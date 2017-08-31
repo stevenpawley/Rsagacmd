@@ -1,10 +1,10 @@
-library(XML)
-library(parallel)
-library(link2GI)
-library(raster)
-library(tools)
-library(stringdist)
-library(rgdal)
+require(XML)
+require(parallel)
+require(link2GI)
+require(raster)
+require(tools)
+require(stringdist)
+require(rgdal)
 
 sagaEnv = function(saga_bin = NA) {
 
