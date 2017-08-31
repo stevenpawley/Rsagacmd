@@ -165,9 +165,9 @@ sagaEnv = function(saga_bin = NA) {
 
   # match the fixed argument names to actual saga commands and arguments
   tool = names(.env$libraries[[lib]])[stringdist::amatch(
-    tool, names(.env$libraries[[lib]]), maxDist=10)]
+    tool, names(.env$libraries[[lib]]), maxDist=20)]
   arg_names = .env$libraries[[lib]][[tool]]$Identifier[stringdist::amatch(
-    arg_names, .env$libraries[[lib]][[tool]]$Identifier)]
+    arg_names, .env$libraries[[lib]][[tool]]$Identifier, maxDist=20)]
 
   # Checking for valid libraries, tools and parameters
   # ---------------------------------------------------
