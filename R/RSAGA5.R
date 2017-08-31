@@ -7,8 +7,19 @@ require(stringdist)
 require(rgdal)
 
 sagaEnv = function(saga_bin = NA) {
-
-  # find SAGA path if not specified
+  # Establishes the link to SAGA GIS
+  # Generates SAGA help file and parses all libraries, tools and options
+  # from the help files into a nested list of library, module and options
+  # Also maps inputs/outputs and establishes which arguments are required or
+  # optional
+  #
+  # Args:
+  #   saga_bin: Optional character with known path to saga_cmd binary
+  #
+  # Returns:
+  #   list: List of saga_cmd path, SAGA-GIS version and nested list of libaries
+  #         tools and options
+  
   if (is.na(saga_bin)) {
     link2GI::linkSAGA()
     path = sagaPath
@@ -40,10 +51,12 @@ sagaEnv = function(saga_bin = NA) {
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries = list.dirs(path = help.path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
-  invalid_libs = which(basename(docs_libraries) %in%
-                         c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer', 'garden_fractals', 'garden_games',
-                           'garden_webservices', 'gc_tools', 'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
-                           'garden_learn_to_program', 'grid_visualisation', 'group_files'))
+  invalid_libs = which(
+    basename(docs_libraries) %in%
+       c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer',
+         'garden_fractals', 'garden_games', 'garden_webservices', 'gc_tools',
+         'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
+         'garden_learn_to_program', 'grid_visualisation', 'group_files'))
   docs_libraries = docs_libraries[-invalid_libs]
   libraries = list()
 
@@ -158,7 +171,21 @@ sagaEnv = function(saga_bin = NA) {
 
 
 sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
-
+  # Main function to execute SAGA-GIS commands through the command line tool
+  #
+  # Args:
+  #   lib: Character string of name of SAGA-GIS library to execute
+  #   tool: Character string of name of SAGA-GIS tool to execute
+  #   arg_names: List of argument names (identifiers) for selected tool
+  #   arg_vals: List of values (inputs/outputs/settings) for selected tool
+  #   .env: SAGA-GIS environment setting
+  #
+  # Returns:
+  #   saga_results: Output of SAGA-GIS tool loaded as an R object
+  #                 (raster/rasterstack/sp/dataframe)
+  
+  # ---- Preprocessing of arguments ----
+  
   # evaluate any arg_vals
   for (i in seq_along(arg_vals))
     arg_vals[[i]] = eval(arg_vals[[i]])
@@ -169,8 +196,7 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   arg_names = .env$libraries[[lib]][[tool]]$Identifier[stringdist::amatch(
     arg_names, .env$libraries[[lib]][[tool]]$Identifier, maxDist=20)]
 
-  # Checking for valid libraries, tools and parameters
-  # ---------------------------------------------------
+  # ---- Checking for valid libraries, tools and parameters ----
 
   # save loaded R objects to files for SAGA to access
   for (i in seq_along(arg_vals)) {
@@ -189,8 +215,8 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
     }
   }
 
-  # Prepare saga_cmd string to system
-  # ---------------------------------
+  # ---- Prepare saga_cmd string to system ----
+  
   sagatool = .env$libraries[[lib]][[tool]]
 
   # argument names
@@ -212,7 +238,8 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
 
   # check that all required outputs have been specified
   # note that some tools do not have any required outputs - issue a warning
-  required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
+  required_outputs = sagatool[
+    which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
   if (nrow(required_outputs) > 0)
    if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
      warning('SAGA command is missing required output arguments')
@@ -223,7 +250,7 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
     print (msg)
   }
 
-  # Load SAGA results
+  # ---- Load SAGA results as list of R objects ----
 
   # check that the selected tool does produce outputs
   if (nrow(sagatool[which(sagatool$IO == "Output"), ]) == 0){
@@ -262,6 +289,21 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
 }
 
 .cleanSagaNames = function(.env, lib, tool){
+  # Function to make valid function and argument names from SAGA-GIS
+  # libraries, tools and options
+  # Typically involves removing spaces, invalid characters etc.
+  #
+  # Args:
+  #   .env: SAGA-GIS environment setting
+  #   lib: Character string of name of SAGA-GIS library to execute
+  #   tool: Character string of name of SAGA-GIS tool to execute
+  #
+  # Returns:
+  #   tool: Valid tool name
+  #   args: Valid argument names
+  #   function_body: Code to place within each dynamically made function that
+  #                  links to each SAGA-GIS tool
+  
   # replace saga tool arguments that start with a numeric
   identifiers = .env$libraries[[lib]][[tool]]$Identifier
   numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
@@ -295,7 +337,10 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
     # get names of function and arguments
     func_call = match.call()
     arg_names = names(func_call)[2:length(names(func_call))]
-    arg_vals = unlist(lapply(seq_along(func_call), function(x){func_call[[x]]}))[2:length(func_call)]
+    arg_vals = unlist(
+      lapply(seq_along(func_call), function(x){
+        func_call[[x]]
+      }))[2:length(func_call)]
 
     fname = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]]
     library = fname[1]
@@ -322,8 +367,10 @@ for (lib in names(.env$libraries)){
 
     # parse function
     eval(
-      expr = parse(text = paste(paste(lib, '.', function_name, sep=''), # function name
-                                ' = function(', args, '){', '\n', body, '\n', 'return(saga_results)}', sep='')))
+      expr = parse(
+        text = paste(paste(lib, '.', function_name, sep=''), # function name
+                    ' = function(', args, '){', '\n', body, '\n', 'return(saga_results)}',
+                    sep='')))
   }
 }
 #dump(lsf.str(), file="/Users/Steven Pawley/Documents/R Packages/RSAGA5/R/RSAGA_Functions.R")
