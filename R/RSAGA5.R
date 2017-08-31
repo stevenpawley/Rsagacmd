@@ -4,6 +4,7 @@ library(link2GI)
 library(raster)
 library(tools)
 library(stringdist)
+library(rgdal)
 
 sagaEnv = function(saga_bin = NA) {
 
