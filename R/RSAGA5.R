@@ -10,7 +10,7 @@ sagaEnv = function(saga_bin = NA) {
 
   # find SAGA path if not specified
   if (is.na(saga_bin)) {
-    linkSAGA()
+    link2GI::linkSAGA()
     path = sagaPath
     cmd = basename(sagaCmd)
   } else {
@@ -215,7 +215,7 @@ sagaEnv = function(saga_bin = NA) {
   required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
   if (nrow(required_outputs) > 0)
    if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
-     stop('SAGA command is missing required output arguments')
+     warning('SAGA command is missing required output arguments')
 
   # Execute the external saga_cmd
   msg = system(saga_cmd, intern = T)
@@ -234,7 +234,8 @@ sagaEnv = function(saga_bin = NA) {
       sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), ]
     specified_outputs['Filename'] = NA
     specified_outputs['Filename'] = arg_vals[
-      which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names)]
+      which(sagatool['Identifier']
+            [which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names),] == arg_names)]
 
     # replace .sgrd extension with .sdat for loading as raster
     specified_outputs['Filename'] = gsub(
@@ -243,13 +244,13 @@ sagaEnv = function(saga_bin = NA) {
     # iterate through the specified outputs and load as R objects
     saga_results = list()
     for (output in specified_outputs['Filename']){
-      if (file_ext(output) == 'shp')
-        saga_results[[paste(file_path_sans_ext(basename(output)))]] = shapefile(output)
-      if (file_ext(output) == 'txt')
-        saga_results[[paste(file_path_sans_ext(basename(output)))]] = read.table(
+      if (tools::file_ext(output) == 'shp')
+        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(output)
+      if (tools::file_ext(output) == 'txt')
+        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
           output, header = T, sep = '\t')
-      if (file_ext(output) == 'sdat')
-        saga_results[[paste(file_path_sans_ext(basename(output)))]] = raster(
+      if (tools::file_ext(output) == 'sdat')
+        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
           output)
     }
 
@@ -295,11 +296,11 @@ sagaEnv = function(saga_bin = NA) {
     func_call = match.call()
     arg_names = names(func_call)[2:length(names(func_call))]
     arg_vals = unlist(lapply(seq_along(func_call), function(x){func_call[[x]]}))[2:length(func_call)]
-    
+
     fname = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]]
     library = fname[1]
     tool = fname[2]
-  
+
     # call the saga geoprocessor
     saga_results = .sagaGeo(library, tool, arg_names, arg_vals, .env)
     ",
