@@ -157,7 +157,7 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-.sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
+sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
 
   # evaluate any arg_vals
   for (i in seq_along(arg_vals))
@@ -302,7 +302,7 @@ sagaEnv = function(saga_bin = NA) {
     tool = fname[2]
 
     # call the saga geoprocessor
-    saga_results = .sagaGeo(library, tool, arg_names, arg_vals, .env)
+    saga_results = sagaGeo(library, tool, arg_names, arg_vals, .env)
     ",
     sep="\n")
 
@@ -310,7 +310,7 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 # dynamic creation of RSAGA functions
-.env = sagaEnv('C:/Program Files/SAGA-GIS/saga_cmd')
+.env = sagaEnv()
 
 for (lib in names(.env$libraries)){
   for (tool in names(.env$libraries[[lib]])){
