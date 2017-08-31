@@ -212,11 +212,10 @@ sagaEnv = function(saga_bin = NA) {
 
   # check that all required outputs have been specified
   # note that some tools do not have any required outputs - issue a warning
-  required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
-  if (nrow(required_outputs) > 0)
-    if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
-      stop('SAGA command is missing required output arguments')
-
+  #required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
+  #if (nrow(required_outputs) > 0)
+  #  if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
+  #    stop('SAGA command is missing required output arguments')
 
   # Execute the external saga_cmd
   msg = system(saga_cmd, intern = T)
