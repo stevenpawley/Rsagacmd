@@ -126,7 +126,7 @@ sagaEnv = function(saga_bin = NA) {
       param = filename(param)
     } else {
       tmp_raster = tempfile(fileext = '.sdat')
-      writeRaster(param, filename = tmp_raster, format = "SAGA")
+      raster::writeRaster(param, filename = tmp_raster, format = "SAGA")
       param = tmp_raster
     }
   }
@@ -136,7 +136,7 @@ sagaEnv = function(saga_bin = NA) {
       class(param) == "SpatialPolygonsDataFrame" |
       class(param) == "SpatialPointsDataFrame") {
     tmp_vector = tempfile(fileext = '.shp')
-    writeOGR(
+    rgdal::writeOGR(
       obj = param,
       dsn = tmp_vector,
       layer = 1,
