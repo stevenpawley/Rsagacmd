@@ -98,8 +98,8 @@ sagaEnv = function(saga_bin = NA) {
   } # libdir loop
 
   return(list(
-    cmd = sagaCmd,
-    path = sagaPath,
+    cmd = cmd,
+    path = path,
     version = version,
     libraries = libraries
   ))
@@ -212,10 +212,10 @@ sagaEnv = function(saga_bin = NA) {
 
   # check that all required outputs have been specified
   # note that some tools do not have any required outputs - issue a warning
-  #required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
-  #if (nrow(required_outputs) > 0)
-  #  if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
-  #    stop('SAGA command is missing required output arguments')
+  required_outputs = sagatool[which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
+  if (nrow(required_outputs) > 0)
+   if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
+     stop('SAGA command is missing required output arguments')
 
   # Execute the external saga_cmd
   msg = system(saga_cmd, intern = T)
@@ -293,15 +293,13 @@ sagaEnv = function(saga_bin = NA) {
     "
     # get names of function and arguments
     func_call = match.call()
-    fname = func_call[[1]]
-    func_call = func_call[2:length(func_call)]
-    arg_names = names(func_call)
-    arg_vals = unlist(lapply(seq_along(func_call), function(x){func_call[[x]]}))
-
-    fname = strsplit(as.character(fname), '\\\\.')[[1]]
-    library = fname[2]
-    tool = fname[3]
-
+    arg_names = names(func_call)[2:length(names(func_call))]
+    arg_vals = unlist(lapply(seq_along(func_call), function(x){func_call[[x]]}))[2:length(func_call)]
+    
+    fname = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]]
+    library = fname[1]
+    tool = fname[2]
+  
     # call the saga geoprocessor
     saga_results = .sagaGeo(library, tool, arg_names, arg_vals, .env)
     ",
@@ -311,7 +309,7 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 # dynamic creation of RSAGA functions
-.env = sagaEnv()
+.env = sagaEnv('C:/Program Files/SAGA-GIS/saga_cmd')
 
 for (lib in names(.env$libraries)){
   for (tool in names(.env$libraries[[lib]])){
@@ -327,8 +325,4 @@ for (lib in names(.env$libraries)){
                                 ' = function(', args, '){', '\n', body, '\n', 'return(saga_results)}', sep='')))
   }
 }
-remove(valid_saga_names)
-remove(function_name)
-remove(args)
-remove(body)
 #dump(lsf.str(), file="/Users/Steven Pawley/Documents/R Packages/RSAGA5/R/RSAGA_Functions.R")
