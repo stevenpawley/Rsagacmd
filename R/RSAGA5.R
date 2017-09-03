@@ -259,29 +259,25 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   } else {
     specified_outputs = sagatool[which(
       sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), ]
-    specified_outputs['Filename'] = NA
-    specified_outputs['Filename'] = arg_vals[
-      which(sagatool[which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), 'Identifier'] %in% arg_names)]
     
-    # replace .sgrd extension with .sdat for loading as raster
-    for (i in 1:nrow(specified_outputs)){
-      specified_outputs[i, 'Filename'] = gsub(
-        pattern = '.sgrd', replacement = '.sdat', x = specified_outputs[i, 'Filename'])
-    }
-
+    params = cbind.data.frame(arg_names, arg_vals)
+    specified_outputs = merge(specified_outputs, params, by.x='Identifier', by.y='arg_names')
+    
     # iterate through the specified outputs and load as R objects
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
-      output = specified_outputs[i, 'Filename']
+      output = specified_outputs[i, 'arg_vals']
       if (tools::file_ext(output) == 'shp')
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
           output)
       if (tools::file_ext(output) == 'txt')
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
           output, header = T, sep = '\t')
-      if (tools::file_ext(output) == 'sdat')
+      if (tools::file_ext(output) == 'sgrd' | tools::file_ext(output) == 'sdat'){
+        if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
           output)
+      }
     }
 
     # do not embed in list if only one result is returned
