@@ -23,7 +23,7 @@ sagaEnv = function(saga_bin = NA) {
   if (is.na(saga_bin)) {
     link2GI::linkSAGA()
     path = sagaPath
-    cmd = basename(sagaCmd)
+    cmd = sagaCmd
   } else {
     path = dirname(saga_bin)
     cmd = saga_bin
@@ -261,9 +261,8 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
       sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), ]
     specified_outputs['Filename'] = NA
     specified_outputs['Filename'] = arg_vals[
-      which(sagatool['Identifier']
-            [which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names),] == arg_names)]
-
+      which(sagatool[which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), 'Identifier'] %in% arg_names)]
+    
     # replace .sgrd extension with .sdat for loading as raster
     for (i in 1:nrow(specified_outputs)){
       specified_outputs[i, 'Filename'] = gsub(
@@ -339,16 +338,15 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
     body,
     "
     # get names of function and arguments
-    func_call = match.call()
+    func_call = as.list(match.call())
+    library = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]][1]
+    tool = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]][2]
+  
     arg_names = names(func_call)[2:length(names(func_call))]
     arg_vals = unlist(
-      lapply(seq_along(func_call), function(x){
-        func_call[[x]]
-      }))[2:length(func_call)]
-
-    fname = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]]
-    library = fname[1]
-    tool = fname[2]
+    lapply(seq_along(func_call), function(x){
+      func_call[[x]]
+    }))[2:length(func_call)]
 
     # call the saga geoprocessor
     saga_results = sagaGeo(library, tool, arg_names, arg_vals, .env)
