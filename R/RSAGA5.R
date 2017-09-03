@@ -19,7 +19,7 @@ sagaEnv = function(saga_bin = NA) {
   # Returns:
   #   list: List of saga_cmd path, SAGA-GIS version and nested list of libaries
   #         tools and options
-  
+
   if (is.na(saga_bin)) {
     link2GI::linkSAGA()
     path = sagaPath
@@ -183,9 +183,9 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   # Returns:
   #   saga_results: Output of SAGA-GIS tool loaded as an R object
   #                 (raster/rasterstack/sp/dataframe)
-  
+
   # ---- Preprocessing of arguments ----
-  
+
   # evaluate any arg_vals
   for (i in seq_along(arg_vals))
     arg_vals[[i]] = eval(arg_vals[[i]])
@@ -216,7 +216,7 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   }
 
   # ---- Prepare saga_cmd string to system ----
-  
+
   sagatool = .env$libraries[[lib]][[tool]]
 
   # argument names
@@ -265,14 +265,18 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
             [which(sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names),] == arg_names)]
 
     # replace .sgrd extension with .sdat for loading as raster
-    specified_outputs['Filename'] = gsub(
-      pattern = '.sgrd', replacement = '.sdat', x = specified_outputs['Filename'])
+    for (i in 1:nrow(specified_outputs)){
+      specified_outputs[i, 'Filename'] = gsub(
+        pattern = '.sgrd', replacement = '.sdat', x = specified_outputs[i, 'Filename'])
+    }
 
     # iterate through the specified outputs and load as R objects
     saga_results = list()
-    for (output in specified_outputs['Filename']){
+    for (i in 1:nrow(specified_outputs)){
+      output = specified_outputs[i, 'Filename']
       if (tools::file_ext(output) == 'shp')
-        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(output)
+        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
+          output)
       if (tools::file_ext(output) == 'txt')
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
           output, header = T, sep = '\t')
@@ -303,7 +307,7 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   #   args: Valid argument names
   #   function_body: Code to place within each dynamically made function that
   #                  links to each SAGA-GIS tool
-  
+
   # replace saga tool arguments that start with a numeric
   identifiers = .env$libraries[[lib]][[tool]]$Identifier
   numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
