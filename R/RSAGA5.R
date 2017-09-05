@@ -278,7 +278,7 @@ sagaGeo = function(lib, tool, .env, ...) {
 
 
 # dynamic creation of RSAGA functions
-.env = sagaEnv('C:/Program Files/SAGA-GIS/saga_cmd.exe')
+.env = sagaEnv()
 
 saga = list()
 for (lib in names(.env$libraries)){
