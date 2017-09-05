@@ -235,12 +235,6 @@ sagaGeo = function(lib, tool, .env, ...) {
   saga_cmd = paste(shQuote(.env$cmd), lib, shQuote(tool, type = quote_type),
                    param_string, sep = ' ')
 
-  # check that all required outputs have been specified
-  # note that some tools do not have any required outputs - issue a warning
-  required_outputs = sagatool[
-    which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
-     warning('SAGA command does not produce any outputs')
-
   # Execute the external saga_cmd
   msg = system(saga_cmd, intern = T)
   if (!is.null(attr(msg, "status"))){
@@ -250,20 +244,18 @@ sagaGeo = function(lib, tool, .env, ...) {
   # ---- Load SAGA results as list of R objects ----
 
   # check that the selected tool does produce outputs
-  if (nrow(sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]) == 0){
+  specified_outputs=sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]
+  if (nrow(specified_outputs) == 0){
     warning('Selected SAGA tool will not produce any output files')
     saga_results = NULL
   } else {
-    specified_outputs = sagatool[which(
-      sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), ]
-
     params = cbind.data.frame(arg_names, arg_vals)
     specified_outputs = merge(specified_outputs, params, by.x='Identifier', by.y='arg_names')
 
     # iterate through the specified outputs and load as R objects
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
-      output = specified_outputs[i, 'arg_vals']
+      output = as.character(specified_outputs[i, 'arg_vals'])
       if (tools::file_ext(output) == 'shp')
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
           output)
@@ -280,7 +272,7 @@ sagaGeo = function(lib, tool, .env, ...) {
     # do not embed in list if only one result is returned
     if (length(saga_results) == 1) saga_results = saga_results[[1]]
   }
-  saga_results=NA
+
   return(saga_results)
 }
 
@@ -353,13 +345,19 @@ for (lib in names(.env$libraries)){
     # parse function
     saga[[lib]] = append(saga[[lib]], eval(
       expr = parse(
-        text = paste(paste(lib, '.', tool, sep=''), # function name
+        text = paste(paste('.', lib, '.', tool, sep=''), # function name
                      '= function(', args, '){', '\n', body, '\n', 'return(saga_results)}',
                      sep=''))))
   }
   names(saga[[lib]]) = toolnames
 }
 
-
-
-#dump(lsf.str(), file="/Users/Steven Pawley/Documents/GitHub/RSAGA5/R/RSAGA5_Functions.R")
+# clean-up namespace
+remove(args)
+remove(body)
+remove(identifiers)
+remove(lib)
+remove(required)
+remove(tool)
+remove(toolnames)
+remove(numeric_identifiers)
