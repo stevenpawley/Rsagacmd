@@ -170,25 +170,24 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
+sagaGeo = function(lib, tool, .env, ...) {
   # Main function to execute SAGA-GIS commands through the command line tool
   #
   # Args:
   #   lib: Character string of name of SAGA-GIS library to execute
   #   tool: Character string of name of SAGA-GIS tool to execute
-  #   arg_names: List of argument names (identifiers) for selected tool
-  #   arg_vals: List of values (inputs/outputs/settings) for selected tool
   #   .env: SAGA-GIS environment setting
+  #   ...: Named arguments and values for SAGA tool
   #
   # Returns:
   #   saga_results: Output of SAGA-GIS tool loaded as an R object
   #                 (raster/rasterstack/sp/dataframe)
 
   # ---- Preprocessing of arguments ----
-
-  # evaluate any arg_vals
-  for (i in seq_along(arg_vals))
-    arg_vals[[i]] = eval(arg_vals[[i]])
+  # split argument names and values
+  args = c(...)
+  arg_names = names(args)
+  arg_vals = unlist(args, use.names = F)
 
   # match the fixed argument names to actual saga commands and arguments
   tool = names(.env$libraries[[lib]])[stringdist::amatch(
@@ -240,9 +239,7 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   # note that some tools do not have any required outputs - issue a warning
   required_outputs = sagatool[
     which(sagatool$IO == 'Output' & sagatool$Required == TRUE), ]
-  if (nrow(required_outputs) > 0)
-   if (nrow(sagatool[which(arg_names %in% required_outputs$Identifier), ]) == 0)
-     warning('SAGA command is missing required output arguments')
+     warning('SAGA command does not produce any outputs')
 
   # Execute the external saga_cmd
   msg = system(saga_cmd, intern = T)
@@ -253,16 +250,16 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
   # ---- Load SAGA results as list of R objects ----
 
   # check that the selected tool does produce outputs
-  if (nrow(sagatool[which(sagatool$IO == "Output"), ]) == 0){
-    warning('Selected SAGA tool does not produce any output files')
+  if (nrow(sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]) == 0){
+    warning('Selected SAGA tool will not produce any output files')
     saga_results = NULL
   } else {
     specified_outputs = sagatool[which(
       sagatool$IO == 'Output' & sagatool$Identifier %in% arg_names), ]
-    
+
     params = cbind.data.frame(arg_names, arg_vals)
     specified_outputs = merge(specified_outputs, params, by.x='Identifier', by.y='arg_names')
-    
+
     # iterate through the specified outputs and load as R objects
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
@@ -283,92 +280,86 @@ sagaGeo = function(lib, tool, arg_names, arg_vals, .env) {
     # do not embed in list if only one result is returned
     if (length(saga_results) == 1) saga_results = saga_results[[1]]
   }
-
+  saga_results=NA
   return(saga_results)
 }
 
-.cleanSagaNames = function(.env, lib, tool){
-  # Function to make valid function and argument names from SAGA-GIS
-  # libraries, tools and options
-  # Typically involves removing spaces, invalid characters etc.
-  #
-  # Args:
-  #   .env: SAGA-GIS environment setting
-  #   lib: Character string of name of SAGA-GIS library to execute
-  #   tool: Character string of name of SAGA-GIS tool to execute
-  #
-  # Returns:
-  #   tool: Valid tool name
-  #   args: Valid argument names
-  #   function_body: Code to place within each dynamically made function that
-  #                  links to each SAGA-GIS tool
-
-  # replace saga tool arguments that start with a numeric
-  identifiers = .env$libraries[[lib]][[tool]]$Identifier
-  numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
-  if (length(numeric_identifiers) > 0)
-    levels(identifiers)[levels(identifiers)==identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
-  identifiers = gsub(" ", "_", identifiers)
-
-  # define tool arguments
-  required = gsub('FALSE', '=NA', .env$libraries[[lib]][[tool]]$Required)
-  required = gsub('TRUE', '', required)
-  args <- paste(identifiers, required, collapse=',', sep='')
-
-  # replace invalid characters from tool name
-  tool = gsub(' ', '_', tool)
-  tool = gsub("\\(", "", tool)
-  tool = gsub("\\)", "", tool)
-  tool = gsub("'", "", tool)
-  tool = gsub(",", "_", tool)
-  tool = gsub("/", "_", tool)
-  tool = gsub("-", "_", tool)
-  tool = gsub(":", "_", tool)
-  tool = gsub("\\[", "_", tool)
-  tool = gsub("\\]", "_", tool)
-  tool = gsub("&", "_", tool)
-
-  # define function body
-  body = ""
-  body = paste(
-    body,
-    "
-    # get names of function and arguments
-    func_call = as.list(match.call())
-    library = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]][1]
-    tool = strsplit(as.character(func_call[[1]]), '\\\\.')[[1]][2]
-  
-    arg_names = names(func_call)[2:length(names(func_call))]
-    arg_vals = unlist(
-    lapply(seq_along(func_call), function(x){
-      func_call[[x]]
-    }))[2:length(func_call)]
-
-    # call the saga geoprocessor
-    saga_results = sagaGeo(library, tool, arg_names, arg_vals, .env)
-    ",
-    sep="\n")
-
-  return (list(tool=tool, args=args, function_body=body))
-}
 
 # dynamic creation of RSAGA functions
-.env = sagaEnv()
+.env = sagaEnv('C:/Program Files/SAGA-GIS/saga_cmd.exe')
 
+saga = list()
 for (lib in names(.env$libraries)){
+  toolnames = list()
   for (tool in names(.env$libraries[[lib]])){
 
-    valid_saga_names = .cleanSagaNames(.env, lib, tool)
-    function_name = valid_saga_names$tool
-    args = valid_saga_names$args
-    body = valid_saga_names$function_body
+    # replace saga tool arguments that start with a numeric
+    identifiers = .env$libraries[[lib]][[tool]]$Identifier
+    numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
+    if (length(numeric_identifiers) > 0)
+      levels(identifiers)[levels(identifiers)==identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
+    identifiers = gsub(" ", "_", identifiers)
+
+    # define tool arguments
+    required = gsub('FALSE', '=NA', .env$libraries[[lib]][[tool]]$Required)
+    required = gsub('TRUE', '', required)
+    args <- paste(identifiers, required, collapse=',', sep='')
+
+    # replace invalid characters from tool name
+    tool = gsub(" ", "_", tool)
+    tool = gsub("\\(", "", tool)
+    tool = gsub("\\)", "", tool)
+    tool = gsub("'", "", tool)
+    tool = gsub(",", "_", tool)
+    tool = gsub("/", "_", tool)
+    tool = gsub("-", "_", tool)
+    tool = gsub(":", "_", tool)
+    tool = gsub("\\[", "_", tool)
+    tool = gsub("\\]", "_", tool)
+    tool = gsub("&", "_", tool)
+    tool = gsub("____", "_", tool)
+    tool = gsub("___", "_", tool)
+    tool = gsub("__", "_", tool)
+
+    # define function body
+    body = ""
+    body = paste(
+      body,
+      "
+      # get names of function and arguments
+      func_call = sys.call()
+      fname = as.character(as.list(func_call))[[1]]
+      if (grepl('RSAGA5::', fname)){
+        fname=strsplit(as.character(as.list(func_call))[[1]], '::')[[1]][2]
+      } else {
+        fname = as.character(as.list(func_call))[[1]]
+      }
+      library = strsplit(fname, '\\\\$')[[1]][2]
+      tool = strsplit(fname, '\\\\$')[[1]][3]
+
+      # get argument names and values
+      args = as.list(func_call)[2:length(func_call)]
+
+      # evaluate any arg_vals
+      for (i in seq_along(args))
+        args[[i]] = eval.parent(args[[i]])
+
+      # call the saga geoprocessor
+      saga_results = sagaGeo(library, tool, .env, args)
+      ", sep="\n")
+
+    toolnames = append(toolnames, tool)
 
     # parse function
-    eval(
+    saga[[lib]] = append(saga[[lib]], eval(
       expr = parse(
-        text = paste(paste(lib, '.', function_name, sep=''), # function name
-                    ' = function(', args, '){', '\n', body, '\n', 'return(saga_results)}',
-                    sep='')))
+        text = paste(paste(lib, '.', tool, sep=''), # function name
+                     '= function(', args, '){', '\n', body, '\n', 'return(saga_results)}',
+                     sep=''))))
   }
+  names(saga[[lib]]) = toolnames
 }
-#dump(lsf.str(), file="/Users/Steven Pawley/Documents/R Packages/RSAGA5/R/RSAGA_Functions.R")
+
+
+
+#dump(lsf.str(), file="/Users/Steven Pawley/Documents/GitHub/RSAGA5/R/RSAGA5_Functions.R")
