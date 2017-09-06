@@ -20,4 +20,4 @@ library(RSAGA5)
 
 saga = initSAGA()
 
-saga$ta_morphometry$Slope_Aspect_Curvature(ELEVATION = )
+saga$ta_morphometry$Slope_Aspect_Curvature(ELEVATION = dem, SLOPE = 'Slope', ASPECT = 'Aspect')
