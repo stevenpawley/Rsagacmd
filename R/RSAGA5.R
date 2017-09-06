@@ -174,7 +174,7 @@ sagaEnv = function(saga_bin = NA) {
 
 sagaGeo = function(lib, tool, senv, ...) {
 
-    # Main function to execute SAGA-GIS commands through the command line tool
+  # Main function to execute SAGA-GIS commands through the command line tool
   #
   # Args:
   #   lib: Character string of name of SAGA-GIS library to execute
@@ -365,7 +365,22 @@ initSAGA = function(saga_bin = NA){
                        sep=''))))
     }
     names(saga[[lib]]) = toolnames
+    saga[['.env']] = senv
   }
 
   return(saga)
+}
+
+viewLibraries = function(senv){
+  return(names(senv$.env$libraries))
+}
+
+viewTools = function(lib, senv){
+  return(names(senv$.env$libraries[[lib]]))
+}
+
+viewOptions = function(lib, tool, senv) {
+  options = senv$.env$libraries[[lib]][[tool]]
+  options = options[c('Name', 'Type', 'Identifier', 'Description', 'Constraints')]
+  View(options)
 }
