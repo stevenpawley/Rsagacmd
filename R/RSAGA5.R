@@ -91,11 +91,12 @@ sagaEnv = function(saga_bin = NA) {
         options[grep("optional", options$Type), 'Required'] = FALSE
         options[grep("Grid", options$Type), 'Feature'] = 'Grid'
         options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
-        options[grep("Shape", options$Type), 'Feature'] = 'Shape list'
-        options[grep("Shape list", options$Type), 'Feature'] = 'Shape'
+        options[grep("Shapes", options$Type), 'Feature'] = 'Shape'
+        options[grep("Shapes list", options$Type), 'Feature'] = 'Shapes list'
         options[grep("Table", options$Type), 'Feature'] = 'Table'
         options[grep("Table list", options$Type), 'Feature'] = 'Table list'
         options[grep("field", options$Type), 'Feature'] = 'Table field'
+        options[grep("field", options$Type), 'Required'] = FALSE
         options[grep("field", options$Type), 'IO'] = 'Input'
         options[grep("Integer", options$Type), 'Required'] = FALSE
         options[grep("Choice", options$Type), 'Required'] = FALSE
@@ -172,7 +173,7 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-sagaGeo = function(lib, tool, senv, ...) {
+sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   # Main function to execute SAGA-GIS commands through the command line tool
   #
@@ -180,6 +181,7 @@ sagaGeo = function(lib, tool, senv, ...) {
   #   lib: Character string of name of SAGA-GIS library to execute
   #   tool: Character string of name of SAGA-GIS tool to execute
   #   senv: SAGA-GIS environment setting
+  #   intern: Boolean to load outputs as R objects
   #   ...: Named arguments and values for SAGA tool
   #
   # Returns:
@@ -191,7 +193,7 @@ sagaGeo = function(lib, tool, senv, ...) {
   # split argument names and values
   args = c(...)
   arg_names = names(args)
-  arg_vals = unlist(args, use.names = F)
+  arg_vals = args
 
   # match the fixed argument names to actual saga commands and arguments
   tool = names(senv$libraries[[lib]])[stringdist::amatch(
@@ -260,16 +262,20 @@ sagaGeo = function(lib, tool, senv, ...) {
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
       output = as.character(specified_outputs[i, 'arg_vals'])
-      if (tools::file_ext(output) == 'shp')
-        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
-          output)
-      if (tools::file_ext(output) == 'txt')
-        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
-          output, header = T, sep = '\t')
-      if (tools::file_ext(output) == 'sgrd' | tools::file_ext(output) == 'sdat'){
-        if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
-        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
-          output)
+      if (intern == TRUE){
+        if (tools::file_ext(output) == 'shp')
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
+            output)
+        if (tools::file_ext(output) == 'txt')
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
+            output, header = T, sep = '\t')
+        if (tools::file_ext(output) == 'sgrd' | tools::file_ext(output) == 'sdat'){
+          if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
+            output)
+        }
+      } else {
+        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = output
       }
     }
 
@@ -336,23 +342,23 @@ initSAGA = function(saga_bin = NA){
         # get names of function and arguments
         func_call = sys.call()
         fname = as.character(as.list(func_call))[[1]]
-        if (grepl('RSAGA5::', fname)){
-          fname=strsplit(as.character(as.list(func_call))[[1]], '::')[[1]][2]
-        } else {
-          fname = as.character(as.list(func_call))[[1]]
-        }
+
         library = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
 
         # get argument names and values
         args = as.list(func_call)[2:length(func_call)]
 
+        # remove intern from saga args list
+        if ('intern' %in% names(args))
+          args = args[-which(names(args) == 'intern')]
+
         # evaluate any arg_vals
         for (i in seq_along(args))
           args[[i]] = eval.parent(args[[i]])
 
         # call the saga geoprocessor
-        saga_results = sagaGeo(library, tool, senv, args)
+        saga_results = sagaGeo(library, tool, senv, intern, args)
         ", sep="\n")
 
       toolnames = append(toolnames, tool)
@@ -361,7 +367,7 @@ initSAGA = function(saga_bin = NA){
       saga[[lib]] = append(saga[[lib]], eval(
         expr = parse(
           text = paste(paste('.', lib, '.', tool, sep=''), # function name
-                       '= function(', args, '){', '\n', body, '\n', 'return(saga_results)}',
+                       '= function(', args, ', intern = TRUE', '){', '\n', body, '\n', 'return(saga_results)}',
                        sep=''))))
     }
     names(saga[[lib]]) = toolnames
