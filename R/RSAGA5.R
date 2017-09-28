@@ -5,6 +5,7 @@ require(raster)
 require(tools)
 require(stringdist)
 require(rgdal)
+require(foreign)
 
 sagaEnv = function(saga_bin = NA) {
 
@@ -104,6 +105,13 @@ sagaEnv = function(saga_bin = NA) {
         options[grep("Boolean", options$Type), 'Required'] = FALSE
         options[grep("Long text", options$Type), 'Required'] = FALSE
         options[grep("Text", options$Type), 'Required'] = FALSE
+
+        # exceptions
+        if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster'){
+          options[grep("File path", options$Type), 'IO'] = 'Output'
+          options[grep("File path", options$Type), 'Required'] = TRUE
+          options[grep("File path", options$Type), 'Feature'] = 'Raster'
+        }
 
         # add parameter options to nested list
         libraries[[basename(libdir)]][[toolName]] = options
@@ -262,15 +270,31 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
       output = as.character(specified_outputs[i, 'arg_vals'])
+
       if (intern == TRUE){
-        if (tools::file_ext(output) == 'shp')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = shapefile(
-            output)
+
+        # GDAL/OGR supported vectors
+        if (specified_outputs[i, 'Feature'] == 'Shape' |
+            specified_outputs[i, 'Feature'] == 'Shapes list')
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = readOGR(
+            dsn=output)
+
+        # Tables
         if (tools::file_ext(output) == 'txt')
           saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
             output, header = T, sep = '\t')
-        if (tools::file_ext(output) == 'sgrd' | tools::file_ext(output) == 'sdat'){
-          if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
+        if (tools::file_ext(output) == 'csv')
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.csv(
+            output)
+        if (tools::file_ext(output) == 'dbf')
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = foriegn::read.dbf(
+            output)
+
+        # Rasters
+        if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
+        if (specified_outputs[i, 'Feature'] == 'Grid' |
+            specified_outputs[i, 'Feature'] == 'Grid list' |
+            specified_outputs[i, 'Feature'] == 'Raster'){
           saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
             output)
         }
