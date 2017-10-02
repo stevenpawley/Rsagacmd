@@ -276,7 +276,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
         # GDAL/OGR supported vectors
         if (specified_outputs[i, 'Feature'] == 'Shape' |
             specified_outputs[i, 'Feature'] == 'Shapes list')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = readOGR(
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = rgdal::readOGR(
             dsn=output)
 
         # Tables
