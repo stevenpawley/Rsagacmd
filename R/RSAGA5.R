@@ -111,6 +111,8 @@ sagaEnv = function(saga_bin = NA) {
           options[grep("File path", options$Type), 'IO'] = 'Output'
           options[grep("File path", options$Type), 'Required'] = TRUE
           options[grep("File path", options$Type), 'Feature'] = 'Raster'
+        } else if (toolName == 'Clip Grid with Rectangle'){
+          options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
         }
 
         # add parameter options to nested list
@@ -268,7 +270,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
     # iterate through the specified outputs and load as R objects
     saga_results = list()
-    for (i in 1:nrow(specified_outputs)){
+    for (i in seq_along(nrow(specified_outputs))){
       output = as.character(specified_outputs[i, 'arg_vals'])
 
       if (intern == TRUE){
