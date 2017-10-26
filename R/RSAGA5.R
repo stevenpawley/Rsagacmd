@@ -387,14 +387,16 @@ initSAGA = function(saga_bin = NA){
         saga_results = sagaGeo(library, tool, senv, intern, args)
         ", sep="\n")
 
-      toolnames = append(toolnames, tool)
-
       # parse function
+      tryCatch(expr = {
       saga[[lib]] = append(saga[[lib]], eval(
         expr = parse(
           text = paste(paste('.', lib, '.', tool, sep=''), # function name
                        '= function(', args, ', intern = TRUE', '){', '\n', body, '\n', 'return(saga_results)}',
                        sep=''))))
+      toolnames = append(toolnames, tool)
+      }, error = function(e) warning(paste("Problem parsing SAGA library", lib, "and tool", tool, sep=' ')))
+
     }
     names(saga[[lib]]) = toolnames
     saga[['.env']] = senv
