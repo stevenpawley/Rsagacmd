@@ -215,9 +215,19 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   # save loaded R objects to files for SAGA to access
   for (i in seq_along(arg_vals)) {
+
+    # if list split list into separate files
     if (class(arg_vals[[i]]) == "list"){
       for (j in seq_along(arg_vals[[i]]))
         arg_vals[[i]][[j]] = .RtoSAGA(arg_vals[[i]][[j]])
+
+    # if rasterstack then parse each band separated
+    } else if (class(arg_vals[[i]]) == 'RasterStack'){
+      arg_vals_parsed = list()
+      for (j in 1:nlayers(arg_vals[[i]]))
+        arg_vals_parsed[[j]] = .RtoSAGA(arg_vals[[i]][[j]])
+      arg_vals[[i]] = unlist(arg_vals_parsed)
+
     } else {
       arg_vals[[i]] = .RtoSAGA(arg_vals[[i]])
     }
