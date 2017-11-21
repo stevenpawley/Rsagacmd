@@ -151,8 +151,8 @@ sagaEnv = function(saga_bin = NA) {
     if (raster::inMemory(param) == FALSE) {
       param = filename(param)
     } else {
-      tmp_raster = tempfile(fileext = '.sdat')
-      raster::writeRaster(param, filename = tmp_raster, format = "SAGA")
+      tmp_raster = tempfile(fileext = '.tif')
+      raster::writeRaster(param, filename = tmp_raster)
       param = tmp_raster
     }
   }
