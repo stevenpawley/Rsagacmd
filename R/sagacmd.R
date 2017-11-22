@@ -1,20 +1,18 @@
-require(XML)
-require(parallel)
-require(link2GI)
-require(raster)
-require(tools)
-require(stringdist)
-require(rgdal)
-require(foreign)
+library(XML)
+library(parallel)
+library(link2GI)
+library(raster)
+library(tools)
+library(stringdist)
+library(rgdal)
+library(foreign)
 
 sagaEnv = function(saga_bin = NA) {
 
-  # Establishes the link to SAGA GIS
-  # Generates SAGA help file and parses all libraries, tools and options
-  # from the help files into a nested list of library, module and options
-  # Also maps inputs/outputs and establishes which arguments are required or
-  # optional
-  #
+  # Establishes the link to SAGA GIS by generating a SAGA help file and parsing
+  # all libraries, tools and options from the help files into a nested list of 
+  # library, module and options
+  # 
   # Args:
   #   saga_bin: Optional character with known path to saga_cmd binary
   #
@@ -22,6 +20,7 @@ sagaEnv = function(saga_bin = NA) {
   #   list: List of saga_cmd path, SAGA-GIS version and nested list of libaries
   #         tools and options
 
+  # use link2GI to find path to saga_cmd unless specified manually
   if (is.na(saga_bin)) {
     link2GI::linkSAGA()
     path = sagaPath
@@ -197,23 +196,22 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   # Returns:
   #   saga_results: Output of SAGA-GIS tool loaded as an R object
   #                 (raster/rasterstack/sp/dataframe)
-
-  # ---- Preprocessing of arguments ----
-
-  # split argument names and values
+  
+  # Preprocessing of arguments
+  ## split argument names and values
   args = c(...)
   arg_names = names(args)
   arg_vals = args
 
-  # match the fixed argument names to actual saga commands and arguments
+  ## match the fixed argument names to actual saga commands and arguments
   tool = names(senv$libraries[[lib]])[stringdist::amatch(
     tool, names(senv$libraries[[lib]]), maxDist=20)]
   arg_names = senv$libraries[[lib]][[tool]]$Identifier[stringdist::amatch(
     arg_names, senv$libraries[[lib]][[tool]]$Identifier, maxDist=20)]
-
-  # ---- Checking for valid libraries, tools and parameters ----
-
-  # save loaded R objects to files for SAGA to access
+  sagatool = senv$libraries[[lib]][[tool]]
+  
+  # Checking for valid libraries, tools and parameters
+  ## save loaded R objects to files for SAGA to access
   for (i in seq_along(arg_vals)) {
 
     # if list split list into separate files
@@ -232,66 +230,69 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
       arg_vals[[i]] = .RtoSAGA(arg_vals[[i]])
     }
   }
-
+  
   # check to see if inputs are valid SAGA GIS parameters
   for (identifier in arg_names) {
     if (identifier %in% senv$libraries[[lib]][[tool]]$Identifier == FALSE) {
       stop(paste('Invalid parameter', identifier, 'not present in', tool))
     }
   }
-
-  # ---- Prepare saga_cmd string to system ----
-
-  sagatool = senv$libraries[[lib]][[tool]]
-
-  # argument names
-  quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
-
-  # argument values
-  # collapse any params that are lists
+    
+  # Prepare saga_cmd string to system
+  ## collapse any argument values that are lists
   for (i in seq_along(arg_vals))
     if (class(arg_vals[i]) == "list")
       arg_vals[i] = paste(arg_vals[[i]], collapse = ';')
 
+  ## create character with argument values within quotes
+  quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
   arg_vals = as.character(unlist(arg_vals))
   params = shQuote(string = arg_vals, type = quote_type)
 
-  # add saga_cmd arguments to the command line call:
-  param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-  saga_cmd = paste(shQuote(senv$cmd), lib, shQuote(tool, type = quote_type),
-                   param_string, sep = ' ')
-
-  # Execute the external saga_cmd
-  msg = system(saga_cmd, intern = T)
-  if (!is.null(attr(msg, "status"))){
-    print (msg)
-  }
-
-  # ---- Load SAGA results as list of R objects ----
-
-  # check that the selected tool does produce outputs
-  specified_outputs=sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]
+  ## check that the selected tool produces some type of output
+  specified_outputs = sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]
   if (nrow(specified_outputs) == 0){
     warning('Selected SAGA tool will not produce any output files')
     saga_results = NULL
   } else {
-    params = cbind.data.frame(arg_names, arg_vals)
-    specified_outputs = merge(specified_outputs, params, by.x='Identifier', by.y='arg_names')
+    names_vals_df = cbind.data.frame(arg_names, arg_vals)
+    specified_outputs = merge(specified_outputs, names_vals_df, by.x='Identifier', by.y='arg_names')
+    
+    # check to see if output format for grids is valid
+    for (i in 1:nrow(specified_outputs)){
+      output = as.character(specified_outputs[i, 'arg_vals'])
+      if (tools::file_ext(output) == 'sdat')
+        stop(paste('Output SAGA Raster Grid', specified_outputs$Identifier, 'must have .sgrd file extension'))
+    }
+  }
+  
+  # Execute the external saga_cmd
+  ## add saga_cmd arguments to the command line call:
+  param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
+  saga_cmd = paste(shQuote(senv$cmd), lib, shQuote(tool, type = quote_type),
+                   param_string, sep = ' ')
+  
+  ## execute system call
+  msg = system(saga_cmd, intern = T)
+  if (!is.null(attr(msg, "status"))){
+    print (saga_cmd)
+    print (msg)
+  }
 
-    # iterate through the specified outputs and load as R objects
+  # Load SAGA results as list of R objects
+  if (nrow(specified_outputs) > 0){
     saga_results = list()
     for (i in seq_along(nrow(specified_outputs))){
       output = as.character(specified_outputs[i, 'arg_vals'])
 
       if (intern == TRUE){
-
-        # GDAL/OGR supported vectors
+        # Import GDAL/OGR supported vector data
         if (specified_outputs[i, 'Feature'] == 'Shape' |
             specified_outputs[i, 'Feature'] == 'Shapes list')
           saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = rgdal::readOGR(
             dsn=output)
 
-        # Tables
+        # Import table data
         if (tools::file_ext(output) == 'txt')
           saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
             output, header = T, sep = '\t')
@@ -302,7 +303,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
           saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = foriegn::read.dbf(
             output)
 
-        # Rasters
+        # Import raster data
         if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
         if (specified_outputs[i, 'Feature'] == 'Grid' |
             specified_outputs[i, 'Feature'] == 'Grid list' |
@@ -311,6 +312,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
             output)
         }
       } else {
+        # if intern=FALSE then only return list of file paths for the sagacmd outputs
         saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = output
       }
     }
@@ -322,10 +324,10 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   return(saga_results)
 }
 
+
 initSAGA = function(saga_bin = NA){
 
-  # Dynamic creating of equivalent R functions for all SAGA-GIS libraries
-  # and tools
+  # Dynamic creating of equivalent R functions for all SAGA-GIS libraries and tools
   #
   # Args:
   #   saga_bin: Optional string with path of saga_cmd.exe
