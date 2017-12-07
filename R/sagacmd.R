@@ -148,15 +148,24 @@ sagaEnv = function(saga_bin = NA) {
       class(param) == "RasterStack" |
       class(param) == "RasterBrick") {
     if (raster::inMemory(param) == FALSE) {
+      # get filename if raster not stored in memory
       param = filename(param)
+      
+      # but have to rewrite raster if stored in R format
+      if (tools::file_ext(param) == '.grd'){
+        tmp_raster = tempfile(fileext = '.tif')
+        raster::writeRaster(param, filename = tmp_raster)
+        param = tmp_raster
+      }
     } else {
+      # write raster to file if stored in memory
       tmp_raster = tempfile(fileext = '.tif')
       raster::writeRaster(param, filename = tmp_raster)
       param = tmp_raster
     }
   }
 
-  # vectors
+  # spatial objects
   if (class(param) == "SpatialLinesDataFrame" |
       class(param) == "SpatialPolygonsDataFrame" |
       class(param) == "SpatialPointsDataFrame") {
@@ -169,6 +178,8 @@ sagaEnv = function(saga_bin = NA) {
     )
     param = tmp_vector
   }
+  
+  # TODO simple features
 
   # tables
   if (class(param) == "data.frame") {
