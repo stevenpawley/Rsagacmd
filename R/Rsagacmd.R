@@ -6,6 +6,7 @@ library(tools)
 library(stringdist)
 library(rgdal)
 library(foreign)
+library(sf)
 
 sagaEnv = function(saga_bin = NA) {
 
@@ -179,7 +180,12 @@ sagaEnv = function(saga_bin = NA) {
     param = tmp_vector
   }
   
-  # TODO simple features
+  # simple features objects
+  if (all(class(features) == c("sf", "data.frame"))){
+    tmp_vector = tempfile(fileext = '.shp')
+    sf::st_write(obj = param, dsn = tmp_vector)
+    param = tmp_vector
+  }
 
   # tables
   if (class(param) == "data.frame") {
@@ -293,15 +299,14 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   # Load SAGA results as list of R objects
   if (nrow(specified_outputs) > 0){
     saga_results = list()
-    for (i in seq_along(nrow(specified_outputs))){
+    for (i in 1:nrow(specified_outputs)){
       output = as.character(specified_outputs[i, 'arg_vals'])
 
       if (intern == TRUE){
         # Import GDAL/OGR supported vector data
         if (specified_outputs[i, 'Feature'] == 'Shape' |
             specified_outputs[i, 'Feature'] == 'Shapes list')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = rgdal::readOGR(
-            dsn=output)
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = sf::st_read(output)
 
         # Import table data
         if (tools::file_ext(output) == 'txt')
