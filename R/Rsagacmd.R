@@ -181,7 +181,7 @@ sagaEnv = function(saga_bin = NA) {
   }
   
   # simple features objects
-  if (all(class(features) == c("sf", "data.frame"))){
+  if (all(class(param) == c("sf", "data.frame"))){
     tmp_vector = tempfile(fileext = '.shp')
     sf::st_write(obj = param, dsn = tmp_vector)
     param = tmp_vector
