@@ -1,21 +1,60 @@
 library(XML)
 library(parallel)
-library(link2GI)
 library(raster)
 library(tools)
 library(rgdal)
 library(foreign)
 library(sf)
 
+
+#' Function to return the installed version of SAGA-GIS
+#'
+#' @param cmd full path of the saga_cmd binary
+#'
+#' @return numeric_version of SAGA-GIS installation
+#' @export
+
+.getSAGAversion = function(cmd){
+  
+  # detect saga version
+  version = system(
+    paste(shQuote(cmd), '--version', sep = ' '), intern = T)[1]
+  version = strsplit(x = version, split = ': ')[[1]][2]
+  
+  if (Sys.info()["sysname"] == "Windows") {
+    version = strsplit(x = version, split = ' ')[[1]][1]
+  }
+  return (as.numeric_version(version))
+}
+
+
+#' Function to attempt to automatically find and select newest SAGA-GIS installation
+#'
+#' @return Full path to installed saga_cmd binary
+#' @export
+
 searchSAGA = function(){
   
-  # check to see if saga_cmd is recognized
+  # check to see if saga_cmd is recognized (i.e. has been added to path)
   cmd = ifelse(nchar(Sys.which(names = 'saga_cmd')) > 0, 'saga_cmd', NA)
   
-  if (is.na(cmd) & Sys.info()["sysname"] == "Windows"){
-    
+  # otherwise search for saga_cmd in usual install locations
+  if (is.na(cmd)){
+    if (Sys.info()["sysname"] == "Windows"){
+      cmd = list.files(path = 'C:', pattern = 'saga_cmd.exe', recursive = TRUE, full.names = TRUE)
+    } else {
+      cmd = list.files(path = '/usr', pattern = 'saga_cmd$', recursive = TRUE, full.names = TRUE)
+    }
   }
-
+  
+  # decide between multiple versions if found
+  saga_version = list()
+  if (length(cmd) > 1){
+    message('Multiple installations of SAGA-GIS are present. Choosing newest version...')
+    for (saga_inst in cmd)
+      saga_version = append(saga_version, .getSAGAversion(saga_inst))
+    cmd = cmd[which(saga_version==max(saga_version))]
+    }
 
   return (cmd)
 }
@@ -32,22 +71,16 @@ searchSAGA = function(){
 sagaEnv = function(saga_bin = NA) {
 
   # use link2GI to find path to saga_cmd unless specified manually
-  if (is.na(saga_bin)) {
-    link2GI::linkSAGA()
-    path = sagaPath
-    cmd = sagaCmd
+  if (is.na(saga_bin)){
+    saga_bin = searchSAGA()
   } else {
-    path = dirname(saga_bin)
-    cmd = saga_bin
+    # check that supplied saga_bin location is correct
+    if (nchar(Sys.which(names = saga_bin)) == 0)
+      stop('The supplied path to the saga_cmd binary is not correct')
   }
 
   # detect saga version
-  version = system(
-    paste(shQuote(cmd), '--version', sep = ' '), intern = T)[1]
-  version = strsplit(x = version, split = ': ')[[1]][2]
-  if (Sys.info()["sysname"] == "Windows") {
-    version = strsplit(x = version, split = ' ')[[1]][1]
-  }
+  version = .getSAGAversion(cmd)
 
   # generate SAGA help files in temporary directory
   temp_dir = tempfile()
@@ -84,8 +117,7 @@ sagaEnv = function(saga_bin = NA) {
       f <- file(paste(libdir, tool, sep = '/'), open = "rb")
       if (length(readLines(f, warn = F)) > 1) {
         # read module options tables
-        options = XML::readHTMLTable(doc = paste(libdir, tool, sep = '/'),
-                                     header = T)
+        options = XML::readHTMLTable(doc = paste(libdir, tool, sep = '/'), header = T)
         
         # create valid tool names
         valid_toolname = colnames(options[[1]])[2]
@@ -159,7 +191,6 @@ sagaEnv = function(saga_bin = NA) {
 
   return(list(
     cmd = cmd,
-    path = path,
     version = version,
     libraries = libraries
   ))
@@ -316,7 +347,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   # Execute the external saga_cmd
   ## add saga_cmd arguments to the command line call:
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-  saga_cmd = paste(shQuote(senv$cmd), lib, shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
+  saga_cmd = paste(shQuote(senv$cmd), '--flags=p ', lib, shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
                    param_string, sep = ' ')
   
   ## execute system call
