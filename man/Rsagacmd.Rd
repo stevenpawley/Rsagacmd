@@ -6,36 +6,38 @@
 \alias{Rsagacmd-package}
 \title{Rsagacmd: A package for linking R with the open-source SAGA-GIS.}
 \description{
-\pkg{Rsagacmd} is intended to provide an R-like scripting environment to the
-open-source SAGA-GIS (\url{https://sourceforge.net/projects/saga-gis/}). The
-current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows
-(x64), OS X and Linux.
+\pkg{Rsagacmd} is intended to provide an R scripting interface to the
+open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}. The
+current version has been tested using SAGA-GIS 2.3.2, 5.0.0 and 6.1.0 on
+Windows (x64), OS X and Linux.
 }
 \details{
-This package is not related to the RSAGA package, which
-provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3.
-However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd
-emphasises access to SAGA-GIS tools by dynamically generating R functions for
-every SAGA-GIS tool. These functions are embedded within a nested list
-structure. This facilitates an easier scripting experience because the
-function's syntax are similar to using the SAGA-GIS command line tool
-directly, and the user can also take advantage of code autocompletion tools,
-allowing for each tools' inputs, outputs and options to be more easily
-recognized.
+This package is not related to the RSAGA package, which provides an
+alternative interface to SAGA-GIS versions 2.0.4 - 2.2.3. In comparison to
+RSAGA, Rsagacmd supports newer versions of SAGA-GIS and provides access to
+SAGA-GIS tools by dynamically generating R functions that map to the html
+tags associated with every supoorted SAGA-GIS tool. These functions are
+returned as a named list of SAGA libraries and nested sub-lists of the
+functions to each library's tools. This facilitates an easier scripting
+experience by organizing the large number of available SAGA-GIS tools (> 500)
+by their respective SAGA-GIS library, and each function's syntax is similar
+to using the SAGA-GIS command line tool directly. Furthermore, because the
+arguments (called identifiers) for many SAGA-GIS tools are not consistently
+named, the user can also take advantage of code autocompletion tools (e.g. in
+\href{http://rstudio.com}{Rstudio}), allowing for each tools' inputs, outputs
+and options to be more easily recognized.
 }
 \section{Dynamically-created functions to SAGA-GIS tools}{
  Rsagacmd attempts
   to facilitate a seamless interface to the open-source SAGA-GIS by providing
-  access to most SAGA-GIS geoprocessing tools in a R-like manner. By default,
-  all results from SAGA-GIS tools are loaded as the appropriate R object:
-  \itemize{
-  \item Raster-based outputs from SAGA-GIS tools are loaded as
-  RasterLayer objects
-  \item Vector features from SAGA-GIS tools in ESRI
-  Shapefile format are loaded into the R environment as simple features
-  objects
-  \item Tabular data from SAGA-GIS tools are loaded as dataframes
-  }
+  access to most SAGA-GIS geoprocessing tools in a 'R-like' manner. By
+  default, all results from SAGA-GIS tools are automatically loaded as the
+  appropriate R object: \itemize{ \item Raster-based outputs from SAGA-GIS
+  tools are loaded as RasterLayer objects \item Vector features from SAGA-GIS
+  tools in ESRI Shapefile format are loaded into the R environment as simple
+  features objects \item Tabular data from SAGA-GIS tools are loaded as
+  dataframes} The results from tools that return multiple outputs are loaded
+  into the R environment as a named list of the appropriate R objects.
 }
 
 \author{

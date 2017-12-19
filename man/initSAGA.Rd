@@ -11,9 +11,30 @@ initSAGA(saga_bin = NA)
 }
 \value{
 Nested list of functions for SAGA-GIS libraries and tools
-#' @export
 }
 \description{
 A simple wrapper that dynamically creates R functions to all valid tools and
 returns them as a nested and named list of SAGA-GIS libraries and tools.
+}
+\examples{
+\dontrun{
+# initialize Rsagacmd and dynamically generate functions for all SAGA-GIS tools
+saga = initSAGA()
+
+# Example of terrain analysis
+
+# Generate random terrain and load as raster object
+dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
+
+# Display help on usage for tool
+saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
+
+# Use Rsagacmd for to calculate the terrain ruggedness index
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'))
+plot(tri)
+
+# Do not load output as an R object
+saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
+}
+#' @export
 }
