@@ -29,7 +29,8 @@ install_github("/stevenpawley/Rsagacmd")
 ```
 library(Rsagacmd)
 
-# initialize Rsagacmd and return a nested list containing named list entries to SAGA-GIS libraries and functions to the library tools
+# initialize Rsagacmd and return a nested list containing named list entries
+# to SAGA-GIS libraries and functions to the library tools
 saga = initSAGA()
 
 # Generate random terrain and load as raster object
@@ -39,9 +40,14 @@ dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgr
 saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
 
 # Use Rsagacmd for to calculate the terrain ruggedness index
-tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'))
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
+  DEM = dem,
+  TRI = tempfile(fileext='.sgrd'))
 plot(tri)
 
 # Do not load output as an R object
-saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = r, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
+saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
+  DEM = dem,
+  TRI = tempfile(fileext='.sgrd'),
+  intern=FALSE)
 ```
