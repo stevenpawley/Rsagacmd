@@ -2,7 +2,7 @@
 % Please edit documentation in R/Rsagacmd.R
 \name{sagaGeo}
 \alias{sagaGeo}
-\title{Main function to execute SAGA-GIS commands through the command line tool}
+\title{Main function to execute SAGA-GIS commands through the command line tool.}
 \usage{
 sagaGeo(lib, tool, senv, intern = TRUE, ...)
 }
@@ -18,8 +18,11 @@ sagaGeo(lib, tool, senv, intern = TRUE, ...)
 \item{...}{Named arguments and values for SAGA tool}
 }
 \value{
-Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
+Output of SAGA-GIS tool loaded as an R object
+  (raster/rasterstack/sf/dataframe)
 }
 \description{
-Main function to execute SAGA-GIS commands through the command line tool
+Intended to be used internally, although sagaGeo can be used directly by
+passing the name of the SAGA-GIS library and tool, along with named
+arguments and values.
 }

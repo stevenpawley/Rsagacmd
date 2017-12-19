@@ -2,18 +2,36 @@
 % Please edit documentation in R/Rsagacmd.R
 \name{initSAGA}
 \alias{initSAGA}
-\title{Dynamically maps all SAGA-GIS functions to a nested list of functions in R.
-Returns a nested list containing function of all SAGA-GIS libraries and tools}
+\title{Dynamically maps all SAGA-GIS functions to a nested list of functions in R.}
 \usage{
 initSAGA(saga_bin = NA)
 }
 \arguments{
-\item{saga_bin}{optional path to saga_cmd}
+\item{saga_bin}{Optional path to saga_cmd}
 }
 \value{
-nested list of functions for SAGA-GIS libraries and tools
+Nested list of functions for SAGA-GIS libraries and tools
 }
 \description{
-Dynamically maps all SAGA-GIS functions to a nested list of functions in R.
-Returns a nested list containing function of all SAGA-GIS libraries and tools
+A simple wrapper that dynamically creates R functions to all valid tools and
+returns them as a nested and named list of SAGA-GIS libraries and tools.
+}
+\examples{
+# initialize Rsagacmd and dynamically generate functions for all SAGA-GIS tools
+saga = initSAGA(saga_bin = 'C:\\\\Program Files\\\\SAGA-GIS\\\\saga_cmd.exe')
+
+# Example of terrain analysis
+
+# Generate random terrain and load as raster object
+dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
+
+# Display help on usage for tool
+saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
+
+# Use Rsagacmd for to calculate the terrain ruggedness index
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'))
+plot(tri)
+
+# Do not load output as an R object
+saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = r, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
 }

@@ -8,35 +8,45 @@ library(sf)
 
 #' Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 #'
-#' Rsagacmd is intended to provide an R-like scripting environment to the open-source SAGA-GIS.
-#' The current version has only been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows (x64),
-#' OS X and Linux.
-#' 
-#' This package is not related to the RSAGA package, which provides an excellent connection
-#' to SAGA-GIS versions 2.0.4 - 2.2.3. However, in addition to supporting newer versions of
-#' SAGA-GIS, Rsagacmd provides a more functional method of accessing SAGA-GIS tools and
-#' libraries. Rsagacmd works by dynamically generating R functions for every SAGA-GIS tool
-#' and embeds these functions within a nested list structure. This facilitates an easier
-#' scripting experience because the function's syntax are similar to using the SAGA-GIS
-#' command line tool directly, and the user can also take advantage of code autocompletion
-#' tools (e.g in Rstudio), allowing for each tools' inputs, outputs and options to be more
-#' easily recognized.
-#' 
-#' @section Foo functions:
-#' The foo functions ...
+#' \pkg{Rsagacmd} is intended to provide an R-like scripting environment to the
+#' open-source SAGA-GIS \url{https://sourceforge.net/projects/saga-gis/}. The
+#' current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows
+#' (x64), OS X and Linux.
+#'
+#' This package is not related to the \code{\link[RSAGA]} package, which
+#' provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3.
+#' However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd
+#' emphasises access to SAGA-GIS tools by dynamically generating R functions for
+#' every SAGA-GIS tool. These functions are embedded within a nested list
+#' structure. This facilitates an easier scripting experience because the
+#' function's syntax are similar to using the SAGA-GIS command line tool
+#' directly, and the user can also take advantage of code autocompletion tools,
+#' allowing for each tools' inputs, outputs and options to be more easily
+#' recognized.
+#'
+#' @section Dynamically-created functions to SAGA-GIS tools: Rsagacmd attempts
+#'   to facilitate a seamless interface to the open-source SAGA-GIS by providing
+#'   access to most SAGA-GIS geoprocessing tools in a R-like manner. By default,
+#'   all results from SAGA-GIS tools are loaded as the appropriate R object:
+#'   \itemize{ \item Raster-based outputs from SAGA-GIS tools are loaded as
+#'   RasterLayer objects \item Vector features from SAGA-GIS tools in ESRI
+#'   Shapefile format are loaded into the R environment as simple features
+#'   objects \item Tabular data from SAGA-GIS tools are loaded as dataframes}
 #'
 #' @docType package
 #' @name Rsagacmd
 NULL
 
 
-#' Function to return the installed version of SAGA-GIS
+#' Return the installed version of SAGA-GIS.
 #'
-#' @param cmd full path of the saga_cmd binary
+#' Intended to be used internally.
 #'
-#' @return numeric_version of SAGA-GIS installation
+#' @param cmd Path of the saga_cmd binary
+#'
+#' @return A numeric_version of SAGA-GIS installation
 #' @export
-
+#' @examples .getSAGAversion(cmd = 'saga_cmd')
 .getSAGAversion = function(cmd){
   
   # detect saga version
@@ -51,46 +61,62 @@ NULL
 }
 
 
-#' Function to attempt to automatically find and select newest SAGA-GIS installation
+#' Automatically search for the path to SAGA-GIS.
+#'
+#' Returns the path to the saga_cmd binary. If multiple versions of SAGA-GIS are
+#' installed on the system, the path to the newest version is returned.
 #'
 #' @return Full path to installed saga_cmd binary
 #' @export
-
 searchSAGA = function(){
   
   # check to see if saga_cmd is recognized (i.e. has been added to path)
   cmd = ifelse(nchar(Sys.which(names = 'saga_cmd')) > 0, 'saga_cmd', NA)
   
   # otherwise search for saga_cmd in usual install locations
-  if (is.na(cmd)){
-    if (Sys.info()["sysname"] == "Windows"){
-      cmd = list.files(path = 'C:', pattern = 'saga_cmd.exe', recursive = TRUE, full.names = TRUE)
+  if (is.na(cmd)) {
+    if (Sys.info()["sysname"] == "Windows") {
+      cmd = list.files(
+        path = 'C:',
+        pattern = 'saga_cmd.exe',
+        recursive = TRUE,
+        full.names = TRUE
+      )
     } else {
-      cmd = list.files(path = '/usr', pattern = 'saga_cmd$', recursive = TRUE, full.names = TRUE)
+      cmd = list.files(
+        path = '/usr',
+        pattern = 'saga_cmd$',
+        recursive = TRUE,
+        full.names = TRUE
+      )
     }
   }
   
   # decide between multiple versions if found
-  saga_version = list()
-  if (length(cmd) > 1){
+  if (length(cmd) > 1) {
     message('Multiple installations of SAGA-GIS are present. Choosing newest version...')
+    saga_version = list()
     for (saga_inst in cmd)
       saga_version = append(saga_version, .getSAGAversion(saga_inst))
-    cmd = cmd[which(saga_version==max(saga_version))]
-    }
-
+    cmd = cmd[which(saga_version == max(saga_version))]
+  }
+  
   return (cmd)
 }
 
-#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-#' all libraries, tools and options from the help files into a nested list of 
-#' library, module and options
+#' Parses valid SAGA-GIS libraries and tools into a nested list of functions.
 #' 
-#' @param saga_bin  Optional character with known path to saga_cmd binary
+#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing
+#' all libraries, tools and options from the help files into a nested list of
+#' library, module and options
 #'
-#' @return List of saga_cmd path, SAGA-GIS version and nested list of libaries tools and options
+#' @param saga_bin Optional character with known path to saga_cmd binary
+#'
+#' @return List of saga_cmd path, SAGA-GIS version and nested list of libaries
+#'   tools and options
 #' @export
-
+#' @examples
+#' saga = sagaEnv(saga_bin = 'saga_cmd')
 sagaEnv = function(saga_bin = NA) {
 
   # use link2GI to find path to saga_cmd unless specified manually
@@ -103,19 +129,24 @@ sagaEnv = function(saga_bin = NA) {
   }
 
   # detect saga version
-  version = .getSAGAversion(cmd)
+  version = .getSAGAversion(saga_bin)
 
   # generate SAGA help files in temporary directory
   temp_dir = tempfile()
   dir.create(temp_dir)
   help.path = temp_dir
-  msg = system(
-    paste(paste(shQuote(cmd), '--create-docs='), help.path, sep = ''),
-    intern=T)
+  if (version > as.numeric_version('3.0.0')){
+    msg = system(
+      paste(paste(shQuote(cmd), '--create-docs='), help.path, sep = ''), intern=T)
+  } else {
+    setwd(help.path)
+    msg = system(
+      paste(shQuote(cmd), '--docs'), intern=T)
+  }
   if (!is.null(attr(msg, "status"))){
     print (msg)
   }
-
+  
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries = list.dirs(path = help.path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
@@ -220,15 +251,17 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-#' Saves R spatial objects to temporary files for processing by SAGA
-#' for raster objects it checks if the object is linked to a file or exists
-#' only in memory
+#' Saves R objects to temporary files for processing by SAGA.
 #'
-#' @param param A single variable that may be a raster object, sp object, sf object or dataframe
+#' Intended to be used internally. Raster objects are checked to see if the
+#' object is linked to a file or exists only in memory. Spatial, sf objects and
+#' dataframes are saved to temporary files.
+#'
+#' @param param A single variable that may be a raster object, sp object, sf
+#'   object or dataframe
 #'
 #' @return Character string of filename of saved object
 #' @export
-
 .RtoSAGA = function(param){
 
   # rasters
@@ -286,7 +319,11 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-#' Main function to execute SAGA-GIS commands through the command line tool
+#' Main function to execute SAGA-GIS commands through the command line tool.
+#'
+#' Intended to be used internally, although sagaGeo can be used directly by
+#' passing the name of the SAGA-GIS library and tool, along with named
+#' arguments and values.
 #'
 #' @param lib Character string of name of SAGA-GIS library to execute
 #' @param tool Character string of name of SAGA-GIS tool to execute
@@ -294,9 +331,9 @@ sagaEnv = function(saga_bin = NA) {
 #' @param intern Boolean to load outputs as R objects
 #' @param ... Named arguments and values for SAGA tool
 #'
-#' @return Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
+#' @return Output of SAGA-GIS tool loaded as an R object
+#'   (raster/rasterstack/sf/dataframe)
 #' @export
-
 sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   # Preprocessing of arguments
@@ -370,7 +407,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   # Execute the external saga_cmd
   ## add saga_cmd arguments to the command line call:
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-  saga_cmd = paste(shQuote(senv$cmd), '--flags=p ', lib, shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
+  saga_cmd = paste(shQuote(senv$cmd), lib, shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
                    param_string, sep = ' ')
   
   ## execute system call
@@ -426,12 +463,31 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
 
 #' Dynamically maps all SAGA-GIS functions to a nested list of functions in R.
-#' Returns a nested list containing function of all SAGA-GIS libraries and tools
-#' 
-#' @param saga_bin optional path to saga_cmd
-#' @return nested list of functions for SAGA-GIS libraries and tools
+#'
+#' A simple wrapper that dynamically creates R functions to all valid tools and
+#' returns them as a nested and named list of SAGA-GIS libraries and tools.
+#'
+#' @param saga_bin Optional path to saga_cmd
+#' @return Nested list of functions for SAGA-GIS libraries and tools
 #' @export
-
+#' @examples
+#' # initialize Rsagacmd and dynamically generate functions for all SAGA-GIS tools
+#' saga = initSAGA(saga_bin = 'C:\\Program Files\\SAGA-GIS\\saga_cmd.exe')
+#'
+#' # Example of terrain analysis
+#'
+#' # Generate random terrain and load as raster object
+#' dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
+#'
+#' # Display help on usage for tool
+#' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
+#' 
+#' # Use Rsagacmd for to calculate the terrain ruggedness index
+#' tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'))
+#' plot(tri)
+#' 
+#' # Do not load output as an R object
+#' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = r, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
 initSAGA = function(saga_bin = NA){
 
   # find saga_cmd

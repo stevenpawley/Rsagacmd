@@ -2,9 +2,7 @@
 % Please edit documentation in R/Rsagacmd.R
 \name{sagaEnv}
 \alias{sagaEnv}
-\title{Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a nested list of 
-library, module and options}
+\title{Parses valid SAGA-GIS libraries and tools into a nested list of functions.}
 \usage{
 sagaEnv(saga_bin = NA)
 }
@@ -12,10 +10,14 @@ sagaEnv(saga_bin = NA)
 \item{saga_bin}{Optional character with known path to saga_cmd binary}
 }
 \value{
-List of saga_cmd path, SAGA-GIS version and nested list of libaries tools and options
+List of saga_cmd path, SAGA-GIS version and nested list of libaries
+  tools and options
 }
 \description{
 Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a nested list of 
+all libraries, tools and options from the help files into a nested list of
 library, module and options
+}
+\examples{
+saga = sagaEnv(saga_bin = 'saga_cmd')
 }

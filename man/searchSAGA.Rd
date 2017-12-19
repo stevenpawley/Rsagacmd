@@ -2,7 +2,7 @@
 % Please edit documentation in R/Rsagacmd.R
 \name{searchSAGA}
 \alias{searchSAGA}
-\title{Function to attempt to automatically find and select newest SAGA-GIS installation}
+\title{Automatically search for the path to SAGA-GIS.}
 \usage{
 searchSAGA()
 }
@@ -10,5 +10,6 @@ searchSAGA()
 Full path to installed saga_cmd binary
 }
 \description{
-Function to attempt to automatically find and select newest SAGA-GIS installation
+Returns the path to the saga_cmd binary. If multiple versions of SAGA-GIS are
+installed on the system, the path to the newest version is returned.
 }
