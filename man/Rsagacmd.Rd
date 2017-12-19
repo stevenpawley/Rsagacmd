@@ -7,12 +7,12 @@
 \title{Rsagacmd: A package for linking R with the open-source SAGA-GIS.}
 \description{
 \pkg{Rsagacmd} is intended to provide an R-like scripting environment to the
-open-source SAGA-GIS \url{https://sourceforge.net/projects/saga-gis/}. The
+open-source SAGA-GIS (\url{https://sourceforge.net/projects/saga-gis/}). The
 current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows
 (x64), OS X and Linux.
 }
 \details{
-This package is not related to the \code{\link[RSAGA]} package, which
+This package is not related to the RSAGA package, which
 provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3.
 However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd
 emphasises access to SAGA-GIS tools by dynamically generating R functions for
@@ -28,9 +28,16 @@ recognized.
   to facilitate a seamless interface to the open-source SAGA-GIS by providing
   access to most SAGA-GIS geoprocessing tools in a R-like manner. By default,
   all results from SAGA-GIS tools are loaded as the appropriate R object:
-  \itemize{ \item Raster-based outputs from SAGA-GIS tools are loaded as
-  RasterLayer objects \item Vector features from SAGA-GIS tools in ESRI
+  \itemize{
+  \item Raster-based outputs from SAGA-GIS tools are loaded as
+  RasterLayer objects
+  \item Vector features from SAGA-GIS tools in ESRI
   Shapefile format are loaded into the R environment as simple features
-  objects \item Tabular data from SAGA-GIS tools are loaded as dataframes}
+  objects
+  \item Tabular data from SAGA-GIS tools are loaded as dataframes
+  }
 }
 
+\author{
+Steven Pawlwey, \email{dr.stevenpawley@gmail.com}
+}

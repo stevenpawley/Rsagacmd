@@ -2,7 +2,6 @@
 
 export(.RtoSAGA)
 export(.getSAGAversion)
-export(initSAGA)
 export(sagaEnv)
 export(sagaGeo)
 export(searchSAGA)

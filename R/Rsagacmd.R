@@ -1,19 +1,18 @@
-library(XML)
-library(parallel)
-library(raster)
-library(tools)
-library(rgdal)
-library(foreign)
-library(sf)
+devtools::use_package("XML")
+devtools::use_package("raster")
+devtools::use_package("tools")
+devtools::use_package("rgdal")
+devtools::use_package("foreign")
+devtools::use_package("sf")
 
 #' Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 #'
 #' \pkg{Rsagacmd} is intended to provide an R-like scripting environment to the
-#' open-source SAGA-GIS \url{https://sourceforge.net/projects/saga-gis/}. The
+#' open-source SAGA-GIS (\url{https://sourceforge.net/projects/saga-gis/}). The
 #' current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows
 #' (x64), OS X and Linux.
 #'
-#' This package is not related to the \code{\link[RSAGA]} package, which
+#' This package is not related to the RSAGA package, which
 #' provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3.
 #' However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd
 #' emphasises access to SAGA-GIS tools by dynamically generating R functions for
@@ -28,15 +27,19 @@ library(sf)
 #'   to facilitate a seamless interface to the open-source SAGA-GIS by providing
 #'   access to most SAGA-GIS geoprocessing tools in a R-like manner. By default,
 #'   all results from SAGA-GIS tools are loaded as the appropriate R object:
-#'   \itemize{ \item Raster-based outputs from SAGA-GIS tools are loaded as
-#'   RasterLayer objects \item Vector features from SAGA-GIS tools in ESRI
+#'   \itemize{
+#'   \item Raster-based outputs from SAGA-GIS tools are loaded as
+#'   RasterLayer objects
+#'   \item Vector features from SAGA-GIS tools in ESRI
 #'   Shapefile format are loaded into the R environment as simple features
-#'   objects \item Tabular data from SAGA-GIS tools are loaded as dataframes}
-#'
+#'   objects
+#'   \item Tabular data from SAGA-GIS tools are loaded as dataframes
+#'   }
+#' @author Steven Pawlwey, \email{dr.stevenpawley@gmail.com}
+
 #' @docType package
 #' @name Rsagacmd
 NULL
-
 
 #' Return the installed version of SAGA-GIS.
 #'
@@ -46,7 +49,10 @@ NULL
 #'
 #' @return A numeric_version of SAGA-GIS installation
 #' @export
-#' @examples .getSAGAversion(cmd = 'saga_cmd')
+#' @examples
+#' \dontrun{
+#' .getSAGAversion(cmd = 'saga_cmd')
+#' }
 .getSAGAversion = function(cmd){
   
   # detect saga version
@@ -116,7 +122,9 @@ searchSAGA = function(){
 #'   tools and options
 #' @export
 #' @examples
+#' \dontrun{
 #' saga = sagaEnv(saga_bin = 'saga_cmd')
+#' }
 sagaEnv = function(saga_bin = NA) {
 
   # use link2GI to find path to saga_cmd unless specified manually
@@ -137,11 +145,11 @@ sagaEnv = function(saga_bin = NA) {
   help.path = temp_dir
   if (version > as.numeric_version('3.0.0')){
     msg = system(
-      paste(paste(shQuote(cmd), '--create-docs='), help.path, sep = ''), intern=T)
+      paste(paste(shQuote(saga_bin), '--create-docs='), help.path, sep = ''), intern=T)
   } else {
     setwd(help.path)
     msg = system(
-      paste(shQuote(cmd), '--docs'), intern=T)
+      paste(shQuote(saga_bin), '--docs'), intern=T)
   }
   if (!is.null(attr(msg, "status"))){
     print (msg)
@@ -244,7 +252,7 @@ sagaEnv = function(saga_bin = NA) {
   } # libdir loop
 
   return(list(
-    cmd = cmd,
+    cmd = saga_bin,
     version = version,
     libraries = libraries
   ))
@@ -270,7 +278,7 @@ sagaEnv = function(saga_bin = NA) {
       class(param) == "RasterBrick") {
     if (raster::inMemory(param) == FALSE) {
       # get filename if raster not stored in memory
-      param = filename(param)
+      param = raster::filename(param)
       
       # but have to rewrite raster if stored in R format
       if (tools::file_ext(param) == '.grd'){
@@ -310,7 +318,7 @@ sagaEnv = function(saga_bin = NA) {
   # tables
   if (class(param) == "data.frame") {
     tmp_table = tempfile(fileext = '.txt')
-    write.table(x = param,
+    utils::write.table(x = param,
                 file = tmp_table,
                 sep = "\t")
     param = tmp_table
@@ -331,8 +339,7 @@ sagaEnv = function(saga_bin = NA) {
 #' @param intern Boolean to load outputs as R objects
 #' @param ... Named arguments and values for SAGA tool
 #'
-#' @return Output of SAGA-GIS tool loaded as an R object
-#'   (raster/rasterstack/sf/dataframe)
+#' @return Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
 #' @export
 sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
@@ -360,7 +367,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     # if rasterstack then parse each band separated
     } else if (class(arg_vals[[i]]) == 'RasterStack'){
       arg_vals_parsed = list()
-      for (j in 1:nlayers(arg_vals[[i]]))
+      for (j in 1:raster::nlayers(arg_vals[[i]]))
         arg_vals_parsed[[j]] = .RtoSAGA(arg_vals[[i]][[j]])
       arg_vals[[i]] = unlist(arg_vals_parsed)
 
@@ -431,13 +438,13 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
         # Import table data
         if (tools::file_ext(output) == 'txt')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.table(
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = utils::read.table(
             output, header = T, sep = '\t')
         if (tools::file_ext(output) == 'csv')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = read.csv(
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = utils::read.csv(
             output)
         if (tools::file_ext(output) == 'dbf')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = foriegn::read.dbf(
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = foreign::read.dbf(
             output)
 
         # Import raster data
@@ -445,7 +452,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
         if (specified_outputs[i, 'Feature'] == 'Grid' |
             specified_outputs[i, 'Feature'] == 'Grid list' |
             specified_outputs[i, 'Feature'] == 'Raster'){
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster(
+          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster::raster(
             output)
         }
       } else {
@@ -469,10 +476,10 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 #'
 #' @param saga_bin Optional path to saga_cmd
 #' @return Nested list of functions for SAGA-GIS libraries and tools
-#' @export
 #' @examples
+#' \dontrun{
 #' # initialize Rsagacmd and dynamically generate functions for all SAGA-GIS tools
-#' saga = initSAGA(saga_bin = 'C:\\Program Files\\SAGA-GIS\\saga_cmd.exe')
+#' saga = initSAGA()
 #'
 #' # Example of terrain analysis
 #'
@@ -487,7 +494,9 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 #' plot(tri)
 #' 
 #' # Do not load output as an R object
-#' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = r, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
+#' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
+#' }
+#' #' @export
 initSAGA = function(saga_bin = NA){
 
   # find saga_cmd

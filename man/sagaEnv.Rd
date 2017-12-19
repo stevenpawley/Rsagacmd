@@ -19,5 +19,7 @@ all libraries, tools and options from the help files into a nested list of
 library, module and options
 }
 \examples{
+\dontrun{
 saga = sagaEnv(saga_bin = 'saga_cmd')
+}
 }

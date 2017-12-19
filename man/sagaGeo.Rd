@@ -18,8 +18,7 @@ sagaGeo(lib, tool, senv, intern = TRUE, ...)
 \item{...}{Named arguments and values for SAGA tool}
 }
 \value{
-Output of SAGA-GIS tool loaded as an R object
-  (raster/rasterstack/sf/dataframe)
+Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
 }
 \description{
 Intended to be used internally, although sagaGeo can be used directly by
