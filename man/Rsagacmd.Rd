@@ -41,5 +41,5 @@ and options to be more easily recognized.
 }
 
 \author{
-Steven Pawlwey, \email{dr.stevenpawley@gmail.com}
+Steven Pawley, \email{dr.stevenpawley@gmail.com}
 }

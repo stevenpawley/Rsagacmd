@@ -36,5 +36,4 @@ plot(tri)
 # Do not load output as an R object
 saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
 }
-#' @export
 }

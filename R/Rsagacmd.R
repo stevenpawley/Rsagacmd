@@ -37,7 +37,7 @@ devtools::use_package("sf")
 #'   features objects \item Tabular data from SAGA-GIS tools are loaded as
 #'   dataframes} The results from tools that return multiple outputs are loaded
 #'   into the R environment as a named list of the appropriate R objects.
-#' @author Steven Pawlwey, \email{dr.stevenpawley@gmail.com}
+#' @author Steven Pawley, \email{dr.stevenpawley@gmail.com}
 
 #' @docType package
 #' @name Rsagacmd
@@ -478,6 +478,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 #'
 #' @param saga_bin Optional path to saga_cmd
 #' @return Nested list of functions for SAGA-GIS libraries and tools
+#' @export
 #' @examples
 #' \dontrun{
 #' # initialize Rsagacmd and dynamically generate functions for all SAGA-GIS tools
@@ -498,7 +499,6 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 #' # Do not load output as an R object
 #' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
 #' }
-#' #' @export
 initSAGA = function(saga_bin = NA){
 
   # find saga_cmd
@@ -527,6 +527,12 @@ initSAGA = function(saga_bin = NA){
         library = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
 
+        # optionally display help for selected tool
+        if (usage == TRUE){
+          print(subset(senv$libraries[[library]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
+          return()
+        }
+
         # get argument names and values
         args = as.list(func_call)[2:length(func_call)]
 
@@ -539,12 +545,6 @@ initSAGA = function(saga_bin = NA){
         # evaluate any arg_vals
         for (i in seq_along(args))
           args[[i]] = eval.parent(args[[i]])
-
-        # optionally display help for selected tool
-        if (usage==TRUE){
-          print(subset(senv$libraries[[library]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
-          stop()
-        }
 
         # call the saga geoprocessor
         saga_results = sagaGeo(library, tool, senv, intern, args)
@@ -567,3 +567,4 @@ initSAGA = function(saga_bin = NA){
 
   return(saga)
 }
+
