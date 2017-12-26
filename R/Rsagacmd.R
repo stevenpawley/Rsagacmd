@@ -499,22 +499,26 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 #' # Do not load output as an R object
 #' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, TRI = tempfile(fileext='.sgrd'), intern=FALSE)
 #' }
-initSAGA = function(saga_bin = NA){
-
+initSAGA = function(saga_bin = NA) {
   # find saga_cmd
   senv = sagaEnv(saga_bin)
-
+  
   # dynamic creation of RSAGA functions
   saga = list()
-  for (lib in names(senv$libraries)){
+  for (lib in names(senv$libraries)) {
     toolnames = list()
-    for (tool in names(senv$libraries[[lib]])){
-
+    for (tool in names(senv$libraries[[lib]])) {
       # define tool arguments
       required = gsub('FALSE', '=NA', senv$libraries[[lib]][[tool]][['options']]$Required)
       required = gsub('TRUE', '', required)
-      args <- paste(senv$libraries[[lib]][[tool]][['options']]$validRIdentifier, required, collapse=',', sep='')
-
+      args <-
+        paste(
+          senv$libraries[[lib]][[tool]][['options']]$validRIdentifier,
+          required,
+          collapse = ',',
+          sep = ''
+        )
+      
       # define function body
       body = ""
       body = paste(
@@ -523,48 +527,65 @@ initSAGA = function(saga_bin = NA){
         # get names of function and arguments
         func_call = sys.call()
         fname = as.character(as.list(func_call))[[1]]
-
+        
         library = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
-
+        
         # optionally display help for selected tool
         if (usage == TRUE){
-          print(subset(senv$libraries[[library]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
-          return()
+        print(subset(senv$libraries[[library]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
+        return()
         }
-
+        
         # get argument names and values
         args = as.list(func_call)[2:length(func_call)]
-
+        
         # remove intern and help from saga args list
         if ('intern' %in% names(args))
-          args = args[-which(names(args) == 'intern')]
+        args = args[-which(names(args) == 'intern')]
         if ('usage' %in% names(args))
-          args = args[-which(names(args) == 'usage')]
-
+        args = args[-which(names(args) == 'usage')]
+        
         # evaluate any arg_vals
         for (i in seq_along(args))
-          args[[i]] = eval.parent(args[[i]])
-
+        args[[i]] = eval.parent(args[[i]])
+        
         # call the saga geoprocessor
         saga_results = sagaGeo(library, tool, senv, intern, args)
-        ", sep="\n")
-
+        ",
+        sep = "\n"
+      )
+      
       # parse function
-      tryCatch(expr = {
-      saga[[lib]] = append(saga[[lib]], eval(
-        expr = parse(
-          text = paste(paste('.', lib, '.', tool, sep=''), # function name
-                       '= function(', args, ', intern = TRUE, usage = FALSE', '){', '\n', body, '\n', 'return(saga_results)}',
-                       sep=''))))
-      toolnames = append(toolnames, tool)
-      }, error = function(e) warning(paste("Problem parsing SAGA library", lib, "and tool", tool, sep=' ')))
-
+      tryCatch(
+        expr = {
+          saga[[lib]] = append(saga[[lib]], eval(expr = parse(
+            text = paste(
+              paste('.', lib, '.', tool, sep = ''),
+              # function name
+              '= function(',
+              args,
+              ', intern = TRUE, usage = FALSE',
+              '){',
+              '\n',
+              body,
+              '\n',
+              'return(saga_results)}',
+              sep = ''
+            )
+          )))
+          toolnames = append(toolnames, tool)
+        },
+        error = function(e)
+          warning(
+            paste("Problem parsing SAGA library", lib, "and tool", tool, sep = ' ')
+          )
+      )
+      
     }
     names(saga[[lib]]) = toolnames
     saga[['.env']] = senv
   }
-
+  
   return(saga)
 }
-
