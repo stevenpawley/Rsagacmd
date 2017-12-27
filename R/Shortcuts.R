@@ -385,7 +385,7 @@ saga.Slope_Aspect_Curvature = function(ELEVATION,
 # For testing
 # library(raster)
 # saga = initSAGA()
-# dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'), ITERATIONS = 50)
+# dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
 # plot(dem)
 # filled = saga.fill_sinks(DEM = dem, DEM_PREPROC = tempfile(fileext='.sgrd'), senv = saga)
 # plot(filled)

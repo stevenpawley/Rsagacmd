@@ -403,7 +403,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     saga_results = NULL
   } else {
     names_vals_df = cbind.data.frame(arg_names, arg_vals)
-    specified_outputs = merge(specified_outputs, names_vals_df, by.x='Identifier', by.y='arg_names')
+    specified_outputs = merge(specified_outputs, names_vals_df, by.x='Identifier', by.y='arg_names', sort=FALSE)
     
     # convert factors to character
     specified_outputs$arg_vals = as.character(specified_outputs$arg_vals)
