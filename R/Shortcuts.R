@@ -382,6 +382,238 @@ saga.Slope_Aspect_Curvature = function(ELEVATION,
   return(saga_results)
 }
 
+
+#' Resampling
+#' 
+#' Resampling of grids.
+#'
+#' @param INPUT Grids: Grid list (input)
+#' @param TARGET_TEMPLATE Target System: Grid (optional input)
+#' @param OUTPUT Resampled Grids: Grid list (optional output)
+#' @param KEEP_TYPE Preserve Data Type: Boolean. Default: 0
+#' @param SCALE_UP Upscaling Method: Choice. Availabe Choices:
+#' \itemize{
+#' \item [0] Nearest Neighbour
+#' \item [1] Bilinear Interpolation
+#' \item [2] Bicubic Spline Interpolation
+#' \item [3] B-Spline Interpolation
+#' \item [4] Mean Value
+#' \item [5] Mean Value (cell area weighted)
+#' \item [6] Minimum Value
+#' \item [7] Maximum Value
+#' \item [8] Majority
+#' \item Default: 5
+#' }
+#' @param SCALE_DOWN Downscaling Method: Choice. Available Choices:
+#' \itemize{
+#' \item [0] Nearest Neighbour
+#' \item [1] Bilinear Interpolation
+#' \item [2] Bicubic Spline Interpolation
+#' \item [3] B-Spline Interpolation
+#' \item Default: 3
+#' }
+#' @param TARGET_DEFINITION Target Grid System: Choice. Available Choices:
+#' \itemize{
+#' \item [0] user defined
+#' \item [1] grid or grid system
+#' \item Default: 0
+#' }
+#' @param TARGET_USER_SIZE Cellsize: Floating point. Minimum: 0.000000; Default: 1.000000
+#' @param TARGET_USER_XMIN Left: Floating point. Default: 0.000000
+#' @param TARGET_USER_XMAX Right: Floating point. Default: 100.000000
+#' @param TARGET_USER_YMIN Bottom: Floating point. Default: 0.000000
+#' @param TARGET_USER_YMAX Top: Floating point. Default: 100.000000
+#' @param TARGET_USER_FITS Fit: Choice. Available Choices:
+#' \itemize{
+#' \item [0] nodes
+#' \item [1] cells
+#' \item Default: 0}
+#' }
+#' @param senv SAGA-GIS environment returned by initSAGA
+#' @param intern Optionally load output as an R object; Default is TRUE
+#' @param usage Boolean, display tool help
+#'
+#' @return Specified SAGA-GIS outputs
+#' @export
+saga.Resampling = function(INPUT,
+                           TARGET_TEMPLATE = NA,
+                           OUTPUT = NA,
+                           KEEP_TYPE = NA,
+                           SCALE_UP = NA,
+                           SCALE_DOWN = NA,
+                           TARGET_DEFINITION = NA,
+                           TARGET_USER_SIZE = NA,
+                           TARGET_USER_XMIN = NA,
+                           TARGET_USER_XMAX = NA,
+                           TARGET_USER_YMIN = NA,
+                           TARGET_USER_YMAX = NA,
+                           TARGET_USER_FITS = NA,
+                           senv,
+                           intern = TRUE,
+                           usage = FALSE) {
+
+  # get names of function and arguments
+  senv = senv$.env
+  func_call = sys.call()
+  lib = 'grid_tools'
+  tool = 'Resampling'
+  
+  # optionally display help for selected tool
+  if (usage == TRUE) {
+    print(subset(
+      senv$libraries[[lib]][[tool]][['options']],
+      select = c(validRIdentifier, Name, Type, Description, Constraints)
+    ))
+    return()
+  }
+  
+  # get argument names and values
+  args = as.list(func_call)[2:length(func_call)]
+  
+  # remove intern and help from saga args list
+  if ('intern' %in% names(args))
+    args = args[-which(names(args) == 'intern')]
+  if ('usage' %in% names(args))
+    args = args[-which(names(args) == 'usage')]
+  args = args[-which(names(args) == 'senv')]
+  
+  # evaluate any arg_vals
+  for (i in seq_along(args))
+    args[[i]] = eval.parent(args[[i]])
+  
+  # call the saga geoprocessor
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
+  
+  return(saga_results)
+}
+
+#' Mosaicking
+#' 
+#' Merges multiple grids into one single grid.
+#'
+#' @param GRIDS Grids: Grid list (input)
+#' @param TARGET_TEMPLATE Target System: Grid (optional input)
+#' @param TARGET_OUT_GRID Target Grid: Grid (output)
+#' @param NAME Name: Text. Default: Mosaic
+#' @param TYPE Data Storage Type: Choice. Available Choices:
+#' \itemize{
+#' \item [0] 1 bit
+#' \item [1] 1 byte unsigned integer
+#' \item [2] 1 byte signed integer
+#' \item [3] 2 byte unsigned integer
+#' \item [4] 2 byte signed integer
+#' \item [5] 4 byte unsigned integer
+#' \item [6] 4 byte signed integer
+#' \item [7] 4 byte floating point
+#' \item [8] 8 byte floating point
+#' \item [9] same as first grid in list
+#' \item Default: 9
+#' }
+#' @param RESAMPLING Resampling: Choice. Available Choices:
+#' \itemize{
+#' \item [0] Nearest Neighbour
+#' \item [1] Bilinear Interpolation
+#' \item [2] Bicubic Spline Interpolation
+#' \item [3] B-Spline Interpolation
+#' \item Default: 3
+#' }
+#' @param OVERLAP Overlapping Areas: Choice. Available Choices:
+#' \itemize{
+#' \item [0] first
+#' \item [1] last
+#' \item [2] minimum
+#' \item [3] maximum
+#' \item [4] mean
+#' \item [5] blend boundary
+#' \item [6] feathering
+#' }
+#' @param BLEND_DIST Blending Distance: Floating point. Minimum: 0.000000; Default: 10.000000
+#' @param MATCH Match: Choice. Available Choices:
+#' \itemize{
+#' \item [0] none
+#' \item [1] match histogram of first grid in list
+#' \item [2] match histogram of overlapping area
+#' \item [3] regression
+#' \item Default: 0
+#' }
+#' @param TARGET_DEFINITION Target Grid System: Choice. Available Choices:
+#' \itemize{
+#' \item [0] user defined
+#' \item [1] grid or grid system
+#' \item Default: 0
+#' }
+#' @param TARGET_USER_SIZE Cellsize: Floating point. Minimum: 0.000000; Default: 1.000000
+#' @param TARGET_USER_XMIN Left: Floating point. Default: 0.000000
+#' @param TARGET_USER_XMAX Right: Floating point. Default: 100.000000
+#' @param TARGET_USER_YMIN Bottom: Floating point. Default: 0.000000
+#' @param TARGET_USER_YMAX Top: Floating point. Default: 100.000000
+#' @param TARGET_USER_FITS Fit: Choice. Available Choices:
+#' \itemize{
+#' \item [0] nodes
+#' \item [1] cells
+#' \item Default: 0}
+#' }
+#' @param senv SAGA-GIS environment returned by initSAGA
+#' @param intern Optionally load output as an R object; Default is TRUE
+#' @param usage Boolean, display tool help
+#'
+#' @return Specified SAGA-GIS outputs
+#' @export
+saga.Mosaicking = function(GRIDS,
+                           TARGET_TEMPLATE = NA,
+                           TARGET_OUT_GRID,
+                           NAME = NA,
+                           TYPE = NA,
+                           RESAMPLING = NA,
+                           OVERLAP = NA,
+                           BLEND_DIST = NA,
+                           MATCH = NA,
+                           TARGET_DEFINITION = NA,
+                           TARGET_USER_SIZE = NA,
+                           TARGET_USER_XMIN = NA,
+                           TARGET_USER_XMAX = NA,
+                           TARGET_USER_YMIN = NA,
+                           TARGET_USER_YMAX = NA,
+                           TARGET_USER_FITS = NA,
+                           senv,
+                           intern = TRUE,
+                           usage = FALSE) {
+
+    # get names of function and arguments
+  senv = senv$.env
+  func_call = sys.call()
+  lib = 'grid_tools'
+  tool = 'Resampling'
+  
+  # optionally display help for selected tool
+  if (usage == TRUE) {
+    print(subset(
+      senv$libraries[[lib]][[tool]][['options']],
+      select = c(validRIdentifier, Name, Type, Description, Constraints)
+    ))
+    return()
+  }
+  
+  # get argument names and values
+  args = as.list(func_call)[2:length(func_call)]
+  
+  # remove intern and help from saga args list
+  if ('intern' %in% names(args))
+    args = args[-which(names(args) == 'intern')]
+  if ('usage' %in% names(args))
+    args = args[-which(names(args) == 'usage')]
+  args = args[-which(names(args) == 'senv')]
+  
+  # evaluate any arg_vals
+  for (i in seq_along(args))
+    args[[i]] = eval.parent(args[[i]])
+  
+  # call the saga geoprocessor
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
+  
+  return(saga_results)
+}
+
 # For testing
 # library(raster)
 # saga = initSAGA()
