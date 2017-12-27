@@ -29,12 +29,14 @@ Default: 0
 \item [1] TOPMODEL
 }}
 
+\item{senv}{SAGA-GIS environment returned by initSAGA}
+
 \item{intern}{Optionally load output as an R object; Default is TRUE}
 
 \item{usage}{Boolean, display tool help}
 }
 \value{
-Specified outputs
+Specified SAGA-GIS outputs
 }
 \description{
 Calculation of the slope and specific catchment area (SCA) based Topographic

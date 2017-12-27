@@ -20,7 +20,7 @@
 #' @param intern Optionally load output as an R object; Default is TRUE
 #' @param usage Boolean, display tool help
 #'
-#' @return Specified outputs
+#' @return Specified SAGA-GIS outputs
 #' @export
 
 saga.fill_sinks = function(DEM,
@@ -36,13 +36,13 @@ saga.fill_sinks = function(DEM,
   # get names of function and arguments
   senv = senv$.env
   func_call = sys.call()
-  library = 'ta_preprocessor'
+  lib = 'ta_preprocessor'
   tool = 'Sink_Removal'
   
   # optionally display help for selected tool
   if (usage == TRUE) {
     print(subset(
-      senv$libraries[[library]][[tool]][['options']],
+      senv$libraries[[lib]][[tool]][['options']],
       select = c(validRIdentifier, Name, Type, Description, Constraints)
     ))
     return()
@@ -63,7 +63,7 @@ saga.fill_sinks = function(DEM,
     args[[i]] = eval.parent(args[[i]])
   
   # call the saga geoprocessor
-  saga_results = sagaGeo(library, tool, senv, intern, args)
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
   
   return (saga_results)
 }
@@ -141,7 +141,7 @@ saga.fill_sinks = function(DEM,
 #' @param intern Optionally load output as an R object; Default is TRUE
 #' @param usage Boolean, display tool help
 #'
-#' @return Specified outputs
+#' @return Specified SAGA-GIS outputs
 #' @export
 saga.flow_accumulation = function(ELEVATION,
                                   SINKROUTE = NA,
@@ -170,6 +170,7 @@ saga.flow_accumulation = function(ELEVATION,
                                   usage = FALSE) {
   
   # get names of function and arguments
+  senv = senv$.env
   func_call = sys.call()
   lib = 'ta_hydrology'
   tool = 'Flow_Accumulation_Top_Down'
@@ -177,7 +178,7 @@ saga.flow_accumulation = function(ELEVATION,
   # optionally display help for selected tool
   if (usage == TRUE) {
     print(subset(
-      senv$libraries[[library]][[tool]][['options']],
+      senv$libraries[[lib]][[tool]][['options']],
       select = c(validRIdentifier, Name, Type, Description, Constraints)
     ))
     return()
@@ -198,7 +199,7 @@ saga.flow_accumulation = function(ELEVATION,
     args[[i]] = eval.parent(args[[i]])
   
   # call the saga geoprocessor
-  saga_results = sagaGeo(library, tool, senv, intern, args)
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
   
   return (saga_results)
 }
@@ -224,10 +225,11 @@ saga.flow_accumulation = function(ELEVATION,
 #' \item [0] Standard
 #' \item [1] TOPMODEL
 #' }
+#' @param senv SAGA-GIS environment returned by initSAGA
 #' @param intern Optionally load output as an R object; Default is TRUE
 #' @param usage Boolean, display tool help
 #'
-#' @return Specified outputs
+#' @return Specified SAGA-GIS outputs
 #' @export
 saga.Topographic_Wetness_Index = function(SLOPE,
                                           AREA,
@@ -239,6 +241,7 @@ saga.Topographic_Wetness_Index = function(SLOPE,
                                           intern = TRUE,
                                           usage = FALSE) {
   # get names of function and arguments
+  senv = senv$.env
   func_call = sys.call()
   lib = 'ta_hydrology'
   tool = 'Topographic_Wetness_Index_TWI'
@@ -246,7 +249,7 @@ saga.Topographic_Wetness_Index = function(SLOPE,
   # optionally display help for selected tool
   if (usage == TRUE) {
     print(subset(
-      senv$libraries[[library]][[tool]][['options']],
+      senv$libraries[[lib]][[tool]][['options']],
       select = c(validRIdentifier, Name, Type, Description, Constraints)
     ))
     return()
@@ -268,7 +271,134 @@ saga.Topographic_Wetness_Index = function(SLOPE,
     args[[i]] = eval.parent(args[[i]])
   
   # call the saga geoprocessor
-  saga_results = sagaGeo(library, tool, senv, intern, args)
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
   
   return(saga_results)
 }
+
+
+#' Slope, Aspect, Curvature
+#' 
+#' Calculates the local morphometric terrain parameters slope, aspect and if
+#' supported by the chosen method also the curvature. Besides tangential
+#' curvature also its horizontal and vertical components (i.e. plan and profile
+#' curvature) can be calculated.
+#'
+#' @param ELEVATION Elevation: Grid (input)
+#' @param SLOPE Slope: Grid (output)
+#' @param ASPECT Aspect: Grid (output)
+#' @param C_GENE General Curvature: Grid (optional output)
+#' @param C_PROF Profile Curvature: Grid (optional output)
+#' @param C_PLAN Plan Curvature: Grid (optional output)
+#' @param C_TANG Tangential Curvature: Grid (optional output)
+#' @param C_LONG Longitudinal Curvature: Grid (optional output)
+#' @param C_CROS Cross-Sectional Curvature: Grid (optional output)
+#' @param C_MINI Minimal Curvature: Grid (optional output)
+#' @param C_MAXI Maximal Curvature: Grid (optional output)
+#' @param C_TOTA Total Curvature: Grid (optional output)
+#' @param C_ROTO Flow Line Curvature: Grid (optional output)
+#' @param METHOD Method: Choice. Available choices:
+#' \itemize{
+#' \item [0] maximum slope (Travis et al. 1975)
+#' \item [1] maximum triangle slope (Tarboton 1997)
+#' \item [2] least squares fitted plane (Horn 1981, Costa-Cabral & Burgess 1996)
+#' \item [3] 6 parameter 2nd order polynom (Evans 1979)
+#' \item [4] 6 parameter 2nd order polynom (Heerdegen & Beran 1982)
+#' \item [5] 6 parameter 2nd order polynom (Bauer, Rohdenburg, Bork 1985)
+#' \item [6] 9 parameter 2nd order polynom (Zevenbergen & Thorne 1987)
+#' \item [7] 10 parameter 3rd order polynom (Haralick 1983)
+#' \item Default: 6
+#' }
+#' @param UNIT_SLOPE Slope units: Choice. Available choices:
+#' \itemize{
+#' \item [0] radians
+#' \item [1] degree
+#' \item [2] percent
+#' \item Default: 0
+#' }
+#' @param UNIT_ASPECT Aspect Units: Choice. Available choices:
+#' \itemize{
+#' \item [0] radians
+#' \item [1] degree
+#' \item Default: 0
+#' }
+#' @param senv SAGA-GIS environment returned by initSAGA
+#' @param intern Optionally load output as an R object; Default is TRUE
+#' @param usage Boolean, display tool help
+#'
+#' @return Specified SAGA-GIS outputs
+#' @export
+saga.Slope_Aspect_Curvature = function(ELEVATION,
+                                       SLOPE,
+                                       ASPECT,
+                                       C_GENE = NA,
+                                       C_PROF = NA,
+                                       C_PLAN = NA,
+                                       C_TANG = NA,
+                                       C_LONG = NA,
+                                       C_CROS = NA,
+                                       C_MINI = NA,
+                                       C_MAXI = NA,
+                                       C_TOTA = NA,
+                                       C_ROTO = NA,
+                                       METHOD = NA,
+                                       UNIT_SLOPE = NA,
+                                       UNIT_ASPECT = NA,
+                                       senv,
+                                       intern = TRUE,
+                                       usage = FALSE) {
+  # get names of function and arguments
+  senv = senv$.env
+  func_call = sys.call()
+  lib = 'ta_morphometry'
+  tool = 'Slope_Aspect_Curvature'
+  
+  # optionally display help for selected tool
+  if (usage == TRUE) {
+    print(subset(
+      senv$libraries[[lib]][[tool]][['options']],
+      select = c(validRIdentifier, Name, Type, Description, Constraints)
+    ))
+    return()
+  }
+  
+  # get argument names and values
+  args = as.list(func_call)[2:length(func_call)]
+  
+  # remove intern and help from saga args list
+  if ('intern' %in% names(args))
+    args = args[-which(names(args) == 'intern')]
+  if ('usage' %in% names(args))
+    args = args[-which(names(args) == 'usage')]
+  args = args[-which(names(args) == 'senv')]
+  
+  # evaluate any arg_vals
+  for (i in seq_along(args))
+    args[[i]] = eval.parent(args[[i]])
+  
+  # call the saga geoprocessor
+  saga_results = sagaGeo(lib, tool, senv, intern, args)
+  
+  return(saga_results)
+}
+
+# For testing
+# library(raster)
+# saga = initSAGA()
+# dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'), ITERATIONS = 50)
+# plot(dem)
+# filled = saga.fill_sinks(DEM = dem, DEM_PREPROC = tempfile(fileext='.sgrd'), senv = saga)
+# plot(filled)
+# slope = saga.Slope_Aspect_Curvature(ELEVATION = dem, SLOPE = tempfile(fileext = '.sgrd'), ASPECT = tempfile(fileext='.sgrd'), senv=saga)
+# plot(slope[[1]])
+# flowacc = saga.flow_accumulation(ELEVATION = filled, FLOW = tempfile(fileext = '.sgrd'), senv=saga)
+# plot(calc(x = flowacc, fun = log))
+# twi = saga.Topographic_Wetness_Index(SLOPE = slope[[1]], AREA = flowacc, TWI = tempfile(fileext='.sgrd'), senv=saga)
+# plot(twi)
+# 
+# lib='ta_morphometry'
+# tool='Slope_Aspect_Curvature'
+# args = list(ELEVATION = dem, SLOPE = tempfile(fileext = '.sgrd'), ASPECT = tempfile(fileext='.sgrd'))
+# senv=saga$.env
+# for (i in seq_along(args))
+#   args[[i]] = eval.parent(args[[i]])

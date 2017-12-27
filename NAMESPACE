@@ -3,6 +3,7 @@
 export(.RtoSAGA)
 export(.getSAGAversion)
 export(initSAGA)
+export(saga.Slope_Aspect_Curvature)
 export(saga.Topographic_Wetness_Index)
 export(saga.fill_sinks)
 export(saga.flow_accumulation)

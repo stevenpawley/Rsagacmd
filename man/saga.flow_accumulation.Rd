@@ -95,7 +95,7 @@ e.g. when accumulating measures of water balance. Default: 1}
 \item{usage}{Boolean, display tool help}
 }
 \value{
-Specified outputs
+Specified SAGA-GIS outputs
 }
 \description{
 Top-down processing of cells for calculation of flow accumulation and related

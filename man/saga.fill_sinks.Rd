@@ -35,7 +35,7 @@ makes it possible to exclude deeper sinks from filling.}
 \item{usage}{Boolean, display tool help}
 }
 \value{
-Specified outputs
+Specified SAGA-GIS outputs
 }
 \description{
 Fill/remove sinks within a digital elevation model

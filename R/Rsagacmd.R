@@ -353,8 +353,8 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   ## match the validRidentifier to the actual identifier used by SAGA-GIS
   arg_names = merge(
-    x=data.frame(arg_names), y=senv$libraries[[lib]][[tool]][['options']],
-    by.x='arg_names', by.y='validRIdentifier')$Identifier
+    x=data.frame(arg_names, stringsAsFactors = F), y=senv$libraries[[lib]][[tool]][['options']],
+    by.x='arg_names', by.y='validRIdentifier', sort=FALSE)$Identifier
   sagatool = senv$libraries[[lib]][[tool]][['options']]
   
   # Checking for valid libraries, tools and parameters
@@ -393,7 +393,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   ## create character with argument values within quotes
   quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
-  arg_vals = as.character(unlist(arg_vals))
+  arg_vals = gsub('.sdat', '.sgrd', arg_vals)
   params = shQuote(string = arg_vals, type = quote_type)
 
   ## check that the selected tool produces some type of output
@@ -405,12 +405,16 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     names_vals_df = cbind.data.frame(arg_names, arg_vals)
     specified_outputs = merge(specified_outputs, names_vals_df, by.x='Identifier', by.y='arg_names')
     
-    # check to see if output format for grids is valid
+    # convert factors to character
+    specified_outputs$arg_vals = as.character(specified_outputs$arg_vals)
+    
+    # replace '.sdat' extension if user passes incorrect extension or if passed from RasterLayer
     for (i in 1:nrow(specified_outputs)){
       output = as.character(specified_outputs[i, 'arg_vals'])
       if (tools::file_ext(output) == 'sdat')
-        stop(paste('Output SAGA Raster Grid', specified_outputs$Identifier, 'must have .sgrd file extension'))
+        specified_outputs[i, 'arg_vals'] = gsub('.sdat', '.sgrd', output)
     }
+    
   }
   
   # Execute the external saga_cmd
@@ -430,36 +434,33 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   if (nrow(specified_outputs) > 0){
     saga_results = list()
     for (i in 1:nrow(specified_outputs)){
-      output = as.character(specified_outputs[i, 'arg_vals'])
+      output = specified_outputs[i, 'arg_vals']
+      file_sans_ext = tools::file_path_sans_ext(basename(output))
 
       if (intern == TRUE){
         # Import GDAL/OGR supported vector data
         if (specified_outputs[i, 'Feature'] == 'Shape' |
             specified_outputs[i, 'Feature'] == 'Shapes list')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = sf::st_read(output)
+          saga_results[[paste(file_sans_ext)]] = sf::st_read(output)
 
         # Import table data
         if (tools::file_ext(output) == 'txt')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = utils::read.table(
-            output, header = T, sep = '\t')
+          saga_results[[paste(file_sans_ext)]] = utils::read.table(output, header = T, sep = '\t')
         if (tools::file_ext(output) == 'csv')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = utils::read.csv(
-            output)
+          saga_results[[paste(file_sans_ext)]] = utils::read.csv(output)
         if (tools::file_ext(output) == 'dbf')
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = foreign::read.dbf(
-            output)
+          saga_results[[paste(file_sans_ext)]] = foreign::read.dbf(output)
 
         # Import raster data
         if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
         if (specified_outputs[i, 'Feature'] == 'Grid' |
             specified_outputs[i, 'Feature'] == 'Grid list' |
             specified_outputs[i, 'Feature'] == 'Raster'){
-          saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = raster::raster(
-            output)
+          saga_results[[paste(file_sans_ext)]] = raster::raster(output)
         }
       } else {
         # if intern=FALSE then only return list of file paths for the sagacmd outputs
-        saga_results[[paste(tools::file_path_sans_ext(basename(output)))]] = output
+        saga_results[[paste(file_sans_ext)]] = output
       }
     }
 
@@ -528,12 +529,12 @@ initSAGA = function(saga_bin = NA) {
         func_call = sys.call()
         fname = as.character(as.list(func_call))[[1]]
         
-        library = strsplit(fname, '\\\\$')[[1]][2]
+        lib = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
         
         # optionally display help for selected tool
         if (usage == TRUE){
-        print(subset(senv$libraries[[library]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
+        print(subset(senv$libraries[[lib]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
         return()
         }
         
@@ -551,7 +552,7 @@ initSAGA = function(saga_bin = NA) {
         args[[i]] = eval.parent(args[[i]])
         
         # call the saga geoprocessor
-        saga_results = sagaGeo(library, tool, senv, intern, args)
+        saga_results = sagaGeo(lib, tool, senv, intern, args)
         ",
         sep = "\n"
       )
