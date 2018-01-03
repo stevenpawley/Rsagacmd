@@ -283,7 +283,7 @@ sagaEnv = function(saga_bin = NA) {
       param = raster::filename(param)
       
       # but have to rewrite raster if stored in R format
-      if (tools::file_ext(param) == '.grd'){
+      if (tools::file_ext(param) == 'grd'){
         tmp_raster = tempfile(fileext = '.tif')
         raster::writeRaster(param, filename = tmp_raster)
         param = tmp_raster
