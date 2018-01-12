@@ -147,7 +147,8 @@ sagaEnv = function(saga_bin = NA) {
   help.path = temp_dir
   if (version > as.numeric_version('3.0.0')){
     msg = system(
-      paste(paste(shQuote(saga_bin), '--create-docs='), help.path, sep = ''), intern=T)
+      paste(paste(shQuote(saga_bin), '--create-docs='), help.path, sep = ''),
+      intern=T)
   } else {
     setwd(help.path)
     msg = system(
@@ -181,7 +182,8 @@ sagaEnv = function(saga_bin = NA) {
       f <- file(paste(libdir, tool, sep = '/'), open = "rb")
       if (length(readLines(f, warn = F)) > 1) {
         # read module options tables
-        options = XML::readHTMLTable(doc = paste(libdir, tool, sep = '/'), header = T)
+        options = XML::readHTMLTable(
+          doc = paste(libdir, tool, sep = '/'), header = T)
         
         # create valid tool names
         valid_toolname = colnames(options[[1]])[2]
@@ -240,14 +242,16 @@ sagaEnv = function(saga_bin = NA) {
         
         # replace saga tool arguments that start with a numeric
         identifiers = options$Identifier
-        numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
+        numeric_identifiers = which(
+          grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
         if (length(numeric_identifiers) > 0)
-          levels(identifiers)[levels(identifiers)==identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
+          levels(identifiers)[levels(identifiers) == identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
         identifiers = gsub(" ", "_", identifiers)
         options['validRIdentifier'] = identifiers
 
         # add parameter options to nested list
-        libraries[[basename(libdir)]][[valid_toolname]] = list(options=options, cmd=toolName)
+        libraries[[basename(libdir)]][[valid_toolname]] = list(
+          options=options, cmd=toolName)
       } # readlines if
       close(f)
     } # tool_file loop
@@ -353,8 +357,11 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
 
   ## match the validRidentifier to the actual identifier used by SAGA-GIS
   arg_names = merge(
-    x=data.frame(arg_names, stringsAsFactors = F), y=senv$libraries[[lib]][[tool]][['options']],
-    by.x='arg_names', by.y='validRIdentifier', sort=FALSE)$Identifier
+    x=data.frame(arg_names, stringsAsFactors = F),
+    y=senv$libraries[[lib]][[tool]][['options']],
+    by.x='arg_names', by.y='validRIdentifier',
+    sort=FALSE)$Identifier
+  
   sagatool = senv$libraries[[lib]][[tool]][['options']]
   
   # Checking for valid libraries, tools and parameters
@@ -403,7 +410,9 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     saga_results = NULL
   } else {
     names_vals_df = cbind.data.frame(arg_names, arg_vals)
-    specified_outputs = merge(specified_outputs, names_vals_df, by.x='Identifier', by.y='arg_names', sort=FALSE)
+    specified_outputs = merge(
+      specified_outputs, names_vals_df,
+      by.x='Identifier', by.y='arg_names', sort=FALSE)
     
     # convert factors to character
     specified_outputs$arg_vals = as.character(specified_outputs$arg_vals)
@@ -420,8 +429,10 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   # Execute the external saga_cmd
   ## add saga_cmd arguments to the command line call:
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-  saga_cmd = paste(shQuote(senv$cmd), lib, shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
-                   param_string, sep = ' ')
+  saga_cmd = paste(
+    shQuote(senv$cmd), lib,
+    shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
+    param_string, sep = ' ')
   
   ## execute system call
   msg = system(saga_cmd, intern = T)
@@ -456,7 +467,11 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
         if (specified_outputs[i, 'Feature'] == 'Grid' |
             specified_outputs[i, 'Feature'] == 'Grid list' |
             specified_outputs[i, 'Feature'] == 'Raster'){
-          saga_results[[paste(file_sans_ext)]] = raster::raster(output)
+          if (file_sans_ext == '.sg-gds-z'){
+            message('Cannot load SAGA Grid Collection as an R raster object - this is not supported')
+          } else{
+            saga_results[[paste(file_sans_ext)]] = raster::raster(output)  
+          }
         }
       } else {
         # if intern=FALSE then only return list of file paths for the sagacmd outputs
