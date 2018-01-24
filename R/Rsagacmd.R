@@ -272,7 +272,7 @@ sagaEnv = function(saga_bin = NA) {
 #' @export
 .writeRasterTmp = function(x) {
   tmp_raster = tempfile(fileext = '.tif')
-  x = raster::writeRaster(x, filename = tmp_raster)
+  x = raster::filename(raster::writeRaster(x, filename = tmp_raster))
   return (x)
 }
 
