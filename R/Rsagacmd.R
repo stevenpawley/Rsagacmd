@@ -264,6 +264,17 @@ sagaEnv = function(saga_bin = NA) {
   ))
 }
 
+#' Write a raster object to a temporary file
+#'
+#' @param x Raster object
+#'
+#' @return Raster object stored as file in tempdir
+#' @export
+.writeRasterTmp = function(x) {
+  tmp_raster = tempfile(fileext = '.tif')
+  x = raster::writeRaster(x, filename = tmp_raster)
+  return (x)
+}
 
 #' Saves R objects to temporary files for processing by SAGA.
 #'
@@ -278,28 +289,50 @@ sagaEnv = function(saga_bin = NA) {
 #' @export
 .RtoSAGA = function(param){
 
-  # rasters
-  if (class(param) == "RasterLayer" |
-      class(param) == "RasterStack" |
-      class(param) == "RasterBrick") {
+  # raster package objects
+  # ? raster stored as file
+  #   ? does the file contain a single band
+  #     - TRUE :
+  #       ? does the filename refer to an raster tmpfile grd
+  #         - TRUE : resave raster as a geotiff in tempdir
+  #         - FALSE : get filename of single band
+  #     - FALSE:
+  #       ? is just a single layer selected
+  #         - TRUE : write layer to temporary file
+  #         - FALSE : error message that SAGA-GIS needs single bands as inputs
+  #
+  # ? raster stored in memory
+  #   ? does the inMemory object contain a single band?
+  #     - TRUE: write RasterLayer to temporary file
+  #     - FALSE: error message that SAGA-GIS needs single bands as inputs
+  
+  if (class(param) == "RasterLayer" | class(param) == "RasterBrick" | class(param) == "RasterStack") {
+
+    # rasters stored as files
     if (raster::inMemory(param) == FALSE) {
-      # get filename if raster not stored in memory
-      param = raster::filename(param)
-      
-      # but have to rewrite raster if stored in R format
-      if (tools::file_ext(param) == 'grd'){
-        tmp_raster = tempfile(fileext = '.tif')
-        raster::writeRaster(param, filename = tmp_raster)
-        param = tmp_raster
+      if (param@file@nbands == 1) {
+        param = raster::filename(param)
+        if (tools::file_ext(param) == 'grd')
+          param = .writeRasterTmp(param)
+      } else {
+        if (raster::nlayers(param) == 1) {
+          param = .writeRasterTmp(param)
+        } else {
+          stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
+        }
       }
-    } else {
-      # write raster to file if stored in memory
-      tmp_raster = tempfile(fileext = '.tif')
-      raster::writeRaster(param, filename = tmp_raster)
-      param = tmp_raster
+    }
+    
+    # rasters stored in memory
+    if (raster::inMemory(param) == TRUE) {
+      if (raster::nlayers(param) == 1) {
+        param = .writeRasterTmp(param)
+      } else {
+        stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
+      }
     }
   }
-
+  
   # spatial objects
   if (class(param) == "SpatialLinesDataFrame" |
       class(param) == "SpatialPolygonsDataFrame" |
