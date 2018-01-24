@@ -256,7 +256,7 @@ sagaEnv = function(saga_bin = NA) {
       close(f)
     } # tool_file loop
   } # libdir loop
-
+  
   return(list(
     cmd = saga_bin,
     version = version,
@@ -321,14 +321,14 @@ sagaEnv = function(saga_bin = NA) {
           stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
-    }
-    
-    # rasters stored in memory
-    if (raster::inMemory(param) == TRUE) {
-      if (raster::nlayers(param) == 1) {
-        param = .writeRasterTmp(param)
-      } else {
-        stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
+    } else {
+      # rasters stored in memory
+      if (raster::inMemory(param) == TRUE) {
+        if (raster::nlayers(param) == 1) {
+          param = .writeRasterTmp(param)
+        } else {
+          stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
+        }
       }
     }
   }
@@ -405,19 +405,17 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
     if (class(arg_vals[[i]]) == "list"){
       for (j in seq_along(arg_vals[[i]]))
         arg_vals[[i]][[j]] = .RtoSAGA(arg_vals[[i]][[j]])
-
-    # if rasterstack then parse each band separated
-    } else if (class(arg_vals[[i]]) == 'RasterStack'){
-      arg_vals_parsed = list()
-      for (j in 1:raster::nlayers(arg_vals[[i]]))
-        arg_vals_parsed[[j]] = .RtoSAGA(arg_vals[[i]][[j]])
-      arg_vals[[i]] = unlist(arg_vals_parsed)
-
+    #} else if (class(arg_vals[[i]]) == 'RasterStack' | class(arg_vals[[i]]) == 'RasterBrick') {
+    # # if raster object contains multiple bands then parse each band into arg=[list of filenames]
+    #    arg_vals_parsed = list()
+    #   for (j in 1:raster::nlayers(arg_vals[[i]]))
+    #      arg_vals_parsed[[j]] = .RtoSAGA(arg_vals[[i]][[j]])
+    #    arg_vals[[i]] = unlist(arg_vals_parsed)
     } else {
       arg_vals[[i]] = .RtoSAGA(arg_vals[[i]])
     }
   }
-  
+
   # check to see if inputs are valid SAGA GIS parameters
   for (identifier in arg_names) {
     if (identifier %in% senv$libraries[[lib]][[tool]][['options']]$Identifier == FALSE) {

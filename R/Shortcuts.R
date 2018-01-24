@@ -23,7 +23,7 @@
 #' @return Specified SAGA-GIS outputs
 #' @export
 
-saga.fill_sinks = function(DEM,
+saga.Fill_Sinks = function(DEM,
                            SINKROUTE = NA,
                            DEM_PREPROC = NA,
                            METHOD = NA,
@@ -143,7 +143,7 @@ saga.fill_sinks = function(DEM,
 #'
 #' @return Specified SAGA-GIS outputs
 #' @export
-saga.flow_accumulation = function(ELEVATION,
+saga.Flow_Accumulation = function(ELEVATION,
                                   SINKROUTE = NA,
                                   WEIGHTS = NA,
                                   VAL_INPUT = NA,
@@ -612,6 +612,18 @@ saga.Mosaicking = function(GRIDS,
   saga_results = sagaGeo(lib, tool, senv, intern, args)
   
   return(saga_results)
+}
+
+
+#' Split a RasterStack or StackBrick into multiple bands
+#'
+#' @param x RasterStack or RasterBrick
+#'
+#' @return list of RasterLayers
+#' @export
+saga.SplitLayers = function(x){
+  layers = lapply(seq_along(raster::nlayers(x)), function(i) raster::raster(x[i]))
+  return(layers)
 }
 
 # For testing
