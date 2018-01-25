@@ -59,6 +59,13 @@ saga.Resampling(INPUT, TARGET_TEMPLATE = NA, OUTPUT = NA, KEEP_TYPE = NA,
 
 \item{TARGET_USER_YMAX}{Top: Floating point. Default: 100.000000}
 
+\item{TARGET_USER_FITS}{Fit: Choice. Available Choices:
+\itemize{
+\item [0] nodes
+\item [1] cells
+\item Default: 0
+}}
+
 \item{senv}{SAGA-GIS environment returned by initSAGA}
 
 \item{intern}{Optionally load output as an R object; Default is TRUE}

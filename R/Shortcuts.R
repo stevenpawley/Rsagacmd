@@ -427,7 +427,7 @@ saga.Slope_Aspect_Curvature = function(ELEVATION,
 #' \itemize{
 #' \item [0] nodes
 #' \item [1] cells
-#' \item Default: 0}
+#' \item Default: 0
 #' }
 #' @param senv SAGA-GIS environment returned by initSAGA
 #' @param intern Optionally load output as an R object; Default is TRUE
@@ -486,6 +486,7 @@ saga.Resampling = function(INPUT,
   
   return(saga_results)
 }
+
 
 #' Mosaicking
 #' 
@@ -551,7 +552,7 @@ saga.Resampling = function(INPUT,
 #' \itemize{
 #' \item [0] nodes
 #' \item [1] cells
-#' \item Default: 0}
+#' \item Default: 0
 #' }
 #' @param senv SAGA-GIS environment returned by initSAGA
 #' @param intern Optionally load output as an R object; Default is TRUE

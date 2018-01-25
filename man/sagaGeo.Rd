@@ -4,7 +4,7 @@
 \alias{sagaGeo}
 \title{Main function to execute SAGA-GIS commands through the command line tool.}
 \usage{
-sagaGeo(lib, tool, senv, intern = TRUE, ...)
+sagaGeo(lib, tool, senv, intern = TRUE, cores, ...)
 }
 \arguments{
 \item{lib}{Character string of name of SAGA-GIS library to execute}
@@ -15,10 +15,12 @@ sagaGeo(lib, tool, senv, intern = TRUE, ...)
 
 \item{intern}{Boolean to load outputs as R objects}
 
+\item{cores}{Number of physical processing cores to use for computation. Default uses all available cores}
+
 \item{...}{Named arguments and values for SAGA tool}
 }
 \value{
-Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
+Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
 }
 \description{
 Intended to be used internally, although sagaGeo can be used directly by

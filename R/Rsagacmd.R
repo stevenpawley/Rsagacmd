@@ -8,40 +8,86 @@ devtools::use_package("sf")
 #' Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 #'
 #' \pkg{Rsagacmd} is intended to provide an R scripting interface to the
-#' open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}. The
-#' current version has been tested using SAGA-GIS 2.3.2, 5.0.0 and 6.1.0 on
-#' Windows (x64), OS X and Linux.
+#' open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}
+#' software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 and
+#' 6.1.0 on Windows (x64), OS X and Linux.
 #'
-#' This package is not related to the RSAGA package, which provides an
+#' This package is not related to the \pkg{RSAGA} package, which provides an
 #' alternative interface to SAGA-GIS versions 2.0.4 - 2.2.3. In comparison to
 #' RSAGA, Rsagacmd supports newer versions of SAGA-GIS and provides access to
 #' SAGA-GIS tools by dynamically generating R functions that map to the html
 #' tags associated with every supoorted SAGA-GIS tool. These functions are
-#' returned as a named list of SAGA libraries and nested sub-lists of the
-#' functions to each library's tools. This facilitates an easier scripting
-#' experience by organizing the large number of available SAGA-GIS tools (> 500)
-#' by their respective SAGA-GIS library, and each function's syntax is similar
-#' to using the SAGA-GIS command line tool directly. Furthermore, because the
-#' arguments (called identifiers) for many SAGA-GIS tools are not consistently
-#' named, the user can also take advantage of code autocompletion tools (e.g. in
-#' \href{http://rstudio.com}{Rstudio}), allowing for each tools' inputs, outputs
-#' and options to be more easily recognized.
+#' returned as a named list of SAGA libraries, each of which contain a nested
+#' sub-list of functions that are mapped to each SAGA-GIS tool in the library.
+#' This facilitates an easier scripting experience by organizing the large
+#' number of SAGA-GIS tools (> 500) by their respective library. Each function's
+#' syntax is therfore similar to using the SAGA-GIS command line tool directly.
+#' Furthermore, because the arguments (called identifiers) for many SAGA-GIS
+#' tools are not consistently named, the user can also take advantage of code
+#' autocompletion tools (e.g. in \href{http://rstudio.com}{Rstudio}), allowing
+#' for each tools' inputs, outputs and options to be more easily recognized.
 #'
-#' @section Dynamically-created functions to SAGA-GIS tools: Rsagacmd attempts
-#'   to facilitate a seamless interface to the open-source SAGA-GIS by providing
-#'   access to most SAGA-GIS geoprocessing tools in a 'R-like' manner. By
-#'   default, all results from SAGA-GIS tools are automatically loaded as the
-#'   appropriate R object: \itemize{ \item Raster-based outputs from SAGA-GIS
-#'   tools are loaded as RasterLayer objects \item Vector features from SAGA-GIS
-#'   tools in ESRI Shapefile format are loaded into the R environment as simple
-#'   features objects \item Tabular data from SAGA-GIS tools are loaded as
-#'   dataframes} The results from tools that return multiple outputs are loaded
-#'   into the R environment as a named list of the appropriate R objects.
+#' @section Handling of geospatial and tabular data:
+#' Rsagacmd aims to facilitate a seamless interface to the open-source
+#' SAGA-GIS by providing access to all SAGA-GIS geoprocessing tools in a
+#' 'R-like' manner. In addition to mapping R functions to execute SAGA-GIS
+#' tools, Rsagacmd automatically handles the passing of geospatial and tabular
+#' data contained from the R environment to SAGA-GIS.
+#' 
+#' Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing
+#' operations. Therefore, all of the Rsagacmd tools allow paths to the input
+#' data to be used as arguments, if the data is stored in the appropriate file
+#' formats (e.g. GDAL-supported single-band rasters, OGR supported vector data,
+#' and comma- or tab-delimited text files for tabular data). In addition,
+#' Rsagacmd currently supports the following R object classes to pass data to
+#' SAGA-GIS, and to load the results back into the R environment:
+#' \itemize{
+#' \item Raster data handling is provided by the R \pkg{raster} package
+#' Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects.
+#' For more details, see the 'Handling of raster data'.
+#' \item Vector features that result from SAGA-GIS geoprocessing operations are
+#' output in ESRI Shapefile format and are loaded into the R environment as
+#' simple features objects
+#' \item Tabular data from SAGA-GIS tools are loaded as dataframes
+#' }
+#' The results from tools that return multiple outputs are loaded into the R
+#' environment as a named list of the appropriate R object classes.
+#'   
+#' @section Handling of raster data by Rsagacmd and SAGA-GIS:
+#' SAGA-GIS does not handle multi-band rasters and the native SAGA GIS Binary
+#' file format (.sgrd) supports only single band data. Therefore when passing
+#' raster data to most SAGA-GIS tools using Rsagacmd, the data should represent
+#' single raster bands, specified as either the path to the single raster band,
+#' or when using the R \pkg{raster} package, a RasterLayer (or less commonly a
+#' RasterStack or RasterBrick) object that contains only a single layer.
+#' Subsetting of raster data is performed automatically by Rsagacmd in the case
+#' of when a single band from a RasterStack or RasterBrick object is passed to a
+#' SAGA-GIS tool. This occurs in by either passing the filename of the raster
+#' to the SAGA-GIS command line, or by writing the data to a temporary file.
+#' However, a few SAGA-GIS functions will accept a list of single
+#' band rasters as an input. In this case if this data is in the form of a
+#' RasterStack or RasterLayer object, it is recommended to use the
+#' saga.SplitLayers function, which will return a list of RasterLayer objects,
+#' and then Rsagacmd will handle the subsetting automatically.
+#' 
+#' @section Notes:
+#' SAGA-GIS compressed .sg-grd-z files are not currently supported, although
+#' support may be added in future package updates once the format is supported
+#' by the \pkg{rgdal} package.
+#' 
+#' The use of temporary files during raster object subsetting operations will
+#' consume additional disk space. If you are dealing with large raster data,
+#' then you will need to take care of ensuring that tempfiles do not consume all
+#' available disk space, either by ensuing the raster data represent single
+#' band, on-disk files, or by manually clearing the contents of the tempdir()
+#' location periodically.
+#'
 #' @author Steven Pawley, \email{dr.stevenpawley@gmail.com}
 
 #' @docType package
 #' @name Rsagacmd
 NULL
+
 
 #' Return the installed version of SAGA-GIS.
 #'
@@ -111,6 +157,7 @@ searchSAGA = function(){
   
   return (cmd)
 }
+
 
 #' Parses valid SAGA-GIS libraries and tools into a nested list of functions.
 #' 
@@ -264,9 +311,10 @@ sagaEnv = function(saga_bin = NA) {
   ))
 }
 
+
 #' Write a raster object to a temporary file
 #'
-#' @param x Raster object
+#' @param x RasterLayer object
 #'
 #' @return Raster object stored as file in tempdir
 #' @export
@@ -276,14 +324,14 @@ sagaEnv = function(saga_bin = NA) {
   return (x)
 }
 
+
 #' Saves R objects to temporary files for processing by SAGA.
 #'
 #' Intended to be used internally. Raster objects are checked to see if the
 #' object is linked to a file or exists only in memory. Spatial, sf objects and
 #' dataframes are saved to temporary files.
 #'
-#' @param param A single variable that may be a raster object, sp object, sf
-#'   object or dataframe
+#' @param param A single variable that may be a raster object, sp object, sf object or dataframe
 #'
 #' @return Character string of filename of saved object
 #' @export
@@ -376,11 +424,12 @@ sagaEnv = function(saga_bin = NA) {
 #' @param tool Character string of name of SAGA-GIS tool to execute
 #' @param senv SAGA-GIS environment setting
 #' @param intern Boolean to load outputs as R objects
+#' @param cores Number of physical processing cores to use for computation. Default uses all available cores
 #' @param ... Named arguments and values for SAGA tool
 #'
-#' @return Output of SAGA-GIS tool loaded as an R object (raster/rasterstack/sf/dataframe)
+#' @return Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
 #' @export
-sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
+sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
 
   # Preprocessing of arguments
   ## split argument names and values
@@ -459,11 +508,17 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, ...) {
   
   # Execute the external saga_cmd
   ## add saga_cmd arguments to the command line call:
+  if (!is.null(cores)){
+    cores = paste('-c', cores, sep='=')
+  } else {
+    cores = ''
+  }
+  
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
   saga_cmd = paste(
-    shQuote(senv$cmd), lib,
+    shQuote(senv$cmd), cores, lib,
     shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
-    param_string, sep = ' ')
+    param_string)
   
   ## execute system call
   msg = system(saga_cmd, intern = T)
@@ -580,7 +635,8 @@ initSAGA = function(saga_bin = NA) {
         
         # optionally display help for selected tool
         if (usage == TRUE){
-        print(subset(senv$libraries[[lib]][[tool]][['options']], select=c(validRIdentifier,Name,Type,Description,Constraints)))
+        print(subset(senv$libraries[[lib]][[tool]][['options']],
+                select=c(validRIdentifier,Name,Type,Description,Constraints)))
         return()
         }
         
@@ -589,16 +645,18 @@ initSAGA = function(saga_bin = NA) {
         
         # remove intern and help from saga args list
         if ('intern' %in% names(args))
-        args = args[-which(names(args) == 'intern')]
+          args = args[-which(names(args) == 'intern')]
         if ('usage' %in% names(args))
-        args = args[-which(names(args) == 'usage')]
+          args = args[-which(names(args) == 'usage')]
+        if ('cores' %in% names(args))
+          args = args[-which(names(args) == 'cores')]
         
         # evaluate any arg_vals
         for (i in seq_along(args))
         args[[i]] = eval.parent(args[[i]])
         
         # call the saga geoprocessor
-        saga_results = sagaGeo(lib, tool, senv, intern, args)
+        saga_results = sagaGeo(lib, tool, senv, intern, cores, args)
         ",
         sep = "\n"
       )
@@ -612,7 +670,7 @@ initSAGA = function(saga_bin = NA) {
               # function name
               '= function(',
               args,
-              ', intern = TRUE, usage = FALSE',
+              ', intern = TRUE, usage = FALSE, cores = NULL',
               '){',
               '\n',
               body,
