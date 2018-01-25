@@ -623,7 +623,7 @@ saga.Mosaicking = function(GRIDS,
 #' @return list of RasterLayers
 #' @export
 saga.SplitLayers = function(x){
-  layers = lapply(seq_along(raster::nlayers(x)), function(i) raster::raster(x[i]))
+  layers = lapply(1:raster::nlayers(x), function(i) raster::raster(x[[i]]))
   return(layers)
 }
 
