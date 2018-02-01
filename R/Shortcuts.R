@@ -614,36 +614,3 @@ saga.Mosaicking = function(GRIDS,
   
   return(saga_results)
 }
-
-
-#' Split a RasterStack or StackBrick into multiple bands
-#'
-#' @param x RasterStack or RasterBrick
-#'
-#' @return list of RasterLayers
-#' @export
-saga.SplitLayers = function(x){
-  layers = lapply(1:raster::nlayers(x), function(i) raster::raster(x[[i]]))
-  return(layers)
-}
-
-# For testing
-# library(raster)
-# saga = initSAGA()
-# dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
-# plot(dem)
-# filled = saga.fill_sinks(DEM = dem, DEM_PREPROC = tempfile(fileext='.sgrd'), senv = saga)
-# plot(filled)
-# slope = saga.Slope_Aspect_Curvature(ELEVATION = dem, SLOPE = tempfile(fileext = '.sgrd'), ASPECT = tempfile(fileext='.sgrd'), senv=saga)
-# plot(slope[[1]])
-# flowacc = saga.flow_accumulation(ELEVATION = filled, FLOW = tempfile(fileext = '.sgrd'), senv=saga)
-# plot(calc(x = flowacc, fun = log))
-# twi = saga.Topographic_Wetness_Index(SLOPE = slope[[1]], AREA = flowacc, TWI = tempfile(fileext='.sgrd'), senv=saga)
-# plot(twi)
-# 
-# lib='ta_morphometry'
-# tool='Slope_Aspect_Curvature'
-# args = list(ELEVATION = dem, SLOPE = tempfile(fileext = '.sgrd'), ASPECT = tempfile(fileext='.sgrd'))
-# senv=saga$.env
-# for (i in seq_along(args))
-#   args[[i]] = eval.parent(args[[i]])
