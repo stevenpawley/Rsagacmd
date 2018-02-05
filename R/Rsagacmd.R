@@ -514,9 +514,11 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
     cores = ''
   }
   
+  flags = '--flags=pl'
+  
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
   saga_cmd = paste(
-    shQuote(senv$cmd), cores, lib,
+    shQuote(senv$cmd), cores, flags, lib,
     shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
     param_string)
   
