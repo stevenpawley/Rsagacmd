@@ -354,8 +354,12 @@ sagaEnv = function(saga_bin = NA) {
   #     - TRUE: write RasterLayer to temporary file
   #     - FALSE: error message that SAGA-GIS needs single bands as inputs
   
-  if (class(param) == "RasterLayer" | class(param) == "RasterBrick" | class(param) == "RasterStack") {
-
+  if (is(param, 'sf') == TRUE){
+    # simple features objects
+    tmp_vector = tempfile(fileext = '.shp')
+    sf::st_write(obj = param, dsn = tmp_vector, quiet = TRUE)
+    param = tmp_vector
+  } else if (is(param, 'RasterLayer') | is(param, 'RasterStack') | is(param, 'RasterBrick')) {
     # rasters stored as files
     if (raster::inMemory(param) == FALSE) {
       if (param@file@nbands == 1) {
@@ -369,22 +373,16 @@ sagaEnv = function(saga_bin = NA) {
           stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
-    } else {
+    } else if (raster::inMemory(param) == TRUE){
       # rasters stored in memory
-      if (raster::inMemory(param) == TRUE) {
-        if (raster::nlayers(param) == 1) {
-          param = .writeRasterTmp(param)
-        } else {
-          stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
+      if (raster::nlayers(param) == 1) {
+        param = .writeRasterTmp(param)
+      } else {
+        stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
-    }
-  }
-  
-  # spatial objects
-  if (class(param) == "SpatialLinesDataFrame" |
-      class(param) == "SpatialPolygonsDataFrame" |
-      class(param) == "SpatialPointsDataFrame") {
+    } else if (is(param, 'SpatialLinesDataFrame') | is(param, 'SpatialPolygonsDataFrame') | is(param, 'SpatialPointsDataFrame')) {
+    # spatial objects
     tmp_vector = tempfile(fileext = '.shp')
     rgdal::writeOGR(
       obj = param,
@@ -393,17 +391,8 @@ sagaEnv = function(saga_bin = NA) {
       driver = "ESRI Shapefile"
     )
     param = tmp_vector
-  }
-  
-  # simple features objects
-  if (all(class(param) == c("sf", "data.frame"))){
-    tmp_vector = tempfile(fileext = '.shp')
-    sf::st_write(obj = param, dsn = tmp_vector, quiet = TRUE)
-    param = tmp_vector
-  }
-
-  # tables
-  if (class(param) == "data.frame") {
+  } else if (is(param, "data.frame")) {
+    # tables
     tmp_table = tempfile(fileext = '.txt')
     utils::write.table(x = param,
                 file = tmp_table,
@@ -435,6 +424,20 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   arg_names = names(args)
   sagatool = senv$libraries[[lib]][[tool]][['options']]
   
+  # # dealing with missing arguments due to pipes ********************************
+  # # get list of required input arguments
+  # req_in = sagatool$validRIdentifier[which(sagatool$IO == 'Input' & sagatool$Required == TRUE)]
+  # # get indexes of which required arguments were passed to function
+  # spec_in_ind = which(req_in %in% arg_names)
+  # # if number of specified inputs does not match number of required inputs
+  # if (length(spec_in_ind) != length(req_in)){
+  #   # remove unamed list elements and append required to start
+  #   arg_names = arg_names[which(!arg_names == "")]
+  #   arg_names = c(req_in, arg_names)
+  #   }
+  # args = setNames(args, arg_names)
+  # # ****************************************************************************
+
   # match the validRidentifier to the identifier used by SAGA-GIS
   arg_names = merge(
     x=data.frame(arg_names, stringsAsFactors = F),
@@ -444,7 +447,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   # save loaded R objects to files for SAGA-GIS to access
   for (i in seq_along(args)) {
     # if list split list into separate files
-    if (class(args[[i]]) == "list"){
+    if (any(class(args[[i]]) == "list")){
       for (j in seq_along(args[[i]]))
         args[[i]][[j]] = .RtoSAGA(args[[i]][[j]])
     } else {
@@ -460,17 +463,17 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   # replace sdat fileext used by raster package with sgrd used by SAGA
   args = gsub('.sdat', '.sgrd', args)
   
-  # provide warning if tool produces no output
+  # provide error if tool produces no outputs
   if (length(which(sagatool$IO == "Output")) == 0){
-    warning(paste('SAGA Tool', tool, 'produces no outputs'))
+    stop(paste('SAGA Tool', tool, 'produces no outputs'))
     saga_results = NA
   }
-
-  # determine the SAGA parameters that have been specified as function args
+  
+  # determine the SAGA output parameters that have been specified as function args
   spec_ind = which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names)
   n_outputs = length(spec_ind)
   spec_out = sagatool[spec_ind, ]
-  
+
   # process the specified arguments
   if (n_outputs > 0){
     # create dataframe of containing tool settings merged with the Rsagacmd
@@ -486,6 +489,11 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   req_out = sagatool[which(sagatool$IO == "Output" & sagatool$Required == TRUE), ]
   unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
   n_temps = length(unspec_ind)
+  
+  if (n_temps == 0 & n_outputs == 0){
+    # some tools have no required outputs - error if no outputs in total are specified
+    stop('Selected SAGA tool has no required outputs.... optional outputs must be specified as arguments')
+  }
 
   # use tempfiles if any required outputs are not specified
   if (n_temps > 0){
@@ -541,18 +549,19 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   }
 
   # load SAGA results as list of R objects
-  if (nrow(spec_out) > 0){
-    saga_results = list()
-    for (i in 1:nrow(spec_out)){
-      out_i = spec_out[i, 'args']
-      current_id = spec_out[i, 'Identifier']
+  saga_results = list()
+  for (i in 1:nrow(spec_out)){
+    out_i = spec_out[i, 'args']
+    current_id = spec_out[i, 'Identifier']
 
-      if (intern == TRUE){
+    if (intern == TRUE){
+      
+      tryCatch(expr = {
         # import OGR supported vector data
         if (spec_out[i, 'Feature'] == 'Shape' |
             spec_out[i, 'Feature'] == 'Shapes list')
           saga_results[[paste0(current_id)]] = sf::st_read(out_i)
-
+  
         # import table data
         if (spec_out[i, 'Feature'] == 'Table'){
           if (tools::file_ext(out_i) == 'txt')
@@ -562,7 +571,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
           if (tools::file_ext(out_i) == 'dbf')
             saga_results[[paste0(current_id)]] = foreign::read.dbf(out_i)
         }
-
+  
         # import raster data
         if (spec_out[i, 'Feature'] %in% c('Grid', 'Grid list', 'Raster')){
           if (tools::file_ext(out_i) == 'sgrd') out_i = gsub('.sgrd', '.sdat', out_i)
@@ -572,18 +581,24 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
             saga_results[[paste0(current_id)]] = raster::raster(out_i)  
           }
         }
-      } else {
-        # if intern=FALSE then only return list of file paths for the sagacmd outputs
-        saga_results[[paste0(current_id)]] = out_i
-      }
+      }, error = function(e){
+        warning(paste('No output for', spec_out[i, 'Identifier'],
+                      '.The tool may require other inputs in order to calculate this output'))
+        }
+      )
+      
+    } else {
+      # if intern=FALSE then only return list of file paths for the sagacmd outputs
+      saga_results[[paste0(current_id)]] = out_i
     }
-    
-    # summarize outputs
-    if (length(saga_results) == 1)
-      saga_results = saga_results[[1]]
-    #if (class(saga_results) == 'list' & all(sapply(slope, class) == 'RasterLayer'))
-    #  saga_results = raster::stack(saga_results)
   }
+  
+  # summarize outputs
+  if (length(saga_results) == 1)
+    saga_results = saga_results[[1]]
+  #if (class(saga_results) == 'list' & all(sapply(slope, class) == 'RasterLayer'))
+  #  saga_results = raster::stif (class(args[[i]]) == "list")ack(saga_results)
+  
   return(saga_results)
 }
 
