@@ -430,84 +430,86 @@ sagaEnv = function(saga_bin = NA) {
 #' @return Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
 #' @export
 sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
-
-  # Preprocessing of arguments
-  ## split argument names and values
+  # summarize arguments
   args = c(...)
   arg_names = names(args)
-  arg_vals = args
-
-  ## match the validRidentifier to the actual identifier used by SAGA-GIS
-  arg_names = merge(
-    x=data.frame(arg_names, stringsAsFactors = F),
-    y=senv$libraries[[lib]][[tool]][['options']],
-    by.x='arg_names', by.y='validRIdentifier',
-    sort=FALSE)$Identifier
-  
   sagatool = senv$libraries[[lib]][[tool]][['options']]
   
-  # Checking for valid libraries, tools and parameters
-  ## save loaded R objects to files for SAGA to access
-  for (i in seq_along(arg_vals)) {
-
+  # match the validRidentifier to the identifier used by SAGA-GIS
+  arg_names = merge(
+    x=data.frame(arg_names, stringsAsFactors = F),
+    y=sagatool, by.x='arg_names', by.y='validRIdentifier',
+    sort=FALSE)$Identifier
+  
+  # save loaded R objects to files for SAGA-GIS to access
+  for (i in seq_along(args)) {
     # if list split list into separate files
-    if (class(arg_vals[[i]]) == "list"){
-      for (j in seq_along(arg_vals[[i]]))
-        arg_vals[[i]][[j]] = .RtoSAGA(arg_vals[[i]][[j]])
-    #} else if (class(arg_vals[[i]]) == 'RasterStack' | class(arg_vals[[i]]) == 'RasterBrick') {
-    # # if raster object contains multiple bands then parse each band into arg=[list of filenames]
-    #    arg_vals_parsed = list()
-    #   for (j in 1:raster::nlayers(arg_vals[[i]]))
-    #      arg_vals_parsed[[j]] = .RtoSAGA(arg_vals[[i]][[j]])
-    #    arg_vals[[i]] = unlist(arg_vals_parsed)
+    if (class(args[[i]]) == "list"){
+      for (j in seq_along(args[[i]]))
+        args[[i]][[j]] = .RtoSAGA(args[[i]][[j]])
     } else {
-      arg_vals[[i]] = .RtoSAGA(arg_vals[[i]])
+      args[[i]] = .RtoSAGA(args[[i]])
     }
   }
 
-  # check to see if inputs are valid SAGA GIS parameters
-  for (identifier in arg_names) {
-    if (identifier %in% senv$libraries[[lib]][[tool]][['options']]$Identifier == FALSE) {
-      stop(paste('Invalid parameter', identifier, 'not present in', tool))
-    }
+  # collapse argument values that are lists into a semi-colon separated strings
+  for (i in seq_along(args))
+    if (class(args[i]) == "list")
+      args[i] = paste(args[[i]], collapse = ';')
+
+  # replace sdat fileext used by raster package with sgrd used by SAGA
+  args = gsub('.sdat', '.sgrd', args)
+  
+  # provide warning if tool produces no output
+  if (length(which(sagatool$IO == "Output")) == 0){
+    warning(paste('SAGA Tool', tool, 'produces no outputs'))
+    saga_results = NA
   }
-    
-  # Prepare saga_cmd string to system
-  ## collapse any argument values that are lists
-  for (i in seq_along(arg_vals))
-    if (class(arg_vals[i]) == "list")
-      arg_vals[i] = paste(arg_vals[[i]], collapse = ';')
 
-  ## create character with argument values within quotes
-  quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
-  arg_vals = gsub('.sdat', '.sgrd', arg_vals)
-  params = shQuote(string = arg_vals, type = quote_type)
-
-  ## check that the selected tool produces some type of output
-  specified_outputs = sagatool[which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names), ]
-  if (nrow(specified_outputs) == 0){
-    warning('Selected SAGA tool will not produce any output files')
-    saga_results = NULL
-  } else {
-    names_vals_df = cbind.data.frame(arg_names, arg_vals)
-    specified_outputs = merge(
-      specified_outputs, names_vals_df,
-      by.x='Identifier', by.y='arg_names', sort=FALSE)
+  # determine the SAGA parameters that have been specified as function args
+  spec_ind = which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names)
+  n_outputs = length(spec_ind)
+  spec_out = sagatool[spec_ind, ]
+  
+  # process the specified arguments
+  if (n_outputs > 0){
+    # create dataframe of containing tool settings merged with the Rsagacmd
+    # function specified arguments
+    spec_out = merge(x=spec_out, y=cbind.data.frame(arg_names, args),
+                     by.x='Identifier', by.y='arg_names', sort=FALSE)
     
     # convert factors to character
-    specified_outputs$arg_vals = as.character(specified_outputs$arg_vals)
-    
-    # replace '.sdat' extension if user passes incorrect extension or if passed from RasterLayer
-    for (i in 1:nrow(specified_outputs)){
-      output = as.character(specified_outputs[i, 'arg_vals'])
-      if (tools::file_ext(output) == 'sdat')
-        specified_outputs[i, 'arg_vals'] = gsub('.sdat', '.sgrd', output)
-    }
-    
+    spec_out$args = as.character(spec_out$args)
   }
   
-  # Execute the external saga_cmd
-  ## add saga_cmd arguments to the command line call:
+  # determine any required outputs that have not been specified as function args
+  req_out = sagatool[which(sagatool$IO == "Output" & sagatool$Required == TRUE), ]
+  unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
+  n_temps = length(unspec_ind)
+
+  # use tempfiles if any required outputs are not specified
+  if (n_temps > 0){
+    unspec_out = req_out[unspec_ind,]
+    unspec_out['args'] = NA
+    
+    for (i in 1:nrow(unspec_out)){
+      if (unspec_out[i, 'Feature'] %in% c('Grid', 'Grid list', 'Raster'))
+        unspec_out[i, 'args'] = tempfile(fileext='.sgrd')
+      
+      if (unspec_out[i, 'Feature'] %in% c('Shape', 'Shapes list'))
+        unspec_out[i, 'args'] = tempfile(fileext = '.shp')
+      
+      if (unspec_out[i, 'Feature'] == 'Table')
+        unspec_out[i, 'args'] = tempfile(fileext = '.csv')
+    }
+    
+    # update the arguments and expected outputs for tool
+    spec_out = rbind(spec_out, unspec_out)
+    arg_names = c(as.character(arg_names), as.character(spec_out$Identifier))
+    args = c(args, spec_out$args)
+  }
+  
+  # add saga_cmd arguments to the command line call
   if (!is.null(cores)){
     cores = paste('-c', cores, sep='=')
   } else {
@@ -516,61 +518,68 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   
   flags = '--flags=pl'
   
+  # create string with argument values within quotes
+  quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
+  params = shQuote(string = args, type = quote_type)
+  
+  # prepare system call
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
   saga_cmd = paste(
     shQuote(senv$cmd), cores, flags, lib,
     shQuote(senv$libraries[[lib]][[tool]][['cmd']], type = quote_type),
     param_string)
-  
-  ## execute system call
+
+  # execute system call
   msg = system(saga_cmd, intern = T)
   if (!is.null(attr(msg, "status"))){
     print (saga_cmd)
     print (msg)
   }
 
-  # Load SAGA results as list of R objects
-  if (nrow(specified_outputs) > 0){
+  # load SAGA results as list of R objects
+  if (nrow(spec_out) > 0){
     saga_results = list()
-    for (i in 1:nrow(specified_outputs)){
-      output = specified_outputs[i, 'arg_vals']
-      file_sans_ext = tools::file_path_sans_ext(basename(output))
+    for (i in 1:nrow(spec_out)){
+      out_i = spec_out[i, 'args']
+      current_id = spec_out[i, 'Identifier']
 
       if (intern == TRUE){
-        # Import GDAL/OGR supported vector data
-        if (specified_outputs[i, 'Feature'] == 'Shape' |
-            specified_outputs[i, 'Feature'] == 'Shapes list')
-          saga_results[[paste(file_sans_ext)]] = sf::st_read(output)
+        # import OGR supported vector data
+        if (spec_out[i, 'Feature'] == 'Shape' |
+            spec_out[i, 'Feature'] == 'Shapes list')
+          saga_results[[paste0(current_id)]] = sf::st_read(out_i)
 
-        # Import table data
-        if (tools::file_ext(output) == 'txt')
-          saga_results[[paste(file_sans_ext)]] = utils::read.table(output, header = T, sep = '\t')
-        if (tools::file_ext(output) == 'csv')
-          saga_results[[paste(file_sans_ext)]] = utils::read.csv(output)
-        if (tools::file_ext(output) == 'dbf')
-          saga_results[[paste(file_sans_ext)]] = foreign::read.dbf(output)
+        # import table data
+        if (spec_out[i, 'Feature'] == 'Table'){
+          if (tools::file_ext(out_i) == 'txt')
+            saga_results[[paste0(current_id)]] = utils::read.table(out_i, header = T, sep = '\t')
+          if (tools::file_ext(out_i) == 'csv')
+            saga_results[[paste0(current_id)]] = utils::read.csv(out_i)
+          if (tools::file_ext(out_i) == 'dbf')
+            saga_results[[paste0(current_id)]] = foreign::read.dbf(out_i)
+        }
 
-        # Import raster data
-        if (tools::file_ext(output) == 'sgrd') output = gsub('.sgrd', '.sdat', output)
-        if (specified_outputs[i, 'Feature'] == 'Grid' |
-            specified_outputs[i, 'Feature'] == 'Grid list' |
-            specified_outputs[i, 'Feature'] == 'Raster'){
-          if (file_sans_ext == '.sg-gds-z'){
+        # import raster data
+        if (spec_out[i, 'Feature'] %in% c('Grid', 'Grid list', 'Raster')){
+          if (tools::file_ext(out_i) == 'sgrd') out_i = gsub('.sgrd', '.sdat', out_i)
+          if (tools::file_ext(out_i) == 'sg-gds-z'){
             message('Cannot load SAGA Grid Collection as an R raster object - this is not supported')
-          } else{
-            saga_results[[paste(file_sans_ext)]] = raster::raster(output)  
+          } else {
+            saga_results[[paste0(current_id)]] = raster::raster(out_i)  
           }
         }
       } else {
         # if intern=FALSE then only return list of file paths for the sagacmd outputs
-        saga_results[[paste(file_sans_ext)]] = output
+        saga_results[[paste0(current_id)]] = out_i
       }
     }
-
-    # do not embed in list if only one result is returned
-    if (length(saga_results) == 1) saga_results = saga_results[[1]]
+    
+    # summarize outputs
+    if (length(saga_results) == 1)
+      saga_results = saga_results[[1]]
+    #if (class(saga_results) == 'list' & all(sapply(slope, class) == 'RasterLayer'))
+    #  saga_results = raster::stack(saga_results)
   }
-
   return(saga_results)
 }
 
