@@ -630,7 +630,7 @@ saga.Mosaicking = function(GRIDS,
 #' @param res Input DEM resolution
 #' @param plot logical, produce plot of relationship
 #'
-#' @return
+#' @return Numeric. T_SLOPE value for MRVBF
 #' @export
 #'
 #' @examples

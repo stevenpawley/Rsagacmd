@@ -11,6 +11,9 @@ saga.mrvbf.threshold(res, plot = FALSE)
 
 \item{plot}{logical, produce plot of relationship}
 }
+\value{
+Numeric. T_SLOPE value for MRVBF
+}
 \description{
 Calculates the T_SLOPE value for the Multiresolution Index of Valley Bottom 
 Flatness (Gallant and Dowling, 2003) based on input DEM resolution. MRVBF
