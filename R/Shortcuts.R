@@ -23,14 +23,8 @@
 #' @return Specified SAGA-GIS outputs
 #' @export
 
-saga.Fill_Sinks = function(DEM,
-                           SINKROUTE = NA,
-                           DEM_PREPROC = NA,
-                           METHOD = NA,
-                           THRESHOLD = NA,
-                           THRSHEIGHT = NA,
-                           senv,
-                           intern = TRUE,
+saga.Fill_Sinks = function(DEM, SINKROUTE = NA, DEM_PREPROC = NA, METHOD = NA,
+                           THRESHOLD = NA, THRSHEIGHT = NA, senv, intern = TRUE,
                            usage = FALSE) {
   
   # get names of function and arguments
@@ -143,31 +137,12 @@ saga.Fill_Sinks = function(DEM,
 #'
 #' @return Specified SAGA-GIS outputs
 #' @export
-saga.Flow_Accumulation = function(ELEVATION,
-                                  SINKROUTE = NA,
-                                  WEIGHTS = NA,
-                                  VAL_INPUT = NA,
-                                  ACCU_MATERIAL = NA,
-                                  ACCU_TARGET,
-                                  LINEAR_VAL = NA,
-                                  LINEAR_DIR = NA,
-                                  FLOW,
-                                  VAL_MEAN,
-                                  ACCU_TOTAL = NA,
-                                  ACCU_LEFT = NA,
-                                  ACCU_RIGHT = NA,
-                                  FLOW_LENGTH = NA,
-                                  WEIGHT_LOSS = NA,
-                                  STEP = NA,
-                                  FLOW_UNIT = NA,
-                                  METHOD = NA,
-                                  LINEAR_DO = NA,
-                                  LINEAR_MIN = NA,
-                                  CONVERGENCE = NA,
-                                  NO_NEGATIVES = NA,
-                                  senv,
-                                  intern = TRUE,
-                                  usage = FALSE) {
+saga.Flow_Accumulation = function(ELEVATION, SINKROUTE = NA, WEIGHTS = NA,
+  VAL_INPUT = NA, ACCU_MATERIAL = NA, ACCU_TARGET, LINEAR_VAL = NA,
+  LINEAR_DIR = NA, FLOW, VAL_MEAN, ACCU_TOTAL = NA, ACCU_LEFT = NA,
+  ACCU_RIGHT = NA, FLOW_LENGTH = NA, WEIGHT_LOSS = NA, STEP = NA,
+  FLOW_UNIT = NA, METHOD = NA, LINEAR_DO = NA, LINEAR_MIN = NA,
+  CONVERGENCE = NA, NO_NEGATIVES = NA, senv, intern = TRUE, usage = FALSE) {
   
   # get names of function and arguments
   senv = senv$.env
@@ -231,15 +206,9 @@ saga.Flow_Accumulation = function(ELEVATION,
 #'
 #' @return Specified SAGA-GIS outputs
 #' @export
-saga.Topographic_Wetness_Index = function(SLOPE,
-                                          AREA,
-                                          TRANS = NA,
-                                          TWI,
-                                          CONV = NA,
-                                          METHOD = NA,
-                                          senv,
-                                          intern = TRUE,
-                                          usage = FALSE) {
+saga.Topographic_Wetness_Index = function(SLOPE, AREA, TRANS = NA, TWI,
+  CONV = NA, METHOD = NA, senv, intern = TRUE, usage = FALSE) {
+  
   # get names of function and arguments
   senv = senv$.env
   func_call = sys.call()
@@ -328,25 +297,11 @@ saga.Topographic_Wetness_Index = function(SLOPE,
 #'
 #' @return Specified SAGA-GIS outputs
 #' @export
-saga.Slope_Aspect_Curvature = function(ELEVATION,
-                                       SLOPE,
-                                       ASPECT,
-                                       C_GENE = NA,
-                                       C_PROF = NA,
-                                       C_PLAN = NA,
-                                       C_TANG = NA,
-                                       C_LONG = NA,
-                                       C_CROS = NA,
-                                       C_MINI = NA,
-                                       C_MAXI = NA,
-                                       C_TOTA = NA,
-                                       C_ROTO = NA,
-                                       METHOD = NA,
-                                       UNIT_SLOPE = NA,
-                                       UNIT_ASPECT = NA,
-                                       senv,
-                                       intern = TRUE,
-                                       usage = FALSE) {
+saga.Slope_Aspect_Curvature = function(ELEVATION, SLOPE, ASPECT, C_GENE = NA,
+   C_PROF = NA, C_PLAN = NA, C_TANG = NA, C_LONG = NA, C_CROS = NA, C_MINI = NA,
+   C_MAXI = NA, C_TOTA = NA, C_ROTO = NA, METHOD = NA, UNIT_SLOPE = NA,
+   UNIT_ASPECT = NA, senv, intern = TRUE,usage = FALSE) {
+  
   # get names of function and arguments
   senv = senv$.env
   func_call = sys.call()
@@ -435,22 +390,11 @@ saga.Slope_Aspect_Curvature = function(ELEVATION,
 #'
 #' @return Specified SAGA-GIS outputs
 #' @export
-saga.Resampling = function(INPUT,
-                           TARGET_TEMPLATE = NA,
-                           OUTPUT = NA,
-                           KEEP_TYPE = NA,
-                           SCALE_UP = NA,
-                           SCALE_DOWN = NA,
-                           TARGET_DEFINITION = NA,
-                           TARGET_USER_SIZE = NA,
-                           TARGET_USER_XMIN = NA,
-                           TARGET_USER_XMAX = NA,
-                           TARGET_USER_YMIN = NA,
-                           TARGET_USER_YMAX = NA,
-                           TARGET_USER_FITS = NA,
-                           senv,
-                           intern = TRUE,
-                           usage = FALSE) {
+saga.Resampling = function(INPUT, TARGET_TEMPLATE = NA, OUTPUT = NA,
+  KEEP_TYPE = NA, SCALE_UP = NA, SCALE_DOWN = NA, TARGET_DEFINITION = NA,
+  TARGET_USER_SIZE = NA, TARGET_USER_XMIN = NA, TARGET_USER_XMAX = NA,
+  TARGET_USER_YMIN = NA, TARGET_USER_YMAX = NA, TARGET_USER_FITS = NA,
+  senv, intern = TRUE, usage = FALSE) {
 
   # get names of function and arguments
   senv = senv$.env
@@ -561,24 +505,11 @@ saga.Resampling = function(INPUT,
 #' @return Specified SAGA-GIS outputs
 #' @export
 saga.Mosaicking = function(GRIDS,
-                           TARGET_TEMPLATE = NA,
-                           TARGET_OUT_GRID,
-                           NAME = NA,
-                           TYPE = NA,
-                           RESAMPLING = NA,
-                           OVERLAP = NA,
-                           BLEND_DIST = NA,
-                           MATCH = NA,
-                           TARGET_DEFINITION = NA,
-                           TARGET_USER_SIZE = NA,
-                           TARGET_USER_XMIN = NA,
-                           TARGET_USER_XMAX = NA,
-                           TARGET_USER_YMIN = NA,
-                           TARGET_USER_YMAX = NA,
-                           TARGET_USER_FITS = NA,
-                           senv,
-                           intern = TRUE,
-                           usage = FALSE) {
+  TARGET_TEMPLATE = NA, TARGET_OUT_GRID, NAME = NA, TYPE = NA, RESAMPLING = NA,
+  OVERLAP = NA, BLEND_DIST = NA, MATCH = NA, TARGET_DEFINITION = NA,
+  TARGET_USER_SIZE = NA, TARGET_USER_XMIN = NA, TARGET_USER_XMAX = NA,
+  TARGET_USER_YMIN = NA, TARGET_USER_YMAX = NA, TARGET_USER_FITS = NA, senv,
+  intern = TRUE, usage = FALSE) {
 
     # get names of function and arguments
   senv = senv$.env
@@ -650,7 +581,8 @@ saga.mrvbf.threshold = function(res, plot=FALSE){
     predy = predict(m, list(dem_res = predx))
     
     # plot
-    plot(dem_res, mrvbf_slope, xlab = 'DEM resolution (m)', ylab = 'MRVBF Initial Slope', xlim=c(min(dem_res), res*1.1), xaxs="i")
+    plot(dem_res, mrvbf_slope, xlab = 'DEM resolution (m)',
+         ylab = 'MRVBF Initial Slope', xlim=c(min(dem_res), res*1.1), xaxs="i")
     lines(predx, predy)
     lines(x=c(res,res), y=c(0,predict(m, list(dem_res=res))))
     lines(x=c(0,res), y=c(predict(m, list(dem_res=res)),predict(m, list(dem_res=res))))

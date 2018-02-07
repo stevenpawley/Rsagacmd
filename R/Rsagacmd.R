@@ -176,7 +176,6 @@ searchSAGA = function(){
 #' }
 sagaEnv = function(saga_bin = NA) {
 
-  # use link2GI to find path to saga_cmd unless specified manually
   if (is.na(saga_bin)){
     saga_bin = searchSAGA()
   } else {
@@ -208,13 +207,13 @@ sagaEnv = function(saga_bin = NA) {
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries = list.dirs(path = help.path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
-  invalid_libs = which(
-    basename(docs_libraries) %in%
-       c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer',
-         'garden_fractals', 'garden_games', 'garden_webservices', 'gc_tools',
-         'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
-         'garden_learn_to_program', 'grid_visualisation', 'group_files'))
-  docs_libraries = docs_libraries[-invalid_libs]
+  # invalid_libs = which(
+  #   basename(docs_libraries) %in%
+  #      c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer',
+  #        'garden_fractals', 'garden_games', 'garden_webservices', 'gc_tools',
+  #        'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
+  #        'garden_learn_to_program', 'grid_visualisation', 'group_files'))
+  # docs_libraries = docs_libraries[-invalid_libs]
   libraries = list()
 
   for (libdir in docs_libraries) {
@@ -227,6 +226,7 @@ sagaEnv = function(saga_bin = NA) {
     for (tool in tool_files) {
       # check to see if file is not emptry
       f <- file(paste(libdir, tool, sep = '/'), open = "rb")
+      
       if (length(readLines(f, warn = F)) > 1) {
         # read module options tables
         options = XML::readHTMLTable(
@@ -252,8 +252,11 @@ sagaEnv = function(saga_bin = NA) {
         # parse parameter table into a dataframe
         toolName = colnames(options[[1]])[2]
         options = options[[length(options)]] # tool options are last table
+        
+        # strip input, output, options lines in table
         options = options[which(apply(options[, 2:5], 1, function(x)
-          any(is.na(x))) == FALSE), ] # strip input, output, options lines in table
+          any(is.na(x))) == FALSE), ]
+        
         options['IO'] = NA
         options['Required'] = TRUE
         options['Feature'] = NA
@@ -289,20 +292,20 @@ sagaEnv = function(saga_bin = NA) {
         
         # replace saga tool arguments that start with a numeric
         identifiers = options$Identifier
-        numeric_identifiers = which(
-          grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
+        numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
         if (length(numeric_identifiers) > 0)
           levels(identifiers)[levels(identifiers) == identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
         identifiers = gsub(" ", "_", identifiers)
         options['validRIdentifier'] = identifiers
-
+        
         # add parameter options to nested list
         libraries[[basename(libdir)]][[valid_toolname]] = list(
           options=options, cmd=toolName)
-      } # readlines if
+      }
+      
       close(f)
-    } # tool_file loop
-  } # libdir loop
+    }
+  }
   
   return(list(
     cmd = saga_bin,
@@ -313,6 +316,8 @@ sagaEnv = function(saga_bin = NA) {
 
 
 #' Write a raster object to a temporary file
+#' 
+#' Helper function that is intended to be used internally
 #'
 #' @param x RasterLayer object
 #'
@@ -359,7 +364,8 @@ sagaEnv = function(saga_bin = NA) {
     tmp_vector = tempfile(fileext = '.shp')
     sf::st_write(obj = param, dsn = tmp_vector, quiet = TRUE)
     param = tmp_vector
-  } else if (is(param, 'RasterLayer') | is(param, 'RasterStack') | is(param, 'RasterBrick')) {
+  } else if (is(param, 'RasterLayer') |
+             is(param, 'RasterStack') | is(param, 'RasterBrick')) {
     # rasters stored as files
     if (raster::inMemory(param) == FALSE) {
       if (param@file@nbands == 1) {
@@ -381,7 +387,10 @@ sagaEnv = function(saga_bin = NA) {
         stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
-    } else if (is(param, 'SpatialLinesDataFrame') | is(param, 'SpatialPolygonsDataFrame') | is(param, 'SpatialPointsDataFrame')) {
+  } else if (is(param, 'SpatialLinesDataFrame') |
+             is(param, 'SpatialPolygonsDataFrame') |
+             is(param, 'SpatialPointsDataFrame')) {
+    
     # spatial objects
     tmp_vector = tempfile(fileext = '.shp')
     rgdal::writeOGR(
@@ -399,6 +408,7 @@ sagaEnv = function(saga_bin = NA) {
                 sep = "\t")
     param = tmp_table
   }
+  
   return(param)
 }
 
