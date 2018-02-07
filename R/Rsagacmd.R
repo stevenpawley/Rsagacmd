@@ -270,10 +270,13 @@ sagaEnv = function(saga_bin = NA) {
         options[grep("Shapes", options$Type), 'Feature'] = 'Shape'
         options[grep("Shapes list", options$Type), 'Feature'] = 'Shapes list'
         options[grep("Table", options$Type), 'Feature'] = 'Table'
+        options[grep("Table", options$Type), 'Required'] = FALSE
+        options[grep("Static table", options$Type), 'Feature'] = 'Table'
+        options[grep("Static table", options$Type), 'Required'] = FALSE
         options[grep("Table list", options$Type), 'Feature'] = 'Table list'
+        options[grep("Table list", options$Type), 'Required'] = FALSE
         options[grep("field", options$Type), 'Feature'] = 'Table field'
         options[grep("field", options$Type), 'Required'] = FALSE
-        options[grep("field", options$Type), 'IO'] = 'Input'
         options[grep("Integer", options$Type), 'Required'] = FALSE
         options[grep("Choice", options$Type), 'Required'] = FALSE
         options[grep("Floating point", options$Type), 'Required'] = FALSE

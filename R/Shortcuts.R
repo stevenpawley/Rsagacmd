@@ -1,3 +1,5 @@
+devtools::use_package("minpack.lm")
+
 #' Sink Removal
 #' 
 #' Fill/remove sinks within a digital elevation model
@@ -572,7 +574,7 @@ saga.mrvbf.threshold = function(res, plot=FALSE){
   dem_res = c(6075, 2025, 675, 225, 75, 25, 8, 3, 1)
   mrvbf_slope = c(0.5, 1, 2, 4, 8, 16, 32, 64, 128)
   ds = data.frame(dem_res, mrvbf_slope)
-  m = nls(mrvbf_slope ~ a*I(dem_res^z), data = ds, start = list(a=100, z=1))
+  m = minpack.lm::nlsLM(mrvbf_slope ~ a*I(dem_res^z), data = ds, start = list(a=100, z=1))
   
   if (plot == TRUE){
     # produce nls smooth line
