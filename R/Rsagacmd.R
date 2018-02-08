@@ -432,30 +432,24 @@ sagaEnv = function(saga_bin = NA) {
 #' @return Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
 #' @export
 sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
-  # summarize arguments
   args = c(...)
-  arg_names = names(args)
   sagatool = senv$libraries[[lib]][[tool]][['options']]
-  
-  # # dealing with missing arguments due to pipes ********************************
-  # # get list of required input arguments
-  # req_in = sagatool$validRIdentifier[which(sagatool$IO == 'Input' & sagatool$Required == TRUE)]
-  # # get indexes of which required arguments were passed to function
-  # spec_in_ind = which(req_in %in% arg_names)
-  # # if number of specified inputs does not match number of required inputs
-  # if (length(spec_in_ind) != length(req_in)){
-  #   # remove unamed list elements and append required to start
-  #   arg_names = arg_names[which(!arg_names == "")]
-  #   arg_names = c(req_in, arg_names)
-  #   }
-  # args = setNames(args, arg_names)
-  # # ****************************************************************************
-
+    
   # match the validRidentifier to the identifier used by SAGA-GIS
+  arg_names = names(args)
   arg_names = merge(
     x=data.frame(arg_names, stringsAsFactors = F),
     y=sagatool, by.x='arg_names', by.y='validRIdentifier',
     sort=FALSE)$Identifier
+  args = setNames(args, arg_names)
+
+  # make lists of missing required arguments
+  # missing_req = names(args[sapply(args, function(x) is(x, 'name'))])
+  # missing_opt = names(args[sapply(args, function(x) is(x, 'logical'))])
+
+  # strip missing arguments
+  args = args[sapply(args, function(x) is(x, 'name'))==FALSE]
+  args = args[sapply(args, function(x) !is(x, 'logical'))]
   
   # save loaded R objects to files for SAGA-GIS to access
   for (i in seq_along(args)) {
@@ -477,10 +471,8 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   args = gsub('.sdat', '.sgrd', args)
   
   # provide error if tool produces no outputs
-  if (length(which(sagatool$IO == "Output")) == 0){
+  if (length(which(sagatool$IO == "Output")) == 0)
     stop(paste('SAGA Tool', tool, 'produces no outputs'))
-    saga_results = NA
-  }
   
   # determine the SAGA output parameters that have been specified as function args
   spec_ind = which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names)
@@ -669,22 +661,22 @@ initSAGA = function(saga_bin = NA) {
       body = paste(
         body,
         "
+        # get argument names and values
+        args = as.list(environment())
+
         # get names of function and arguments
         func_call = sys.call()
-        fname = as.character(as.list(func_call))[[1]]
-        
+        fname = as.character(func_call)[[1]]
+
         lib = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
         
         # optionally display help for selected tool
         if (usage == TRUE){
-        print(subset(senv$libraries[[lib]][[tool]][['options']],
-                select=c(validRIdentifier,Name,Type,Description,Constraints)))
-        return()
+          print(subset(senv$libraries[[lib]][[tool]][['options']],
+                  select=c(validRIdentifier,Name,Type,Description,Constraints)))
+          return()
         }
-        
-        # get argument names and values
-        args = as.list(func_call)[2:length(func_call)]
         
         # remove intern and help from saga args list
         if ('intern' %in% names(args))
@@ -693,11 +685,11 @@ initSAGA = function(saga_bin = NA) {
           args = args[-which(names(args) == 'usage')]
         if ('cores' %in% names(args))
           args = args[-which(names(args) == 'cores')]
-        
+
         # evaluate any arg_vals
-        for (i in seq_along(args))
-        args[[i]] = eval.parent(args[[i]])
-        
+        # for (i in seq_along(args))
+        #   args[[i]] = eval(args[[i]])
+
         # call the saga geoprocessor
         saga_results = sagaGeo(lib, tool, senv, intern, cores, args)
         ",
