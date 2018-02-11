@@ -434,7 +434,7 @@ sagaEnv = function(saga_bin = NA) {
 sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   args = c(...)
   sagatool = senv$libraries[[lib]][[tool]][['options']]
-    
+
   # match the validRidentifier to the identifier used by SAGA-GIS
   arg_names = names(args)
   arg_names = merge(
@@ -450,6 +450,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   # strip missing arguments
   args = args[sapply(args, function(x) is(x, 'name'))==FALSE]
   args = args[sapply(args, function(x) !is(x, 'logical'))]
+  arg_names = names(args)
   
   # save loaded R objects to files for SAGA-GIS to access
   for (i in seq_along(args)) {
@@ -478,14 +479,14 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   spec_ind = which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names)
   n_outputs = length(spec_ind)
   spec_out = sagatool[spec_ind, ]
-
+  
   # process the specified arguments
   if (n_outputs > 0){
     # create dataframe of containing tool settings merged with the Rsagacmd
     # function specified arguments
     spec_out = merge(x=spec_out, y=cbind.data.frame(arg_names, args),
                      by.x='Identifier', by.y='arg_names', sort=FALSE)
-    
+
     # convert factors to character
     spec_out$args = as.character(spec_out$args)
   }
@@ -661,13 +662,11 @@ initSAGA = function(saga_bin = NA) {
       body = paste(
         body,
         "
-        # get argument names and values
+        # get arguments and names
         args = as.list(environment())
 
-        # get names of function and arguments
-        func_call = sys.call()
-        fname = as.character(func_call)[[1]]
-
+        # get names of function
+        fname = as.character(sys.call())[[1]]
         lib = strsplit(fname, '\\\\$')[[1]][2]
         tool = strsplit(fname, '\\\\$')[[1]][3]
         
