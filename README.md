@@ -3,7 +3,7 @@ Rsagacmd
 
 Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 
-Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (https://sourceforge.net/projects/saga-gis/) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 and 6.1.0 on Windows (x64), OS X and Linux.
+Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (https://sourceforge.net/projects/saga-gis/) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0, 6.1.0, and 6.2.0 on Windows (x64), OS X and Linux.
 
 ## Description
 
@@ -22,22 +22,40 @@ The results from tools that return multiple outputs are loaded into the R enviro
 
 ## Handling of raster data by Rsagacmd and SAGA-GIS
 SAGA-GIS does not handle multi-band rasters and the native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains only a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the saga.SplitLayers function, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.
- 
-### Notes
-SAGA-GIS compressed .sg-grd-z files are not currently supported, although support may be added in future package updates once the format is supported by the rgdal package.
 
-The use of temporary files during raster object subsetting operations will consume additional disk space. If you are dealing with large raster data, then you will need to take care of ensuring that tempfiles do not consume all available disk space, either by ensuing the raster data represent single band, on-disk files, or by manually clearing the contents of the tempdir() location periodically.
+## Combining SAGA-GIS commands with pipes
+
+For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, e.g.:
+```
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM=dem_clipped, RADIUS=3)
+ ```
+Will write the output terrain ruggedness index to a temporary file, and will automatically load the result into the R environment as a RasterLayer object. This was implemented for convenience, and so that the user can also create complex workflows that require very little code. It is also means that you can combine several processing steps with pipes:
+```
+# read project area as a simple features object
+prj_bnd = st_read('some_shape.shp')
+dem = raster('some_dem.tif')
+
+# clip dem to shape, resample, and calculate potential incoming solar radiation
+pisr = dem %>%
+saga$shapes_grid$Clip_Grid_with_Rectangle(SHAPES = prj_bnd)) %>%
+saga$grid_tools$Resampling(TARGET_USER_SIZE = 100) %>%
+saga$ta_lighting$Potential_Incoming_Solar_Radiation(
+LOCATION = 1, PERIOD = 2, DAY='2013-01-01', DAY_STOP = '2014-01-01',
+DAYS_STEP=10, HOUR_STEP=3, METHOD='Hofierka and Suri',
+GRD_LINKE_DEFAULT=3)
+```
+In the above example, three tools are joined together using pipes, and only the PISR grid is returned as a RasterLayer object. The intermediate processing steps are dealt with automatically by saving the outputs as tempfiles. When dealing with high-resolution and/or larger raster data, these tempfiles can start to consume a significant amount of disk space over a session. If required, temporary files can be cleaned during the session in a similar way to the raster package, using:
+```
+saga.removeTmpFiles(h=0).
+```
+where h is minimum age (in number of hours) of tempfiles for removal, so h=0 will remove all tempfiles that were automatically created by Rsagacmd.
+
+### Notes
+The newer SAGA-GIS compressed .sg-grd-z file format is not currently supported, although support may be added in future package updates.
 
 Rsagacmd is intended to provide an R-like scripting environment to the open-source SAGA-GIS. The current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows (x64), OS X and Linux.
 
 This package is not related to the RSAGA package, which provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3. However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd emphasises access to SAGA-GIS tools by dynamically generating R functions for every SAGA-GIS tool. These functions are embedded within a nested list structure. This facilitates an easier scripting experience because the function's syntax are similar to using the SAGA-GIS command line tool directly, and the user can also take advantage of code autocompletion tools, allowing for each tools' inputs, outputs and options to be more easily recognized.
-
-## Dynamically-created functions to SAGA-GIS tools
-
-Rsagacmd attempts to facilitate a seamless interface to the open-source SAGA-GIS by providing access to most SAGA-GIS geoprocessing tools in a R-like manner. By default, all results from SAGA-GIS tools are loaded as the appropriate R object:
-- Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects
-- Vector features from SAGA-GIS tools in ESRI Shapefile format are loaded into the R environment as simple features objects
-- Tabular data from SAGA-GIS tools are loaded as dataframes
 
 ## Package installation
 
@@ -61,20 +79,19 @@ library(Rsagacmd)
 saga = initSAGA()
 
 # Generate random terrain and load as raster object
-dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = tempfile(fileext='.sgrd'))
+dem = saga$grid_calculus$Random_Terrain()
 
 # Display help on usage for tool
 saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
 
 # Use Rsagacmd for to calculate the terrain ruggedness index
 tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
-  DEM = dem,
-  TRI = tempfile(fileext='.sgrd'))
+  DEM = dem)
 plot(tri)
 
 # Do not load output as an R object
 saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
   DEM = dem,
-  TRI = tempfile(fileext='.sgrd'),
+  TRI = 'output_tri.sgrd',
   intern=FALSE)
 ```
