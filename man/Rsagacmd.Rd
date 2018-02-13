@@ -8,8 +8,8 @@
 \description{
 \pkg{Rsagacmd} is intended to provide an R scripting interface to the
 open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}
-software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 and
-6.1.0 on Windows (x64), OS X and Linux.
+software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0,
+6.1.0, and 6.2.0 on Windows (x64), OS X and Linux.
 }
 \details{
 This package is not related to the \pkg{RSAGA} package, which provides an
@@ -69,23 +69,56 @@ SAGA-GIS tool. This occurs in by either passing the filename of the raster
 to the SAGA-GIS command line, or by writing the data to a temporary file.
 However, a few SAGA-GIS functions will accept a list of single
 band rasters as an input. In this case if this data is in the form of a
-RasterStack or RasterLayer object, it is recommended to use the
-saga.SplitLayers function, which will return a list of RasterLayer objects,
-and then Rsagacmd will handle the subsetting automatically.
+RasterStack or RasterLayer object, it is recommended to use the unstack
+function in the \pkg{raster} package, which will return a list of RasterLayer
+objects, and then Rsagacmd will handle the subsetting automatically.
+}
+
+\section{Combining SAGA-GIS commands with pipes}{
+
+For convenience, non-optional outputs from SAGA-GIS are automatically saved
+to tempfiles if outputs are not explicitly stated, e.g.
+
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM=dem_clipped, RADIUS=3)
+
+Will write the output terrain ruggedness index to a temporary file, and will
+automatically load the result into the R environment as a RasterLayer object.
+This was implemented for convenience, and so that the user can also create
+complex workflows that require very little code. It is also means that you
+can combine several processing steps with pipes:
+
+# clip dem to shape, resample, and calculate potential incoming solar
+radiation
+
+prj_bnd = st_read('some_shape.shp')
+dem = raster('some_dem.tif')
+
+pisr = dem %>%
+saga$shapes_grid$Clip_Grid_with_Rectangle(SHAPES = prj_bnd)) %>%
+saga$grid_tools$Resampling(TARGET_USER_SIZE = 100) %>%
+saga$ta_lighting$Potential_Incoming_Solar_Radiation(
+LOCATION = 1, PERIOD = 2, DAY='2013-01-01', DAY_STOP = '2014-01-01',
+DAYS_STEP=10, HOUR_STEP=3, METHOD='Hofierka and Suri',
+GRD_LINKE_DEFAULT=3)
+
+In the above example, three tools are joined together using pipes, and only
+the PISR grid is returned as a RasterLayer object. The intermediate
+processing steps are dealt with automatically by saving the outputs as
+tempfiles. When dealing with high-resolution and/or larger raster data, these
+tempfiles can start to consume a significant amount of disk space over a
+session. If required, temporary files can be cleaned during the session in a
+similar way to the raster package, using:
+
+saga.removeTmpFiles(h=0).
+
+where h is minimum age (in number of hours) of tempfiles for removal, so h=0
+will remove all tempfiles that were automatically created by Rsagacmd.
 }
 
 \section{Notes}{
 
 SAGA-GIS compressed .sg-grd-z files are not currently supported, although
-support may be added in future package updates once the format is supported
-by the \pkg{rgdal} package.
-
-The use of temporary files during raster object subsetting operations will
-consume additional disk space. If you are dealing with large raster data,
-then you will need to take care of ensuring that tempfiles do not consume all
-available disk space, either by ensuing the raster data represent single
-band, on-disk files, or by manually clearing the contents of the tempdir()
-location periodically.
+support may be added in future package updates.
 }
 
 \author{

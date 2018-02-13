@@ -18,7 +18,6 @@ devtools::use_package("minpack.lm")
 #' @return Numeric. T_SLOPE value for MRVBF
 #' @export
 #'
-#' @examples
 saga.mrvbf.threshold = function(res, plot=FALSE){
   # slope decreases by factor of 2 per every 'step' above a 25 m dem resolution
   # a step consists of a 3 factor increase in the dem cell size
