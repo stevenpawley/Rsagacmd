@@ -2,7 +2,6 @@
 
 export(.RtoSAGA)
 export(.getSAGAversion)
-export(.writeRasterTmp)
 export(initSAGA)
 export(saga.Fill_Sinks)
 export(saga.Flow_Accumulation)

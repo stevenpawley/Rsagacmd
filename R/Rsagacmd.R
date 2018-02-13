@@ -318,21 +318,6 @@ sagaEnv = function(saga_bin = NA) {
 }
 
 
-#' Write a raster object to a temporary file
-#' 
-#' Helper function that is intended to be used internally
-#'
-#' @param x RasterLayer object
-#'
-#' @return Raster object stored as file in tempdir
-#' @export
-.writeRasterTmp = function(x) {
-  tmp_raster = tempfile(fileext = '.tif')
-  x = raster::filename(raster::writeRaster(x, filename = tmp_raster))
-  return (x)
-}
-
-
 #' Saves R objects to temporary files for processing by SAGA.
 #'
 #' Intended to be used internally. Raster objects are checked to see if the
@@ -362,54 +347,70 @@ sagaEnv = function(saga_bin = NA) {
   #     - TRUE: write RasterLayer to temporary file
   #     - FALSE: error message that SAGA-GIS needs single bands as inputs
   
+  # Simple features objects
   if (is(param, 'sf') == TRUE){
-    # simple features objects
-    tmp_vector = tempfile(fileext = '.shp')
-    sf::st_write(obj = param, dsn = tmp_vector, quiet = TRUE)
-    param = tmp_vector
+    temp = tempfile(fileext = '.shp')
+    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
+    sf::st_write(obj = param, dsn = temp, quiet = TRUE)
+    param = temp
+  
+  # Raster objects
   } else if (is(param, 'RasterLayer') |
              is(param, 'RasterStack') | is(param, 'RasterBrick')) {
-    # rasters stored as files
+    
+    # Rasters stored as files
     if (raster::inMemory(param) == FALSE) {
       if (param@file@nbands == 1) {
         param = raster::filename(param)
-        if (tools::file_ext(param) == 'grd')
-          param = .writeRasterTmp(param)
+        if (tools::file_ext(param) == 'grd'){
+          temp = tempfile(fileext = '.tif')
+          raster::filename(raster::writeRaster(param, filename = temp))
+          param = temp
+        }
       } else {
         if (raster::nlayers(param) == 1) {
-          param = .writeRasterTmp(param)
+          temp = tempfile(fileext = '.tif')
+          raster::filename(raster::writeRaster(param, filename = temp))
+          param = temp
         } else {
           stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
+    
+    # Rasters stored in memory
     } else if (raster::inMemory(param) == TRUE){
-      # rasters stored in memory
       if (raster::nlayers(param) == 1) {
-        param = .writeRasterTmp(param)
+        temp = tempfile(fileext = '.tif')
+        raster::filename(raster::writeRaster(param, filename = temp))
+        param = temp
       } else {
         stop('Raster object contains multiple bands; SAGA-GIS requires single band rasters as inputs')
         }
       }
+  
+  # Spatial objects
   } else if (is(param, 'SpatialLinesDataFrame') |
              is(param, 'SpatialPolygonsDataFrame') |
              is(param, 'SpatialPointsDataFrame')) {
     
-    # spatial objects
-    tmp_vector = tempfile(fileext = '.shp')
+    temp = tempfile(fileext = '.shp')
+    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     rgdal::writeOGR(
       obj = param,
-      dsn = tmp_vector,
+      dsn = temp,
       layer = 1,
       driver = "ESRI Shapefile"
     )
-    param = tmp_vector
+    param = temp
+  
+  # Tables
   } else if (is(param, "data.frame")) {
-    # tables
-    tmp_table = tempfile(fileext = '.txt')
+    temp = tempfile(fileext = '.txt')
+    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     utils::write.table(x = param,
-                file = tmp_table,
+                file = temp,
                 sep = "\t")
-    param = tmp_table
+    param = temp
   }
   
   return(param)
@@ -447,7 +448,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
   # missing_req = names(args[sapply(args, function(x) is(x, 'name'))])
   # missing_opt = names(args[sapply(args, function(x) is(x, 'logical'))])
 
-  # strip missing arguments
+  # strip missing arguments and update arg_names
   args = args[sapply(args, function(x) is(x, 'name'))==FALSE]
   args = args[sapply(args, function(x) !is(x, 'logical'))]
   arg_names = names(args)
@@ -588,8 +589,8 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores, ...) {
           }
         }
       }, error = function(e){
-        warning(paste('No output for', spec_out[i, 'Identifier'],
-                      '.The tool may require other inputs in order to calculate this output'))
+        warning(paste0('No output for', spec_out[i, 'Identifier'],
+                      '. The tool may require other inputs in order to calculate this output'))
         }
       )
       
@@ -749,15 +750,22 @@ initSAGA = function(saga_bin = NA) {
 #' @examples
 saga.removeTmpFiles = function(h=0){
   for (f in pkg.env$sagaTmpFiles){
-    tdelay = difftime(Sys.time(), file.mtime(f), units='hours')
-    if (tdelay > h)
-      message(paste('Removing Rsagacmd temporary file', f))
-      assoc_files = list.files(
-        path = dirname(f),
-        pattern = glob2rx(paste0(tools::file_path_sans_ext(basename(f)), '.*')),
-        full.names = T)
-      file.remove(assoc_files)
+    if (file.exists(f) == TRUE){
+      tdelay = difftime(Sys.time(), file.mtime(f), units='hours')
+      if (tdelay > h){
+        message(f)
+        assoc_files = list.files(
+          path = dirname(f),
+          pattern = glob2rx(paste0(tools::file_path_sans_ext(basename(f)), '.*')),
+          full.names = T)
+        file.remove(assoc_files)
+        pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]
+      }
+    } else {
+      pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]
+    }
   }
+  return (NULL)
 }
 
 #' List temporary files created by Rsagacmd
