@@ -53,10 +53,6 @@ where h is minimum age (in number of hours) of tempfiles for removal, so h=0 wil
 ### Notes
 The newer SAGA-GIS compressed .sg-grd-z file format is not currently supported, although support may be added in future package updates.
 
-Rsagacmd is intended to provide an R-like scripting environment to the open-source SAGA-GIS. The current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows (x64), OS X and Linux.
-
-This package is not related to the RSAGA package, which provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3. However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd emphasises access to SAGA-GIS tools by dynamically generating R functions for every SAGA-GIS tool. These functions are embedded within a nested list structure. This facilitates an easier scripting experience because the function's syntax are similar to using the SAGA-GIS command line tool directly, and the user can also take advantage of code autocompletion tools, allowing for each tools' inputs, outputs and options to be more easily recognized.
-
 ## Package installation
 
 #### First install the devtools package:
