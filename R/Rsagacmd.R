@@ -17,23 +17,24 @@ devtools::use_package("sf")
 #' RSAGA, Rsagacmd supports newer versions of SAGA-GIS and provides access to
 #' SAGA-GIS tools by dynamically generating R functions that map to the html
 #' tags associated with every supoorted SAGA-GIS tool. These functions are
-#' returned as a named list of SAGA libraries, each of which contain a nested
-#' sub-list of functions that are mapped to each SAGA-GIS tool in the library.
-#' This facilitates an easier scripting experience by organizing the large
-#' number of SAGA-GIS tools (> 500) by their respective library. Each function's
-#' syntax is therfore similar to using the SAGA-GIS command line tool directly.
-#' Furthermore, because the arguments (called identifiers) for many SAGA-GIS
-#' tools are not consistently named, the user can also take advantage of code
-#' autocompletion tools (e.g. in \href{http://rstudio.com}{Rstudio}), allowing
-#' for each tools' inputs, outputs and options to be more easily recognized.
-#'
-#' @section Handling of geospatial and tabular data:
-#' Rsagacmd aims to facilitate a seamless interface to the open-source
-#' SAGA-GIS by providing access to all SAGA-GIS geoprocessing tools in a
-#' 'R-like' manner. In addition to mapping R functions to execute SAGA-GIS
-#' tools, Rsagacmd automatically handles the passing of geospatial and tabular
-#' data contained from the R environment to SAGA-GIS.
+#' returned from the initSAGA function as a named list of SAGA-GIS libraries,
+#' each of which contain a nested sub-list of functions that correspond to each
+#' SAGA-GIS tool in the library. This facilitates an easier scripting experience
+#' by organizing the large number of SAGA-GIS tools (> 500) by their respective
+#' library. Each function's syntax is therefore similar to what is encounted
+#' when using the SAGA-GIS command line tool directly. Furthermore, because the
+#' arguments (called identifiers) for many SAGA-GIS tools are not consistently
+#' named, the user can also take advantage of code autocompletion tools (e.g. in
+#' \href{http://rstudio.com}{Rstudio}), allowing for each tools' inputs, outputs
+#' and options to be more quickly recognized.
 #' 
+#' @section Handling of geospatial and tabular data:
+#' Rsagacmd aims to facilitate a seamless interface to the open-source SAGA-GIS
+#' by providing access to all SAGA-GIS geoprocessing tools in a 'R-like' manner.
+#' In addition to generating R functions that correspond to each SAGA-GIS tool,
+#' Rsagacmd automatically handles the passing of geospatial and tabular data
+#' contained from the R environment to SAGA-GIS.
+#'   
 #' Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing
 #' operations. Therefore, all of the Rsagacmd tools allow paths to the input
 #' data to be used as arguments, if the data is stored in the appropriate file
@@ -48,7 +49,7 @@ devtools::use_package("sf")
 #' \item Vector features that result from SAGA-GIS geoprocessing operations are
 #' output in ESRI Shapefile format and are loaded into the R environment as
 #' simple features objects
-#' \item Tabular data from SAGA-GIS tools are loaded as dataframes
+#' \item Tabular data from SAGA-GIS tools are loaded as data frames
 #' }
 #' The results from tools that return multiple outputs are loaded into the R
 #' environment as a named list of the appropriate R object classes.
@@ -64,24 +65,50 @@ devtools::use_package("sf")
 #' of when a single band from a RasterStack or RasterBrick object is passed to a
 #' SAGA-GIS tool. This occurs in by either passing the filename of the raster
 #' to the SAGA-GIS command line, or by writing the data to a temporary file.
-#' However, a few SAGA-GIS functions will accept a list of single
-#' band rasters as an input. In this case if this data is in the form of a
-#' RasterStack or RasterLayer object, it is recommended to use the unstack
+#' A few SAGA-GIS functions will accept a list of single band rasters as an
+#' input. In this case if this data is in the form of a RasterStack or
+#' RasterLayer object, it is recommended to use pass the output from the unstack
 #' function in the \pkg{raster} package, which will return a list of RasterLayer
 #' objects, and then Rsagacmd will handle the subsetting automatically.
 #' 
 #' @section Combining SAGA-GIS commands with pipes:
 #' For convenience, non-optional outputs from SAGA-GIS are automatically saved
-#' to tempfiles if outputs are not explicitly stated, e.g.
+#' to tempfiles if outputs are not explicitly stated as arguments when calling
+#' the function. This was implemented so that the user can create complex
+#' workflows based on little code. It is also means that several processing
+#' steps can be combined or chained in a convenient manner using pipes from the
+#' \pkg{magritrr} package. When using pipes, all of the intermediate processing
+#' steps are dealt with automatically by saving the outputs as tempfiles, and
+#' then in turn passing the output to the next function in the chain. Note that
+#' when dealing with high-resolution and/or larger raster data, these tempfiles
+#' can start to consume a significant amount of disk space during a session. If
+#' required, these temporary files can be cleaned during the session in a
+#' similar way to the raster package, using the saga.removeTmpFiles function.
 #' 
-#' tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM=dem_clipped, RADIUS=3)
+#' @section Notes:
+#' SAGA-GIS compressed .sg-grd-z files are not currently supported, although
+#' support may be added in future package updates.
 #' 
-#' Will write the output terrain ruggedness index to a temporary file, and will
-#' automatically load the result into the R environment as a RasterLayer object.
-#' This was implemented for convenience, and so that the user can also create
-#' complex workflows that require very little code. It is also means that you
-#' can combine several processing steps with pipes:
+#' @examples
+#' \dontrun{
+#' # initialize SAGA-GIS
+#' library(Rsagacmd)
+#' saga = initSAGA('C:/SAGA-GIS')
 #' 
+#' # Generate random terrain and save to file
+#' dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = 'terrain.sgrd')
+#' 
+#' # Example of automatically using tempfiles by not explicitly stating an
+#' # output file for a non-optional argument
+#' dem = saga$grid_calculus$Random_Terrain()
+#' tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM=dem, RADIUS=3)
+#' 
+#' # Example of chaining operations using pipes
+#' library(maggritr)
+#' tri = saga$grid_calculus$Random_Terrain() %>%
+#'     saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(RADIUS=3)
+#' 
+#' # A more complex use of pipes
 #' # clip dem to shape, resample, and calculate potential incoming solar
 #' radiation
 #' 
@@ -96,22 +123,9 @@ devtools::use_package("sf")
 #' DAYS_STEP=10, HOUR_STEP=3, METHOD='Hofierka and Suri',
 #' GRD_LINKE_DEFAULT=3)
 #' 
-#' In the above example, three tools are joined together using pipes, and only
-#' the PISR grid is returned as a RasterLayer object. The intermediate
-#' processing steps are dealt with automatically by saving the outputs as
-#' tempfiles. When dealing with high-resolution and/or larger raster data, these
-#' tempfiles can start to consume a significant amount of disk space over a
-#' session. If required, temporary files can be cleaned during the session in a
-#' similar way to the raster package, using:
-#' 
-#' saga.removeTmpFiles(h=0).
-#' 
-#' where h is minimum age (in number of hours) of tempfiles for removal, so h=0
-#' will remove all tempfiles that were automatically created by Rsagacmd.
-#' 
-#' @section Notes:
-#' SAGA-GIS compressed .sg-grd-z files are not currently supported, although
-#' support may be added in future package updates.
+#' # Remove tempfiles generated by Rsagacmd during a session
+#' saga.removeTmpFiles(h=0)
+#' }
 #'
 #' @author Steven Pawley, \email{dr.stevenpawley@gmail.com}
 
