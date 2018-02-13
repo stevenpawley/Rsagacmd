@@ -21,7 +21,7 @@ Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing opera
 The results from tools that return multiple outputs are loaded into the R environment as a named list of the appropriate R object classes.
 
 ## Handling of raster data by Rsagacmd and SAGA-GIS
-SAGA-GIS does not handle multi-band rasters and the native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains only a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the saga.SplitLayers function, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.
+SAGA-GIS does not handle multi-band rasters and the native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains only a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the unstack function in the raster package, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.
 
 ## Combining SAGA-GIS commands with pipes
 
@@ -52,10 +52,6 @@ where h is minimum age (in number of hours) of tempfiles for removal, so h=0 wil
 
 ### Notes
 The newer SAGA-GIS compressed .sg-grd-z file format is not currently supported, although support may be added in future package updates.
-
-Rsagacmd is intended to provide an R-like scripting environment to the open-source SAGA-GIS. The current version has been tested using SAGA-GIS 5.0.0 and 6.1.0 on Windows (x64), OS X and Linux.
-
-This package is not related to the RSAGA package, which provides an alternative method to link with SAGA-GIS versions 2.0.4 - 2.2.3. However, in addition to supporting newer versions of SAGA-GIS, Rsagacmd emphasises access to SAGA-GIS tools by dynamically generating R functions for every SAGA-GIS tool. These functions are embedded within a nested list structure. This facilitates an easier scripting experience because the function's syntax are similar to using the SAGA-GIS command line tool directly, and the user can also take advantage of code autocompletion tools, allowing for each tools' inputs, outputs and options to be more easily recognized.
 
 ## Package installation
 
