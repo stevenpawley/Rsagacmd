@@ -99,7 +99,7 @@ support may be added in future package updates.
 
 \examples{
 \dontrun{
-# initialize SAGA-GIS
+# initialize a saga.gis class object
 library(Rsagacmd)
 saga = initSAGA('C:/SAGA-GIS')
 
@@ -107,7 +107,7 @@ saga = initSAGA('C:/SAGA-GIS')
 dem = saga$grid_calculus$Random_Terrain(TARGET_OUT_GRID = 'terrain.sgrd')
 
 # Example of automatically using tempfiles by not explicitly stating an
-# output file for a non-optional argument
+# output file for a non-optional SAGA-GIS tool argument
 dem = saga$grid_calculus$Random_Terrain()
 tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM=dem, RADIUS=3)
 
