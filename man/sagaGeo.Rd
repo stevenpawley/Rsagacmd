@@ -15,12 +15,14 @@ sagaGeo(lib, tool, senv, intern = TRUE, cores = NULL, ...)
 
 \item{intern}{Boolean to load outputs as R objects}
 
-\item{cores}{Number of physical processing cores to use for computation. Default uses all available cores}
+\item{cores}{Number of physical processing cores to use for computation.
+Default uses all available cores}
 
 \item{...}{Named arguments and values for SAGA tool}
 }
 \value{
-Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
+Output of SAGA-GIS tool loaded as an R object
+  (RasterLayer/sf/dataframe)
 }
 \description{
 Intended to be used internally, although sagaGeo can be used directly by

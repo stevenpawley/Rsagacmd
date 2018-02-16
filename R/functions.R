@@ -87,7 +87,7 @@ sagaEnv = function(saga_bin = NA) {
   } else {
     # check that supplied saga_bin location is correct
     if (nchar(Sys.which(names = saga_bin)) == 0)
-      stop('The supplied path to the saga_cmd binary is not correct', call = FALSE)
+      stop('The supplied path to the saga_cmd binary is not correct', call. = FALSE)
   }
 
   # detect saga version
@@ -118,7 +118,8 @@ sagaEnv = function(saga_bin = NA) {
   #      c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer',
   #        'garden_fractals', 'garden_games', 'garden_webservices', 'gc_tools',
   #        'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
-  #        'garden_learn_to_program', 'grid_visualisation', 'group_files'))
+  #        'garden_learn_to_program', 'grid_visualisation', 'group_files',
+  #        'sim_ecosystems_hugget'))
   # docs_libraries = docs_libraries[-invalid_libs]
   libraries = list()
 
@@ -140,20 +141,20 @@ sagaEnv = function(saga_bin = NA) {
         
         # create valid tool names
         valid_toolname = colnames(options[[1]])[2]
-        valid_toolname = gsub(" ", "_", valid_toolname)
-        valid_toolname = gsub("\\(", "", valid_toolname)
-        valid_toolname = gsub("\\)", "", valid_toolname)
-        valid_toolname = gsub("'", "", valid_toolname)
-        valid_toolname = gsub(",", "_", valid_toolname)
-        valid_toolname = gsub("/", "_", valid_toolname)
-        valid_toolname = gsub("-", "_", valid_toolname)
-        valid_toolname = gsub(":", "_", valid_toolname)
-        valid_toolname = gsub("\\[", "_", valid_toolname)
-        valid_toolname = gsub("\\]", "_", valid_toolname)
-        valid_toolname = gsub("&", "_", valid_toolname)
-        valid_toolname = gsub("____", "_", valid_toolname)
-        valid_toolname = gsub("___", "_", valid_toolname)
-        valid_toolname = gsub("__", "_", valid_toolname)
+        valid_toolname = gsub("^[0-9]+", '', valid_toolname) # remove digits from start of tool name
+        valid_toolname = gsub(" ", "_", valid_toolname) # replace spaces with underscores
+        valid_toolname = gsub("\\(", "", valid_toolname) # remove parenthesis
+        valid_toolname = gsub("\\)", "", valid_toolname) # remove parenthesis
+        valid_toolname = gsub("'", "", valid_toolname) # remove single quotations
+        valid_toolname = gsub(",", "_", valid_toolname) # remove commas
+        valid_toolname = gsub("/", "_", valid_toolname) # replace forward slash with underscore
+        valid_toolname = gsub("-", "_", valid_toolname) # replace minus with underscore
+        valid_toolname = gsub(":", "_", valid_toolname) # replace colon with underscore
+        valid_toolname = gsub("\\[", "_", valid_toolname) # replace square brackets with underscore
+        valid_toolname = gsub("\\]", "_", valid_toolname) # replace square brackets with underscore
+        valid_toolname = gsub("&", "_", valid_toolname) # replace ampersand with underscore
+        valid_toolname = gsub('_+', '_', valid_toolname) # replace multiple underscores due to above with single _
+        valid_toolname = gsub("^_+", '', valid_toolname) # remove underscore from start of tool name
         
         # parse parameter table into a dataframe
         toolName = colnames(options[[1]])[2]
@@ -216,14 +217,7 @@ sagaEnv = function(saga_bin = NA) {
     }
   }
   
-  return(structure(
-    list(
-      cmd = saga_bin,
-      version = version,
-      libraries = libraries
-    ),
-    class = 'saga.gis'
-  ))
+  return(list(cmd = saga_bin, version = version, libraries = libraries))
 }
 
 
@@ -285,7 +279,7 @@ RtoSAGA = function(param){
             paste(
               'Raster object contains multiple bands;',
               'SAGA-GIS requires single band rasters as inputs'),
-            call = FALSE
+            call. = FALSE
           )
         }
       }
@@ -302,7 +296,7 @@ RtoSAGA = function(param){
             'Raster object contains multiple bands;',
             'SAGA-GIS requires single band rasters as inputs'
           ),
-          call = FALSE
+          call. = FALSE
         )
       }
       }
@@ -346,10 +340,12 @@ RtoSAGA = function(param){
 #' @param tool Character string of name of SAGA-GIS tool to execute
 #' @param senv SAGA-GIS environment setting
 #' @param intern Boolean to load outputs as R objects
-#' @param cores Number of physical processing cores to use for computation. Default uses all available cores
+#' @param cores Number of physical processing cores to use for computation.
+#'   Default uses all available cores
 #' @param ... Named arguments and values for SAGA tool
 #'
-#' @return Output of SAGA-GIS tool loaded as an R object (RasterLayer/sf/dataframe)
+#' @return Output of SAGA-GIS tool loaded as an R object
+#'   (RasterLayer/sf/dataframe)
 #' @export
 #' @examples
 #' \dontrun{
@@ -405,7 +401,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores = NULL, ...) {
   
   # provide error if tool produces no outputs
   if (length(which(sagatool$IO == "Output")) == 0)
-    stop(paste('SAGA Tool', tool, 'produces no outputs'), call = FALSE)
+    stop(paste('SAGA Tool', tool, 'produces no outputs'), call. = FALSE)
   
   # determine the SAGA output parameters that have been specified as function args
   spec_ind = which(sagatool$IO == "Output" & sagatool$Identifier %in% arg_names)
@@ -435,7 +431,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores = NULL, ...) {
         'Selected SAGA tool has no required outputs....',
         'optional outputs must be specified as arguments'
       ),
-      call = FALSE
+      call. = FALSE
     )
   }
 
@@ -538,7 +534,7 @@ sagaGeo = function(lib, tool, senv, intern = TRUE, cores = NULL, ...) {
           paste(
             'No output for', spec_out[i, 'Identifier'],
             '. The tool may require other inputs in order to calculate this output')
-          , call = FALSE)
+          , call. = FALSE)
         }
       )
       
@@ -605,18 +601,12 @@ initSAGA = function(saga_bin = NA) {
         )
       
       # define function body
-      body = ""
       body = paste(
-        body,
+        paste0('args = as.list(environment())'),
+        paste0('fname = ', "'", tool, "'"),
+        paste0('lib = ', "'", lib, "'"),
+        paste0('tool = ', "'", tool, "'"),
         "
-        # get arguments and names
-        args = as.list(environment())
-
-        # get names of function
-        fname = as.character(sys.call())[[1]]
-        lib = strsplit(fname, '\\\\$')[[1]][2]
-        tool = strsplit(fname, '\\\\$')[[1]][3]
-        
         # optionally display help for selected tool
         if (usage == TRUE){
           print(subset(senv$libraries[[lib]][[tool]][['options']],
@@ -664,14 +654,15 @@ initSAGA = function(saga_bin = NA) {
         },
         error = function(e)
           warning(
-            paste("Problem parsing SAGA library", lib, "and tool", tool),
-            call = FALSE)
+            paste("Problem parsing SAGA library", lib, "and tool", tool), call. = FALSE)
       )
       
     }
     names(saga[[lib]]) = toolnames
     saga[['.env']] = senv
   }
+  
+  class(saga) = 'saga.gis'
   
   return(saga)
 }
