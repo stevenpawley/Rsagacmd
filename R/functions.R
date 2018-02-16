@@ -113,14 +113,6 @@ sagaEnv = function(saga_bin = NA) {
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries = list.dirs(path = help.path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
-  # invalid_libs = which(
-  #   basename(docs_libraries) %in%
-  #      c('db_odbc', 'db_pgsql', 'docs_html', 'docs_pdf', 'garden_3d_viewer',
-  #        'garden_fractals', 'garden_games', 'garden_webservices', 'gc_tools',
-  #        'toolchains', 'tta_tools', 'tin_viewer', 'pointcloud_viewer',
-  #        'garden_learn_to_program', 'grid_visualisation', 'group_files',
-  #        'sim_ecosystems_hugget'))
-  # docs_libraries = docs_libraries[-invalid_libs]
   libraries = list()
 
   for (libdir in docs_libraries) {
@@ -622,12 +614,10 @@ initSAGA = function(saga_bin = NA) {
         if ('cores' %in% names(args))
           args = args[-which(names(args) == 'cores')]
 
-        # evaluate any arg_vals
-        # for (i in seq_along(args))
-        #   args[[i]] = eval(args[[i]])
-
         # call the saga geoprocessor
         saga_results = sagaGeo(lib, tool, senv, intern, cores, args)
+
+        return (saga_results)
         ",
         sep = "\n"
       )
@@ -635,21 +625,11 @@ initSAGA = function(saga_bin = NA) {
       # parse function
       tryCatch(
         expr = {
-          saga[[lib]] = append(saga[[lib]], eval(expr = parse(
-            text = paste(
-              paste('.', lib, '.', tool, sep = ''),
-              # function name
-              '= function(',
-              args,
-              ', intern = TRUE, usage = FALSE, cores = NULL',
-              '){',
-              '\n',
-              body,
-              '\n',
-              'return(saga_results)}',
-              sep = ''
-            )
-          )))
+          func = paste0(
+            'function(', args,', intern = TRUE, usage = FALSE, cores = NULL', '){',
+            '\n', body, '\n', '}')
+          
+          saga[[lib]] = append(saga[[lib]], eval(expr = parse(text = func)))
           toolnames = append(toolnames, tool)
         },
         error = function(e)
