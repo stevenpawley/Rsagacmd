@@ -78,11 +78,10 @@ saga = initSAGA()
 dem = saga$grid_calculus$Random_Terrain()
 
 # Display help on usage for tool
-saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(usage=TRUE)
+print(saga$ta_morphometry$Terrain_Ruggedness_Index_TRI)
 
 # Use Rsagacmd for to calculate the terrain ruggedness index
-tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
-  DEM = dem)
+tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
 plot(tri)
 
 # Do not load output as an R object
