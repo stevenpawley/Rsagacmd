@@ -4,7 +4,7 @@
 \alias{getSAGAversion}
 \title{Return the installed version of SAGA-GIS.}
 \usage{
-getSAGAversion(cmd)
+getSAGAversion(saga_cmd)
 }
 \arguments{
 \item{cmd}{Path of the saga_cmd binary}

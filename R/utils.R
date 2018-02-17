@@ -52,7 +52,6 @@ MRVBFthreshold = function(res, plot=FALSE){
 #'
 #' @param grid RasterLayer. Input raster to be used as a base for tiling
 #' @param func Function. Function to be called from within a saga.gis object
-#' @param saga.gis Class saga.gis. Class of saga.gis from which to call func
 #' @param func_args List. Named list of arguments and values to pass to the
 #'   selected SAGA-GIS tool. Use the argument placeholder . to indicate which
 #'   argument within func refers to the input grid.
@@ -87,9 +86,8 @@ MRVBFthreshold = function(res, plot=FALSE){
 #' 
 #' # calculate slope using grid tiling
 #' slope = tileGeoprocessor(
-#'     grid = dem_clipped,
+#'     grid = dem,
 #'     func = saga$ta_morphometry$Slope_Aspect_Curvature,
-#'     saga.gis = saga,
 #'     func_args = list(ELEVATION = .),
 #'     output_arg = 'SLOPE',
 #'     nx = 500, ny = 500, overlap = 50,
@@ -97,12 +95,12 @@ MRVBFthreshold = function(res, plot=FALSE){
 #'     )
 #' }
 tileGeoprocessor = function(
-  grid, func, saga.gis, func_args, output_arg, nx, ny, overlap, overlap_fun,
+  grid, func, func_args, output_arg, nx, ny, overlap, overlap_fun,
   intern=TRUE, cores=NULL){
   
-  func = as.list(substitute(func))
-  lib = strsplit(deparse(func[[2]]), '\\$')[[1]][2]
-  tool = deparse(func[[3]])
+  # some checks
+  if (length(output_arg) > 1)
+    stop('Only a single output from a SAGA-GIS tool is currently supported')
   
   # calculate number of tiles required
   n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
@@ -114,35 +112,42 @@ tileGeoprocessor = function(
   for (i in 1:n_tiles){
     temp = tempfile(fileext = '.sgrd')
     tile_outputs = c(tile_outputs, temp)
-    #pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
+    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
   }
   
   # grid tiling
-  tiles = saga.gis$grid_tools$Tiling(
-    GRID = grid, TILES = tile_outputs, OVERLAP = overlap, NX = nx, NY = ny)
+  tiles = sagaGeo(
+    lib='grid_tools', tool = 'Tiling', intern = intern, cores = cores,
+    list(GRID = grid, TILES = tile_outputs, OVERLAP = overlap, NX = nx, NY = ny))
+
+  # get library and tool name from function attributes
+  lib = attr(func, 'lib')
+  tool = attr(func, 'tool')
   
   # capture func_args as expression and strip unnamed elements
   func_args = as.list(substitute(func_args))
   func_args = func_args[names(func_args) != '']
-  
+
   # replace (.) in func_args with input tile and run geoprocessing function
   outputs = lapply(tiles, function(input_tile){
     args = func_args
     for (i in seq_along(args)){
       args[[identical(args[[i]], quote(.))]] = input_tile
     }
-    return (
-      sagaGeo(lib, tool, saga.gis$.env, intern, cores, args)[[output_arg]]
-      )
+    return (sagaGeo(lib, tool, intern, cores, args)[[output_arg]])
   })
   
   # mosaic outputs
-  rasters = lapply(1:length(outputs), function(x) outputs[[x]])
-  rasters$fun = overlap_fun
-  mosaicked = do.call(raster::mosaic, rasters)
+  if (all(lapply(outputs, class) == 'RasterLayer')){
+    rasters = lapply(1:length(outputs), function(x) outputs[[x]])
+    rasters$fun = overlap_fun
+    mosaicked = do.call(raster::mosaic, rasters)
+    
+    # crop to data area
+    cropped = raster::crop(mosaicked, grid)
+  } else if (all(lapply(outputs, function(x) is(x, 'sf')))){
+    stop('Mosaicking other datatypes not yet implemented')
+  }
 
-  # crop to data area
-  cropped = raster::crop(mosaicked, grid)
-  
   return (cropped)
 }

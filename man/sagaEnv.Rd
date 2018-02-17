@@ -15,7 +15,7 @@ List of saga_cmd path, SAGA-GIS version and nested list of libaries
 }
 \description{
 Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a saga.gis class
-object, which contains a nested list of library, module and options.
-Intended to be used internally and called by the initSAGA function.
+all libraries, tools and options from the help files into a nested list of
+library, module and options. Intended to be used internally by the
+initSAGA function
 }

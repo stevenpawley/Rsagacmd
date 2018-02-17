@@ -15,4 +15,5 @@ Imports: XML,
     rgdal,
     foreign,
     sf,
-    minpack.lm
+    minpack.lm,
+    pryr

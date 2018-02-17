@@ -4,15 +4,13 @@
 \alias{tileGeoprocessor}
 \title{Apply a SAGA-GIS tool on grid data using tile-based geoprocessing}
 \usage{
-tileGeoprocessor(grid, func, saga.gis, func_args, output_arg, nx, ny, overlap,
+tileGeoprocessor(grid, func, func_args, output_arg, nx, ny, overlap,
   overlap_fun, intern = TRUE, cores = NULL)
 }
 \arguments{
 \item{grid}{RasterLayer. Input raster to be used as a base for tiling}
 
 \item{func}{Function. Function to be called from within a saga.gis object}
-
-\item{saga.gis}{Class saga.gis. Class of saga.gis from which to call func}
 
 \item{func_args}{List. Named list of arguments and values to pass to the
 selected SAGA-GIS tool. Use the argument placeholder . to indicate which
@@ -59,9 +57,8 @@ dem = saga$grid_calculus$Random_Terrain(
 
 # calculate slope using grid tiling
 slope = tileGeoprocessor(
-    grid = dem_clipped,
+    grid = dem,
     func = saga$ta_morphometry$Slope_Aspect_Curvature,
-    saga.gis = saga,
     func_args = list(ELEVATION = .),
     output_arg = 'SLOPE',
     nx = 500, ny = 500, overlap = 50,

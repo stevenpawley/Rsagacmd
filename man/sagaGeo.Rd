@@ -4,14 +4,12 @@
 \alias{sagaGeo}
 \title{Main function to execute SAGA-GIS commands through the command line tool.}
 \usage{
-sagaGeo(lib, tool, senv, intern = TRUE, cores = NULL, ...)
+sagaGeo(lib, tool, intern = TRUE, cores = NULL, ...)
 }
 \arguments{
 \item{lib}{Character string of name of SAGA-GIS library to execute}
 
 \item{tool}{Character string of name of SAGA-GIS tool to execute}
-
-\item{senv}{SAGA-GIS environment setting}
 
 \item{intern}{Boolean to load outputs as R objects}
 
@@ -38,7 +36,7 @@ saga = initSAGA()
 
 # Generate random terrain and load as raster object
 dem = saga$grid_calculus$Random_Terrain()
-dem = sagaGeo(lib = 'grid_calculus', tool = 'Random Terrain', senv = saga, 
+dem = sagaGeo(lib = 'grid_calculus', tool = 'Random Terrain',
 RADIUS = 3, TARGET_OUT_GRID = 'somegrid.sgrd')
 }
 }
