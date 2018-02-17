@@ -722,5 +722,5 @@ sagaShowTmpFiles = function(){
 }
 
 # local environment to store vector of tempfiles in package namespace
-pkg.env = new.env()
+pkg.env = new.env(parent = emptyenv())
 pkg.env$sagaTmpFiles = c()
