@@ -546,8 +546,10 @@ sagaGeo = function(lib, tool, intern = TRUE, cores = NULL, ...) {
 
 #' Dynamically maps all SAGA-GIS functions to a nested list of functions in R.
 #'
-#' A simple wrapper that dynamically creates R functions to all valid tools and
-#' returns them as a nested and named list of SAGA-GIS libraries and tools.
+#' Dynamically creates R functions to all valid tools and
+#' returns them as a nested and named list of SAGA-GIS libraries and tools. 
+#' This list is defined as an S3 SAGAgis object, and the enclosed tools
+#' represent SAGAtool objects.
 #'
 #' @param saga_bin Optional path to saga_cmd
 #' @return Nested list of functions for SAGA-GIS libraries and tools
@@ -599,18 +601,9 @@ initSAGA = function(saga_bin = NA) {
         paste0('lib = ', "'", lib, "'"),
         paste0('tool = ', "'", tool, "'"),
         "
-        # optionally display help for selected tool
-        if (usage == TRUE){
-          print(subset(pkg.env$senv$libraries[[lib]][[tool]][['options']],
-                  select=c(identifierR,Name,Type,Description,Constraints)))
-          return()
-        }
-        
         # remove intern and help from saga args list
         if ('intern' %in% names(args))
           args = args[-which(names(args) == 'intern')]
-        if ('usage' %in% names(args))
-          args = args[-which(names(args) == 'usage')]
         if ('cores' %in% names(args))
           args = args[-which(names(args) == 'cores')]
 
@@ -625,12 +618,13 @@ initSAGA = function(saga_bin = NA) {
       tryCatch(
         expr = {
           func_code = paste0(
-            'function(', args,', intern = TRUE, usage = FALSE, cores = NULL', '){',
+            'function(', args,', intern = TRUE, cores = NULL', '){',
             '\n', body, '\n', '}')
           func = structure(
             eval(expr = parse(text = func_code)),
             lib = lib,
-            tool = tool)
+            tool = tool,
+            class = 'SAGAtool')
           
           saga[[lib]] = append(saga[[lib]], func)
           toolnames = append(toolnames, tool)
@@ -645,7 +639,6 @@ initSAGA = function(saga_bin = NA) {
   }
   
   # S3 implementation
-  # saga[['senv']] = senv
   class(saga) = 'SAGAgis'
   
   # S4 implementation
@@ -720,6 +713,37 @@ sagaShowTmpFiles = function(){
   }
   return(pkg.env$sagaTmpFiles)
 }
+
+
+#' Print (display) parameters and options of a SAGAtool object
+#' 
+#' Used to display more information on the usage of any particular SAGA-GIS
+#' tool
+#'
+#' @param x SAGAtool object
+#'
+#' @return NULL
+#' @export
+print.SAGAtool = function(x){
+  lib = attr(x, 'lib')
+  tool = attr(x, 'tool')
+  
+  tool_options = pkg.env$senv$libraries[[lib]][[tool]][['options']][, c('identifierR', 'Name', 'Type', 'Description', 'Constraints')]
+  tool_options$Constraints = gsub('Available Choices:\n', '', tool_options$Constraints)
+  tool_options$Constraints = gsub('\n', ';', tool_options$Constraints)
+  
+  cat(paste0('Help for library = ', lib, '; tool = ', tool, ':', '\n'))
+  for (i in 1:nrow(tool_options)){
+    cat(paste0('Name of tool: ', tool_options[i, 'Name']), '\n')
+    cat(paste0('Identifier: ', tool_options[i, 'identifierR'], '\n'))
+    cat(paste0('Type: ', tool_options[i, 'Type'], '\n'))
+    cat(paste0('Description: ', tool_options[i, 'Description'], '\n'))
+    cat(paste0('Constraints: ', tool_options[i, 'Constraints'], '\n'))
+    cat('\n')
+  }
+  
+}
+
 
 # local environment to store vector of tempfiles in package namespace
 pkg.env = new.env(parent = emptyenv())

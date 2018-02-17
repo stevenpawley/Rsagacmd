@@ -2,6 +2,7 @@
 
 export(MRVBFthreshold)
 export(initSAGA)
+export(print.SAGAtool)
 export(sagaGeo)
 export(sagaRemoveTmpFiles)
 export(sagaShowTmpFiles)

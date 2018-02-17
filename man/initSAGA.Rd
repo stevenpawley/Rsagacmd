@@ -13,8 +13,10 @@ initSAGA(saga_bin = NA)
 Nested list of functions for SAGA-GIS libraries and tools
 }
 \description{
-A simple wrapper that dynamically creates R functions to all valid tools and
-returns them as a nested and named list of SAGA-GIS libraries and tools.
+Dynamically creates R functions to all valid tools and
+returns them as a nested and named list of SAGA-GIS libraries and tools. 
+This list is defined as an S3 SAGAgis object, and the enclosed tools
+represent SAGAtool objects.
 }
 \examples{
 \dontrun{
