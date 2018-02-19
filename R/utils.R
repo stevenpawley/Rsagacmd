@@ -1,4 +1,5 @@
 devtools::use_package("minpack.lm")
+devtools::use_package("SpaDES")
 
 #' Calculate the T_SLOPE value based on DEM resolution for MRVBF
 #'
@@ -58,8 +59,8 @@ MRVBFthreshold = function(res, plot=FALSE){
 #' @param output_arg Character. Name of the output feature from the SAGA-GIS
 #'   tool that is to be mosaicked after tiling. E.g., SLOPE. This is required
 #'   because many SAGA-GIS tools produce multiple outputs
-#' @param nx Numeric. Horiontal size of tiles in terms of number of cells
-#' @param ny Numeric. Vertical size of tiles in terms of number of cells
+#' @param nx Numeric. Number of horizontal tiles
+#' @param ny Numeric. Number of vertical tiles
 #' @param overlap Numeric. Number of cells to overlap the tiles
 #' @param overlap_fun Function. E.g. mean, min or max. Must be a function that
 #'   accepts a 'na.rm' argument
@@ -82,7 +83,8 @@ MRVBFthreshold = function(res, plot=FALSE){
 #'     TARGET_USER_XMIN = 0,
 #'     TARGET_USER_XMAX = 1000,
 #'     TARGET_USER_YMIN = 0,
-#'     TARGET_USER_YMAX = 1000)
+#'     TARGET_USER_YMAX = 1000,
+#'     RADIUS = 200)
 #' 
 #' # calculate slope using grid tiling
 #' slope = tileGeoprocessor(
@@ -90,39 +92,28 @@ MRVBFthreshold = function(res, plot=FALSE){
 #'     func = saga$ta_morphometry$Slope_Aspect_Curvature,
 #'     func_args = list(ELEVATION = .),
 #'     output_arg = 'SLOPE',
-#'     nx = 500, ny = 500, overlap = 50,
+#'     nx = 3, ny = 3, overlap = 50,
 #'     overlap_fun = mean
 #'     )
 #' }
 tileGeoprocessor = function(
-  grid, func, func_args, output_arg, nx, ny, overlap, overlap_fun,
+  grid, func, func_args, output_arg, nx, ny, overlap, overlap_fun = mean,
   intern=TRUE, cores=NULL){
   
   # some checks
   if (length(output_arg) > 1)
     stop('Only a single output from a SAGA-GIS tool is currently supported')
   
-  # calculate number of tiles required
-  n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
-  n_heights = ceiling(1/(ny/(nrow(grid)+overlap)))
-  n_tiles = n_widths * n_heights
+  # tiling
+  tiles = SpaDES.tools::splitRaster(
+    r=grid, nx=nx, ny=ny, buffer=overlap, path=tempdir())
   
-  # create list of temporary files for tiles
-  tile_outputs = c()
-  for (i in 1:n_tiles){
-    temp = tempfile(fileext = '.sgrd')
-    tile_outputs = c(tile_outputs, temp)
-    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
-  }
-  
-  # grid tiling
-  tiles = sagaGeo(
-    lib='grid_tools', tool = 'Tiling', intern = intern, cores = cores,
-    list(GRID = grid, TILES = tile_outputs, OVERLAP = overlap, NX = nx, NY = ny))
-
   # get library and tool name from function attributes
   lib = attr(func, 'lib')
   tool = attr(func, 'tool')
+  saga_cmd = attr(func, 'saga_cmd')
+  tool_cmd = attr(func, 'tool_cmd')
+  tool_params = attr(func, 'tool_params')
   
   # capture func_args as expression and strip unnamed elements
   func_args = as.list(substitute(func_args))
@@ -131,10 +122,11 @@ tileGeoprocessor = function(
   # replace (.) in func_args with input tile and run geoprocessing function
   outputs = lapply(tiles, function(input_tile){
     args = func_args
-    for (i in seq_along(args)){
+    for (i in seq_along(args))
       args[[identical(args[[i]], quote(.))]] = input_tile
-    }
-    return (sagaGeo(lib, tool, intern, cores, args)[[output_arg]])
+    return (sagaGeo(lib = lib, tool = tool, saga_cmd = saga_cmd,
+        tool_cmd = tool_cmd, tool_params = tool_params, intern, cores,
+        args)[[output_arg]])
   })
   
   # mosaic outputs

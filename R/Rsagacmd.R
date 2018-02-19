@@ -28,12 +28,12 @@ devtools::use_package("sf")
 #' \href{http://rstudio.com}{Rstudio}), allowing for each tools' inputs, outputs
 #' and options to be more quickly recognized.
 #' 
-#' @section Handling of geospatial and tabular data:
-#' Rsagacmd aims to facilitate a seamless interface to the open-source SAGA-GIS
-#' by providing access to all SAGA-GIS geoprocessing tools in a 'R-like' manner.
-#' In addition to generating R functions that correspond to each SAGA-GIS tool,
-#' Rsagacmd automatically handles the passing of geospatial and tabular data
-#' contained from the R environment to SAGA-GIS.
+#' @section Handling of geospatial and tabular data: Rsagacmd aims to facilitate
+#'   a seamless interface to the open-source SAGA-GIS by providing access to all
+#'   SAGA-GIS geoprocessing tools in a 'R-like' manner. In addition to
+#'   generating R functions that correspond to each SAGA-GIS tool, Rsagacmd
+#'   automatically handles the passing of geospatial and tabular data contained
+#'   from the R environment to SAGA-GIS.
 #'   
 #' Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing
 #' operations. Therefore, all of the Rsagacmd tools allow paths to the input
