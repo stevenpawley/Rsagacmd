@@ -413,8 +413,8 @@ sagaGeo = function(lib, tool, saga_cmd, tool_cmd, tool_params, intern = TRUE,
   args = setNames(args, arg_names)
 
   # strip missing arguments and update arg_names
-  args = args[sapply(args, function(x) is(x, 'name'))==FALSE]
-  args = args[sapply(args, function(x) !is(x, 'logical'))]
+  args[args == ''] = NA
+  args = args[!is.na(args)]
   arg_names = names(args)
 
   # save loaded R objects to files for SAGA-GIS to access
