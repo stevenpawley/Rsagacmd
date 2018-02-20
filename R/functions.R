@@ -142,7 +142,7 @@ sagaEnv = function(saga_bin = NA) {
 
     for (tool in tool_files) {
       # check to see if file is not emptry
-      f <- file(paste(libdir, tool, sep = '/'), open = "rb")
+      f = file(paste(libdir, tool, sep = '/'), open = "rb")
       
       if (length(readLines(f, warn = F)) > 1) {
         # read module options tables
@@ -217,6 +217,46 @@ sagaEnv = function(saga_bin = NA) {
           levels(identifiers)[levels(identifiers) == identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
         identifiers = gsub(" ", "_", identifiers)
         options['identifierR'] = identifiers
+        
+        # clean-up constraints text
+        options$Constraints[options$Constraints == ''] = NA
+        options$Constraints = gsub('Available Choices:', '', options$Constraints) # remove text
+        options$Constraints = gsub('^\n', '', options$Constraints) # remove line break at start of text
+        options$Constraints = gsub('\n', ';', options$Constraints) # replace line seps with ;
+        
+        # extract default values for tool parameters
+        options['Default'] = NA
+        default_src = strsplit(options$Constraints, 'Default: ')
+        for (i in seq_len(length(default_src)))
+          if (all(!is.na(default_src[[i]])))
+            options[i, 'Default'] = suppressWarnings(as.numeric(default_src[[i]][2]))
+        
+        # extract minimum values for tool parameters
+        options['Minimum'] = NA
+        constraints_split = strsplit(options$Constraints, ';')
+        for (i in seq_len(length(constraints_split))){
+          constraints_line = constraints_split[i][[1]]
+          
+          if (any(grepl('Minimum:', constraints_line))){
+            constraints_min = constraints_line[grepl('Minimum:', constraints_line)]
+            constraints_min = strsplit(constraints_min, 'Minimum: ')[[1]][2]
+            options$Minimum[i] = suppressWarnings(as.numeric(constraints_min))
+          }
+        }
+  
+        # extract maximum values for tool parameters
+        options['Maximum'] = NA
+        constraints_split = strsplit(options$Constraints, ';')
+        for (i in seq_len(length(constraints_split))){
+          constraints_line = constraints_split[i][[1]]
+        
+          if (any(grepl('Maximum:', constraints_line))){
+            constraints_max = constraints_line[grepl('Maximum:', constraints_line)]
+            constraints_max = strsplit(constraints_max, 'Maximum: ')[[1]][2]
+            options$Maximum[i] = suppressWarnings(as.numeric(constraints_max))
+          }
+        }
+        
         
         # add parameter options to nested list
         libraries[[basename(libdir)]][[valid_toolname]] = list(
@@ -583,10 +623,11 @@ sagaGeo = function(lib, tool, saga_cmd, tool_cmd, tool_params, intern = TRUE,
 initSAGA = function(saga_bin = NA) {
   
   senv = sagaEnv(saga_bin)
-
-  # dynamic creation of RSAGA functions
-  saga = list()
   
+  # create list used to represent object for the class
+  saga = list()
+
+  # dynamically create functions
   for (lib in names(senv$libraries)) {
     toolnames = list()
     
@@ -606,20 +647,21 @@ initSAGA = function(saga_bin = NA) {
         paste0('args = as.list(environment())'),
         paste0('lib = ', deparse(lib)),
         paste0('tool = ', deparse(tool)),
-        paste0('saga_cmd = ', deparse(senv$saga_cmd)),
+        paste0('saga_cmd = ', deparse(as.character(senv$saga_cmd))),
         paste0('tool_cmd = ', deparse(tool_cmd)),
-        paste0('options = ', paste0(deparse(tool_options), collapse='\n')),
+        paste0('options = ', paste0(
+          deparse(tool_options[c('Identifier', 'IO', 'Required', 'Feature', 'identifierR')]),
+          collapse='\n')),
         "
-        # remove intern and help from saga args list
-        if ('intern' %in% names(args))
-          args = args[-which(names(args) == 'intern')]
-        if ('cores' %in% names(args))
-          args = args[-which(names(args) == 'cores')]
+# remove intern and help from saga args list
+if ('intern' %in% names(args))
+  args = args[-which(names(args) == 'intern')]
+if ('cores' %in% names(args))
+  args = args[-which(names(args) == 'cores')]
 
-        # call the saga geoprocessor
-        senv = list(options = options, saga_cmd = saga_cmd, tool_cmd = tool_cmd)
-        saga_results = sagaGeo(lib, tool, saga_cmd, tool_cmd, options, intern, cores, args)
-        return (saga_results)
+# call the saga geoprocessor
+saga_results = sagaGeo(lib, tool, saga_cmd, tool_cmd, options, intern, cores, args)
+return (saga_results)
         ",
         sep = "\n"
       )
@@ -657,71 +699,6 @@ initSAGA = function(saga_bin = NA) {
   return(saga)
 }
 
-#' Removes temporary files created by Rsagacmd
-#'
-#' For convenience, functions in the Rsagacmd package create temporary files if
-#' any required outputs for a SAGA-GIS tool are not specified as arguments.
-#' Temporary files in R are automatically removed at the end of each session.
-#' However, when dealing with raster data, these temporary files potentially can
-#' consume large amounts of disk space. These temporary files can be observed
-#' during a session by using the sagaShowTmpFiles function, and can be removed
-#' using the sagaRemoveTmpFiles function. Note that this function also removes
-#' any accompanying files, i.e. the '.prj' and '.shx' files that may be written
-#' as part of writing a ESRI Shapefile '.shp' format.
-#'
-#' @param h Remove temporary files that are older than h (in number of hours)
-#'
-#' @return Nothing is returned
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' # remove all temporary files generated by Rsagacmd
-#' sagaRemoveTmpFiles(h=0)
-#' }
-sagaRemoveTmpFiles = function(h=0){
-  for (f in pkg.env$sagaTmpFiles){
-    if (file.exists(f) == TRUE){
-      tdelay = difftime(Sys.time(), file.mtime(f), units='hours')
-      if (tdelay > h){
-        message(f)
-        assoc_files = list.files(
-          path = dirname(f),
-          pattern = glob2rx(paste0(tools::file_path_sans_ext(basename(f)), '.*')),
-          full.names = T)
-        file.remove(assoc_files)
-        pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]
-      }
-    } else {
-      pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]
-    }
-  }
-  return (NULL)
-}
-
-#' List temporary files created by Rsagacmd
-#' 
-#' For convenience, functions in the Rsagacmd package create temporary files if
-#' any required outputs for a SAGA-GIS tool are not specified as arguments.
-#' Temporary files in R are automatically removed at the end of each session.
-#' However, when dealing with raster data, these temporary files potentially can
-#' consume large amounts of disk space. These temporary files can be observed
-#' during a session by using the sagaShowTmpFiles function, and can be removed
-#' using the sagaRemoveTmpFiles function.
-#'
-#' @return returns the file names of the files in the temp directory that have
-#' been generated by Rsagacmd. Note this list of files only includes the primary
-#' file extension, i.e. '.shp' for a shapefile without the accessory files
-#' (e.g. .prj, .shx etc.).
-#' @export
-sagaShowTmpFiles = function(){
-  message('Rsagacmd temporary files:')
-  for (f in pkg.env$sagaTmpFiles){
-    message(f)
-  }
-  return(pkg.env$sagaTmpFiles)
-}
-
 
 #' Print (display) parameters and options of a SAGAtool object
 #' 
@@ -739,24 +716,17 @@ sagaShowTmpFiles = function(){
 print.SAGAtool = function(x){
   lib = attr(x, 'lib')
   tool = attr(x, 'tool')
-  
-  tool_options = pkg.env$senv$libraries[[lib]][[tool]][['options']][, c('identifierR', 'Name', 'Type', 'Description', 'Constraints')]
-  tool_options$Constraints = gsub('Available Choices:\n', '', tool_options$Constraints)
-  tool_options$Constraints = gsub('\n', ';', tool_options$Constraints)
+  tool_params = attr(x, 'tool_params')
+  tool_params = tool_params[, c('identifierR', 'Name', 'Type', 'Description', 'Constraints')]
   
   cat(paste0('Help for library = ', lib, '; tool = ', tool, ':', '\n'))
-  for (i in 1:nrow(tool_options)){
-    cat(paste0('Name of tool: ', tool_options[i, 'Name']), '\n')
-    cat(paste0('Identifier: ', tool_options[i, 'identifierR'], '\n'))
-    cat(paste0('Type: ', tool_options[i, 'Type'], '\n'))
-    cat(paste0('Description: ', tool_options[i, 'Description'], '\n'))
-    cat(paste0('Constraints: ', tool_options[i, 'Constraints'], '\n'))
+  for (i in 1:nrow(tool_params)){
+    cat(paste0('Name of tool: ', tool_params[i, 'Name']), '\n')
+    cat(paste0('Identifier: ', tool_params[i, 'identifierR'], '\n'))
+    cat(paste0('Type: ', tool_params[i, 'Type'], '\n'))
+    cat(paste0('Description: ', tool_params[i, 'Description'], '\n'))
+    cat(paste0('Constraints: ', tool_params[i, 'Constraints'], '\n'))
     cat('\n')
   }
   
 }
-
-
-# local environment to store vector of tempfiles in package namespace
-pkg.env = new.env(parent = emptyenv())
-pkg.env$sagaTmpFiles = c()
