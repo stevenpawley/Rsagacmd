@@ -257,7 +257,6 @@ sagaEnv = function(saga_bin = NA) {
           }
         }
         
-        
         # add parameter options to nested list
         libraries[[basename(libdir)]][[valid_toolname]] = list(
           options=options, tool_cmd=toolName)
@@ -266,7 +265,6 @@ sagaEnv = function(saga_bin = NA) {
       close(f)
     }
   }
-  
   return(list(saga_cmd = saga_bin, version = version, libraries = libraries))
 }
 
@@ -313,17 +311,18 @@ RtoSAGA = function(param){
     
     # Rasters stored as files
     if (raster::inMemory(param) == FALSE) {
-      if (param@file@nbands == 1) {
-        param = raster::filename(param)
-        if (tools::file_ext(param) == 'grd'){
+      if (raster::nbands(param) == 1) {
+        if (tools::file_ext(raster::filename(param)) == 'grd'){
           temp = tempfile(fileext = '.tif')
-          raster::filename(raster::writeRaster(raster(param), filename = temp))
+          raster::writeRaster(raster(param), filename = temp)
           param = temp
+        } else {
+          param = raster::filename(param)
         }
       } else {
         if (raster::nlayers(param) == 1) {
           temp = tempfile(fileext = '.tif')
-          raster::filename(raster::writeRaster(param, filename = temp))
+          raster::writeRaster(param, filename = temp)
           param = temp
         } else {
           stop(
@@ -339,7 +338,7 @@ RtoSAGA = function(param){
     } else if (raster::inMemory(param) == TRUE){
       if (raster::nlayers(param) == 1) {
         temp = tempfile(fileext = '.tif')
-        raster::filename(raster::writeRaster(param, filename = temp))
+        raster::writeRaster(param, filename = temp)
         param = temp
       } else {
         stop(
@@ -371,9 +370,7 @@ RtoSAGA = function(param){
   } else if (is(param, "data.frame")) {
     temp = tempfile(fileext = '.txt')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
-    utils::write.table(x = param,
-                file = temp,
-                sep = "\t")
+    utils::write.table(x = param, file = temp, sep = "\t")
     param = temp
   }
   
@@ -608,7 +605,7 @@ sagaGeo = function(lib, tool, saga_cmd, tool_cmd, tool_params, intern = TRUE,
 #' # Example of terrain analysis
 #'
 #' # Generate random terrain and load as raster object
-#' dem = saga$grid_calculus$Random_Terrain()
+#' dem = saga$grid_calculus$Random_Terrain(RADIUS=100)
 #'
 #' # Display help on usage for tool
 #' print(saga$ta_morphometry$Terrain_Ruggedness_Index_TRI)
@@ -695,8 +692,6 @@ return (saga_results)
   }
   
   saga = structure(saga, class = 'initSAGA')
-
-  return(saga)
 }
 
 
