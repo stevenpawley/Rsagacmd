@@ -1,5 +1,5 @@
 devtools::use_package("minpack.lm")
-devtools::use_package("SpaDES")
+devtools::use_package("SpaDES.tools")
 
 #' Calculate the T_SLOPE value based on DEM resolution for MRVBF
 #'

@@ -17,4 +17,5 @@ Imports: XML,
     sf,
     minpack.lm,
     pryr,
-    SpaDES
+    SpaDES,
+    SpaDES.tools

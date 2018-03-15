@@ -691,7 +691,7 @@ return (saga_results)
     names(saga[[lib]]) = toolnames
   }
   
-  saga = structure(saga, class = 'initSAGA')
+  saga = structure(saga, class = 'SAGAprocessor')
 }
 
 
