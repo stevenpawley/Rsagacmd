@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{RtoSAGA}
 \alias{RtoSAGA}
-\title{Saves R objects to temporary files for processing by SAGA.}
+\title{Saves R objects to temporary files for processing by SAGA-GIS.}
 \usage{
 RtoSAGA(param)
 }

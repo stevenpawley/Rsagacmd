@@ -2,20 +2,20 @@
 % Please edit documentation in R/functions.R
 \name{sagaEnv}
 \alias{sagaEnv}
-\title{Parses valid SAGA-GIS libraries and tools into a nested list of functions.}
+\title{Parses valid SAGA-GIS libraries and tools into a nested list of functions}
 \usage{
 sagaEnv(saga_bin = NA)
 }
 \arguments{
-\item{saga_bin}{character. Optional path to saga_cmd binary}
+\item{saga_bin}{character. Optional path to saga_cmd executable}
 }
 \value{
-list. Containing  saga_cmd path, SAGA-GIS version and nested list of
-  libaries tools and options
+sagaInstallation object. Contains paths, settings and a nested list
+  of libaries tools and options
 }
 \description{
 Establishes the link to SAGA GIS by generating a SAGA help file and parsing
 all libraries, tools and options from the help files into a nested list of
-library, module and options. Intended to be used internally by the
-initSAGA function
+library, module and options, that are contained within an sagaInstallation
+object. Intended to be used internally by \code{\link{sagaGIS}}
 }
