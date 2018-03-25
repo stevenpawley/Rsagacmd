@@ -483,6 +483,8 @@ sagaGIS = function(saga_bin = NA,
                    eval(expr = parse(text = func_code)),
                    lib = lib,
                    tool = tool,
+                   tool_options = tool_options,
+                   tool_cmd = tool_cmd,
                    class = 'sagaTool')
                  
                  self$gp[[lib]] = append(self$gp[[lib]], func)
@@ -495,24 +497,6 @@ sagaGIS = function(saga_bin = NA,
              )
            }
            names(self$gp[[lib]]) = toolnames
-         }
-       },
-       
-       print = function(x){
-         lib = attr(x, 'lib')
-         tool = attr(x, 'tool')
-         tool_params = private$senv$libraries[[lib]][[tool]][['options']]
-         tool_params = tool_params[, c(
-           'identifierR', 'Name', 'Type', 'Description', 'Constraints')]
-         
-         cat(paste0('Help for library = ', lib, '; tool = ', tool, ':', '\n'))
-         for (i in 1:nrow(tool_params)){
-           cat(paste0('Name of tool: ', tool_params[i, 'Name']), '\n')
-           cat(paste0('Identifier: ', tool_params[i, 'identifierR'], '\n'))
-           cat(paste0('Type: ', tool_params[i, 'Type'], '\n'))
-           cat(paste0('Description: ', tool_params[i, 'Description'], '\n'))
-           cat(paste0('Constraints: ', tool_params[i, 'Constraints'], '\n'))
-           cat('\n')
          }
        },
        
@@ -536,6 +520,17 @@ sagaGIS = function(saga_bin = NA,
            lib = 'grid_tools', tool = 'Tiling', senv = private$senv, intern = TRUE,
            list(GRID = grid, TILES = tile_outputs, OVERLAP = overlap,
                 NX = nx, NY = ny))
+       },
+       
+       searchTools = function(x) {
+         matches = list()
+         
+         for (lib in names(self$gp)) {
+           match_text = grep(x, names(self$gp[[lib]]), ignore.case = T)
+           if (length(match_text) > 0)
+             matches[[lib]] = names(self$gp[[lib]])[match_text]
+         }
+         return (matches)
        }
 
      ) # public
@@ -544,6 +539,27 @@ sagaGIS = function(saga_bin = NA,
   return (sagaGIS$new(senv))
   }
 
+
+#' Search for a SAGA-GIS tool
+#'
+#' @param x sagaGIS object
+#' @param pattern character. Pattern of text to search for within the tool name
+#'
+#' @return list of tools that match the pattern of the search text and their
+#' host library
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # initialize Rsagacmd
+#' saga = sagaGIS()
+#' 
+#' # search for a tool
+#' searchTools(saga, 'Terrain')
+#' }
+searchTools = function(x, pattern) {
+  return (x$searchTools(pattern))
+}
 
 #' Split a raster grid into tiles for tile-based processing
 #' 
@@ -583,8 +599,35 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #'
 #' @return NULL
 #' @export
-print.sagaTool = function(x, sagaTool, ...){
-  x$print(sagaTool)
+#' 
+#' @examples
+#' \dontrun{
+#' # Initialize Rsagacmd
+#' saga = sagaGIS()
+#' 
+#' # Display usage information on a tool
+#' print(saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing)
+#' 
+#' # or alternatively
+#' saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing
+#' }
+print.sagaTool = function(x, ...) {
+
+  lib = attr(x, 'lib')
+  tool = attr(x, 'tool')
+  tool_options = attr(x, 'tool_options')
+  tool_options = tool_options[, c(
+    'identifierR', 'Name', 'Type', 'Description', 'Constraints')]
+  
+  cat(paste0('Help for library = ', lib, '; tool = ', tool, ':', '\n'))
+  for (i in 1:nrow(tool_options)) {
+    cat(paste0('Name of tool: ', tool_options[i, 'Name']), '\n')
+    cat(paste0('Identifier: ', tool_options[i, 'identifierR'], '\n'))
+    cat(paste0('Type: ', tool_options[i, 'Type'], '\n'))
+    cat(paste0('Description: ', tool_options[i, 'Description'], '\n'))
+    cat(paste0('Constraints: ', tool_options[i, 'Constraints'], '\n'))
+    cat('\n')
+  }
 }
 
 
@@ -604,7 +647,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   args = c(...)
 
   # sagaInstallation settings
-  tool_params = senv$libraries[[lib]][[tool]][['options']]
+  tool_options = senv$libraries[[lib]][[tool]][['options']]
   tool_cmd = senv$libraries[[lib]][[tool]][['tool_cmd']]
   saga_cmd = senv$saga_cmd
   saga_config = senv$saga_config
@@ -613,7 +656,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   arg_names = names(args)
   arg_names = merge(
     x=data.frame(arg_names, stringsAsFactors = FALSE),
-    y=tool_params, by.x='arg_names', by.y='identifierR',
+    y=tool_options, by.x='arg_names', by.y='identifierR',
     sort=FALSE)$Identifier
   args = setNames(args, arg_names)
   
@@ -642,13 +685,13 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   args = gsub('.sdat', '.sgrd', args)
   
   # provide error if tool produces no outputs
-  if (length(which(tool_params$IO == "Output")) == 0)
+  if (length(which(tool_options$IO == "Output")) == 0)
     stop(paste('SAGA Tool', tool, 'produces no outputs'), call. = FALSE)
   
   # determine the SAGA output parameters that have been specified as function args
-  spec_ind = which(tool_params$IO == "Output" & tool_params$Identifier %in% arg_names)
+  spec_ind = which(tool_options$IO == "Output" & tool_options$Identifier %in% arg_names)
   n_outputs = length(spec_ind)
-  spec_out = tool_params[spec_ind, ]
+  spec_out = tool_options[spec_ind, ]
   
   # process the specified arguments
   if (n_outputs > 0) {
@@ -662,7 +705,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   }
   
   # determine any required outputs that have not been specified as function args
-  req_out = tool_params[which(tool_params$IO == "Output" & tool_params$Required == TRUE), ]
+  req_out = tool_options[which(tool_options$IO == "Output" & tool_options$Required == TRUE), ]
   unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
   n_temps = length(unspec_ind)
   

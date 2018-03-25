@@ -4,11 +4,23 @@
 \alias{print.sagaTool}
 \title{Generic function to display help and usage information for any SAGA-GIS tool}
 \usage{
-print.sagaTool(x, sagaTool, ...)
+print.sagaTool(x, ...)
 }
 \arguments{
 \item{x}{sagaTool object}
 }
 \description{
 Generic function to display help and usage information for any SAGA-GIS tool
+}
+\examples{
+\dontrun{
+# Initialize Rsagacmd
+saga = sagaGIS()
+
+# Display usage information on a tool
+print(saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing)
+
+# or alternatively
+saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing
+}
 }
