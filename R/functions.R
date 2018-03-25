@@ -439,6 +439,16 @@ sagaGIS = function(saga_bin = NA,
 
        # public functions
        initialize = function(senv){
+         # R6 class initialization
+         # Initializes the sagaGIS R6 class object and builds a library of 
+         # functions that are mapped to the syntax of the user's installed
+         # SAGA-GIS software
+         #
+         # Args:
+         #  senv : sagaInstallation object
+         #    object containing the settings and recognized libraries within the
+         #    installed SAGA-GIS version
+         
          private$senv = senv
 
          # dynamically create functions
@@ -501,6 +511,25 @@ sagaGIS = function(saga_bin = NA,
        },
        
        tileGeoprocessor = function(grid, nx, ny, overlap=0){
+         # Split a raster grid into tiles for tile-based processing
+         # Split a raster grid into tiles. The tiles are saved as Rsagacmd
+         # temporary files, and are loaded as a list of R objects for futher
+         # processing. This is a function to make the the SAGA-GIS 
+         # grid_tools / tiling tool more convenient to use.
+         #
+         # Args:
+         #  grid : character, RasterLayer, RasterStack, RasterBrick object
+         #    Input grid data from file path or loaded as an R object
+         # nx : numeric
+         #  Number of pixels in the x-dimension per tile
+         # ny : numeric
+         #  Number of pixels in the y-dimension per tile
+         # overlap : numeric, default = 0
+         #  Number of pixels to overlap the tiles by on all sides
+         # Returns:
+         #  tiles : list
+         #    List of RasterLayer objects saved to temporary file location
+         #    that represent the input grid divided into tiles
 
          # calculate number of tiles required
          n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
@@ -523,6 +552,16 @@ sagaGIS = function(saga_bin = NA,
        },
        
        searchTools = function(x) {
+         # Search for a SAGA-GIS tool within the loaded libraries using
+         # pattern matching
+         # Args:
+         #  x : character
+         #    Text representing pattern to search for, case is ignored
+         # Returns:
+         #  matches : list
+         #    List of matches as a named list of libraries and tools that
+         #    match the search pattern in each library
+  
          matches = list()
          
          for (lib in names(self$gp)) {
