@@ -5,7 +5,7 @@
 \title{Generates a custom saga_cmd configuration file}
 \usage{
 sagaConfigure(senv, grid_caching = FALSE, grid_cache_threshlod = 100,
-  grid_cache_dir = NA, cores = 1)
+  grid_cache_dir = NA, cores = NA)
 }
 \arguments{
 \item{senv}{sagaInstallation object. SAGA-GIS environment and settings}

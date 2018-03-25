@@ -180,37 +180,52 @@ sagaEnv = function(saga_bin = NA) {
           any(is.na(x))) == FALSE), ]
         
         options['IO'] = NA
-        options['Required'] = TRUE
+        options['Required'] = FALSE
         options['Feature'] = NA
+        
+        # required inputs/outputs
         options[grep("input", options$Type), 'IO'] = 'Input'
-        options[grep("File path", options$Type), 'IO'] = 'Input'
-        options[grep("File path", options$Type), 'Required'] = FALSE
+        options[grep("input", options$Type), 'Required'] = TRUE
         options[grep("output", options$Type), 'IO'] = 'Output'
+        options[grep("output", options$Type), 'Required'] = TRUE
         options[grep("optional", options$Type), 'Required'] = FALSE
+        
+        # grids
         options[grep("Grid", options$Type), 'Feature'] = 'Grid'
         options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
+        
+        # shapes
         options[grep("Shapes", options$Type), 'Feature'] = 'Shape'
         options[grep("Shapes list", options$Type), 'Feature'] = 'Shapes list'
+        
+        # tables
         options[grep("Table", options$Type), 'Feature'] = 'Table'
-        options[grep("Table", options$Type), 'Required'] = FALSE
         options[grep("Static table", options$Type), 'Feature'] = 'Table'
-        options[grep("Static table", options$Type), 'Required'] = FALSE
         options[grep("Table list", options$Type), 'Feature'] = 'Table list'
-        options[grep("Table list", options$Type), 'Required'] = FALSE
+
+        # paths
+        options[grep("File path", options$Type), 'Feature'] = 'File path'
+
+        # fields
         options[grep("field", options$Type), 'Feature'] = 'Table field'
-        options[grep("field", options$Type), 'Required'] = FALSE
-        options[grep("Integer", options$Type), 'Required'] = FALSE
-        options[grep("Choice", options$Type), 'Required'] = FALSE
-        options[grep("Floating point", options$Type), 'Required'] = FALSE
-        options[grep("Boolean", options$Type), 'Required'] = FALSE
-        options[grep("Long text", options$Type), 'Required'] = FALSE
-        options[grep("Text", options$Type), 'Required'] = FALSE
+        options[grep("Integer", options$Type), 'Feature'] = 'Integer'
+        options[grep("Choice", options$Type), 'Feature'] = 'Choice'
+        options[grep("Floating point", options$Type), 'Feature'] = 'numeric'
+        options[grep("Boolean", options$Type), 'Feature'] = 'logical'
+        options[grep("Long text", options$Type), 'Feature'] = 'character'
+        options[grep("Text", options$Type), 'Feature'] = 'character'
         
         # exceptions
         if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster') {
           options[grep("File path", options$Type), 'IO'] = 'Output'
+          options[grep("File path", options$Type), 'Feature'] = 'Grid'
           options[grep("File path", options$Type), 'Required'] = TRUE
-          options[grep("File path", options$Type), 'Feature'] = 'Raster'
+
+        } else if (toolName == 'Export Shapes' | toolName == 'Export Shapes to KML') {
+          options[grep("File path", options$Type), 'IO'] = 'Output'
+          options[grep("File path", options$Type), 'Feature'] = 'Shapes'
+          options[grep("File path", options$Type), 'Required'] = TRUE
+
         } else if (toolName == 'Clip Grid with Rectangle') {
           options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
         }
@@ -301,43 +316,38 @@ sagaConfigure = function(senv,
                          grid_caching = FALSE,
                          grid_cache_threshlod = 100,
                          grid_cache_dir = NA,
-                         cores = 1) {
+                         cores = NA) {
   # some checks
-  if (missing(senv)) {
+  if (missing(senv))
     stop('senv parameter is missing')
-  }
   
-  if (is.na(grid_cache_dir)) {
+  if (is.na(grid_cache_dir))
     grid_cache_dir = gsub('\\\\', '/', tempdir())
-  }
   
-  if (cores > 1 & grid_caching == TRUE) {
-    stop('SAGA-GIS file caching is not thread-safe. Number of processing cores must be set to one')
-  }
-  
-  # create a custom saga_cmd configuration file
-  if (!missing(cores) | grid_caching == TRUE) {
-    
-    # call saga_cmd to create configuration file
+  # create configuration file if any arguments are supplied
+  if (length(as.list(match.call())) > 1){
     saga_config = tempfile(fileext = '.ini')
     msg = system(paste(
       shQuote(senv$saga_cmd),
       paste0('--create-config=', saga_config)
     ),
     intern = T)
-    
-    # read custom saga_cmd.ini and change grid cache-related settings
     saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
     
-    if (!missing(cores)) {
+    # configuration for custom number of cores
+    if (!missing(cores) & grid_caching == FALSE) {
       saga_config_settings = gsub(
         'OMP_THREADS_MAX=[0-9]*',
         paste0('OMP_THREADS_MAX=', cores),
-        saga_config_settings
-      )
-    }
+        saga_config_settings)
     
-    if (grid_caching == TRUE) {
+    # configuration for grid caching
+    } else if (grid_caching == TRUE) {
+      if (cores > 1 | is.na(cores)) {
+        message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
+        cores = 1
+      }
+      
       saga_config_settings = gsub(
         'GRID_CACHE_MODE=[0-3]', 'GRID_CACHE_MODE=1', saga_config_settings)
       saga_config_settings = gsub(
@@ -351,14 +361,16 @@ sagaConfigure = function(senv,
       saga_config_settings = gsub(
         'OMP_THREADS_MAX=[0-9]*', 'OMP_THREADS_MAX=1', saga_config_settings)
     }
-      
+    
+    # write configuration file
     writeChar(saga_config_settings, saga_config)
+    
   } else {
     saga_config = NA
   }
-  
   return (saga_config)
 }
+
 
 #' Initiate a SAGA-GIS geoprocessor object
 #'
@@ -412,7 +424,7 @@ sagaGIS = function(saga_bin = NA,
   # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
   senv[['saga_config']] = sagaConfigure(
-    senv, grid_caching, grid_cache_threshold, grid_cache_dir, cores)
+    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores)
   
   # create R6 class
   sagaGIS = R6Class("sagaGIS",
@@ -716,7 +728,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   msg = system(saga_cmd, intern = T)
   if (!is.null(attr(msg, "status"))){
     print (saga_cmd)
-    message(msg)
+    print(msg)
     stop()
   }
   
@@ -762,11 +774,8 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         }
         
       }, error = function(e){
-        warning(
-          paste(
-            'No output for', spec_out[i, 'Identifier'],
-            '. The tool may require other inputs in order to calculate this output')
-          , call. = FALSE)
+        warning(paste('No geoprocessing output for', spec_out[i, 'Identifier']),
+                call. = FALSE)
       }
       )
       
