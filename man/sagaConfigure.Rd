@@ -10,6 +10,8 @@ sagaConfigure(senv, grid_caching = FALSE, grid_cache_threshlod = 100,
 \arguments{
 \item{senv}{sagaInstallation object. SAGA-GIS environment and settings}
 
+\item{grid_caching}{logical. Optionally use file caching}
+
 \item{grid_cache_threshlod}{numeric. Threshold (in Mb) before file caching 
 for loaded raster data is activated}
 
@@ -17,8 +19,6 @@ for loaded raster data is activated}
 
 \item{cores}{numeric. Maximum number of processing cores. Needs to be set to
 1 if file caching is activated}
-
-\item{grid_caching.}{logical. Optionally use file caching}
 }
 \value{
 character. Path to custom saga_cmd initiation file

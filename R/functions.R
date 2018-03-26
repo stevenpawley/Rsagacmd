@@ -2,7 +2,7 @@
 #'
 #' Intended to be used internally by \code{\link{sagaEnv}}
 #'
-#' @param cmd character. Path of the saga_cmd binary
+#' @param saga_cmd character. Path of the saga_cmd binary
 #'
 #' @return numeric_version. Version of SAGA-GIS found at the cmd path
 sagaVersion = function(saga_cmd) {
@@ -304,7 +304,7 @@ sagaEnv = function(saga_bin = NA) {
 #' Intended to be used internally by \code{\link{sagaGIS}}.
 #'
 #' @param senv sagaInstallation object. SAGA-GIS environment and settings
-#' @param grid_caching. logical. Optionally use file caching
+#' @param grid_caching logical. Optionally use file caching
 #' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching 
 #' for loaded raster data is activated
 #' @param grid_cache_dir character. Path to directory for temporary files
@@ -641,7 +641,7 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' @param x sagaTool object
 #'
 #' @return NULL
-#' @export
+#' @export print.sagaTool
 #' 
 #' @examples
 #' \dontrun{
@@ -701,7 +701,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
     x=data.frame(arg_names, stringsAsFactors = FALSE),
     y=tool_options, by.x='arg_names', by.y='identifierR',
     sort=FALSE)$Identifier
-  args = setNames(args, arg_names)
+  args = stats::setNames(args, arg_names)
   
   # strip missing arguments and update arg_names
   args[args == ''] = NA
@@ -909,15 +909,15 @@ RtoSAGA = function(param) {
   #     - FALSE: error message that SAGA-GIS needs single bands as inputs
   
   # Simple features objects
-  if (is(param, 'sf') == TRUE) {
+  if (methods::is(param, 'sf') == TRUE) {
     temp = tempfile(fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     sf::st_write(obj = param, dsn = temp, quiet = TRUE)
     param = temp
     
     # Raster objects
-  } else if (is(param, 'RasterLayer') |
-             is(param, 'RasterStack') | is(param, 'RasterBrick')) {
+  } else if (methods::is(param, 'RasterLayer') |
+             methods::is(param, 'RasterStack') | methods::is(param, 'RasterBrick')) {
     
     # Rasters stored as files
     if (raster::inMemory(param) == FALSE) {
@@ -962,9 +962,9 @@ RtoSAGA = function(param) {
     }
     
     # Spatial objects
-  } else if (is(param, 'SpatialLinesDataFrame') |
-             is(param, 'SpatialPolygonsDataFrame') |
-             is(param, 'SpatialPointsDataFrame')) {
+  } else if (methods::is(param, 'SpatialLinesDataFrame') |
+             methods::is(param, 'SpatialPolygonsDataFrame') |
+             methods::is(param, 'SpatialPointsDataFrame')) {
     
     temp = tempfile(fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
@@ -977,7 +977,7 @@ RtoSAGA = function(param) {
     param = temp
     
     # Tables
-  } else if (is(param, "data.frame")) {
+  } else if (methods::is(param, "data.frame")) {
     temp = tempfile(fileext = '.txt')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     utils::write.table(x = param, file = temp, sep = "\t")
@@ -1020,7 +1020,7 @@ sagaRemoveTmpFiles = function(h=0) {
         message(f)
         assoc_files = list.files(
           path = dirname(f),
-          pattern = glob2rx(paste0(tools::file_path_sans_ext(basename(f)), '.*')),
+          pattern = utils::glob2rx(paste0(tools::file_path_sans_ext(basename(f)), '.*')),
           full.names = T)
         file.remove(assoc_files)
         pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]

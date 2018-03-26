@@ -7,7 +7,7 @@
 sagaVersion(saga_cmd)
 }
 \arguments{
-\item{cmd}{character. Path of the saga_cmd binary}
+\item{saga_cmd}{character. Path of the saga_cmd binary}
 }
 \value{
 numeric_version. Version of SAGA-GIS found at the cmd path

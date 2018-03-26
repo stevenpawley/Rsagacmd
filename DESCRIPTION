@@ -16,4 +16,5 @@ Imports: XML,
     foreign,
     sf,
     minpack.lm,
-    R6
+    R6,
+    methods

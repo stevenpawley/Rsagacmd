@@ -5,6 +5,7 @@ devtools::use_package("rgdal")
 devtools::use_package("foreign")
 devtools::use_package("sf")
 devtools::use_package("R6")
+devtools::use_package("methods")
 
 #' Rsagacmd: A package for linking R with the open-source SAGA-GIS software.
 #'

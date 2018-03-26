@@ -31,15 +31,15 @@ MRVBFthreshold = function(res, plot=FALSE){
     # produce nls smooth line
     if (res > max(dem_res))
       predx = seq(min(dem_res), max(res*2, dem_res), 1)
-    predy = predict(m, list(dem_res = predx))
+    predy = stats::predict(m, list(dem_res = predx))
     
     # plot
     plot(dem_res, mrvbf_slope, xlab = 'DEM resolution (m)',
          ylab = 'MRVBF Initial Slope', xlim=c(min(dem_res), res*1.1), xaxs="i")
-    lines(predx, predy)
-    lines(x=c(res,res), y=c(0,predict(m, list(dem_res=res))))
-    lines(x=c(0,res), y=c(predict(m, list(dem_res=res)),predict(m, list(dem_res=res))))
+    graphics::lines(predx, predy)
+    graphics::lines(x=c(res,res), y=c(0, stats::predict(m, list(dem_res=res))))
+    graphics::lines(x=c(0,res), y=c(stats::predict(m, list(dem_res=res)), stats::predict(m, list(dem_res=res))))
     }
   
-  predict(m, list(dem_res=res))
+  stats::predict(m, list(dem_res=res))
 }
