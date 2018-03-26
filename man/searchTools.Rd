@@ -12,8 +12,8 @@ searchTools(x, pattern)
 \item{pattern}{character. Pattern of text to search for within the tool name}
 }
 \value{
-list of tools that match the pattern of the search text and their
-host library
+dataframe of tools that match the pattern of the search text and
+their host library
 }
 \description{
 Search for a SAGA-GIS tool

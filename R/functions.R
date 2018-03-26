@@ -558,8 +558,8 @@ sagaGIS = function(saga_bin = NA,
          #  x : character
          #    Text representing pattern to search for, case is ignored
          # Returns:
-         #  matches : list
-         #    List of matches as a named list of libraries and tools that
+         #  matches : dataframe
+         #    Dataframe of matches as a named list of libraries and tools that
          #    match the search pattern in each library
   
          matches = list()
@@ -569,7 +569,11 @@ sagaGIS = function(saga_bin = NA,
            if (length(match_text) > 0)
              matches[[lib]] = names(self$gp[[lib]])[match_text]
          }
-         return (matches)
+         
+         matches_df = data.frame(
+           library = rep(names(matches), lapply(matches, length)),
+           tool = unlist(matches, use.names = F))
+         return (matches_df)
        }
 
      ) # public
@@ -584,8 +588,8 @@ sagaGIS = function(saga_bin = NA,
 #' @param x sagaGIS object
 #' @param pattern character. Pattern of text to search for within the tool name
 #'
-#' @return list of tools that match the pattern of the search text and their
-#' host library
+#' @return dataframe of tools that match the pattern of the search text and
+#' their host library
 #' @export
 #'
 #' @examples
