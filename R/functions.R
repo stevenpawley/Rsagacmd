@@ -790,7 +790,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   }
   
   # add saga_cmd arguments to the command line call
-  flags = '--flags=pl'
+  flags = '--flags=p'
   
   # create string with argument values within quotes
   quote_type = ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
