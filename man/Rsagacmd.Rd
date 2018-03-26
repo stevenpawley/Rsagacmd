@@ -4,7 +4,7 @@
 \name{Rsagacmd}
 \alias{Rsagacmd}
 \alias{Rsagacmd-package}
-\title{Rsagacmd: A package for linking R with the open-source SAGA-GIS software.}
+\title{Rsagacmd: Linking R with the open-source SAGA-GIS software.}
 \description{
 \pkg{Rsagacmd} provides an R scripting interface to the
 open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}

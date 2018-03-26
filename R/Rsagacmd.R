@@ -7,7 +7,7 @@ devtools::use_package("sf")
 devtools::use_package("R6")
 devtools::use_package("methods")
 
-#' Rsagacmd: A package for linking R with the open-source SAGA-GIS software.
+#' Rsagacmd: Linking R with the open-source SAGA-GIS software.
 #'
 #' \pkg{Rsagacmd} provides an R scripting interface to the
 #' open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}
