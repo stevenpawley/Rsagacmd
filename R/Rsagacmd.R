@@ -1,9 +1,3 @@
-#' Rsagacmd: Linking R with the open-source SAGA-GIS software.
-#'
-#' \pkg{Rsagacmd} provides an R scripting interface to the
-#' open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}
-#' software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0,
-#' 6.0.0-6.3.0 on Windows (x64), OS X and Linux.
 devtools::use_package("raster")
 devtools::use_package("tools")
 devtools::use_package("rgdal")
@@ -12,6 +6,13 @@ devtools::use_package("sf")
 devtools::use_package("minpack.lm")
 devtools::use_package("R6")
 devtools::use_package("methods")
+
+#' Rsagacmd: Linking R with the open-source SAGA-GIS software.
+#'
+#' \pkg{Rsagacmd} provides an R scripting interface to the
+#' open-source \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}
+#' software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0,
+#' 6.0.0-6.3.0 on Windows (x64), OS X and Linux.
 
 #' This package is not related to the \pkg{RSAGA} package, which provides an
 #' alternative interface to SAGA-GIS. However in contrast to RSAGA, Rsagacmd
