@@ -31,7 +31,7 @@ of functions for SAGA-GIS libraries and tools
 \description{
 Dynamically generates functions to all valid SAGA-GIS libraries and tools.
 These functions are stored within a sagaGIS R6 object as a named list of 
-functions. These functions are accessed via the 'gp' attribute and are
+functions. These functions are accessed via the 'gp' attribute.
 }
 \examples{
 \dontrun{

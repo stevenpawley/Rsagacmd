@@ -4,7 +4,7 @@
 \alias{print.sagaTool}
 \title{Generic function to display help and usage information for any SAGA-GIS tool}
 \usage{
-print.sagaTool(x, ...)
+\method{print}{sagaTool}(x)
 }
 \arguments{
 \item{x}{sagaTool object}

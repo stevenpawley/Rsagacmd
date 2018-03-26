@@ -376,7 +376,7 @@ sagaConfigure = function(senv,
 #'
 #' Dynamically generates functions to all valid SAGA-GIS libraries and tools.
 #' These functions are stored within a sagaGIS R6 object as a named list of 
-#' functions. These functions are accessed via the 'gp' attribute and are
+#' functions. These functions are accessed via the 'gp' attribute.
 #'
 #' @param saga_bin character, optional. Path to saga_cmd executable. If this 
 #' argument is not supplied then an automatic search for the saga_cmd executable
@@ -416,10 +416,10 @@ sagaConfigure = function(senv,
 #'     DEM = dem, intern=FALSE)
 #' }
 sagaGIS = function(saga_bin = NA,
-                    grid_caching = FALSE,
-                    grid_cache_threshlod = 100,
-                    grid_cache_dir = NA,
-                    cores = NA) {
+                   grid_caching = FALSE,
+                   grid_cache_threshlod = 100,
+                   grid_cache_dir = NA,
+                   cores = NA) {
   
   # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
@@ -427,8 +427,8 @@ sagaGIS = function(saga_bin = NA,
     senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores)
   
   # create R6 class
-  sagaGIS = R6Class("sagaGIS",
-
+  sagaGIS = R6::R6Class("sagaGIS",
+      
      private = list(
        senv = NULL
      ),
@@ -583,6 +583,10 @@ sagaGIS = function(saga_bin = NA,
   }
 
 
+# list of supposedly 'global' names to appease R CMD check
+.__global__ <- c("self","private")
+
+
 #' Search for a SAGA-GIS tool
 #'
 #' @param x sagaGIS object
@@ -641,7 +645,7 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' @param x sagaTool object
 #'
 #' @return NULL
-#' @export print.sagaTool
+#' @exportClass print
 #' 
 #' @examples
 #' \dontrun{
@@ -654,7 +658,7 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' # or alternatively
 #' saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing
 #' }
-print.sagaTool = function(x, ...) {
+print.sagaTool = function(x) {
 
   lib = attr(x, 'lib')
   tool = attr(x, 'tool')
@@ -924,7 +928,7 @@ RtoSAGA = function(param) {
       if (raster::nbands(param) == 1) {
         if (tools::file_ext(raster::filename(param)) == 'grd') {
           temp = tempfile(fileext = '.tif')
-          raster::writeRaster(raster(param), filename = temp)
+          raster::writeRaster(raster::raster(param), filename = temp)
           param = temp
         } else {
           param = raster::filename(param)

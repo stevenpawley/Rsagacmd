@@ -1,5 +1,3 @@
-devtools::use_package("minpack.lm")
-
 #' Calculate the T_SLOPE value based on DEM resolution for MRVBF
 #'
 #' Calculates the T_SLOPE value for the Multiresolution Index of Valley Bottom 

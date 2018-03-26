@@ -1,12 +1,3 @@
-devtools::use_package("XML")
-devtools::use_package("raster")
-devtools::use_package("tools")
-devtools::use_package("rgdal")
-devtools::use_package("foreign")
-devtools::use_package("sf")
-devtools::use_package("R6")
-devtools::use_package("methods")
-
 #' Rsagacmd: Linking R with the open-source SAGA-GIS software.
 #'
 #' \pkg{Rsagacmd} provides an R scripting interface to the
