@@ -9,9 +9,8 @@ tileGeoprocessor(x, grid, nx, ny, overlap = 0)
 \arguments{
 \item{x}{sagaGIS R6 object}
 
-\item{grid}{character, or RasterLayer.
-GDAL-supported raster, as as a path to the raster or representing a 
-RasterLayer object}
+\item{grid}{character, or RasterLayer. GDAL-supported raster, as as a path to
+the raster or representing a RasterLayer object}
 
 \item{nx}{numeric. Number of x-pixels per tile}
 

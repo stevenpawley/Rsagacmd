@@ -305,69 +305,80 @@ sagaEnv = function(saga_bin = NA) {
 #'
 #' @param senv sagaInstallation object. SAGA-GIS environment and settings
 #' @param grid_caching logical. Optionally use file caching
-#' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching 
-#' for loaded raster data is activated
+#' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching
+#'   for loaded raster data is activated
 #' @param grid_cache_dir character. Path to directory for temporary files
 #' @param cores numeric. Maximum number of processing cores. Needs to be set to
-#' 1 if file caching is activated
+#'   1 if file caching is activated
+#' @param sagaversion numeric_version. Version of SAGA-GIS. The generation of a
+#'   saga_cmd configuration file is only valid for versions > 4.0.0
 #'
 #' @return character. Path to custom saga_cmd initiation file
 sagaConfigure = function(senv,
                          grid_caching = FALSE,
                          grid_cache_threshlod = 100,
                          grid_cache_dir = NA,
-                         cores = NA) {
+                         cores = NA,
+                         sagaversion) {
   # some checks
   if (missing(senv))
     stop('senv parameter is missing')
-  
+
   if (is.na(grid_cache_dir))
     grid_cache_dir = gsub('\\\\', '/', tempdir())
   
   # create configuration file if any arguments are supplied
-  if (grid_caching == TRUE | !is.na(cores)){
-    saga_config = tempfile(fileext = '.ini')
-    msg = system(paste(
-      shQuote(senv$saga_cmd),
-      paste0('--create-config=', saga_config)
-    ),
-    intern = T)
-    saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
-    
-    # configuration for custom number of cores
-    if (!missing(cores) & grid_caching == FALSE) {
-      saga_config_settings = gsub(
-        'OMP_THREADS_MAX=[0-9]*',
-        paste0('OMP_THREADS_MAX=', cores),
-        saga_config_settings)
-    
-    # configuration for grid caching
-    } else if (grid_caching == TRUE) {
-      if (cores > 1 | is.na(cores)) {
-        message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
-        cores = 1
+  if (sagaversion >= as.numeric_version('4.0.0')) {
+    if (grid_caching == TRUE | !is.na(cores)){
+      saga_config = tempfile(fileext = '.ini')
+      msg = system(paste(
+        shQuote(senv$saga_cmd),
+        paste0('--create-config=', saga_config)
+      ),
+      intern = T)
+      saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
+      
+      # configuration for custom number of cores
+      if (!missing(cores) & grid_caching == FALSE) {
+        saga_config_settings = gsub(
+          'OMP_THREADS_MAX=[0-9]*',
+          paste0('OMP_THREADS_MAX=', cores),
+          saga_config_settings)
+      
+      # configuration for grid caching
+      } else if (grid_caching == TRUE) {
+        if (cores > 1 | is.na(cores)) {
+          message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
+          cores = 1
+        }
+        
+        saga_config_settings = gsub(
+          'GRID_CACHE_MODE=[0-3]', 'GRID_CACHE_MODE=1', saga_config_settings)
+        saga_config_settings = gsub(
+          'GRID_CACHE_THRESHLOD=[0-9]*',
+          paste0('GRID_CACHE_THRESHLOD=', grid_cache_threshlod),
+          saga_config_settings)
+        saga_config_settings = gsub(
+          'GRID_CACHE_TMPDIR=;*',
+          paste0('GRID_CACHE_TMPDIR=', shQuote(gsub('\\\\', '/', tempdir()))),
+          saga_config_settings)
+        saga_config_settings = gsub(
+          'OMP_THREADS_MAX=[0-9]*', 'OMP_THREADS_MAX=1', saga_config_settings)
       }
       
-      saga_config_settings = gsub(
-        'GRID_CACHE_MODE=[0-3]', 'GRID_CACHE_MODE=1', saga_config_settings)
-      saga_config_settings = gsub(
-        'GRID_CACHE_THRESHLOD=[0-9]*',
-        paste0('GRID_CACHE_THRESHLOD=', grid_cache_threshlod),
-        saga_config_settings)
-      saga_config_settings = gsub(
-        'GRID_CACHE_TMPDIR=;*',
-        paste0('GRID_CACHE_TMPDIR=', shQuote(gsub('\\\\', '/', tempdir()))),
-        saga_config_settings)
-      saga_config_settings = gsub(
-        'OMP_THREADS_MAX=[0-9]*', 'OMP_THREADS_MAX=1', saga_config_settings)
+      # write configuration file
+      writeChar(saga_config_settings, saga_config)
+      
     }
-    
-    # write configuration file
-    writeChar(saga_config_settings, saga_config)
-    
   } else {
-    saga_config = NA
+    message(
+      paste('Cannot enable grid caching or change number cores for SAGA-GIS',
+            'versions < 4.0.0. Please use a more recent version of SAGA-GIS'))
   }
+  
+  if (!exists('saga_config'))
+    saga_config = NA
+
   return (saga_config)
 }
 
@@ -378,19 +389,19 @@ sagaConfigure = function(senv,
 #' These functions are stored within a sagaGIS R6 object as a named list of 
 #' functions. These functions are accessed via the 'gp' attribute.
 #'
-#' @param saga_bin character, optional. Path to saga_cmd executable. If this 
-#' argument is not supplied then an automatic search for the saga_cmd executable
-#' will be performed.
+#' @param saga_bin character, optional. Path to saga_cmd executable. If this
+#'   argument is not supplied then an automatic search for the saga_cmd
+#'   executable will be performed.
 #' @param grid_caching logical, optional. Use file caching in saga_cmd
-#' geoprocessing operations for rasters that are too large to fit into memory.
+#'   geoprocessing operations for rasters that are too large to fit into memory.
 #' @param grid_cache_threshlod numeric, optional. Threshold (in Mb) before file
-#' caching is activated for loaded raster data.
+#'   caching is activated for loaded raster data.
 #' @param grid_cache_dir character, optional. Path to directory for temporary
 #'   files generated by file caching.
 #' @param cores numeric. Maximum number of processing cores. Needs to be set to
-#' 1 if file caching is activated.
-#' @return R6 sagaGIS object containing a 'gp' attribute containing a nested list
-#' of functions for SAGA-GIS libraries and tools
+#'   1 if file caching is activated.
+#' @return R6 sagaGIS object containing a 'gp' attribute containing a nested
+#'   list of functions for SAGA-GIS libraries and tools
 #' 
 #' @export
 #'
@@ -423,19 +434,9 @@ sagaGIS = function(saga_bin = NA,
   
   # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
-  
-  # set saga_cmd configuration options
-  if (grid_caching == TRUE | !is.na(cores)) {
-    if (senv$version >= as.numeric_version('4.0.0')) {
-    senv[['saga_config']] = sagaConfigure(
-      senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores)
-    } else {
-      message(
-        paste('Cannot enable grid caching or change number cores for SAGA-GIS',
-              'versions < 4.0.0. Please use a more recent version of SAGA-GIS'))
-    }
-  }
-  
+  senv[['saga_config']] = sagaConfigure(
+    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores, senv$version)
+
   # create R6 class
   sagaGIS = R6::R6Class("sagaGIS",
       
@@ -584,6 +585,58 @@ sagaGIS = function(saga_bin = NA,
            library = rep(names(matches), lapply(matches, length)),
            tool = unlist(matches, use.names = F))
          return (matches_df)
+       },
+       
+       sagaExtract = function(SHAPES, GRIDS, RESAMPLING = 0){
+         # Extract grid values at vector feature locations using SAGA-GIS
+         # Args:
+         #  SHAPES : sp or sf object
+         #  GRIDS : Single raster object, or list of raster objects
+         #  RESAMPLING : numeric or character with resampling method to use
+         #
+         # Returns:
+         #  x : sf dataframe
+         #    sf, dataframe of extracted data
+
+         # some checks
+         if (!methods::is(SHAPES, 'SpatialPointsDataFrame') &
+             !methods::is(SHAPES, 'SpatialPolygonsDataFrame') &
+             !methods::is(SHAPES, 'SpatialLinesDataFrame') &
+             !methods::is(SHAPES, 'sf')){
+           stop('SHAPES argument must represent an sp or sf vector data object')
+         }
+         
+         if (!methods::is(GRIDS, 'list'))
+           GRIDS = list(GRIDS)
+         
+         for (item in GRIDS){
+           if (!methods::is(item, 'RasterLayer') &
+               !methods::is(item, 'RasterBrick') &
+               !methods::is(item, 'RasterStack')) {
+             stop('GRIDS argument must contain a RasterLayer, RasterBrick or RasterStack object')
+           }
+         }
+         
+         # extract data using SAGA
+         tmp = tempfile(fileext = '.shp')
+         tmp = pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, tmp)
+         
+         x = saga$gp$shapes_grid$Add_Grid_Values_to_Shapes(
+           SHAPES = SHAPES, GRIDS = GRIDS, RESULT = tmp,
+           RESAMPLING = RESAMPLING, intern = T)
+
+         # rename columns
+         grid_names = lapply(GRIDS, function(band)
+           tools::file_path_sans_ext(basename(raster::filename(band))))
+         grid_names_dup = which(grid_names %in% unique(grid_names))
+         for (i in 1:length(grid_names_dup)){
+           grid_names[grid_names_dup[i]] = paste(
+             grid_names[grid_names_dup[i]], i, sep='.')
+         }
+         grid_names = make.names(names(grid_names))
+         names(x)[(ncol(SHAPES)+1):(ncol(x)-1)] = grid_names
+         
+         return(x)
        }
 
      ) # public
@@ -596,6 +649,27 @@ sagaGIS = function(saga_bin = NA,
 # list of supposedly 'global' names to appease R CMD check
 .__global__ <- c("self","private")
 
+
+#' Extract raster data at vector feature locations using SAGA-GIS
+#' 
+#' Extracts pixel values at vector feature locations using SAGA-GIS. If the
+#' vector feature represents point or lines, then a single pixel value is
+#' extracted. For polygon data, the average pixel value of each grid within the
+#' area of the polygon is extracted.
+#'
+#' @param x sagaGIS object
+#' @param SHAPES sf or sp vector object
+#' @param GRIDS list of RasterLayer, RasterBrick, or RasterStack objects
+#'   containing only a single layer
+#' @param RESAMPLING numeric or character. Resampling method used to extract
+#'   pixel values. [0] Nearest Neighbour;[1] Bilinear Interpolation;[2] Bicubic
+#'   Spline Interpolation;[3] B-Spline Interpolation
+#'
+#' @return sf object containing extracted raster data
+#' @export
+sagaExtract = function(x, SHAPES, GRIDS, RESAMPLING = 0){
+  extracted_data = x$sagaExtract(SHAPES, GRIDS, RESAMPLING)
+}
 
 #' Search for a SAGA-GIS tool
 #'
@@ -626,9 +700,8 @@ searchTools = function(x, pattern) {
 #' grid_tools / tiling tool more convenient to use.
 #'
 #' @param x sagaGIS R6 object 
-#' @param grid character, or RasterLayer.
-#' GDAL-supported raster, as as a path to the raster or representing a 
-#' RasterLayer object
+#' @param grid character, or RasterLayer. GDAL-supported raster, as as a path to
+#'   the raster or representing a RasterLayer object
 #' @param nx numeric. Number of x-pixels per tile
 #' @param ny numeric. Number of y-pixels per tile
 #' @param overlap numeric. Number of overlapping pixels
@@ -668,7 +741,7 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' # or alternatively
 #' saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing
 #' }
-print.sagaTool = function(x) {
+print.sagaTool = function(x, ...) {
 
   lib = attr(x, 'lib')
   tool = attr(x, 'tool')
@@ -812,7 +885,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   
   # prepare system call
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-  
+
   if (!is.na(saga_config)) {
     config =  paste('-C', shQuote(saga_config), sep='=')
   } else {

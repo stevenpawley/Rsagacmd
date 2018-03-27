@@ -5,20 +5,23 @@
 \title{Generates a custom saga_cmd configuration file}
 \usage{
 sagaConfigure(senv, grid_caching = FALSE, grid_cache_threshlod = 100,
-  grid_cache_dir = NA, cores = NA)
+  grid_cache_dir = NA, cores = NA, sagaversion)
 }
 \arguments{
 \item{senv}{sagaInstallation object. SAGA-GIS environment and settings}
 
 \item{grid_caching}{logical. Optionally use file caching}
 
-\item{grid_cache_threshlod}{numeric. Threshold (in Mb) before file caching 
+\item{grid_cache_threshlod}{numeric. Threshold (in Mb) before file caching
 for loaded raster data is activated}
 
 \item{grid_cache_dir}{character. Path to directory for temporary files}
 
 \item{cores}{numeric. Maximum number of processing cores. Needs to be set to
 1 if file caching is activated}
+
+\item{sagaversion}{numeric_version. Version of SAGA-GIS. The generation of a
+saga_cmd configuration file is only valid for versions > 4.0.0}
 }
 \value{
 character. Path to custom saga_cmd initiation file
