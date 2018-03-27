@@ -328,55 +328,56 @@ sagaConfigure = function(senv,
     grid_cache_dir = gsub('\\\\', '/', tempdir())
   
   # create configuration file if any arguments are supplied
-  if (sagaversion >= as.numeric_version('4.0.0')) {
-    if (grid_caching == TRUE | !is.na(cores)){
-      saga_config = tempfile(fileext = '.ini')
-      msg = system(paste(
-        shQuote(senv$saga_cmd),
-        paste0('--create-config=', saga_config)
-      ),
-      intern = T)
-      saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
-      
-      # configuration for custom number of cores
-      if (!missing(cores) & grid_caching == FALSE) {
-        saga_config_settings = gsub(
-          'OMP_THREADS_MAX=[0-9]*',
-          paste0('OMP_THREADS_MAX=', cores),
-          saga_config_settings)
-      
-      # configuration for grid caching
-      } else if (grid_caching == TRUE) {
-        if (cores > 1 | is.na(cores)) {
-          message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
-          cores = 1
-        }
-        
-        saga_config_settings = gsub(
-          'GRID_CACHE_MODE=[0-3]', 'GRID_CACHE_MODE=1', saga_config_settings)
-        saga_config_settings = gsub(
-          'GRID_CACHE_THRESHLOD=[0-9]*',
-          paste0('GRID_CACHE_THRESHLOD=', grid_cache_threshlod),
-          saga_config_settings)
-        saga_config_settings = gsub(
-          'GRID_CACHE_TMPDIR=;*',
-          paste0('GRID_CACHE_TMPDIR=', shQuote(gsub('\\\\', '/', tempdir()))),
-          saga_config_settings)
-        saga_config_settings = gsub(
-          'OMP_THREADS_MAX=[0-9]*', 'OMP_THREADS_MAX=1', saga_config_settings)
+  if ((grid_caching == TRUE | !is.na(cores)) &
+      sagaversion >= as.numeric_version('4.0.0')){
+
+    saga_config = tempfile(fileext = '.ini')
+    msg = system(paste(
+      shQuote(senv$saga_cmd),
+      paste0('--create-config=', saga_config)
+    ),
+    intern = T)
+    saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
+    
+    # configuration for custom number of cores
+    if (!missing(cores) & grid_caching == FALSE) {
+      saga_config_settings = gsub(
+        'OMP_THREADS_MAX=[0-9]*',
+        paste0('OMP_THREADS_MAX=', cores),
+        saga_config_settings)
+    
+    # configuration for grid caching
+    } else if (grid_caching == TRUE) {
+      if (cores > 1 | is.na(cores)) {
+        message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
+        cores = 1
       }
       
-      # write configuration file
-      writeChar(saga_config_settings, saga_config)
-      
+      saga_config_settings = gsub(
+        'GRID_CACHE_MODE=[0-3]', 'GRID_CACHE_MODE=1', saga_config_settings)
+      saga_config_settings = gsub(
+        'GRID_CACHE_THRESHLOD=[0-9]*',
+        paste0('GRID_CACHE_THRESHLOD=', grid_cache_threshlod),
+        saga_config_settings)
+      saga_config_settings = gsub(
+        'GRID_CACHE_TMPDIR=;*',
+        paste0('GRID_CACHE_TMPDIR=', shQuote(gsub('\\\\', '/', tempdir()))),
+        saga_config_settings)
+      saga_config_settings = gsub(
+        'OMP_THREADS_MAX=[0-9]*', 'OMP_THREADS_MAX=1', saga_config_settings)
     }
-  } else {
+    
+    # write configuration file
+    writeChar(saga_config_settings, saga_config)
+    
+  } else if ((grid_caching == TRUE | !is.na(cores)) &
+             sagaversion < as.numeric_version('4.0.0')){
     message(
       paste('Cannot enable grid caching or change number cores for SAGA-GIS',
             'versions < 4.0.0. Please use a more recent version of SAGA-GIS'))
   }
   
-  if (!exists('saga_config'))
+  if(!exists('saga_config'))
     saga_config = NA
 
   return (saga_config)
