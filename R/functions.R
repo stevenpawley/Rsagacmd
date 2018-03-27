@@ -46,7 +46,7 @@ sagaSearch = function() {
         'C:/Program Files/SAGA-GIS/'
       )
       saga_executable = 'saga_cmd.exe'
-    } else if (Sys.info()["sysname"] == "linux") {
+    } else if (Sys.info()["sysname"] == "Linux") {
       search_paths = c('/usr/')
       saga_executable = 'saga_cmd$'
     } else if (Sys.info()["sysname"] == "Darwin") {
@@ -325,7 +325,7 @@ sagaConfigure = function(senv,
     grid_cache_dir = gsub('\\\\', '/', tempdir())
   
   # create configuration file if any arguments are supplied
-  if (length(as.list(match.call())) > 1){
+  if (grid_caching == TRUE | !is.na(cores)){
     saga_config = tempfile(fileext = '.ini')
     msg = system(paste(
       shQuote(senv$saga_cmd),
@@ -423,8 +423,18 @@ sagaGIS = function(saga_bin = NA,
   
   # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
-  senv[['saga_config']] = sagaConfigure(
-    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores)
+  
+  # set saga_cmd configuration options
+  if (grid_caching == TRUE | !is.na(cores)) {
+    if (senv$version >= as.numeric_version('4.0.0')) {
+    senv[['saga_config']] = sagaConfigure(
+      senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores)
+    } else {
+      message(
+        paste('Cannot enable grid caching or change number cores for SAGA-GIS',
+              'versions < 4.0.0. Please use a more recent version of SAGA-GIS'))
+    }
+  }
   
   # create R6 class
   sagaGIS = R6::R6Class("sagaGIS",
