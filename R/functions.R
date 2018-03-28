@@ -154,137 +154,176 @@ sagaEnv = function(saga_bin = NA) {
         options = XML::readHTMLTable(
           doc = paste(libdir, tool, sep = '/'), header = T)
         
-        # create valid tool names
-        valid_toolname = colnames(options[[1]])[2]
-        valid_toolname = gsub("^[0-9]+", '', valid_toolname) # remove digits from start of tool name
-        valid_toolname = gsub(" ", "_", valid_toolname) # replace spaces with underscores
-        valid_toolname = gsub("\\(", "", valid_toolname) # remove parenthesis
-        valid_toolname = gsub("\\)", "", valid_toolname) # remove parenthesis
-        valid_toolname = gsub("'", "", valid_toolname) # remove single quotations
-        valid_toolname = gsub(",", "_", valid_toolname) # remove commas
-        valid_toolname = gsub("/", "_", valid_toolname) # replace forward slash with underscore
-        valid_toolname = gsub("-", "_", valid_toolname) # replace minus with underscore
-        valid_toolname = gsub(":", "_", valid_toolname) # replace colon with underscore
-        valid_toolname = gsub("\\[", "_", valid_toolname) # replace square brackets with underscore
-        valid_toolname = gsub("\\]", "_", valid_toolname) # replace square brackets with underscore
-        valid_toolname = gsub("&", "_", valid_toolname) # replace ampersand with underscore
-        valid_toolname = gsub('_+', '_', valid_toolname) # replace multiple underscores due to above with single _
-        valid_toolname = gsub("^_+", '', valid_toolname) # remove underscore from start of tool name
+        # ignore interactive tools
+        if (!any(grepl('interactive', x = options[[1]][,2]))) {
         
-        # parse parameter table into a dataframe
-        toolName = colnames(options[[1]])[2]
-        options = options[[length(options)]] # tool options are last table
-        
-        # strip input, output, options lines in table
-        options = options[which(apply(options[, 2:5], 1, function(x)
-          any(is.na(x))) == FALSE), ]
-        
-        options['IO'] = NA
-        options['Required'] = FALSE
-        options['Feature'] = NA
-        
-        # required inputs/outputs
-        options[grep("input", options$Type), 'IO'] = 'Input'
-        options[grep("input", options$Type), 'Required'] = TRUE
-        options[grep("output", options$Type), 'IO'] = 'Output'
-        options[grep("output", options$Type), 'Required'] = TRUE
-        options[grep("optional", options$Type), 'Required'] = FALSE
-        
-        # grids
-        options[grep("Grid", options$Type), 'Feature'] = 'Grid'
-        options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
-        
-        # shapes
-        options[grep("Shapes", options$Type), 'Feature'] = 'Shape'
-        options[grep("Shapes list", options$Type), 'Feature'] = 'Shapes list'
-        
-        # tables
-        options[grep("Table", options$Type), 'Feature'] = 'Table'
-        options[grep("Static table", options$Type), 'Feature'] = 'Table'
-        options[grep("Table list", options$Type), 'Feature'] = 'Table list'
-
-        # paths
-        options[grep("File path", options$Type), 'Feature'] = 'File path'
-
-        # fields
-        options[grep("field", options$Type), 'Feature'] = 'Table field'
-        options[grep("Integer", options$Type), 'Feature'] = 'Integer'
-        options[grep("Choice", options$Type), 'Feature'] = 'Choice'
-        options[grep("Floating point", options$Type), 'Feature'] = 'numeric'
-        options[grep("Boolean", options$Type), 'Feature'] = 'logical'
-        options[grep("Long text", options$Type), 'Feature'] = 'character'
-        options[grep("Text", options$Type), 'Feature'] = 'character'
-        
-        # exceptions
-        if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster') {
-          options[grep("File path", options$Type), 'IO'] = 'Output'
-          options[grep("File path", options$Type), 'Feature'] = 'Grid'
-          options[grep("File path", options$Type), 'Required'] = TRUE
-
-        } else if (toolName == 'Export Shapes' | toolName == 'Export Shapes to KML') {
-          options[grep("File path", options$Type), 'IO'] = 'Output'
-          options[grep("File path", options$Type), 'Feature'] = 'Shapes'
-          options[grep("File path", options$Type), 'Required'] = TRUE
-
-        } else if (toolName == 'Clip Grid with Rectangle') {
-          options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
-        }
-        
-        # replace saga tool arguments that start with a numeric
-        identifiers = options$Identifier
-        numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
-        if (length(numeric_identifiers) > 0)
-          levels(identifiers)[levels(identifiers) == identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
-        identifiers = gsub(" ", "_", identifiers)
-        options['identifierR'] = identifiers
-        
-        # clean-up constraints text
-        options$Constraints[options$Constraints == ''] = NA
-        options$Constraints = gsub('Available Choices:', '', options$Constraints) # remove text
-        options$Constraints = gsub('^\n', '', options$Constraints) # remove line break at start of text
-        options$Constraints = gsub('\n', ';', options$Constraints) # replace line seps with ;
-        
-        # extract default values for tool parameters
-        options['Default'] = NA
-        default_src = strsplit(options$Constraints, 'Default: ')
-        for (i in seq_len(length(default_src)))
-          if (all(!is.na(default_src[[i]])))
-            options[i, 'Default'] = suppressWarnings(as.numeric(default_src[[i]][2]))
-        
-        # extract minimum values for tool parameters
-        options['Minimum'] = NA
-        constraints_split = strsplit(options$Constraints, ';')
-        for (i in seq_len(length(constraints_split))){
-          constraints_line = constraints_split[i][[1]]
+          # create valid tool names
+          valid_toolname = colnames(options[[1]])[2]
+          valid_toolname = gsub("^[0-9]+", '', valid_toolname) # remove digits from start of tool name
+          valid_toolname = gsub(" ", "_", valid_toolname) # replace spaces with underscores
+          valid_toolname = gsub("\\(", "", valid_toolname) # remove parenthesis
+          valid_toolname = gsub("\\)", "", valid_toolname) # remove parenthesis
+          valid_toolname = gsub("'", "", valid_toolname) # remove single quotations
+          valid_toolname = gsub(",", "_", valid_toolname) # remove commas
+          valid_toolname = gsub("/", "_", valid_toolname) # replace forward slash with underscore
+          valid_toolname = gsub("-", "_", valid_toolname) # replace minus with underscore
+          valid_toolname = gsub(":", "_", valid_toolname) # replace colon with underscore
+          valid_toolname = gsub("\\[", "_", valid_toolname) # replace square brackets with underscore
+          valid_toolname = gsub("\\]", "_", valid_toolname) # replace square brackets with underscore
+          valid_toolname = gsub("&", "_", valid_toolname) # replace ampersand with underscore
+          valid_toolname = gsub('_+', '_', valid_toolname) # replace multiple underscores due to above with single _
+          valid_toolname = gsub("^_+", '', valid_toolname) # remove underscore from start of tool name
           
-          if (any(grepl('Minimum:', constraints_line))) {
-            constraints_min = constraints_line[grepl('Minimum:', constraints_line)]
-            constraints_min = strsplit(constraints_min, 'Minimum: ')[[1]][2]
-            options$Minimum[i] = suppressWarnings(as.numeric(constraints_min))
-          }
-        }
-        
-        # extract maximum values for tool parameters
-        options['Maximum'] = NA
-        constraints_split = strsplit(options$Constraints, ';')
-        for (i in seq_len(length(constraints_split))){
-          constraints_line = constraints_split[i][[1]]
+          # parse parameter table into a dataframe
+          toolName = colnames(options[[1]])[2]
+          options = options[[length(options)]] # tool options are last table
           
-          if (any(grepl('Maximum:', constraints_line))) {
-            constraints_max = constraints_line[grepl('Maximum:', constraints_line)]
-            constraints_max = strsplit(constraints_max, 'Maximum: ')[[1]][2]
-            options$Maximum[i] = suppressWarnings(as.numeric(constraints_max))
+          # strip input, output, options lines in table
+          options = options[which(apply(options[, 2:5], 1, function(x)
+            any(is.na(x))) == FALSE), ]
+          
+          options['IO'] = NA
+          options['Required'] = FALSE
+          options['Feature'] = NA
+          
+          # required inputs/outputs
+          options[grep("input", options$Type), 'IO'] = 'Input'
+          options[grep("input", options$Type), 'Required'] = TRUE
+          options[grep("output", options$Type), 'IO'] = 'Output'
+          options[grep("output", options$Type), 'Required'] = TRUE
+          options[grep("optional", options$Type), 'Required'] = FALSE
+          
+          # grids
+          options[grep("Grid", options$Type), 'Feature'] = 'Grid'
+          options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
+          
+          # shapes
+          options[grep("Shapes", options$Type), 'Feature'] = 'Shape'
+          options[grep("Shapes list", options$Type), 'Feature'] = 'Shapes list'
+          
+          # tables
+          options[grep("Table", options$Type), 'Feature'] = 'Table'
+          options[grep("Static table", options$Type), 'Feature'] = 'Table'
+          options[grep("Table list", options$Type), 'Feature'] = 'Table list'
+  
+          # paths
+          options[grep("File path", options$Type), 'Feature'] = 'File path'
+  
+          # fields
+          options[grep("field", options$Type), 'Feature'] = 'Table field'
+          options[grep("Integer", options$Type), 'Feature'] = 'Integer'
+          options[grep("Choice", options$Type), 'Feature'] = 'Choice'
+          options[grep("Floating point", options$Type), 'Feature'] = 'numeric'
+          options[grep("Boolean", options$Type), 'Feature'] = 'logical'
+          options[grep("Long text", options$Type), 'Feature'] = 'character'
+          options[grep("Text", options$Type), 'Feature'] = 'character'
+          
+          # exceptions
+          if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster') {
+            options[grep("File path", options$Type), 'IO'] = 'Output'
+            options[grep("File path", options$Type), 'Feature'] = 'Grid'
+            options[grep("File path", options$Type), 'Required'] = TRUE
+  
+          } else if (toolName == 'Export Shapes' | toolName == 'Export Shapes to KML') {
+            options[grep("File path", options$Type), 'IO'] = 'Output'
+            options[grep("File path", options$Type), 'Feature'] = 'Shapes'
+            options[grep("File path", options$Type), 'Required'] = TRUE
+  
+          } else if (toolName == 'Clip Grid with Rectangle') {
+            options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
           }
-        }
-        
-        # add parameter options to nested list
-        libraries[[basename(libdir)]][[valid_toolname]] = list(
-          options=options, tool_cmd=toolName)
-      }
+          
+          # replace saga tool arguments that start with a numeric
+          identifiers = options$Identifier
+          numeric_identifiers = which(grepl("[[:digit:]]", substr(identifiers, 1, 1)) == TRUE)
+          if (length(numeric_identifiers) > 0)
+            levels(identifiers)[levels(identifiers) == identifiers[[numeric_identifiers]]] = sub("^.", "", identifiers[numeric_identifiers])
+          identifiers = gsub(" ", "_", identifiers)
+          options['identifierR'] = identifiers
+          
+          # clean-up constraints text
+          options$Constraints[options$Constraints == ''] = NA
+          options$Constraints = gsub('Available Choices:', '', options$Constraints) # remove text
+          options$Constraints = gsub('^\n', '', options$Constraints) # remove line break at start of text
+          options$Constraints = gsub('\n', ';', options$Constraints) # replace line seps with ;
+          
+          # extract default values for tool parameters
+          options['Default'] = NA
+          default_src = strsplit(options$Constraints, 'Default: ')
+          for (i in seq_len(length(default_src)))
+            if (all(!is.na(default_src[[i]])))
+              options[i, 'Default'] = suppressWarnings(as.numeric(default_src[[i]][2]))
+          
+          # extract minimum values for tool parameters
+          options['Minimum'] = NA
+          constraints_split = strsplit(options$Constraints, ';')
+          for (i in seq_len(length(constraints_split))){
+            constraints_line = constraints_split[i][[1]]
+            
+            if (any(grepl('Minimum:', constraints_line))) {
+              constraints_min = constraints_line[grepl('Minimum:', constraints_line)]
+              constraints_min = strsplit(constraints_min, 'Minimum: ')[[1]][2]
+              options$Minimum[i] = suppressWarnings(as.numeric(constraints_min))
+            }
+          }
+          
+          # extract maximum values for tool parameters
+          options['Maximum'] = NA
+          constraints_split = strsplit(options$Constraints, ';')
+          for (i in seq_len(length(constraints_split))){
+            constraints_line = constraints_split[i][[1]]
+            
+            if (any(grepl('Maximum:', constraints_line))) {
+              constraints_max = constraints_line[grepl('Maximum:', constraints_line)]
+              constraints_max = strsplit(constraints_max, 'Maximum: ')[[1]][2]
+              options$Maximum[i] = suppressWarnings(as.numeric(constraints_max))
+            }
+          }
+          
+          # add parameter options to nested list
+          libraries[[basename(libdir)]][[valid_toolname]] = list(
+            options=options, tool_cmd=toolName)
+        } # interactive
+      } # length of file
       
       close(f)
     }
   }
+  
+  # remove tools that produce no outputs
+  for (lib in names(libraries)){
+    tools = names(libraries[[lib]])
+    for (tool in tools){
+      selected_tool = libraries[[lib]][[tool]]$options
+  
+      if(nrow(selected_tool[which(selected_tool$IO == 'Output'),]) == 0)
+        libraries[[lib]] = libraries[[lib]][!names(libraries[[lib]]) == tool]
+    }
+  }
+  
+  # remove libraries with no tools
+  for (lib in names(libraries)){
+    n_tools = length(libraries[[lib]])
+    if (n_tools == 0)
+      libraries = libraries[!names(libraries) != lib]
+  }
+
+  # remove invalid libraries for saga_cmd
+  invalid_libs = list(
+    'db_odbc',
+    'db_pgsql',
+    'docs_html',
+    'docs_pdf',
+    'garden_3d_viewer',
+    'garden_games',
+    'garden_learn_to_program',
+    'garden_webservices',
+    'grid_calculus_bsl',
+    'pointcloud_viewer',
+    'tin_viewer'
+  )
+  
+  libraries = libraries[!names(libraries) %in% invalid_libs]
   
   return(structure(
     list(
