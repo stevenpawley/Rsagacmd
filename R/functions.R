@@ -305,7 +305,7 @@ sagaEnv = function(saga_bin = NA) {
   for (lib in names(libraries)){
     n_tools = length(libraries[[lib]])
     if (n_tools == 0)
-      libraries = libraries[!names(libraries) != lib]
+      libraries = libraries[names(libraries) != lib]
   }
 
   # remove invalid libraries for saga_cmd
