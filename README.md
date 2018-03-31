@@ -72,7 +72,7 @@ install.packages("devtools")
 #### Next install Rsagacmd:
 ```
 library(devtools)
-install_github("/stevenpawley/Rsagacmd")
+install_github("stevenpawley/Rsagacmd")
 ```
 
 ## Package usage
