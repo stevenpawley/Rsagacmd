@@ -66,7 +66,7 @@
 #' objects, and then Rsagacmd will handle the subsetting automatically.
 #' 
 #' @section Combining SAGA-GIS tools with pipes:
-#' For convenience, non-optional outputs from SAGA-GIS are automatically saved
+#' For convenience, outputs from SAGA-GIS tools are automatically saved
 #' to tempfiles if outputs are not explicitly stated as arguments when calling
 #' the function. This was implemented so that the user can create complex
 #' workflows based on little code. It is also means that several processing

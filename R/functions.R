@@ -877,20 +877,9 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   }
   
   # determine any required outputs that have not been specified as function args
-  req_out = tool_options[which(tool_options$IO == "Output" & tool_options$Required == TRUE), ]
+  req_out = tool_options[which(tool_options$IO == "Output"), ]
   unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
   n_temps = length(unspec_ind)
-  
-  if (n_temps == 0 & n_outputs == 0) {
-    # some tools have no required outputs - error if no outputs are specified
-    stop(
-      paste(
-        'Selected SAGA tool has no required outputs....',
-        'optional outputs must be specified as arguments'
-      ),
-      call. = FALSE
-    )
-  }
   
   # use tempfiles if any required outputs are not specified
   if (n_temps > 0) {
@@ -989,8 +978,10 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         }
         
       }, error = function(e){
-        warning(paste('No geoprocessing output for', spec_out[i, 'Identifier']),
-                call. = FALSE)
+        warning(
+          paste0('No geoprocessing output for ', spec_out[i, 'Identifier'],
+                '. Results may require other input parameters to be specified'),
+          call. = FALSE)
       }
       )
       
@@ -1158,7 +1149,6 @@ sagaRemoveTmpFiles = function(h=0) {
       pkg.env$sagaTmpFiles = pkg.env$sagaTmpFiles[pkg.env$sagaTmpFiles != f]
     }
   }
-  return (NULL)
 }
 
 #' List temporary files created by Rsagacmd
