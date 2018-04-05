@@ -778,9 +778,6 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' 
 #' # Display usage information on a tool
 #' print(saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing)
-#' 
-#' # or alternatively
-#' saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing
 #' }
 print.sagaTool = function(x, ...) {
 

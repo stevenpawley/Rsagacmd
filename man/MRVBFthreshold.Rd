@@ -25,3 +25,6 @@ threshold T_SLOPE needs to be adjusted from its default value of 16 in order
 to maintain the relationship between slope and DEM resolution. This function
 provides a convenient way to perform that calculation.
 }
+\examples{
+MRVBFthreshold(res = 10, plot = TRUE)
+}
