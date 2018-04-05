@@ -661,7 +661,7 @@ sagaGIS = function(saga_bin = NA,
          tmp = tempfile(fileext = '.shp')
          tmp = pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, tmp)
          
-         x = saga$gp$shapes_grid$Add_Grid_Values_to_Shapes(
+         x = self$gp$shapes_grid$Add_Grid_Values_to_Shapes(
            SHAPES = SHAPES, GRIDS = GRIDS, RESULT = tmp,
            RESAMPLING = RESAMPLING, intern = T)
 
@@ -766,10 +766,11 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #' Generic function to display help and usage information for any SAGA-GIS tool
 #'
 #' @param x sagaTool object
+#' @param ... Additional arguments to pass to print
 #'
 #' @return NULL
-#' @exportClass print
-#' 
+#' @export
+#'
 #' @examples
 #' \dontrun{
 #' # Initialize Rsagacmd
@@ -798,6 +799,7 @@ print.sagaTool = function(x, ...) {
     cat(paste0('Constraints: ', tool_options[i, 'Constraints'], '\n'))
     cat('\n')
   }
+  
 }
 
 
