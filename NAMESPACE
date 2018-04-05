@@ -2,7 +2,6 @@
 
 S3method(print,sagaTool)
 export(MRVBFthreshold)
-export(sagaExtract)
 export(sagaGIS)
 export(sagaRemoveTmpFiles)
 export(sagaShowTmpFiles)

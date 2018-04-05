@@ -625,58 +625,6 @@ sagaGIS = function(saga_bin = NA,
            library = rep(names(matches), lapply(matches, length)),
            tool = unlist(matches, use.names = F))
          return (matches_df)
-       },
-       
-       sagaExtract = function(SHAPES, GRIDS, RESAMPLING = 0){
-         # Extract grid values at vector feature locations using SAGA-GIS
-         # Args:
-         #  SHAPES : sp or sf object
-         #  GRIDS : Single raster object, or list of raster objects
-         #  RESAMPLING : numeric or character with resampling method to use
-         #
-         # Returns:
-         #  x : sf dataframe
-         #    sf, dataframe of extracted data
-
-         # some checks
-         if (!methods::is(SHAPES, 'SpatialPointsDataFrame') &
-             !methods::is(SHAPES, 'SpatialPolygonsDataFrame') &
-             !methods::is(SHAPES, 'SpatialLinesDataFrame') &
-             !methods::is(SHAPES, 'sf')){
-           stop('SHAPES argument must represent an sp or sf vector data object')
-         }
-         
-         if (!methods::is(GRIDS, 'list'))
-           GRIDS = list(GRIDS)
-         
-         for (item in GRIDS){
-           if (!methods::is(item, 'RasterLayer') &
-               !methods::is(item, 'RasterBrick') &
-               !methods::is(item, 'RasterStack')) {
-             stop('GRIDS argument must contain a RasterLayer, RasterBrick or RasterStack object')
-           }
-         }
-         
-         # extract data using SAGA
-         tmp = tempfile(fileext = '.shp')
-         tmp = pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, tmp)
-         
-         x = self$gp$shapes_grid$Add_Grid_Values_to_Shapes(
-           SHAPES = SHAPES, GRIDS = GRIDS, RESULT = tmp,
-           RESAMPLING = RESAMPLING, intern = T)
-
-         # rename columns
-         grid_names = lapply(GRIDS, function(band)
-           tools::file_path_sans_ext(basename(raster::filename(band))))
-         grid_names_dup = which(grid_names %in% unique(grid_names))
-         for (i in 1:length(grid_names_dup)){
-           grid_names[grid_names_dup[i]] = paste(
-             grid_names[grid_names_dup[i]], i, sep='.')
-         }
-         grid_names = make.names(names(grid_names))
-         names(x)[(ncol(SHAPES)+1):(ncol(x)-1)] = grid_names
-         
-         return(x)
        }
 
      ) # public
@@ -688,28 +636,6 @@ sagaGIS = function(saga_bin = NA,
 
 # list of supposedly 'global' names to appease R CMD check
 .__global__ <- c("self","private")
-
-
-#' Extract raster data at vector feature locations using SAGA-GIS
-#' 
-#' Extracts pixel values at vector feature locations using SAGA-GIS. If the
-#' vector feature represents point or lines, then a single pixel value is
-#' extracted. For polygon data, the average pixel value of each grid within the
-#' area of the polygon is extracted.
-#'
-#' @param x sagaGIS object
-#' @param SHAPES sf or sp vector object
-#' @param GRIDS list of RasterLayer, RasterBrick, or RasterStack objects
-#'   containing only a single layer
-#' @param RESAMPLING numeric or character. Resampling method used to extract
-#'   pixel values. [0] Nearest Neighbour;[1] Bilinear Interpolation;[2] Bicubic
-#'   Spline Interpolation;[3] B-Spline Interpolation
-#'
-#' @return sf object containing extracted raster data
-#' @export
-sagaExtract = function(x, SHAPES, GRIDS, RESAMPLING = 0){
-  extracted_data = x$sagaExtract(SHAPES, GRIDS, RESAMPLING)
-}
 
 #' Search for a SAGA-GIS tool
 #'
