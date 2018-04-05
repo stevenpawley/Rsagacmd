@@ -130,7 +130,8 @@ sagaEnv = function(saga_bin = NA) {
   }
   
   if (!is.null(attr(msg, "status"))) {
-    stop(msg)
+    cat(msg, sep = '\n')
+    stop()
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
@@ -854,8 +855,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   # execute system call
   msg = system(saga_cmd, intern = T)
   if (!is.null(attr(msg, "status"))){
-    print (saga_cmd)
-    print(msg)
+    cat(msg, sep = '\n')
     stop()
   }
   
