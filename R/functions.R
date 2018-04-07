@@ -184,16 +184,12 @@ sagaEnv = function(saga_bin = NA) {
             any(is.na(x))) == FALSE), ]
           
           options['IO'] = NA
-          options['Required'] = FALSE
           options['Feature'] = NA
           
-          # required inputs/outputs
+          # inputs/outputs
           options[grep("input", options$Type), 'IO'] = 'Input'
-          options[grep("input", options$Type), 'Required'] = TRUE
           options[grep("output", options$Type), 'IO'] = 'Output'
-          options[grep("output", options$Type), 'Required'] = TRUE
-          options[grep("optional", options$Type), 'Required'] = FALSE
-          
+
           # grids
           options[grep("Grid", options$Type), 'Feature'] = 'Grid'
           options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
@@ -223,13 +219,11 @@ sagaEnv = function(saga_bin = NA) {
           if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster') {
             options[grep("File path", options$Type), 'IO'] = 'Output'
             options[grep("File path", options$Type), 'Feature'] = 'Grid'
-            options[grep("File path", options$Type), 'Required'] = TRUE
-  
+
           } else if (toolName == 'Export Shapes' | toolName == 'Export Shapes to KML') {
             options[grep("File path", options$Type), 'IO'] = 'Output'
             options[grep("File path", options$Type), 'Feature'] = 'Shapes'
-            options[grep("File path", options$Type), 'Required'] = TRUE
-  
+
           } else if (toolName == 'Clip Grid with Rectangle') {
             options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
           }
@@ -512,10 +506,7 @@ sagaGIS = function(saga_bin = NA,
              # define tool arguments
              tool_options = senv$libraries[[lib]][[tool]][['options']]
              tool_cmd = senv[['libraries']][[lib]][[tool]][['tool_cmd']]
-             
-             required = gsub('FALSE', '=NA', tool_options$Required)
-             required = gsub('TRUE', '', required)
-             args = paste0(tool_options$identifierR, required, collapse = ',')
+             args = paste0(tool_options$identifierR, collapse = ',')
              
              # define function body
              # deparse tool settings into function and create code to call sagaExecute
@@ -779,11 +770,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   
   # replace sdat fileext used by raster package with sgrd used by SAGA
   args = gsub('.sdat', '.sgrd', args)
-  
-  # provide error if tool produces no outputs
-  if (length(which(tool_options$IO == "Output")) == 0)
-    stop(paste('SAGA Tool', tool, 'produces no outputs'), call. = FALSE)
-  
+
   # determine the SAGA output parameters that have been specified as function args
   spec_ind = which(tool_options$IO == "Output" & tool_options$Identifier %in% arg_names)
   n_outputs = length(spec_ind)
@@ -800,12 +787,12 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
     spec_out$args = as.character(spec_out$args)
   }
   
-  # determine any required outputs that have not been specified as function args
+  # determine any outputs that have not been specified as function args
   req_out = tool_options[which(tool_options$IO == "Output"), ]
   unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
   n_temps = length(unspec_ind)
   
-  # use tempfiles if any required outputs are not specified
+  # use tempfiles if any outputs are not specified
   if (n_temps > 0) {
     unspec_out = req_out[unspec_ind,]
     unspec_out['args'] = NA
@@ -1034,7 +1021,7 @@ RtoSAGA = function(param) {
 #' Removes temporary files created by Rsagacmd
 #'
 #' For convenience, functions in the Rsagacmd package create temporary files if
-#' any required outputs for a SAGA-GIS tool are not specified as arguments.
+#' any outputs for a SAGA-GIS tool are not specified as arguments.
 #' Temporary files in R are automatically removed at the end of each session.
 #' However, when dealing with raster data, these temporary files potentially can
 #' consume large amounts of disk space. These temporary files can be observed
@@ -1077,7 +1064,7 @@ sagaRemoveTmpFiles = function(h=0) {
 #' List temporary files created by Rsagacmd
 #' 
 #' For convenience, functions in the Rsagacmd package create temporary files if
-#' any required outputs for a SAGA-GIS tool are not specified as arguments.
+#' any outputs for a SAGA-GIS tool are not specified as arguments.
 #' Temporary files in R are automatically removed at the end of each session.
 #' However, when dealing with raster data, these temporary files potentially can
 #' consume large amounts of disk space. These temporary files can be observed

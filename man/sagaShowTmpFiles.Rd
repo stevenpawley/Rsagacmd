@@ -14,7 +14,7 @@ file extension, i.e. '.shp' for a shapefile without the accessory files
 }
 \description{
 For convenience, functions in the Rsagacmd package create temporary files if
-any required outputs for a SAGA-GIS tool are not specified as arguments.
+any outputs for a SAGA-GIS tool are not specified as arguments.
 Temporary files in R are automatically removed at the end of each session.
 However, when dealing with raster data, these temporary files potentially can
 consume large amounts of disk space. These temporary files can be observed
