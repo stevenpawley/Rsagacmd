@@ -34,24 +34,27 @@ These functions are stored within a sagaGIS R6 object as a named list of
 functions. These functions are accessed via the 'gp' attribute.
 }
 \examples{
-\dontrun{
-# initialize Rsagacmd and generate functions for all SAGA-GIS tools
-saga = sagaGIS()
+# check that SAGA-GIS is installed in a recognizable location
+library(Rsagacmd)
 
-# activate file caching for rasters that are too large to fit into memory
-saga = sagaGIS(grid_caching=TRUE, grid_cache_threshlod=250, cores=1)
+if(!is.null(sagaSearch())) {
 
-# Example of terrain analysis
-
-# Generate random terrain and load as raster object
-dem = saga$gp$grid_calculus$Random_Terrain(RADIUS=100)
-
-# Use Rsagacmd for to calculate the terrain ruggedness index
-tri = saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
-plot(tri)
-
-# Do not load output as an R object
-saga$ta_morphometry$geoprocessor$Terrain_Ruggedness_Index_TRI(
-    DEM = dem, intern=FALSE)
+    # initialize Rsagacmd and generate functions for all SAGA-GIS tools
+    saga = sagaGIS()
+    
+    # activate file caching for rasters that are too large to fit into memory
+    saga = sagaGIS(grid_caching = TRUE, grid_cache_threshlod = 250, cores = 1)
+    
+    # Example of terrain analysis
+    # Generate random terrain and load as raster object
+    dem = saga$gp$grid_calculus$Random_Terrain(RADIUS = 100)
+    
+    # Use Rsagacmd for to calculate the terrain ruggedness index
+    tri = saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
+    plot(tri)
+    
+    # Do not load output as an R object
+    saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(
+        DEM = dem, intern = FALSE)
 }
 }

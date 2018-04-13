@@ -6,13 +6,13 @@
 #'
 #' @return numeric_version. Version of SAGA-GIS found at the cmd path
 sagaVersion = function(saga_cmd) {
-  version = system(paste(shQuote(saga_cmd), '--version'), intern = T)[1]
-  version = strsplit(x = version, split = ': ')[[1]][2]
+  saga_version = system(paste(shQuote(saga_cmd), '--version'), intern = T)[1]
+  saga_version = strsplit(x = saga_version, split = ': ')[[1]][2]
   
   if (Sys.info()["sysname"] == "Windows") {
-    version = strsplit(x = version, split = ' ')[[1]][1]
+    saga_version = strsplit(x = saga_version, split = ' ')[[1]][1]
   }
-  return (as.numeric_version(version))
+  return (as.numeric_version(saga_version))
 }
 
 
@@ -23,10 +23,10 @@ sagaVersion = function(saga_cmd) {
 #' (x86)/SAGA-GIS; C:/SAGA-GIS; 'C:/OSGeo4W', and 'C:/OSGeo4W64'. On linux or OS
 #' X, saga_cmd is usually included in PATH, if not an automatic search is
 #' performed in the /usr folder. If multiple versions of SAGA-GIS are installed
-#' on the system, the path to the newest version is returned. Intended to be
-#' called internally by the SAGA function.
+#' on the system, the path to the newest version is returned.
 #'
 #' @return character. Path to installed saga_cmd binary
+#' @export
 sagaSearch = function() {
   
   # check to see if saga_cmd is recognized (i.e. has been added to path)
@@ -72,8 +72,9 @@ sagaSearch = function() {
   
   # error is saga_cmd not found
   if (length(saga_cmd) == 0) {
-    stop(paste('SAGA-GIS installation not found. Need to supply a valid path',
+    message(paste('SAGA-GIS installation not found. Need to supply a valid path',
                'to the saga_cmd executable'))
+    return(NULL)
     
     # automatically use newest version if multiple installations are found
   } else if (length(saga_cmd) > 1) {
@@ -114,18 +115,17 @@ sagaEnv = function(saga_bin = NA) {
   }
   
   # detect saga version
-  version = sagaVersion(saga_bin)
+  saga_version = sagaVersion(saga_bin)
   
   # generate SAGA help files in temporary directory
-  temp_dir = tempfile()
-  dir.create(temp_dir)
-  help.path = temp_dir
+  help_path = file.path(tempdir(), basename(tempfile()))
+  dir.create(help_path)
   
-  if (version > as.numeric_version('3.0.0')) {
+  if (saga_version > as.numeric_version('3.0.0')) {
     msg = system(
-      paste0(paste(shQuote(saga_bin), '--create-docs='), help.path), intern=T)
+      paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=T)
   } else {
-    setwd(help.path)
+    setwd(help_path)
     msg = system(paste(shQuote(saga_bin), '--docs'), intern=T)
   }
   
@@ -135,7 +135,7 @@ sagaEnv = function(saga_bin = NA) {
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
-  docs_libraries = list.dirs(path = help.path)
+  docs_libraries = list.dirs(path = help_path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
   libraries = list()
   
@@ -323,7 +323,7 @@ sagaEnv = function(saga_bin = NA) {
   return(structure(
     list(
       saga_cmd = saga_bin,
-      version = version,
+      saga_version = saga_version,
       libraries = libraries
     ),
     class = 'sagaInstallation'
@@ -437,29 +437,31 @@ sagaConfigure = function(senv,
 #'   1 if file caching is activated.
 #' @return R6 sagaGIS object containing a 'gp' attribute containing a nested
 #'   list of functions for SAGA-GIS libraries and tools
-#' 
 #' @export
-#'
+#' @import raster
 #' @examples
-#' \dontrun{
-#' # initialize Rsagacmd and generate functions for all SAGA-GIS tools
-#' saga = sagaGIS()
+#' # check that SAGA-GIS is installed in a recognizable location
+#' library(Rsagacmd)
 #' 
-#' # activate file caching for rasters that are too large to fit into memory
-#' saga = sagaGIS(grid_caching=TRUE, grid_cache_threshlod=250, cores=1)
-#'
-#' # Example of terrain analysis
-#'
-#' # Generate random terrain and load as raster object
-#' dem = saga$gp$grid_calculus$Random_Terrain(RADIUS=100)
+#' if(!is.null(sagaSearch())) {
 #' 
-#' # Use Rsagacmd for to calculate the terrain ruggedness index
-#' tri = saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
-#' plot(tri)
-#' 
-#' # Do not load output as an R object
-#' saga$ta_morphometry$geoprocessor$Terrain_Ruggedness_Index_TRI(
-#'     DEM = dem, intern=FALSE)
+#'     # initialize Rsagacmd and generate functions for all SAGA-GIS tools
+#'     saga = sagaGIS()
+#'     
+#'     # activate file caching for rasters that are too large to fit into memory
+#'     saga = sagaGIS(grid_caching = TRUE, grid_cache_threshlod = 250, cores = 1)
+#'     
+#'     # Example of terrain analysis
+#'     # Generate random terrain and load as raster object
+#'     dem = saga$gp$grid_calculus$Random_Terrain(RADIUS = 100)
+#'     
+#'     # Use Rsagacmd for to calculate the terrain ruggedness index
+#'     tri = saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
+#'     plot(tri)
+#'     
+#'     # Do not load output as an R object
+#'     saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(
+#'         DEM = dem, intern = FALSE)
 #' }
 sagaGIS = function(saga_bin = NA,
                    grid_caching = FALSE,
@@ -470,7 +472,7 @@ sagaGIS = function(saga_bin = NA,
   # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
   senv[['saga_config']] = sagaConfigure(
-    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores, senv$version)
+    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores, senv$saga_version)
 
   # create R6 class
   sagaGIS = R6::R6Class("sagaGIS",
@@ -668,13 +670,17 @@ searchTools = function(x, pattern) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' library(Rsagacmd)
 #' 
-#' saga = sagaGIS()
-#' dem = saga$gp$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
-#' 
-#' tiles = saga$tileGeoprocessor(grid = dem, nx = 20, ny = 20)
+#' # check that SAGA-GIS is installed in a recognizable location
+#' if(!is.null(sagaSearch())) {
+#'     saga = sagaGIS()
+#'     
+#'     # generate a random DEM
+#'     dem = saga$gp$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
+#'     
+#'     # return tiled version of DEM
+#'     tiles = saga$tileGeoprocessor(grid = dem, nx = 20, ny = 20)
 #' }
 tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
   x$tileGeoprocessor(grid, nx, ny, overlap=0)
@@ -688,14 +694,16 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #'
 #' @return NULL
 #' @export
-#'
 #' @examples
-#' \dontrun{
-#' # Initialize Rsagacmd
-#' saga = sagaGIS()
-#' 
-#' # Display usage information on a tool
-#' print(saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing)
+#' # Initialize Rsagacmd if SAGA-GIS is installed in a recognized location
+#' if(!is.null(sagaSearch())) {
+#'     saga = sagaGIS()
+#'     
+#'     # Display usage information on a tool
+#'     print(saga$gp$ta_morphometry$Slope_Aspect_Curvature)
+#'     
+#'     # Or simply
+#'     saga$gp$ta_morphometry$Slope_Aspect_Curvature
 #' }
 print.sagaTool = function(x, ...) {
 
@@ -1036,10 +1044,8 @@ RtoSAGA = function(param) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # remove all temporary files generated by Rsagacmd
 #' sagaRemoveTmpFiles(h=0)
-#' }
 sagaRemoveTmpFiles = function(h=0) {
   
   message(paste0('Removing Rsagacmd temporary files h=', h))
@@ -1076,6 +1082,9 @@ sagaRemoveTmpFiles = function(h=0) {
 #' file extension, i.e. '.shp' for a shapefile without the accessory files
 #' (e.g. .prj, .shx etc.).
 #' @export
+#' @examples
+#' # show all temporary files generated by Rsagacmd
+#' sagaRemoveTmpFiles(h=0)
 sagaShowTmpFiles = function() {
   
   message('Rsagacmd temporary files:')

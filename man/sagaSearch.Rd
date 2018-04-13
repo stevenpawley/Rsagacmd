@@ -15,6 +15,5 @@ will search in first in C:/Program Files/SAGA-GIS; C:/Program Files
 (x86)/SAGA-GIS; C:/SAGA-GIS; 'C:/OSGeo4W', and 'C:/OSGeo4W64'. On linux or OS
 X, saga_cmd is usually included in PATH, if not an automatic search is
 performed in the /usr folder. If multiple versions of SAGA-GIS are installed
-on the system, the path to the newest version is returned. Intended to be
-called internally by the SAGA function.
+on the system, the path to the newest version is returned.
 }

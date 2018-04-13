@@ -4,7 +4,7 @@
 \alias{print.sagaTool}
 \title{Generic function to display help and usage information for any SAGA-GIS tool}
 \usage{
-\method{print}{sagaTool}(x, ...)
+print.sagaTool(x, ...)
 }
 \arguments{
 \item{x}{sagaTool object}
@@ -15,11 +15,14 @@
 Generic function to display help and usage information for any SAGA-GIS tool
 }
 \examples{
-\dontrun{
-# Initialize Rsagacmd
-saga = sagaGIS()
-
-# Display usage information on a tool
-print(saga$gp$climate$Lapse_Rate_Based_Temperature_Downscaling_Bulk_Processing)
+# Initialize Rsagacmd if SAGA-GIS is installed in a recognized location
+if(!is.null(sagaSearch())) {
+    saga = sagaGIS()
+    
+    # Display usage information on a tool
+    print(saga$gp$ta_morphometry$Slope_Aspect_Curvature)
+    
+    # Or simply
+    saga$gp$ta_morphometry$Slope_Aspect_Curvature
 }
 }
