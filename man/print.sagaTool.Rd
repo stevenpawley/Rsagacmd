@@ -20,9 +20,9 @@ if(!is.null(sagaSearch())) {
     saga = sagaGIS()
     
     # Display usage information on a tool
-    print(saga$gp$ta_morphometry$Slope_Aspect_Curvature)
+    print(saga$ta_morphometry$Slope_Aspect_Curvature)
     
     # Or simply
-    saga$gp$ta_morphometry$Slope_Aspect_Curvature
+    saga$ta_morphometry$Slope_Aspect_Curvature
 }
 }

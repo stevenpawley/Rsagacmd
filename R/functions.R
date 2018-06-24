@@ -6,12 +6,16 @@
 #'
 #' @return numeric_version. Version of SAGA-GIS found at the cmd path
 sagaVersion = function(saga_cmd) {
+  # system call saga_cmd to display version on console
   saga_version = system(paste(shQuote(saga_cmd), '--version'), intern = T)[1]
-  saga_version = strsplit(x = saga_version, split = ': ')[[1]][2]
   
+  # extract version number from string
   if (Sys.info()["sysname"] == "Windows") {
-    saga_version = strsplit(x = saga_version, split = ' ')[[1]][1]
+    saga_version = stringr::str_extract(saga_version, '(?<= ).*')
+  } else {
+    saga_version = stringr::str_extract(saga_version, '(?<=: ).*')
   }
+  
   return (as.numeric_version(saga_version))
 }
 
@@ -19,7 +23,7 @@ sagaVersion = function(saga_cmd) {
 #' Automatic search for the path to a SAGA-GIS installation
 #'
 #' Returns the path to the saga_cmd executable On windows, automatic searching
-#' will search in first in C:/Program Files/SAGA-GIS; C:/Program Files
+#' will occur first in C:/Program Files/SAGA-GIS; C:/Program Files
 #' (x86)/SAGA-GIS; C:/SAGA-GIS; 'C:/OSGeo4W', and 'C:/OSGeo4W64'. On linux or OS
 #' X, saga_cmd is usually included in PATH, if not an automatic search is
 #' performed in the /usr folder. If multiple versions of SAGA-GIS are installed
@@ -43,12 +47,13 @@ sagaSearch = function() {
         'C:/SAGA-GIS/',
         'C:/OSGeo4W/',
         'C:/OSGeo4W64/',
-        'C:/Program Files/SAGA-GIS/'
-      )
+        'C:/Program Files/SAGA-GIS/')
       saga_executable = 'saga_cmd.exe'
+      
     } else if (Sys.info()["sysname"] == "Linux") {
       search_paths = c('/usr/')
       saga_executable = 'saga_cmd$'
+      
     } else if (Sys.info()["sysname"] == "Darwin") {
       search_paths = c('/usr/local/bin/',
                        '/Applications/QGIS/Contents/MacOS/bin/')
@@ -61,19 +66,18 @@ sagaSearch = function() {
         path = x,
         pattern = saga_executable,
         recursive = TRUE,
-        full.names = TRUE
-      ))
+        full.names = TRUE))
     
     saga_cmd = saga_cmd[which(length(saga_cmd) > 0)] # remove empty results
     
     if (length(saga_cmd) == 1)
       saga_cmd = unlist(saga_cmd)
-    }
+  }
   
   # error is saga_cmd not found
   if (length(saga_cmd) == 0) {
     message(paste('SAGA-GIS installation not found. Need to supply a valid path',
-               'to the saga_cmd executable'))
+                  'to the saga_cmd executable'))
     return(NULL)
     
     # automatically use newest version if multiple installations are found
@@ -157,7 +161,7 @@ sagaEnv = function(saga_bin = NA) {
         
         # ignore interactive tools
         if (!any(grepl('interactive', x = options[[1]][,2]))) {
-        
+          
           # create valid tool names
           valid_toolname = colnames(options[[1]])[2]
           valid_toolname = gsub("^[0-9]+", '', valid_toolname) # remove digits from start of tool name
@@ -189,7 +193,7 @@ sagaEnv = function(saga_bin = NA) {
           # inputs/outputs
           options[grep("input", options$Type), 'IO'] = 'Input'
           options[grep("output", options$Type), 'IO'] = 'Output'
-
+          
           # grids
           options[grep("Grid", options$Type), 'Feature'] = 'Grid'
           options[grep("Grid list", options$Type), 'Feature'] = 'Grid list'
@@ -202,10 +206,10 @@ sagaEnv = function(saga_bin = NA) {
           options[grep("Table", options$Type), 'Feature'] = 'Table'
           options[grep("Static table", options$Type), 'Feature'] = 'Table'
           options[grep("Table list", options$Type), 'Feature'] = 'Table list'
-  
+          
           # paths
           options[grep("File path", options$Type), 'Feature'] = 'File path'
-  
+          
           # fields
           options[grep("field", options$Type), 'Feature'] = 'Table field'
           options[grep("Integer", options$Type), 'Feature'] = 'Integer'
@@ -219,11 +223,11 @@ sagaEnv = function(saga_bin = NA) {
           if (toolName == 'Export GeoTIFF' | toolName == 'Export Raster') {
             options[grep("File path", options$Type), 'IO'] = 'Output'
             options[grep("File path", options$Type), 'Feature'] = 'Grid'
-
+            
           } else if (toolName == 'Export Shapes' | toolName == 'Export Shapes to KML') {
             options[grep("File path", options$Type), 'IO'] = 'Output'
             options[grep("File path", options$Type), 'Feature'] = 'Shapes'
-
+            
           } else if (toolName == 'Clip Grid with Rectangle') {
             options[grep("Data Object", options$Type), 'Feature'] = 'Grid'
           }
@@ -290,7 +294,7 @@ sagaEnv = function(saga_bin = NA) {
     tools = names(libraries[[lib]])
     for (tool in tools){
       selected_tool = libraries[[lib]][[tool]]$options
-  
+      
       if(nrow(selected_tool[which(selected_tool$IO == 'Output'),]) == 0)
         libraries[[lib]] = libraries[[lib]][!names(libraries[[lib]]) == tool]
     }
@@ -302,7 +306,7 @@ sagaEnv = function(saga_bin = NA) {
     if (n_tools == 0)
       libraries = libraries[names(libraries) != lib]
   }
-
+  
   # remove invalid libraries for saga_cmd
   invalid_libs = list(
     'db_odbc',
@@ -357,20 +361,19 @@ sagaConfigure = function(senv,
   # some checks
   if (missing(senv))
     stop('senv parameter is missing')
-
+  
   if (is.na(grid_cache_dir))
     grid_cache_dir = gsub('\\\\', '/', tempdir())
   
   # create configuration file if any arguments are supplied
   if ((grid_caching == TRUE | !is.na(cores)) &
       sagaversion >= as.numeric_version('4.0.0')){
-
+    
     saga_config = tempfile(fileext = '.ini')
     msg = system(paste(
       shQuote(senv$saga_cmd),
       paste0('--create-config=', saga_config)
-    ),
-    intern = T)
+    ), intern = T)
     saga_config_settings = readChar(saga_config, file.info(saga_config)$size)
     
     # configuration for custom number of cores
@@ -379,8 +382,8 @@ sagaConfigure = function(senv,
         'OMP_THREADS_MAX=[0-9]*',
         paste0('OMP_THREADS_MAX=', cores),
         saga_config_settings)
-    
-    # configuration for grid caching
+      
+      # configuration for grid caching
     } else if (grid_caching == TRUE) {
       if (cores > 1 | is.na(cores)) {
         message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
@@ -413,7 +416,7 @@ sagaConfigure = function(senv,
   
   if(!exists('saga_config'))
     saga_config = NA
-
+  
   return (saga_config)
 }
 
@@ -421,8 +424,8 @@ sagaConfigure = function(senv,
 #' Initiate a SAGA-GIS geoprocessor object
 #'
 #' Dynamically generates functions to all valid SAGA-GIS libraries and tools.
-#' These functions are stored within a sagaGIS R6 object as a named list of 
-#' functions. These functions are accessed via the 'gp' attribute.
+#' These functions are stored within a saga S3 object as a named list of 
+#' functions.
 #'
 #' @param saga_bin character, optional. Path to saga_cmd executable. If this
 #'   argument is not supplied then an automatic search for the saga_cmd
@@ -435,8 +438,8 @@ sagaConfigure = function(senv,
 #'   files generated by file caching.
 #' @param cores numeric. Maximum number of processing cores. Needs to be set to
 #'   1 if file caching is activated.
-#' @return R6 sagaGIS object containing a 'gp' attribute containing a nested
-#'   list of functions for SAGA-GIS libraries and tools
+#' @return S3 saga object containing a nested list of functions for SAGA-GIS
+#' libraries and tools
 #' @export
 #' @import raster
 #' @examples
@@ -453,14 +456,14 @@ sagaConfigure = function(senv,
 #'     
 #'     # Example of terrain analysis
 #'     # Generate random terrain and load as raster object
-#'     dem = saga$gp$grid_calculus$Random_Terrain(RADIUS = 100)
+#'     dem = saga$grid_calculus$Random_Terrain(RADIUS = 100)
 #'     
 #'     # Use Rsagacmd for to calculate the terrain ruggedness index
-#'     tri = saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
+#'     tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
 #'     plot(tri)
 #'     
 #'     # Do not load output as an R object
-#'     saga$gp$ta_morphometry$Terrain_Ruggedness_Index_TRI(
+#'     saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(
 #'         DEM = dem, intern = FALSE)
 #' }
 sagaGIS = function(saga_bin = NA,
@@ -468,222 +471,83 @@ sagaGIS = function(saga_bin = NA,
                    grid_cache_threshlod = 100,
                    grid_cache_dir = NA,
                    cores = NA) {
-  
-  # intialize sagaInstallation
   senv = sagaEnv(saga_bin)
   senv[['saga_config']] = sagaConfigure(
-    senv, grid_caching, grid_cache_threshlod, grid_cache_dir, cores, senv$saga_version)
-
-  # create R6 class
-  sagaGIS = R6::R6Class("sagaGIS",
-      
-     private = list(
-       senv = NULL
-     ),
-
-     public = list(
-       # public attributes
-       gp = list(),
-
-       # public functions
-       initialize = function(senv){
-         # R6 class initialization
-         # Initializes the sagaGIS R6 class object and builds a library of 
-         # functions that are mapped to the syntax of the user's installed
-         # SAGA-GIS software
-         #
-         # Args:
-         #  senv : sagaInstallation object
-         #    object containing the settings and recognized libraries within the
-         #    installed SAGA-GIS version
-         
-         private$senv = senv
-
-         # dynamically create functions
-         for (lib in names(senv$libraries)) {
-           toolnames = list()
-           
-           for (tool in names(senv$libraries[[lib]])) {
-             
-             # define tool arguments
-             tool_options = senv$libraries[[lib]][[tool]][['options']]
-             tool_cmd = senv[['libraries']][[lib]][[tool]][['tool_cmd']]
-             args = paste0(tool_options$identifierR, collapse = ',')
-             
-             # define function body
-             # deparse tool settings into function and create code to call sagaExecute
-             body = paste(
-               paste0('args = as.list(environment())'),
-               paste0('lib = ', deparse(lib)),
-               paste0('tool = ', deparse(tool)),
-               "
-               # remove intern and help from saga args list
-               if ('intern' %in% names(args))
-               args = args[-which(names(args) == 'intern')]
-               
-               # call the saga geoprocessor
-               saga_results = sagaExecute(lib, tool, private$senv, intern, args)
-               return (saga_results)
-               ",
-               sep = "\n"
-             )
-             
-             # parse function
-             tryCatch(
-               expr = {
-                 func_code = paste0(
-                   'function(', args,', intern = TRUE', '){',
-                   '\n', body, '\n', '}')
-                 func = structure(
-                   eval(expr = parse(text = func_code)),
-                   lib = lib,
-                   tool = tool,
-                   tool_options = tool_options,
-                   tool_cmd = tool_cmd,
-                   class = 'sagaTool')
-                 
-                 self$gp[[lib]] = append(self$gp[[lib]], func)
-                 toolnames = append(toolnames, tool)
-               },
-               error = function(e)
-                 warning(
-                   paste0("Problem parsing SAGA-GIS library = ", lib,
-                          "; and tool = ", tool), call. = FALSE)
-             )
-           }
-           names(self$gp[[lib]]) = toolnames
-         }
-       },
-       
-       tileGeoprocessor = function(grid, nx, ny, overlap=0){
-         # Split a raster grid into tiles for tile-based processing
-         # Split a raster grid into tiles. The tiles are saved as Rsagacmd
-         # temporary files, and are loaded as a list of R objects for futher
-         # processing. This is a function to make the the SAGA-GIS 
-         # grid_tools / tiling tool more convenient to use.
-         #
-         # Args:
-         #  grid : character, RasterLayer, RasterStack, RasterBrick object
-         #    Input grid data from file path or loaded as an R object
-         # nx : numeric
-         #  Number of pixels in the x-dimension per tile
-         # ny : numeric
-         #  Number of pixels in the y-dimension per tile
-         # overlap : numeric, default = 0
-         #  Number of pixels to overlap the tiles by on all sides
-         # Returns:
-         #  tiles : list
-         #    List of RasterLayer objects saved to temporary file location
-         #    that represent the input grid divided into tiles
-
-         # calculate number of tiles required
-         n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
-         n_heights = ceiling(1/(ny/(nrow(grid)+overlap)))
-         n_tiles = n_widths * n_heights
-         
-         # create list of temporary files for tiles
-         tile_outputs = c()
-         for (i in 1:n_tiles){
-           temp = tempfile(fileext = '.sgrd')
-           tile_outputs = c(tile_outputs, temp)
-           pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
-         }
-         
-         # grid tiling
-         tiles = sagaExecute(
-           lib = 'grid_tools', tool = 'Tiling', senv = private$senv, intern = TRUE,
-           list(GRID = grid, TILES = tile_outputs, OVERLAP = overlap,
-                NX = nx, NY = ny))
-       },
-       
-       searchTools = function(x) {
-         # Search for a SAGA-GIS tool within the loaded libraries using
-         # pattern matching
-         # Args:
-         #  x : character
-         #    Text representing pattern to search for, case is ignored
-         # Returns:
-         #  matches : dataframe
-         #    Dataframe of matches as a named list of libraries and tools that
-         #    match the search pattern in each library
+    senv,
+    grid_caching,
+    grid_cache_threshlod,
+    grid_cache_dir,
+    cores,
+    senv$saga_version
+  )
   
-         matches = list()
-         
-         for (lib in names(self$gp)) {
-           match_text = grep(x, names(self$gp[[lib]]), ignore.case = T)
-           if (length(match_text) > 0)
-             matches[[lib]] = names(self$gp[[lib]])[match_text]
-         }
-         
-         matches_df = data.frame(
-           library = rep(names(matches), lapply(matches, length)),
-           tool = unlist(matches, use.names = F))
-         return (matches_df)
-       }
-
-     ) # public
-  ) # R6class
-
-  return (sagaGIS$new(senv))
+  # dynamically create functions
+  tool_libraries = list()
+  for (lib in names(senv$libraries)) {
+    toolnames = list()
+    
+    for (tool in names(senv$libraries[[lib]])) {
+      # define tool arguments
+      tool_options = senv$libraries[[lib]][[tool]][['options']]
+      tool_cmd = senv[['libraries']][[lib]][[tool]][['tool_cmd']]
+      args = paste0(tool_options$identifierR, collapse = ',')
+      
+      # define function body
+      # deparse tool settings into function and create code to call sagaExecute
+      body = paste(
+        paste0('args = as.list(environment())'),
+        paste0('lib = ', deparse(lib)),
+        paste0('tool = ', deparse(tool)),
+        "
+        # remove intern and help from saga args list
+        if ('intern' %in% names(args))
+        args = args[-which(names(args) == 'intern')]
+        
+        # call the saga geoprocessor
+        saga_results = sagaExecute(lib, tool, senv, intern, args)
+        return (saga_results)
+        ",
+        sep = "\n"
+      )
+      
+      # parse function
+      tryCatch(
+        expr = {
+          func_code = paste0('function(', args, ', intern = TRUE', ') {',
+                             '\n', body, '\n', '}')
+          func = structure(
+            eval(expr = parse(text = func_code)),
+            lib = lib,
+            tool = tool,
+            tool_options = tool_options,
+            tool_cmd = tool_cmd,
+            class = 'sagaTool'
+          )
+          
+          tool_libraries[[lib]] = append(tool_libraries[[lib]], func)
+          toolnames = append(toolnames, tool)
+        },
+        error = function(e)
+          warning(
+            paste0("Problem parsing SAGA-GIS library = ", lib, "; and tool = ", tool),
+            call. = FALSE
+          )
+      )
+    }
+    names(tool_libraries[[lib]]) = toolnames
   }
-
-
-# list of supposedly 'global' names to appease R CMD check
-.__global__ <- c("self","private")
-
-#' Search for a SAGA-GIS tool
-#'
-#' @param x sagaGIS object
-#' @param pattern character. Pattern of text to search for within the tool name
-#'
-#' @return dataframe of tools that match the pattern of the search text and
-#' their host library
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' # initialize Rsagacmd
-#' saga = sagaGIS()
-#' 
-#' # search for a tool
-#' searchTools(saga, 'Terrain')
-#' }
-searchTools = function(x, pattern) {
-  return (x$searchTools(pattern))
-}
-
-#' Split a raster grid into tiles for tile-based processing
-#' 
-#' Split a raster grid into tiles. The tiles are saved as Rsagacmd
-#' temporary files, and are loaded as a list of R objects for futher
-#' processing. This is a function to make the the SAGA-GIS 
-#' grid_tools / tiling tool more convenient to use.
-#'
-#' @param x sagaGIS R6 object 
-#' @param grid character, or RasterLayer. GDAL-supported raster, as as a path to
-#'   the raster or representing a RasterLayer object
-#' @param nx numeric. Number of x-pixels per tile
-#' @param ny numeric. Number of y-pixels per tile
-#' @param overlap numeric. Number of overlapping pixels
-#'
-#' @return list. List of RasterLayer objects representing tiled data
-#' @export
-#'
-#' @examples
-#' library(Rsagacmd)
-#' 
-#' # check that SAGA-GIS is installed in a recognizable location
-#' if(!is.null(sagaSearch())) {
-#'     saga = sagaGIS()
-#'     
-#'     # generate a random DEM
-#'     dem = saga$gp$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
-#'     
-#'     # return tiled version of DEM
-#'     tiles = saga$tileGeoprocessor(grid = dem, nx = 20, ny = 20)
-#' }
-tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
-  x$tileGeoprocessor(grid, nx, ny, overlap=0)
+  
+  # clean local environment
+  remove(args, body, cores, func, func_code, grid_cache_dir,
+         grid_cache_threshlod, grid_caching, lib, saga_bin, tool, tool_cmd,
+         tool_options, toolnames)
+  
+  #  return S3 saga object
+  structure(
+    tool_libraries,
+    class = 'saga',
+    env = environment()
+  )
 }
 
 
@@ -700,13 +564,13 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0){
 #'     saga = sagaGIS()
 #'     
 #'     # Display usage information on a tool
-#'     print(saga$gp$ta_morphometry$Slope_Aspect_Curvature)
+#'     print(saga$ta_morphometry$Slope_Aspect_Curvature)
 #'     
 #'     # Or simply
-#'     saga$gp$ta_morphometry$Slope_Aspect_Curvature
+#'     saga$ta_morphometry$Slope_Aspect_Curvature
 #' }
 print.sagaTool = function(x, ...) {
-
+  
   lib = attr(x, 'lib')
   tool = attr(x, 'tool')
   tool_options = attr(x, 'tool_options')
@@ -740,7 +604,7 @@ print.sagaTool = function(x, ...) {
 #'   (RasterLayer/sf/dataframe)
 sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   args = c(...)
-
+  
   # sagaInstallation settings
   tool_options = senv$libraries[[lib]][[tool]][['options']]
   tool_cmd = senv$libraries[[lib]][[tool]][['tool_cmd']]
@@ -750,8 +614,8 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   # match the identifierR to the identifier used by SAGA-GIS
   arg_names = names(args)
   arg_names = merge(
-    x=data.frame(arg_names, stringsAsFactors = FALSE),
-    y=tool_options, by.x='arg_names', by.y='identifierR',
+    x = data.frame(arg_names, stringsAsFactors = FALSE),
+    y = tool_options, by.x='arg_names', by.y = 'identifierR',
     sort=FALSE)$Identifier
   args = stats::setNames(args, arg_names)
   
@@ -778,7 +642,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   
   # replace sdat fileext used by raster package with sgrd used by SAGA
   args = gsub('.sdat', '.sgrd', args)
-
+  
   # determine the SAGA output parameters that have been specified as function args
   spec_ind = which(tool_options$IO == "Output" & tool_options$Identifier %in% arg_names)
   n_outputs = length(spec_ind)
@@ -835,7 +699,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   
   # prepare system call
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
-
+  
   if (!is.na(saga_config)) {
     config =  paste('-C', shQuote(saga_config), sep='=')
   } else {
@@ -898,7 +762,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
       }, error = function(e){
         warning(
           paste0('No geoprocessing output for ', spec_out[i, 'Identifier'],
-                '. Results may require other input parameters to be specified'),
+                 '. Results may require other input parameters to be specified'),
           call. = FALSE)
       }
       )

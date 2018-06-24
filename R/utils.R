@@ -42,3 +42,94 @@ MRVBFthreshold = function(res, plot=FALSE){
   
   stats::predict(m, list(dem_res=res))
 }
+
+
+#' Search for a SAGA-GIS tool
+#'
+#' @param x saga object
+#' @param pattern character. Pattern of text to search for within the tool name
+#'
+#' @return dataframe of tools that match the pattern of the search text and
+#' their host library
+#' @export
+#'
+#' @examples
+#' # initialize Rsagacmd
+#' saga = sagaGIS()
+#' 
+#' # search for a tool
+#' searchTools(x = saga, pattern = 'Terrain')
+searchTools = function(x, pattern) {
+  
+  # get local environment of sagaGIS object
+  env = attr(x, 'env')
+  
+  matches = list()
+  
+  for (lib in names(env$tool_libraries)) {
+    match_text = grep(pattern, names(env$tool_libraries[[lib]]), ignore.case = T)
+    if (length(match_text) > 0)
+      matches[[lib]] = names(env$tool_libraries[[lib]])[match_text]
+  }
+  
+  matches_df = data.frame(
+    library = rep(names(matches), lapply(matches, length)),
+    tool = unlist(matches, use.names = F))
+  return (matches_df)
+}
+
+
+#' Split a raster grid into tiles for tile-based processing
+#' 
+#' Split a raster grid into tiles. The tiles are saved as Rsagacmd
+#' temporary files, and are loaded as a list of R objects for futher
+#' processing. This is a function to make the the SAGA-GIS 
+#' grid_tools / tiling tool more convenient to use.
+#'
+#' @param x saga R3 object 
+#' @param grid character, or RasterLayer. GDAL-supported raster, as as a path to
+#'   the raster or representing a RasterLayer object
+#' @param nx numeric. Number of x-pixels per tile
+#' @param ny numeric. Number of y-pixels per tile
+#' @param overlap numeric. Number of overlapping pixels
+#'
+#' @return list. List of RasterLayer objects representing tiled data
+#' @export
+#'
+#' @examples
+#' library(Rsagacmd)
+#' 
+#' # check that SAGA-GIS is installed in a recognizable location
+#' if(!is.null(sagaSearch())) {
+#'     saga = sagaGIS()
+#'     
+#'     # generate a random DEM
+#'     dem = saga$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
+#'     
+#'     # return tiled version of DEM
+#'     tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
+#' }
+tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
+  
+  # get local environment of sagaGIS object
+  env = attr(x, 'env')
+  
+  # calculate number of tiles required
+  n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
+  n_heights = ceiling(1/(ny/(nrow(grid)+overlap)))
+  n_tiles = n_widths * n_heights
+  
+  # create list of temporary files for tiles
+  tile_outputs = c()
+  for (i in 1:n_tiles){
+    temp = tempfile(fileext = '.sgrd')
+    tile_outputs = c(tile_outputs, temp)
+    pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
+  }
+  
+  # grid tiling
+  tiles = sagaExecute(
+    lib = 'grid_tools', tool = 'Tiling', senv = env$senv, intern = TRUE,
+    list(GRID = grid, TILES = tile_outputs, OVERLAP = overlap,
+         NX = nx, NY = ny))
+}

@@ -23,7 +23,7 @@ Imports: XML,
     rgdal,
     foreign,
     minpack.lm,
-    R6,
+    stringr,
     methods
 Suggests:
     dplyr
