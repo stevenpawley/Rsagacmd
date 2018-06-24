@@ -4,10 +4,13 @@
 \alias{sagaEnv}
 \title{Parses valid SAGA-GIS libraries and tools into a nested list of functions}
 \usage{
-sagaEnv(saga_bin = NA)
+sagaEnv(saga_bin = NA, opt_lib = NA)
 }
 \arguments{
 \item{saga_bin}{character. Optional path to saga_cmd executable}
+
+\item{opt_lib}{character vector. List of subset of SAGA-GIS tool libraries
+to generate links to.}
 }
 \value{
 sagaInstallation object. Contains paths, settings and a nested list

@@ -19,9 +19,11 @@ their host library
 Search for a SAGA-GIS tool
 }
 \examples{
+\dontrun{
 # initialize Rsagacmd
 saga = sagaGIS()
 
 # search for a tool
 searchTools(x = saga, pattern = 'Terrain')
+}
 }

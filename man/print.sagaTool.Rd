@@ -9,20 +9,20 @@ print.sagaTool(x, ...)
 \arguments{
 \item{x}{sagaTool object}
 
-\item{...}{Additional arguments to pass to print}
+\item{...}{Additional arguments to pass to print. Currently not used.}
 }
 \description{
 Generic function to display help and usage information for any SAGA-GIS tool
 }
 \examples{
-# Initialize Rsagacmd if SAGA-GIS is installed in a recognized location
-if(!is.null(sagaSearch())) {
-    saga = sagaGIS()
-    
-    # Display usage information on a tool
-    print(saga$ta_morphometry$Slope_Aspect_Curvature)
-    
-    # Or simply
-    saga$ta_morphometry$Slope_Aspect_Curvature
+\dontrun{
+# Intialize a saga object
+saga = sagaGIS()
+
+# Display usage information on a tool
+print(saga$ta_morphometry$Slope_Aspect_Curvature)
+
+# Or simply:
+saga$ta_morphometry$Slope_Aspect_Curvature
 }
 }

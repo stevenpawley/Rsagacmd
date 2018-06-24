@@ -52,13 +52,14 @@ MRVBFthreshold = function(res, plot=FALSE){
 #' @return dataframe of tools that match the pattern of the search text and
 #' their host library
 #' @export
-#'
-#' @examples
+#' @examples 
+#' \dontrun{
 #' # initialize Rsagacmd
 #' saga = sagaGIS()
 #' 
 #' # search for a tool
 #' searchTools(x = saga, pattern = 'Terrain')
+#' }
 searchTools = function(x, pattern) {
   
   # get local environment of sagaGIS object
@@ -95,19 +96,16 @@ searchTools = function(x, pattern) {
 #'
 #' @return list. List of RasterLayer objects representing tiled data
 #' @export
-#'
 #' @examples
-#' library(Rsagacmd)
+#' \dontrun{
+#' # Initialize a saga object
+#' saga = sagaGIS()
 #' 
-#' # check that SAGA-GIS is installed in a recognizable location
-#' if(!is.null(sagaSearch())) {
-#'     saga = sagaGIS()
-#'     
-#'     # generate a random DEM
-#'     dem = saga$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
-#'     
-#'     # return tiled version of DEM
-#'     tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
+#' # Generate a random DEM
+#' dem = saga$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
+#' 
+#' # Return tiled version of DEM
+#' tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 #' }
 tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
   
@@ -115,13 +113,13 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
   env = attr(x, 'env')
   
   # calculate number of tiles required
-  n_widths = ceiling(1/(nx/(ncol(grid)+overlap)))
-  n_heights = ceiling(1/(ny/(nrow(grid)+overlap)))
+  n_widths = ceiling(1 / (nx/ (ncol(grid) + overlap)))
+  n_heights = ceiling(1 / (ny/ (nrow(grid) + overlap)))
   n_tiles = n_widths * n_heights
   
   # create list of temporary files for tiles
   tile_outputs = c()
-  for (i in 1:n_tiles){
+  for (i in 1:n_tiles) {
     temp = tempfile(fileext = '.sgrd')
     tile_outputs = c(tile_outputs, temp)
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)

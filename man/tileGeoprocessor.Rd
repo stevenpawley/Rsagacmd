@@ -28,16 +28,14 @@ processing. This is a function to make the the SAGA-GIS
 grid_tools / tiling tool more convenient to use.
 }
 \examples{
-library(Rsagacmd)
+\dontrun{
+# Initialize a saga object
+saga = sagaGIS()
 
-# check that SAGA-GIS is installed in a recognizable location
-if(!is.null(sagaSearch())) {
-    saga = sagaGIS()
-    
-    # generate a random DEM
-    dem = saga$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
-    
-    # return tiled version of DEM
-    tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
+# Generate a random DEM
+dem = saga$grid_calculus$Random_Terrain(RADIUS=15, ITERATIONS=500)
+
+# Return tiled version of DEM
+tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 }
 }
