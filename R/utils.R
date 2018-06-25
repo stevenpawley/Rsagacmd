@@ -62,8 +62,8 @@ MRVBFthreshold = function(res, plot=FALSE){
 #' }
 searchTools = function(x, pattern) {
   
-  # get local environment of sagaGIS object
-  env = attr(x, 'env')
+  # get local environment of sagaGIS object (first tool)
+  env = environment(x[[1]][[1]])
   
   matches = list()
   
@@ -109,8 +109,8 @@ searchTools = function(x, pattern) {
 #' }
 tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
   
-  # get local environment of sagaGIS object
-  env = attr(x, 'env')
+  # get local environment of sagaGIS object (first tool)
+  env = environment(x[[1]][[1]])
   
   # calculate number of tiles required
   n_widths = ceiling(1 / (nx/ (ncol(grid) + overlap)))

@@ -517,6 +517,15 @@ sagaGIS = function(saga_bin = NA,
       )
       
       # parse function
+      # here we are creating functions by evaluating expressions
+      # these functions have some additional attributes used to printing tool
+      # information etc.
+      
+      # The functions are stored as a nested list which is returned as a saga
+      # class. These functions exist within the environment of the class object, 
+      # along with the variables/tools/libraries needed by each
+      # function. Thus, when each function is called, it can find the variables
+      # that it needs from within its own environment
       tryCatch(
         expr = {
           func_code = paste0('function(', args, ', intern = TRUE', ') {',
@@ -551,8 +560,7 @@ sagaGIS = function(saga_bin = NA,
   #  return S3 saga object
   structure(
     tool_libraries,
-    class = 'saga',
-    env = environment()
+    class = 'saga'
   )
 }
 
