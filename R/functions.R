@@ -534,8 +534,6 @@ sagaGIS = function(saga_bin = NA,
             eval(expr = parse(text = func_code)),
             lib = lib,
             tool = tool,
-            tool_options = tool_options,
-            tool_cmd = tool_cmd,
             class = 'sagaTool'
           )
           
@@ -587,7 +585,10 @@ print.sagaTool = function(x, ...) {
   
   lib = attr(x, 'lib')
   tool = attr(x, 'tool')
-  tool_options = attr(x, 'tool_options')
+  
+  # get local environment of sagaGIS object
+  env = environment(x)
+  tool_options = env$senv$libraries[[lib]][[tool]][['options']]
   tool_options = tool_options[, c(
     'identifierR', 'Name', 'Type', 'Description', 'Constraints')]
   
