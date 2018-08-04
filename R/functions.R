@@ -9,12 +9,8 @@ sagaVersion = function(saga_cmd) {
   # system call saga_cmd to display version on console
   saga_version = system(paste(shQuote(saga_cmd), '--version'), intern = T)[1]
   
-  # extract version number from string
-  if (Sys.info()["sysname"] == "Windows") {
-    saga_version = stringr::str_extract(saga_version, '(?<= ).*')
-  } else {
-    saga_version = stringr::str_extract(saga_version, '(?<=: ).*')
-  }
+  saga_version = stringr::str_extract(saga_version, '\\d.\\d.\\d.')
+  saga_version = stringr::str_trim(saga_version)
   
   return (as.numeric_version(saga_version))
 }
