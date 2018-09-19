@@ -1,1 +1,9 @@
 language: r
+cache: packages
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
+    packages:
+      - saga
