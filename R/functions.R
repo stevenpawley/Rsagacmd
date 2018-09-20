@@ -119,6 +119,10 @@ sagaEnv = function(saga_bin = NA, opt_lib = NA) {
   saga_version = sagaVersion(saga_bin)
   
   # generate SAGA help files in temporary directory
+  ## note that prior to saga version 3.0.0 a path cannot be specified in which
+  ## to create the document pages, i.e. saga will only generate them in the
+  ## working directory. In this case we need to manually change the working
+  ## directory to tempdir and then restore
   help_path = file.path(tempdir(), basename(tempfile()))
   dir.create(help_path)
   
@@ -126,8 +130,10 @@ sagaEnv = function(saga_bin = NA, opt_lib = NA) {
     msg = system(
       paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=T)
   } else {
+    olddir = getwd()
     setwd(help_path)
     msg = system(paste(shQuote(saga_bin), '--docs'), intern=T)
+    setwd(olddir)
   }
   
   if (!is.null(attr(msg, "status"))) {
