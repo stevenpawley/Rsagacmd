@@ -1,5 +1,7 @@
+[![Build Status](https://travis-ci.org/stevenpawley/Rsagacmd.svg?branch=master)](https://travis-ci.org/stevenpawley/Rsagacmd)
+
 Rsagacmd
-======
+========
 
 Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 
