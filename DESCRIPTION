@@ -13,18 +13,19 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
 LazyData: false
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Depends:
     raster
-Imports: XML,
+Imports:
+    XML,
     sf,
-    magrittr,
     tools,
     rgdal,
     foreign,
     minpack.lm,
     stringr,
-    methods
+    methods,
+    magrittr
 Suggests:
     dplyr
 Collate:
