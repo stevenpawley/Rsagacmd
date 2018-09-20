@@ -29,7 +29,7 @@ SAGA-GIS does not handle multi-band rasters and the native SAGA GIS Binary file 
 
 For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, e.g.:
 ```
-# Initialize SAGA-GIS as a R6 object
+# Initialize SAGA-GIS as a S3 object
 
 library(Rsagacmd)
 saga = sagaGIS('C:/SAGA-GIS/saga_cmd.exe')
