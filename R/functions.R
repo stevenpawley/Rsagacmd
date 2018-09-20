@@ -8,8 +8,7 @@
 sagaVersion = function(saga_cmd) {
   # system call saga_cmd to display version on console
   saga_version = system(paste(shQuote(saga_cmd), '--version'), intern = T)[1]
-  
-  saga_version = stringr::str_extract(saga_version, '\\d.\\d.\\d.')
+  saga_version = stringr::str_extract(saga_version, '\\d.\\d.\\d')
   saga_version = stringr::str_trim(saga_version)
   
   return (as.numeric_version(saga_version))
