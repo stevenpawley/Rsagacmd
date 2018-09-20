@@ -1,4 +1,7 @@
-language: r
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: false
 cache: packages
 
 addons:
@@ -7,3 +10,7 @@ addons:
       - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
       - saga
+      - libgit2-dev
+      - libudunits2-dev
+      - libgdal-dev
+      - python-gdal
