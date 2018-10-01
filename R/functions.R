@@ -746,7 +746,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         # import OGR supported vector data
         if (spec_out[i, 'Feature'] == 'Shape' |
             spec_out[i, 'Feature'] == 'Shapes list')
-          saga_results[[paste0(current_id)]] = sf::st_read(out_i)
+          saga_results[[paste0(current_id)]] = sf::st_read(out_i, quiet = TRUE)
         
         # import table data
         if (spec_out[i, 'Feature'] == 'Table'){
