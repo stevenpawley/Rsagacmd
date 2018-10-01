@@ -2,7 +2,7 @@ Package: Rsagacmd
 Type: Package
 Title: Linking R with the Open-Source 'SAGA-GIS' Software
 Version: 0.1.0
-Date: 2018-03-26
+Date: 2018-10-01
 Authors@R: c(
     person("Steven", "Pawley",
     email = "dr.stevenpawley@gmail.com",
