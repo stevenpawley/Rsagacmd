@@ -17,7 +17,9 @@
 #' @export
 #' 
 #' @examples
+#' \dontrun{
 #' MRVBFthreshold(res = 10, plot = TRUE)
+#' }
 MRVBFthreshold = function(res, plot=FALSE){
   # slope decreases by factor of 2 per every 'step' above a 25 m dem resolution
   # a step consists of a 3 factor increase in the dem cell size

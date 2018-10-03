@@ -1,0 +1,12 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Flow Accumulation (QM of ESP)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">2</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2013</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Calculation of flow accumulation, aka upslope contributing area, with the multiple flow direction method after Freeman (1991).
+
+References:
+Freeman, G.T. (1991): Calculating catchment area with divergent flow based on a rectangular grid. Computers & Geosciences, 17, pp.413-422.
+Pelletier, J.D. (2008): Quantitative Modeling of Earth Surface Processes. Cambridge, 295p.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>DEM </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Contributing Area</td><td>Grid (output)</td><td>FLOW</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Preprocessing</td><td>Choice</td><td>PREPROC</td><td></td><td>Available Choices:
+[0] none
+[1] fill sinks temporarily
+[2] fill sinks permanently
+Default: 1</td></tr><tr><td>Fill Increment</td><td>Floating point</td><td>DZFILL</td><td></td><td>Minimum: 0.000000
+Default: 0.010000</td></tr></table>

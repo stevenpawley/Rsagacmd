@@ -1,0 +1,12 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Diffusive Hillslope Evolution (ADI)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2013</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Simulation of diffusive hillslope evolution using an Alternating-Direction-Implicit (ADI) method.
+
+References:
+Pelletier, J.D. (2008): Quantitative Modeling of Earth Surface Processes. Cambridge, 295p.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><td>Channel Mask (*)</td><td>Grid (optional input)</td><td>CHANNELS</td><td>use a zero value for hillslopes, any other value for channel cells.</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Modelled Elevation</td><td>Grid (output)</td><td>MODEL</td><td></td><td></td></tr><tr><td>Elevation Difference (*)</td><td>Grid (optional output)</td><td>DIFF</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Update</td><td>Boolean</td><td>UPDATE</td><td></td><td>Default: 1</td></tr><tr><td>Diffusivity [m2 / kyr]</td><td>Floating point</td><td>KAPPA</td><td></td><td>Minimum: 0.000000
+Default: 10.000000</td></tr><tr><td>Simulation Time [kyr]</td><td>Floating point</td><td>DURATION</td><td></td><td>Minimum: 0.000000
+Default: 10000.000000</td></tr><tr><td>Time Step</td><td>Choice</td><td>TIMESTEP</td><td></td><td>Available Choices:
+[0] user defined
+[1] automatically
+Default: 0</td></tr><tr><td>Time Step [kyr]</td><td>Floating point</td><td>DTIME</td><td></td><td>Minimum: 0.000000
+Default: 1000.000000</td></tr></table>(*) <i>optional</i>

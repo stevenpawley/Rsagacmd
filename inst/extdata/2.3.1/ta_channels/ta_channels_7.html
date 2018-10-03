@@ -1,0 +1,9 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Valley Depth</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">7</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Valley depth is calculated as difference between the elevation and an interpolated ridge level. Ridge level interpolation uses the algorithm implemented in the 'Vertical Distance to Channel Network' tool. It performs the following steps:
+ - Definition of ridge cells (using Strahler order on the inverted DEM).
+ - Interpolation of the ridge level.
+ - Subtraction of the original elevations from the ridge level.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>ELEVATION</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Valley Depth</td><td>Grid (output)</td><td>VALLEY_DEPTH</td><td></td><td></td></tr><tr><td>Ridge Level (*)</td><td>Grid (optional output)</td><td>RIDGE_LEVEL</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Tension Threshold [Percentage of Cell Size]</td><td>Floating point</td><td>THRESHOLD</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Keep Ridge Level above Surface</td><td>Boolean</td><td>NOUNDERGROUND</td><td></td><td>Default: 1</td></tr><tr><td>Ridge Detection Threshold</td><td>Integer</td><td>ORDER</td><td></td><td>Minimum: 1
+Maximum: 7
+Default: 4</td></tr></table>(*) <i>optional</i>

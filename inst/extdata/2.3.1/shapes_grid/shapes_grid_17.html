@@ -1,0 +1,10 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Gradient Vectors from Directional Components</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">17</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2006</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Create lines indicating the gradient. <hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>X Component </td><td>Grid (input)</td><td>X</td><td></td><td></td></tr><tr><td>Y Component </td><td>Grid (input)</td><td>Y</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Gradient Vectors</td><td>Shapes (output)</td><td>VECTORS</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Step</td><td>Integer</td><td>STEP</td><td></td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Size Range</td><td>Value range</td><td>SIZE</td><td>size range as percentage of step</td><td></td></tr><tr><td>Aggregation</td><td>Choice</td><td>AGGR</td><td>how to request values if step size is more than one cell</td><td>Available Choices:
+[0] nearest neighbour
+[1] mean value
+Default: 1</td></tr><tr><td>Style</td><td>Choice</td><td>STYLE</td><td></td><td>Available Choices:
+[0] simple line
+[1] arrow
+[2] arrow (centered to cell)
+Default: 2</td></tr></table>

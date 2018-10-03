@@ -1,0 +1,20 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Fragmentation Classes from Density and Connectivity</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">17</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2008 by O.Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>
+(1) interior, if Density = 1.0
+(2) undetermined, if Density > 0.6 and Density = Connectivity
+(3) perforated, if Density > 0.6 and Density - Connectivity > 0
+(4) edge, if Density > 0.6 and Density - Connectivity < 0
+(5) transitional, if 0.4 < Density < 0.6
+(6) patch, if Density < 0.4
+
+
+References:
+Riitters, K., Wickham, J., O'Neill, R., Jones, B., Smith, E. (2000): 
+Global-scale patterns of forest fragmentation. Conservation Ecology 4(2): 3
+<a href="http://www.ecologyandsociety.org/vol4/iss2/art3/">http://www.ecologyandsociety.org/vol4/iss2/art3/</a>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Density [Percent] </td><td>Grid (input)</td><td>DENSITY</td><td>Density Index (Pf).</td><td></td></tr><tr><td>Connectivity [Percent] </td><td>Grid (input)</td><td>CONNECTIVITY</td><td>Connectivity Index (Pff).</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Fragmentation</td><td>Grid (output)</td><td>FRAGMENTATION</td><td>Fragmentation Index</td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Add Border</td><td>Boolean</td><td>BORDER</td><td></td><td>Default: 0</td></tr><tr><td>Connectivity Weighting</td><td>Floating point</td><td>WEIGHT</td><td></td><td>Minimum: 0.000000
+Default: 1.100000</td></tr><tr><td>Minimum Density [Percent]</td><td>Floating point</td><td>DENSITY_MIN</td><td></td><td>Minimum: 0.000000
+Maximum: 100.000000
+Default: 10.000000</td></tr><tr><td>Minimum Density for Interior Forest [Percent]</td><td>Floating point</td><td>DENSITY_INT</td><td>if less than 100, it is distinguished between interior and core forest</td><td>Minimum: 0.000000
+Maximum: 100.000000
+Default: 99.000000</td></tr></table>

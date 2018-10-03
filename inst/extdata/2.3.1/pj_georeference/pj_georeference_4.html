@@ -1,0 +1,29 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Direct Georeferencing of Airborne Photographs</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Direct georeferencing of aerial photographs uses extrinsic (position, attitude) and intrinsic (focal length, physical pixel size) camera parameters. Orthorectification routine supports additional data from a Digital Elevation Model (DEM).
+
+References:
+Baumker, M. / Heimes, F.J. (2001): New Calibration and Computing Method for Direct Georeferencing of Image and Scanner Data Using the Position and Angular Data of an Hybrid Inertial Navigation System. OEEPE Workshop, Integrated Sensor Orientation, Hannover 2001. <a target="_blank" href="http://www.hochschule-bochum.de/fileadmin/media/fb_v/veroeffentlichungen/baeumker/baheimesoeepe.pdf">online</a>.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Unreferenced Grids </td><td>Grid list (input)</td><td>INPUT</td><td></td><td></td></tr><tr><td>Elevation (*)</td><td>Grid (optional input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Referenced Grids</td><td>Grid list (output)</td><td>OUTPUT</td><td></td><td></td></tr><tr><td>Extent (*)</td><td>Shapes (optional output)</td><td>EXTENT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Default Reference Height</td><td>Floating point</td><td>ZREF</td><td></td><td>Default: 0.000000</td></tr><tr><td>X</td><td>Floating point</td><td>X</td><td></td><td>Default: 0.000000</td></tr><tr><td>Y</td><td>Floating point</td><td>Y</td><td></td><td>Default: 0.000000</td></tr><tr><td>Flying Height</td><td>Floating point</td><td>Z</td><td></td><td>Default: 1000.000000</td></tr><tr><td>Orientation</td><td>Choice</td><td>ORIENTATION</td><td></td><td>Available Choices:
+[0] BLUH
+[1] PATB
+Default: 0</td></tr><tr><td>Omega [degree]</td><td>Floating point</td><td>OMEGA</td><td>rotation around the X axis (roll)</td><td>Default: 0.000000</td></tr><tr><td>Phi [degree]</td><td>Floating point</td><td>PHI</td><td>rotation around the Y axis (pitch)</td><td>Default: 0.000000</td></tr><tr><td>Kappa [degree]</td><td>Floating point</td><td>KAPPA</td><td>rotation around the Z axis (heading)</td><td>Default: 0.000000</td></tr><tr><td>Kappa Offset [degree]</td><td>Floating point</td><td>KAPPA_OFF</td><td>origin adjustment for Z axis (heading)</td><td>Default: 90.000000</td></tr><tr><td>Focal Length [mm]</td><td>Floating point</td><td>CFL</td><td></td><td>Minimum: 0.000000
+Default: 80.000000</td></tr><tr><td>CCD Physical Pixel Size [micron]</td><td>Floating point</td><td>PXSIZE</td><td></td><td>Minimum: 0.000000
+Default: 5.200000</td></tr><tr><td>Resampling</td><td>Choice</td><td>RESAMPLING</td><td></td><td>Available Choices:
+[0] Nearest Neighbour
+[1] Bilinear Interpolation
+[2] Bicubic Spline Interpolation
+[3] B-Spline Interpolation
+Default: 3</td></tr><tr><td>Data Storage Type</td><td>Choice</td><td>DATA_TYPE</td><td></td><td>Available Choices:
+[0] 1 byte unsigned integer
+[1] 1 byte signed integer
+[2] 2 byte unsigned integer
+[3] 2 byte signed integer
+[4] 4 byte unsigned integer
+[5] 4 byte signed integer
+[6] 4 byte floating point
+[7] 8 byte floating point
+[8] same as original
+Default: 8</td></tr><tr><td>Row Order</td><td>Choice</td><td>ROW_ORDER</td><td></td><td>Available Choices:
+[0] top down
+[1] bottom up
+Default: 0</td></tr></table>(*) <i>optional</i>

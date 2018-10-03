@@ -1,0 +1,61 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Flow Accumulation (Top-Down)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2001-2016, T.Grabs portions (c) 2010</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Top-down processing of cells for calculation of flow accumulation and related parameters. This set of algorithms processes a DEM downwards from the highest to the lowest cell.
+
+References:
+
+Deterministic 8
+- O'Callaghan, J.F. / Mark, D.M. (1984):
+    'The extraction of drainage networks from digital elevation data',
+    Computer Vision, Graphics and Image Processing, 28:323-344
+
+Rho 8:
+- Fairfield, J. / Leymarie, P. (1991):
+    'Drainage networks from grid digital elevation models',
+    Water Resources Research, 27:709-717
+
+Braunschweiger Reliefmodell:
+- Bauer, J. / Rohdenburg, H. / Bork, H.-R. (1985):
+    'Ein Digitales Reliefmodell als Vorraussetzung fuer ein deterministisches Modell der Wasser- und Stoff-Fluesse',
+    Landschaftsgenese und Landschaftsoekologie, H.10, Parameteraufbereitung fuer deterministische Gebiets-Wassermodelle,
+    Grundlagenarbeiten zu Analyse von Agrar-Oekosystemen, (Eds.: Bork, H.-R. / Rohdenburg, H.), p.1-15
+
+Deterministic Infinity:
+- Tarboton, D.G. (1997):
+    'A new method for the determination of flow directions and upslope areas in grid digital elevation models',
+    Water Resources Research, Vol.33, No.2, p.309-319
+
+Multiple Flow Direction:
+- Freeman, G.T. (1991):
+    'Calculating catchment area with divergent flow based on a regular grid',
+    Computers and Geosciences, 17:413-22
+
+- Quinn, P.F. / Beven, K.J. / Chevallier, P. / Planchon, O. (1991):
+    'The prediction of hillslope flow paths for distributed hydrological modelling using digital terrain models',
+    Hydrological Processes, 5:59-79
+
+Triangular Multiple Flow Direction
+- Seibert, J. / McGlynn, B. (2007):
+    'A new triangular multiple flow direction algorithm for computing upslope areas from gridded digital elevation models',
+    Water Resources Research, Vol. 43, W04501
+    C++ Implementation into SAGA by Thomas Grabs, Copyrights (c) 2007
+    Contact: thomas.grabs@natgeo.su.se, jan.seibert@natgeo.su.se 
+
+Multiple Flow Direction based on Maximum Downslope Gradient:
+- Qin, C. Z. / Zhu, A. X. / Pei, T. / Li, B. L. / Scholten, T. / Behrens, T. / & Zhou, C. H. (2011):
+    'An approach to computing topographic wetness index based on maximum downslope gradient',
+    Precision Agriculture, 12(1), 32-43.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>ELEVATION</td><td></td><td></td></tr><tr><td>Sink Routes (*)</td><td>Grid (optional input)</td><td>SINKROUTE</td><td></td><td></td></tr><tr><td>Weights (*)</td><td>Grid (optional input)</td><td>WEIGHTS</td><td></td><td></td></tr><tr><td>Input for Mean over Catchment (*)</td><td>Grid (optional input)</td><td>VAL_INPUT</td><td></td><td></td></tr><tr><td>Material for Accumulation (*)</td><td>Grid (optional input)</td><td>ACCU_MATERIAL</td><td></td><td></td></tr><tr><td>Accumulation Target </td><td>Grid (input)</td><td>ACCU_TARGET</td><td></td><td></td></tr><tr><td>Linear Flow Threshold Grid (*)</td><td>Grid (optional input)</td><td>LINEAR_VAL</td><td>optional grid providing values to be compared with linear flow threshold instead of flow accumulation</td><td></td></tr><tr><td>Channel Direction (*)</td><td>Grid (optional input)</td><td>LINEAR_DIR</td><td>use this for (linear) flow routing, if the value is a valid direction (0-7 = N, NE, E, SE, S, SW, W, NW)</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Flow Accumulation</td><td>Grid (output)</td><td>FLOW</td><td></td><td></td></tr><tr><td>Mean over Catchment</td><td>Grid (output)</td><td>VAL_MEAN</td><td></td><td></td></tr><tr><td>Accumulated Material (*)</td><td>Grid (optional output)</td><td>ACCU_TOTAL</td><td></td><td></td></tr><tr><td>Accumulated Material (Left Side) (*)</td><td>Grid (optional output)</td><td>ACCU_LEFT</td><td></td><td></td></tr><tr><td>Accumulated Material (Right Side) (*)</td><td>Grid (optional output)</td><td>ACCU_RIGHT</td><td></td><td></td></tr><tr><td>Flow Path Length (*)</td><td>Grid (optional output)</td><td>FLOW_LENGTH</td><td>average distance that a cell's accumulated flow travelled</td><td></td></tr><tr><td>Loss through Negative Weights (*)</td><td>Grid (optional output)</td><td>WEIGHT_LOSS</td><td>when using weights without support for negative flow: output of the absolute amount of negative flow that occurred</td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Step</td><td>Integer</td><td>STEP</td><td></td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Flow Accumulation Unit</td><td>Choice</td><td>FLOW_UNIT</td><td></td><td>Available Choices:
+[0] number of cells
+[1] cell area
+Default: 1</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Deterministic 8
+[1] Rho 8
+[2] Braunschweiger Reliefmodell
+[3] Deterministic Infinity
+[4] Multiple Flow Direction
+[5] Multiple Triangular Flow Directon
+[6] Multiple Maximum Downslope Gradient Based Flow Directon
+Default: 4</td></tr><tr><td>Thresholded Linear Flow</td><td>Boolean</td><td>LINEAR_DO</td><td>apply linear flow routing (D8) to all cells, having a flow accumulation greater than the specified threshold</td><td>Default: 0</td></tr><tr><td>Linear Flow Threshold</td><td>Integer</td><td>LINEAR_MIN</td><td>flow accumulation threshold (cells) for linear flow routing</td><td>Default: 500</td></tr><tr><td>Convergence</td><td>Floating point</td><td>CONVERGENCE</td><td>Convergence factor for Multiple Flow Direction Algorithm (Freeman 1991).
+Applies also to the Multiple Triangular Flow Directon Algorithm.</td><td>Minimum: 0.000000
+Default: 1.100000</td></tr><tr><td>Prevent Negative Flow Accumulation</td><td>Boolean</td><td>NO_NEGATIVES</td><td>when using weights: do not transport negative flow, set it to zero instead; useful e.g. when accumulating measures of water balance.</td><td>Default: 1</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,18 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Seeded Region Growing</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">3</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">B. Bechtel, O. Conrad (c) 2008</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>
+References:
+Adams, R. & Bischof, L. (1994): Seeded Region Growing. IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol.16, No.6, p.641-647.
+
+Bechtel, B., Ringeler, A. & Boehner, J. (2008): Segmentation for Object Extraction of Trees using MATLAB and SAGA. In: Boehner, J., Blaschke, T., Montanarella, L. [Eds.]: SAGA - Seconds Out. Hamburger Beitraege zur Physischen Geographie und Landschaftsoekologie, 19:59-70. <a href="http://downloads.sourceforge.net/saga-gis/hbpl19_01.pdf">download</a>
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Seeds </td><td>Grid (input)</td><td>SEEDS</td><td></td><td></td></tr><tr><td>Features </td><td>Grid list (input)</td><td>FEATURES</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Segments</td><td>Grid (output)</td><td>SEGMENTS</td><td></td><td></td></tr><tr><td>Similarity</td><td>Grid (output)</td><td>SIMILARITY</td><td></td><td></td></tr><tr><td>Seeds</td><td>Table (output)</td><td>TABLE</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Normalize</td><td>Boolean</td><td>NORMALIZE</td><td></td><td>Default: 0</td></tr><tr><td>Neighbourhood</td><td>Choice</td><td>NEIGHBOUR</td><td></td><td>Available Choices:
+[0] 4 (von Neumann)
+[1] 8 (Moore)
+Default: 0</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] feature space and position
+[1] feature space
+Default: 0</td></tr><tr><td>Variance in Feature Space</td><td>Floating point</td><td>SIG_1</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Variance in Position Space</td><td>Floating point</td><td>SIG_2</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Similarity Threshold</td><td>Floating point</td><td>THRESHOLD</td><td></td><td>Minimum: 0.000000
+Default: 0.000000</td></tr><tr><td>Refresh</td><td>Boolean</td><td>REFRESH</td><td></td><td>Default: 0</td></tr><tr><td>Leaf Size (for Speed Optimisation)</td><td>Integer</td><td>LEAFSIZE</td><td></td><td>Minimum: 2
+Default: 256</td></tr></table>

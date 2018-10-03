@@ -1,0 +1,32 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Angular Distance Weighted</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">7</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2013</td></tr></table><hr><h4>Description</h4>Angular Distance Weighted (ADW) grid interpolation from irregular distributed points.
+
+References:
+Shepard, D. (1968): A Two-Dimensional Interpolation Function for Irregularly-Spaced Data. Proceedings of the 1968 23rd ACM National Conference, pp.517-524, <a target="_blank" href="http://champs.cecs.ucf.edu/Library/Conference_Papers/pdfs/A%20two-dimentional%20intepolation%20function%20for%20irregalarly-spaced%20data.pdf">online</a>.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Points </td><td>Shapes (input)</td><td>SHAPES</td><td></td><td></td></tr><tr><td>Target System (*)</td><td>Grid (optional input)</td><td>TARGET_TEMPLATE</td><td>use this grid's system for output grids</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target Grid</td><td>Grid (output)</td><td>TARGET_OUT_GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Attribute</td><td>Table field</td><td>FIELD</td><td></td><td></td></tr><tr><td>Target Grid System</td><td>Choice</td><td>TARGET_DEFINITION</td><td></td><td>Available Choices:
+[0] user defined
+[1] grid or grid system
+Default: 0</td></tr><tr><td>Cellsize</td><td>Floating point</td><td>TARGET_USER_SIZE</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Left</td><td>Floating point</td><td>TARGET_USER_XMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Right</td><td>Floating point</td><td>TARGET_USER_XMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Bottom</td><td>Floating point</td><td>TARGET_USER_YMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Top</td><td>Floating point</td><td>TARGET_USER_YMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Fit</td><td>Choice</td><td>TARGET_USER_FITS</td><td></td><td>Available Choices:
+[0] nodes
+[1] cells
+Default: 0</td></tr><tr><td>Search Range</td><td>Choice</td><td>SEARCH_RANGE</td><td></td><td>Available Choices:
+[0] local
+[1] global
+Default: 0</td></tr><tr><td>Maximum Search Distance</td><td>Floating point</td><td>SEARCH_RADIUS</td><td>local maximum search distance given in map units</td><td>Minimum: 0.000000
+Default: 1000.000000</td></tr><tr><td>Number of Points</td><td>Choice</td><td>SEARCH_POINTS_ALL</td><td></td><td>Available Choices:
+[0] maximum number of nearest points
+[1] all points within search distance
+Default: 0</td></tr><tr><td>Minimum</td><td>Integer</td><td>SEARCH_POINTS_MIN</td><td>minimum number of points to use</td><td>Minimum: 1
+Default: -1</td></tr><tr><td>Maximum</td><td>Integer</td><td>SEARCH_POINTS_MAX</td><td>maximum number of nearest points</td><td>Minimum: 1
+Default: 20</td></tr><tr><td>Direction</td><td>Choice</td><td>SEARCH_DIRECTION</td><td></td><td>Available Choices:
+[0] all directions
+[1] quadrants
+Default: 0</td></tr><tr><td>Weighting Function</td><td>Choice</td><td>DW_WEIGHTING</td><td></td><td>Available Choices:
+[0] no distance weighting
+[1] inverse distance to a power
+[2] exponential
+[3] gaussian weighting
+Default: 1</td></tr><tr><td>Inverse Distance Weighting Power</td><td>Floating point</td><td>DW_IDW_POWER</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr><tr><td>Inverse Distance Offset</td><td>Boolean</td><td>DW_IDW_OFFSET</td><td>Calculates weights for distance plus one, avoiding division by zero for zero distances</td><td>Default: 0</td></tr><tr><td>Gaussian and Exponential Weighting Bandwidth</td><td>Floating point</td><td>DW_BANDWIDTH</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr></table>(*) <i>optional</i>

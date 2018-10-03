@@ -1,0 +1,27 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">PET (after Hargreaves, Grid)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">8</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2015</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Estimation of daily potential evapotranspiration from daily average, minimum and maximum temperatures using Hargreave's empirical equation. In order to estimate extraterrestrial net radiation geographic latitude of observation and Julian day have to be supplied too. 
+References:
+- Ambikadevi, K.M. (2004): Simulation of Evapotranspiration and Rainfall-runoff for the Stillwater River Watershed in Central Massachusetts. Environmental & Water Resources Engineering Masters Projects, University of Massachusetts, Amherst <a target="_blank" href="http://scholarworks.umass.edu/cee_ewre/22/">online</a>
+- Hargraeves, G.H., Samani, Z.A. (1985): Reference crop evapotranspiration from ambient air temperatures. Paper presented in ASAE Regional Meeting, Grand Junction, Colorado. <a target="_blank" href="http://cagesun.nmsu.edu/~zsamani/papers/Hargreaves_Samani_85.pdf">online</a>
+Allen, R.G., Pereira, L.S., Raes, D., Smith, M. (1998): Crop evapotranspiration - Guidelines for computing crop water requirements. FAO Irrigation and drainage paper 56. <a target="_blank" href="http://www.fao.org/docrep/X0490E/x0490e00.htm#Contents">online</a>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Mean Temperature </td><td>Grid (input)</td><td>T</td><td></td><td></td></tr><tr><td>Minimum Temperature </td><td>Grid (input)</td><td>T_MIN</td><td></td><td></td></tr><tr><td>Maximum Temperature </td><td>Grid (input)</td><td>T_MAX</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Potential Evapotranspiration</td><td>Grid (output)</td><td>PET</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Latitude [Degree]</td><td>Floating point</td><td>LAT</td><td></td><td>Minimum: -90.000000
+Maximum: 90.000000
+Default: 53.000000</td></tr><tr><td>Time</td><td>Choice</td><td>TIME</td><td></td><td>Available Choices:
+[0] day
+[1] month
+Default: 0</td></tr><tr><td>Month</td><td>Choice</td><td>MONTH</td><td></td><td>Available Choices:
+[0] January
+[1] February
+[2] March
+[3] April
+[4] May
+[5] June
+[6] July
+[7] August
+[8] September
+[9] October
+[10] November
+[11] December
+Default: 9</td></tr><tr><td>Day of Month</td><td>Integer</td><td>DAY</td><td></td><td>Minimum: 1
+Maximum: 31
+Default: 2</td></tr></table>

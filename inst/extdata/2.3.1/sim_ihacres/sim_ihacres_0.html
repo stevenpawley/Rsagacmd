@@ -1,0 +1,23 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">IHACRES Calibration (2)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">copyrights (c) 2008 Stefan Liersch</td></tr></table><hr><h4>Description</h4>Calibration Tool for the Model IHACRES 
+ 
+ 
+Reference: 
+ 
+Jakeman, A.J. / Hornberger, G.M. (1993). 
+How Much Complexity Is Warranted in a Rainfall-Runoff Model? 
+Water Resources Research, (29), NO. 8 (2637-2649) 
+ 
+Croke, B. F. W., W. S. Merritt, et al. (2004).
+A dynamic model for predicting hydrologic response to land cover changes in gauged and ungauged catchments. 
+Journal Of Hydrology 291(1-2): 115-131.<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Table </td><td>Table (input)</td><td>TABLE</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Table (*)</td><td>Data Object (optional output)</td><td>TABLEout</td><td></td><td></td></tr><tr><td>Table (*)</td><td>Data Object (optional output)</td><td>TABLEparms</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Date Column</td><td>Table field</td><td>DATE_Field</td><td>Select the column containing the Date</td><td></td></tr><tr><td>Streamflow Column</td><td>Table field</td><td>DISCHARGE_Field</td><td>Select the Column containing Discharge Values</td><td></td></tr><tr><td>Precipitation Column</td><td>Table field</td><td>PCP_Field</td><td>Select the Column containing precipitation Values</td><td></td></tr><tr><td>Temperature Column</td><td>Table field</td><td>TMP_Field</td><td>Select the Column containing Temperature Values</td><td></td></tr><tr><td>Subbasin Inflow</td><td>Table field</td><td>INFLOW_Field</td><td>Select the column containing inflow data to the subbasin</td><td></td></tr><tr><td>Is the subbasin upstream (no external inflow)</td><td>Boolean</td><td>bUPSTREAM</td><td>If checked, it means there is no external inflow to the subbasin</td><td>Default: 1</td></tr><tr><td>Using temperature data?</td><td>Boolean</td><td>USE_TMP</td><td>If checked, then temperature data are used.</td><td>Default: 1</td></tr><tr><td>Number of Simulations</td><td>Integer</td><td>NSIM</td><td>Number of Simulations for Calibration</td><td>Minimum: 1
+Maximum: 10000000
+Default: 1000</td></tr><tr><td>Area of the Watershed in [km2]</td><td>Floating point</td><td>AREA</td><td>Area of the Watershed in [km2] used for unit conversion</td><td>Minimum: 0.000010
+Default: 100.000000</td></tr><tr><td>Storage</td><td>Choice</td><td>STORAGE</td><td></td><td>Available Choices:
+[0] Single Storage
+[1] Two Parallel Storages
+[2] Two Storages in Series
+Default: 0</td></tr><tr><td>IHACRES Version</td><td>Choice</td><td>IHACVERS</td><td></td><td>Available Choices:
+[0] Jakeman & Hornberger (1993)
+[1] Croke et al. (2005)
+Default: 0</td></tr><tr><td>Snow Module on/off</td><td>Boolean</td><td>SNOW_MODULE</td><td>If checked the snow module is active</td><td>Default: 1</td></tr></table>(*) <i>optional</i>

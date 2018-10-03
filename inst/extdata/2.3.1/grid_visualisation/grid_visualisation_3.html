@@ -1,0 +1,30 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">RGB Composite</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">3</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2002</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Create red-green-blue overlays of grids. <hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Red </td><td>Grid (input)</td><td>R_GRID</td><td></td><td></td></tr><tr><td>Green </td><td>Grid (input)</td><td>G_GRID</td><td></td><td></td></tr><tr><td>Blue </td><td>Grid (input)</td><td>B_GRID</td><td></td><td></td></tr><tr><td>Alpha (*)</td><td>Grid (optional input)</td><td>A_GRID</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Composite</td><td>Grid (output)</td><td>RGB</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Value Preparation</td><td>Choice</td><td>R_METHOD</td><td></td><td>Available Choices:
+[0] take original value (0 - 255)
+[1] rescale to 0 - 255
+[2] user defined
+[3] percentiles
+[4] standard deviation
+Default: 4</td></tr><tr><td>Rescale Range</td><td>Value range</td><td>R_RANGE</td><td></td><td></td></tr><tr><td>Percentiles</td><td>Value range</td><td>R_PERCTL</td><td></td><td></td></tr><tr><td>Standard Deviation</td><td>Floating point</td><td>R_STDDEV</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr><tr><td>Value Preparation</td><td>Choice</td><td>G_METHOD</td><td></td><td>Available Choices:
+[0] take original value (0 - 255)
+[1] rescale to 0 - 255
+[2] user defined
+[3] percentiles
+[4] standard deviation
+Default: 4</td></tr><tr><td>Rescale Range</td><td>Value range</td><td>G_RANGE</td><td></td><td></td></tr><tr><td>Percentiles</td><td>Value range</td><td>G_PERCTL</td><td></td><td></td></tr><tr><td>Standard Deviation</td><td>Floating point</td><td>G_STDDEV</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr><tr><td>Value Preparation</td><td>Choice</td><td>B_METHOD</td><td></td><td>Available Choices:
+[0] take original value (0 - 255)
+[1] rescale to 0 - 255
+[2] user defined
+[3] percentiles
+[4] standard deviation
+Default: 4</td></tr><tr><td>Rescale Range</td><td>Value range</td><td>B_RANGE</td><td></td><td></td></tr><tr><td>Percentiles</td><td>Value range</td><td>B_PERCTL</td><td></td><td></td></tr><tr><td>Standard Deviation</td><td>Floating point</td><td>B_STDDEV</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr><tr><td>Value Preparation</td><td>Choice</td><td>A_METHOD</td><td></td><td>Available Choices:
+[0] take original value (0 - 255)
+[1] rescale to 0 - 255
+[2] user defined
+[3] percentiles
+[4] standard deviation
+Default: 4</td></tr><tr><td>Rescale Range</td><td>Value range</td><td>A_RANGE</td><td></td><td></td></tr><tr><td>Percentiles</td><td>Value range</td><td>A_PERCTL</td><td></td><td></td></tr><tr><td>Standard Deviation</td><td>Floating point</td><td>A_STDDEV</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr></table>(*) <i>optional</i>

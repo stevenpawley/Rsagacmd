@@ -1,0 +1,27 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">SVM Classification</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Support Vector Machine (SVM) based classification for grids.
+Reference:
+Chang, C.-C. / Lin, C.-J. (2011): A library for support vector machines. ACM Transactions on Intelligent Systems and Technology, vol.2/3, p.1-27. <a target="_blank" href="http://www.csie.ntu.edu.tw/~cjlin/libsvm">LIBSVM Homepage</a>.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grids </td><td>Grid list (input)</td><td>GRIDS</td><td></td><td></td></tr><tr><td>Training Areas </td><td>Shapes (input)</td><td>ROI</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Classification</td><td>Grid (output)</td><td>CLASSES</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Scaling</td><td>Choice</td><td>SCALING</td><td></td><td>Available Choices:
+[0] none
+[1] normalize (0-1)
+[2] standardize
+Default: 2</td></tr><tr><td>Verbose Messages</td><td>Boolean</td><td>MESSAGE</td><td></td><td>Default: 0</td></tr><tr><td>Model Source</td><td>Choice</td><td>MODEL_SRC</td><td></td><td>Available Choices:
+[0] create from training areas
+[1] restore from file
+Default: 0</td></tr><tr><td>Restore Model from File</td><td>File path</td><td>MODEL_LOAD</td><td></td><td></td></tr><tr><td>Class Identifier</td><td>Table field</td><td>ROI_ID</td><td></td><td></td></tr><tr><td>Store Model to File</td><td>File path</td><td>MODEL_SAVE</td><td></td><td></td></tr><tr><td>SVM Type</td><td>Choice</td><td>SVM_TYPE</td><td></td><td>Available Choices:
+[0] C-SVC
+[1] nu-SVC
+[2] one-class SVM
+[3] epsilon-SVR
+[4] nu-SVR
+Default: 0</td></tr><tr><td>Kernel Type</td><td>Choice</td><td>KERNEL_TYPE</td><td>linear: u'*v
+polynomial: (gamma*u'*v + coef0)^degree
+radial basis function: exp(-gamma*|u-v|^2)
+sigmoid: tanh(gamma*u'*v + coef0)</td><td>Available Choices:
+[0] linear
+[1] polynomial
+[2] radial basis function
+[3] sigmoid
+Default: 2</td></tr><tr><td>Degree</td><td>Integer</td><td>DEGREE</td><td>degree in kernel function</td><td>Default: 3</td></tr><tr><td>Gamma</td><td>Floating point</td><td>GAMMA</td><td>gamma in kernel function</td><td>Default: 0.000000</td></tr><tr><td>coef0</td><td>Floating point</td><td>COEF0</td><td>coef0 in kernel function</td><td>Default: 0.000000</td></tr><tr><td>C</td><td>Floating point</td><td>COST</td><td>parameter C (cost) of C-SVC, epsilon-SVR, and nu-SVR</td><td>Default: 1.000000</td></tr><tr><td>nu-SVR</td><td>Floating point</td><td>NU</td><td>parameter nu of nu-SVC, one-class SVM, and nu-SVR</td><td>Default: 0.500000</td></tr><tr><td>SVR Epsilon</td><td>Floating point</td><td>EPS_SVR</td><td>epsilon in loss function of epsilon-SVR</td><td>Default: 0.100000</td></tr><tr><td>Cache Size</td><td>Floating point</td><td>CACHE_SIZE</td><td>cache memory size in MB</td><td>Default: 100.000000</td></tr><tr><td>Epsilon</td><td>Floating point</td><td>EPS</td><td>tolerance of termination criterion</td><td>Default: 0.001000</td></tr><tr><td>Shrinking</td><td>Boolean</td><td>SHRINKING</td><td>whether to use the shrinking heuristics</td><td>Default: 0</td></tr><tr><td>Probability Estimates</td><td>Boolean</td><td>PROBABILITY</td><td>whether to train a SVC or SVR model for probability estimates</td><td>Default: 0</td></tr><tr><td>Cross Validation</td><td>Integer</td><td>CROSSVAL</td><td>n-fold cross validation: n must > 1</td><td>Minimum: 1
+Default: 1</td></tr></table>

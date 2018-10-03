@@ -1,0 +1,17 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Directional Statistics for Single Grid</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">6</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2010</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Calculates for each cell statistical properties (arithmetic mean, minimum, maximum, variance, standard deviation) of all cells lying in given direction based on the input grid. <hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>GRID</td><td></td><td></td></tr><tr><td>Points (*)</td><td>Shapes (optional input)</td><td>POINTS</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Arithmetic Mean (*)</td><td>Grid (optional output)</td><td>MEAN</td><td></td><td></td></tr><tr><td>Difference from Arithmetic Mean (*)</td><td>Grid (optional output)</td><td>DIFMEAN</td><td></td><td></td></tr><tr><td>Minimum (*)</td><td>Grid (optional output)</td><td>MIN</td><td></td><td></td></tr><tr><td>Maximum (*)</td><td>Grid (optional output)</td><td>MAX</td><td></td><td></td></tr><tr><td>Range (*)</td><td>Grid (optional output)</td><td>RANGE</td><td></td><td></td></tr><tr><td>Variance (*)</td><td>Grid (optional output)</td><td>VAR</td><td></td><td></td></tr><tr><td>Standard Deviation (*)</td><td>Grid (optional output)</td><td>STDDEV</td><td></td><td></td></tr><tr><td>Mean less Standard Deviation (*)</td><td>Grid (optional output)</td><td>STDDEVLO</td><td></td><td></td></tr><tr><td>Mean plus Standard Deviation (*)</td><td>Grid (optional output)</td><td>STDDEVHI</td><td></td><td></td></tr><tr><td>Deviation from Arithmetic Mean (*)</td><td>Grid (optional output)</td><td>DEVMEAN</td><td></td><td></td></tr><tr><td>Percentile (*)</td><td>Grid (optional output)</td><td>PERCENT</td><td></td><td></td></tr><tr><td>Directional Statistics for Points (*)</td><td>Shapes (optional output)</td><td>POINTS_OUT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Direction [Degree]</td><td>Floating point</td><td>DIRECTION</td><td></td><td>Default: 0.000000</td></tr><tr><td>Tolerance [Degree]</td><td>Floating point</td><td>TOLERANCE</td><td></td><td>Minimum: 0.000000
+Maximum: 45.000000
+Default: 0.000000</td></tr><tr><td>Maximum Distance [Cells]</td><td>Integer</td><td>MAXDISTANCE</td><td>Maximum distance parameter is ignored if set to zero (default).</td><td>Minimum: 0
+Default: 0</td></tr><tr><td>Weighting</td><td>Parameters</td><td>WEIGHTING</td><td></td><td>4 Parameters:
+- 1. Available Choices:
+[0] no distance weighting
+[1] inverse distance to a power
+[2] exponential
+[3] gaussian weighting
+Default: 0
+- 2. Minimum: 0.000000
+Default: 1.000000
+- 3. Default: 1
+- 4. Minimum: 0.000000
+Default: 1.000000
+</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,20 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Cluster Analysis</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">6</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O. Conrad (c) 2010</td></tr></table><hr><h4>Description</h4>Cluster Analysis for tables.
+
+References:
+
+Iterative Minimum Distance:
+- Forgy, E. (1965):
+  'Cluster Analysis of multivariate data: efficiency vs. interpretability of classifications',
+  Biometrics 21:768
+
+Hill-Climbing:- Rubin, J. (1967):
+  'Optimal Classification into Groups: An Approach for Solving the Taxonomy Problem',
+  J. Theoretical Biology, 15:103-144
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Table </td><td>Table (input)</td><td>INPUT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Result (*)</td><td>Table (optional output)</td><td>RESULT</td><td></td><td></td></tr><tr><td>Statistics</td><td>Table (output)</td><td>STATISTICS</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Attributes</td><td>Table fields</td><td>FIELDS</td><td></td><td></td></tr><tr><td>Cluster</td><td>Table field</td><td>CLUSTER</td><td></td><td></td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Iterative Minimum Distance (Forgy 1965)
+[1] Hill-Climbing (Rubin 1967)
+[2] Combined Minimum Distance / Hillclimbing
+Default: 1</td></tr><tr><td>Clusters</td><td>Integer</td><td>NCLUSTER</td><td>Number of clusters</td><td>Minimum: 2
+Default: 10</td></tr><tr><td>Normalise</td><td>Boolean</td><td>NORMALISE</td><td>Automatically normalise grids by standard deviation before clustering.</td><td>Default: 0</td></tr></table>(*) <i>optional</i>

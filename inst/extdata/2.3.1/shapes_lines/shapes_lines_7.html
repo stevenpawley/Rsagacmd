@@ -1,0 +1,23 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Line Smoothing</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">7</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">V. Wichmann, J. Engels (c) 2014</td></tr></table><hr><h4>Description</h4>The module provides methods for line smoothing including iterative averaging (SIA) and Gaussian filtering.
+
+Iterative averaging (SIA) is described by Mansouryar & Hedayati (2012). A higher smoothing sensitivity results in a stronger smoothing in less iterations and vice versa. The 'improved SIA model' simply applies a preservation factor in the first iteration and then runs the 'basic SIA model' for the following iterations.
+
+Gaussian filtering with shrinkage correction is described by Lowe (1989).
+
+In case the density of line vertices is too high, the 'Line Simplification' tool can be applied first. If the density of line vertices is too low, additional vertices can be inserted by applying the 'Convert Lines to Points' and the 'Convert Points to Line(s)' tools prior to smoothing.
+
+References:
+Lowe, D. (1989): Organization of Smooth Image Curves at Multiple Scales. International Journal of Computer Vision, 3: 119-130. (<a target="_blank" href="http://www.cs.ubc.ca/~lowe/papers/iccv88.pdf">pdf</a>)
+
+Mansouryar, M. & Hedayati, A. (2012): Smoothing Via Iterative Averaging (SIA) - A Basic Technique for Line Smoothing. International Journal of Computer and Electrical Engineering Vol. 4, No. 3: 307-311. (<a target="_blank" href="http://www.ijcee.org/papers/501-P063.pdf">pdf</a>)
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Lines </td><td>Shapes (input)</td><td>LINES_IN</td><td>The input line shapefile to smooth.</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Smoothed Lines</td><td>Shapes (output)</td><td>LINES_OUT</td><td>The smoothed output line shapefile.</td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td>Choose the method to apply.</td><td>Available Choices:
+[0] basic SIA model
+[1] improved SIA model
+[2] Gaussian Filtering
+Default: 2</td></tr><tr><td>Sensitivity</td><td>Integer</td><td>SENSITIVITY</td><td>Half the size of the moving window [vertex count], controls smoothing sensitivity.</td><td>Minimum: 1
+Default: 3</td></tr><tr><td>Iterations</td><td>Integer</td><td>ITERATIONS</td><td>The number of smoothing iterations [-].</td><td>Minimum: 1
+Default: 10</td></tr><tr><td>Preservation</td><td>Floating point</td><td>PRESERVATION</td><td>The smoothing preservation factor [-].</td><td>Minimum: 1.000000
+Default: 10.000000</td></tr><tr><td>Sigma</td><td>Floating point</td><td>SIGMA</td><td>Standard deviation of the Gaussian filter [-].</td><td>Minimum: 0.500000
+Default: 2.000000</td></tr></table>

@@ -4,9 +4,9 @@
 \alias{sagaGIS}
 \title{Initiate a SAGA-GIS geoprocessor object}
 \usage{
-sagaGIS(saga_bin = NA, grid_caching = FALSE,
-  grid_cache_threshlod = 100, grid_cache_dir = NA, cores = NA,
-  opt_lib = NA)
+sagaGIS(saga_bin = NULL, grid_caching = FALSE,
+  grid_cache_threshlod = 100, grid_cache_dir = NULL, cores = NULL,
+  opt_lib = NULL)
 }
 \arguments{
 \item{saga_bin}{character, optional. Path to saga_cmd executable. If this

@@ -1,0 +1,28 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">IMCORR - Feature Tracking</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">19</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">Magnus Bremer (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>The module performs an image correlation based on two raster data sets.
+Additionally, two DTMs can be given and used to optain 3D displacement vectors.
+
+This is a SAGA implementation of the standalone IMCORR software provided by the National Snow and Ice Data Center in Boulder, Colorado / US.
+
+The standalone software and documentation is available from:
+<a href="http://nsidc.org/data/velmap/imcorr.html">http://nsidc.org/data/velmap/imcorr.html</a>
+
+References:
+Scambos, T. A., Dutkiewicz, M. J., Wilson, J. C., and R. A. Bindschadler (1992): Application of image cross-correlation to the measurement of glacier velocity using satellite image data. Remote Sensing Environ., 42(3), 177-186.
+
+Fahnestock, M. A., Scambos, T.A., and R. A. Bindschadler (1992): Semi-automated ice velocity determination from satellite imagery. Eos, 73, 493.
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid 1 </td><td>Grid (input)</td><td>GRID_1</td><td>The first grid to correlate</td><td></td></tr><tr><td>Grid 2 </td><td>Grid (input)</td><td>GRID_2</td><td>The second grid to correlate</td><td></td></tr><tr><td>DTM 1 (*)</td><td>Grid (optional input)</td><td>DTM_1</td><td>The first DTM used to assign height information to grid 1</td><td></td></tr><tr><td>DTM 2 (*)</td><td>Grid (optional input)</td><td>DTM_2</td><td>The second DTM used to assign height information to grid 2</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Correlated Points</td><td>Shapes (output)</td><td>CORRPOINTS</td><td>Correlated points with displacement and correlation information</td><td></td></tr><tr><td>Displacement Vector</td><td>Shapes (output)</td><td>CORRLINES</td><td>Displacement vectors between correlated points</td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Search Chip Size (Cells)</td><td>Choice</td><td>SEARCH_CHIPSIZE</td><td>Chip size of search chip, used to find correlating reference chip</td><td>Available Choices:
+[0] 16x16
+[1] 32x32
+[2] 64x64
+[3] 128x128
+[4] 256x256
+Default: 2</td></tr><tr><td>Reference Chip Size (Cells)</td><td>Choice</td><td>REF_CHIPSIZE</td><td>Chip size of reference chip to be found in search chip</td><td>Available Choices:
+[0] 16x16
+[1] 32x32
+[2] 64x64
+[3] 128x128
+Default: 1</td></tr><tr><td>Grid Spacing (Map Units)</td><td>Floating point</td><td>GRID_SPACING</td><td>Grid spacing used for the construction of correlated points [map units]</td><td>Minimum: 0.100000
+Maximum: 256.000000
+Default: 10.000000</td></tr></table>(*) <i>optional</i>

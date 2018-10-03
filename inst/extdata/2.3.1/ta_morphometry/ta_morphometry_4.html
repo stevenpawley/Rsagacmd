@@ -1,0 +1,18 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Curvature Classification</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2001</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Surface curvature based terrain classification.
+Reference:
+Dikau, R. (1988):
+'Entwurf einer geomorphographisch-analytischen Systematik von Reliefeinheiten',
+Heidelberger Geographische Bausteine, Heft 5
+
+0 - V  / V
+1 - GE / V
+2 - X  / V
+3 - V  / GR
+4 - GE / GR
+5 - X  / GR
+6 - V  / X
+7 - GE / X
+8 - X  / X
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Curvature Classification</td><td>Grid (output)</td><td>CLASS</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Threshold for plane</td><td>Floating point</td><td>THRESHOLD</td><td></td><td>Minimum: 0.000000
+Default: 0.000500</td></tr></table>

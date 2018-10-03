@@ -1,0 +1,29 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Cubic Spline Approximation</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">6</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O. Conrad (c) 2008</td></tr></table><hr><h4>Description</h4>This module approximates irregular scalar 2D data in specified points using C1-continuous bivariate cubic spline.
+Minimal Number of Points:                minimal number of points locally involved                in spline calculation (normally = 3)
+
+Maximal Number of Points:npmax:          maximal number of points locally involved                in spline calculation (required > 10,                recommended 20 < npmax < 60)
+Tolerance:                relative tolerance multiple in fitting                spline coefficients: the higher this                value, the higher degree of the locally                fitted spline (recommended 80 < k < 200)
+
+Points per square:                average number of points per square                (increase if the point distribution is strongly non-uniform                to get larger cells)
+
+Author:         Pavel Sakov,                CSIRO Marine Research
+
+Purpose:        2D data approximation with bivariate C1 cubic spline.                A set of library functions + standalone utility.
+
+Description:    See J. Haber, F. Zeilfelder, O.Davydov and H.-P. Seidel,                Smooth approximation and rendering of large scattered data                sets, in 'Proceedings of IEEE Visualization 2001'                (Th.Ertl, K.Joy and A.Varshney, Eds.), pp.341-347, 571,                IEEE Computer Society, 2001.
+<a target="_blank" href="http://www.uni-giessen.de/www-Numerische-Mathematik/davydov/VIS2001.ps.gz">www.uni-giessen.de/www-Numerische-Mathematik/davydov/VIS2001.ps.gz</a>
+<a target="_blank" href="http://www.math.uni-mannheim.de/~lsmath4/paper/VIS2001.pdf.gz">www.math.uni-mannheim.de/~lsmath4/paper/VIS2001.pdf.gz</a>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Points </td><td>Shapes (input)</td><td>SHAPES</td><td></td><td></td></tr><tr><td>Target System (*)</td><td>Grid (optional input)</td><td>TARGET_TEMPLATE</td><td>use this grid's system for output grids</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target Grid</td><td>Grid (output)</td><td>TARGET_OUT_GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Attribute</td><td>Table field</td><td>FIELD</td><td></td><td></td></tr><tr><td>Target Grid System</td><td>Choice</td><td>TARGET_DEFINITION</td><td></td><td>Available Choices:
+[0] user defined
+[1] grid or grid system
+Default: 0</td></tr><tr><td>Cellsize</td><td>Floating point</td><td>TARGET_USER_SIZE</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Left</td><td>Floating point</td><td>TARGET_USER_XMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Right</td><td>Floating point</td><td>TARGET_USER_XMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Bottom</td><td>Floating point</td><td>TARGET_USER_YMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Top</td><td>Floating point</td><td>TARGET_USER_YMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Fit</td><td>Choice</td><td>TARGET_USER_FITS</td><td></td><td>Available Choices:
+[0] nodes
+[1] cells
+Default: 0</td></tr><tr><td>Minimal Number of Points</td><td>Integer</td><td>NPMIN</td><td></td><td>Minimum: 0
+Default: 3</td></tr><tr><td>Maximal Number of Points</td><td>Integer</td><td>NPMAX</td><td></td><td>Minimum: 11
+Maximum: 59
+Default: 20</td></tr><tr><td>Points per Square</td><td>Floating point</td><td>NPPC</td><td></td><td>Minimum: 1.000000
+Default: 5.000000</td></tr><tr><td>Tolerance</td><td>Integer</td><td>K</td><td>Spline sensitivity, reduce to get smoother results, recommended: 80 < Tolerance < 200</td><td>Minimum: 0
+Default: 140</td></tr></table>(*) <i>optional</i>

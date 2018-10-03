@@ -1,0 +1,14 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Mesh Denoise</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">10</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Mesh denoising for grids, using the algorithm of Sun et al. (2007).
+References:
+Cardiff University: Filtering and Processing of Irregular Meshes with Uncertainties. <a target="_blank" href="http://www.cs.cf.ac.uk/meshfiltering/">online</a>.
+Stevenson, J.A., Sun, X., Mitchell, N.C. (2010): Despeckling SRTM and other topographic data with a denoising algorithm, Geomorphology, Vol.114, No.3, pp.238-252.
+Sun, X., Rosin, P.L., Martin, R.R., Langbein, F.C. (2007): Fast and effective feature-preserving mesh denoising. IEEE Transactions on Visualization and Computer Graphics, Vol.13, No.5, pp.925-938.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>INPUT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Denoised Grid</td><td>Grid (output)</td><td>OUTPUT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Threshold</td><td>Floating point</td><td>SIGMA</td><td></td><td>Minimum: 0.000000
+Maximum: 1.000000
+Default: 0.900000</td></tr><tr><td>Number of Iterations for Normal Updating</td><td>Integer</td><td>ITER</td><td></td><td>Minimum: 1
+Default: 5</td></tr><tr><td>Number of Iterations for Vertex Updating</td><td>Integer</td><td>VITER</td><td></td><td>Minimum: 1
+Default: 50</td></tr><tr><td>Common Edge Type of Face Neighbourhood</td><td>Choice</td><td>NB_CV</td><td></td><td>Available Choices:
+[0] Common Vertex
+[1] Common Edge
+Default: 0</td></tr><tr><td>Only Z-Direction Position is Updated</td><td>Boolean</td><td>ZONLY</td><td></td><td>Default: 0</td></tr></table>

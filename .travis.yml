@@ -4,10 +4,6 @@ language: R
 sudo: false
 cache: packages
 
-# before_install:
-#    - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y
-#    - sudo apt-get install -y saga libgit2-dev libudunits2-dev libgdal-dev python-gdal
-
 addons:
   apt:
     sources:

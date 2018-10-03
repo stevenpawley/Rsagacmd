@@ -1,0 +1,23 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Stereo Match (OpenCV)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2014</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>References:
+OpenCV - Open Source Computer Vision
+<a target="_blank" href="http://opencv.org">http://opencv.org</a><hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Left Image </td><td>Grid (input)</td><td>LEFT</td><td></td><td></td></tr><tr><td>Right Image </td><td>Grid (input)</td><td>RIGHT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Disparity Image</td><td>Grid (output)</td><td>DISPARITY</td><td></td><td></td></tr><tr><td>Points (*)</td><td>Point Cloud (optional output)</td><td>POINTS</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Algorithm</td><td>Choice</td><td>ALGORITHM</td><td></td><td>Available Choices:
+[0] Block Matching
+[1] Modified Hirschmuller
+Default: 0</td></tr><tr><td>Minimum Disparity</td><td>Integer</td><td>DISP_MIN</td><td>Minimum possible disparity value. Normally, it is zero but sometimes rectification algorithms can shift images, so this parameter needs to be adjusted accordingly.</td><td>Minimum: 0
+Default: 0</td></tr><tr><td>Number of Disparities</td><td>Integer</td><td>DISP_NUM</td><td>Maximum disparity minus minimum disparity. The value is always greater than zero.</td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Block Size</td><td>Integer</td><td>BLOCKSIZE</td><td>The linear size of the blocks compared by the algorithm. Larger block size implies smoother, though less accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher chance for algorithm to find a wrong correspondence.</td><td>Minimum: 0
+Default: 4</td></tr><tr><td>Maximum Disparity Difference</td><td>Integer</td><td>DIFF_MAX</td><td>Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.</td><td>Minimum: -1
+Default: 1</td></tr><tr><td>Uniqueness Ratio</td><td>Integer</td><td>UNIQUENESS</td><td>Margin in percentage by which the best (minimum) computed cost function value should "win" the second best value to consider the found match correct. Normally, a value within the 5-15 range is good enough.</td><td>Minimum: 0
+Default: 15</td></tr><tr><td>Speckle Window Size</td><td>Integer</td><td>SPECKLE_SIZE</td><td>Maximum size of smooth disparity regions to consider their noise speckles and invalidate. Set it to 0 to disable speckle filtering. Otherwise, set it somewhere in the 50-200 range.</td><td>Minimum: 0
+Default: 100</td></tr><tr><td>Speckle Range</td><td>Integer</td><td>SPECKLE_RANGE</td><td>Maximum disparity variation within each connected component. If you do speckle filtering, set the parameter to a positive value, it will be implicitly multiplied by 16. Normally, 1 or 2 is good enough.</td><td>Minimum: 0
+Default: 2</td></tr><tr><td>Texture Threshold</td><td>Integer</td><td>BM_TEXTURE</td><td></td><td>Minimum: 0
+Default: 31</td></tr><tr><td>Prefilter Truncation Value</td><td>Integer</td><td>BM_FILTER_CAP</td><td>Truncation value for the prefiltered image pixels.</td><td>Minimum: 0
+Default: 31</td></tr><tr><td>Mode</td><td>Choice</td><td>SGBM_MODE</td><td></td><td>Available Choices:
+[0] Semi-Global Block Matching
+[1] HH
+[2] SGBM 3 Way
+Default: 0</td></tr><tr><td>Disparity Smoothness Parameter 1</td><td>Integer</td><td>SGBM_P1</td><td>The larger the value, the smoother the disparity. Parameter 1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. The algorithm requires Parameter 2 > Parameter 1.</td><td>Minimum: 0
+Default: 8</td></tr><tr><td>Disparity Smoothness Parameter 2</td><td>Integer</td><td>SGBM_P2</td><td>The larger the value, the smoother the disparity. Parameter 2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires Parameter 2 > Parameter 1.</td><td>Minimum: 0
+Default: 32</td></tr><tr><td>Prefilter Truncation Value</td><td>Integer</td><td>SGBM_FILTER_CAP</td><td>Truncation value for the prefiltered image pixels. The algorithm first computes x-derivative at each pixel and clips its value by [-preFilterCap, preFilterCap] interval. The result values are passed to the Birchfield-Tomasi pixel cost function.</td><td>Minimum: 0
+Default: 31</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,10 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Export Point Cloud to Text File</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">18</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">V. Wichmann, LASERDATA GmbH (c) 2011</td></tr></table><hr><h4>Description</h4>Exports a point cloud to a text file. Once the module is executed, a pop-up dialog allows one to specify the fields to be exported and their decimal precision.
+
+Module usage is different between SAGA GUI and SAGA CMD: With SAGA GUI you will get prompted to choose the fields to export and the decimal precisions to use once you execute the module. With SAGA CMD you have to provide two strings with the -FIELDS and -PRECISIONS parameters. The first one must contain the field numbers, the latter the precisions (separated by semicolon). Field numbers start with 1, e.g. -FIELDS="1;2;3;5" -PRECISIONS="2;2;2;0".
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Point Cloud </td><td>Point Cloud (input)</td><td>POINTS</td><td>The point cloud to export.</td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Text File</td><td>File path</td><td>FILE</td><td>The file to write the point cloud to.</td><td></td></tr><tr><td>Write Header</td><td>Boolean</td><td>WRITE_HEADER</td><td>Write column names.</td><td>Default: 0</td></tr><tr><td>Field Separator</td><td>Choice</td><td>FIELDSEP</td><td>Field Separator</td><td>Available Choices:
+[0] tabulator
+[1] space
+[2] comma
+Default: 0</td></tr><tr><td>Fields</td><td>Text</td><td>FIELDS</td><td>The numbers (starting from 1) of the fields to export, separated by semicolon, e.g. "1;2;3;5"</td><td></td></tr><tr><td>Precisions</td><td>Text</td><td>PRECISIONS</td><td>The decimal precision to use for each field, separated by semicolon, e.g. "2;2;2;0"</td><td></td></tr></table>

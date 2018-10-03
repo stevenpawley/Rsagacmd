@@ -1,0 +1,15 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Concentration</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">6</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">R.Heinrich, O.Conrad (c) 2007</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Cellular automata are simple computational operators, but despite their simplicity, they allow the simulation of highly complex processes. This tool has been created to apply the concept of cellular automata to simulate diffusion and flow processes in shallow water bodies with in- and outflow, where monitoring data show concentration growth or decrease between the inflow and the outflow points. Parameters are for example nutrients like nitrate, which is reduced by denitrification process inside the water body.
+Values of mask grid are expected to be 1 for water area, 2 for inlet, 3 for outlet and 0 for non water.
+
+References:
+<ul><li>Heinrich, R. / Conrad, O. (2008): Diffusion, Flow and Concentration Gradient Simulation with SAGA GIS using Cellular Automata Methods. In: Boehner, J. / Blaschke, T. / Montanarella, L. [Eds.]: SAGA - Seconds Out. Hamburger Beitraege zur Physischen Geographie und Landschaftsoekologie, Vol.19, p59-70, <a href="http://downloads.sourceforge.net/saga-gis/hbpl19_07.pdf">online</a>.</li></ul>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Mask </td><td>Grid (input)</td><td>MASK</td><td></td><td></td></tr><tr><td>Gradient </td><td>Grid (input)</td><td>GRAD</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Concentration</td><td>Grid (output)</td><td>CONC</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Inlet Concentration</td><td>Floating point</td><td>CONC_IN</td><td></td><td>Minimum: 0.000000
+Default: 5.000000</td></tr><tr><td>Outlet Concentration</td><td>Floating point</td><td>CONC_OUT</td><td></td><td>Minimum: 0.000000
+Default: 3.000000</td></tr><tr><td>Concentration Approximation Threshold</td><td>Floating point</td><td>CONC_E</td><td></td><td>Minimum: 0.000000
+Default: 0.001000</td></tr><tr><td>Minimum Gradient</td><td>Floating point</td><td>GRAD_MIN</td><td></td><td>Minimum: 0.000000
+Default: 0.000000</td></tr><tr><td>Neighbourhood</td><td>Choice</td><td>NEIGHBOURS</td><td></td><td>Available Choices:
+[0] Moore (8)
+[1] Neumann (4)
+[2] Optimised
+Default: 0</td></tr></table>

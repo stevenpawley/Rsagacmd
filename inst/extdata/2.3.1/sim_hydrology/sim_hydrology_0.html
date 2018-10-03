@@ -1,0 +1,31 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Soil Moisture Content</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2002 by O.Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>The WEELS (Wind Erosion on European Light Soils) soil moisture model dynamically calculates the soil moisture based on the rules proposed by the DVWK (1996) with input data about:
+- soil properties (grids: field capacity and permanent wilting point)
+- land use (grid: crop types)
+- climate (table: daily values of precipitation, temperature, air humidity)
+
+References:
+- DVWK - Deutscher Verband fuer Wasserwirtschaft und Kulturbau e.V. (1996): 'Ermittlung der Verdunstung von Land- und Wasserflaechen', DVWK Merkblaetter 238/1996, Bonn, 135p.
+- Boehner, J., Schaefer, W., Conrad, O., Gross, J., Ringeler, A. (2001): 'The WEELS Model: methods, results and limits of wind erosion modelling', In: Catena, Special Issue
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Field Capacity [mm] (*)</td><td>Grid (optional input)</td><td>STA_FC</td><td></td><td></td></tr><tr><td>Permanent Wilting Point [mm] (*)</td><td>Grid (optional input)</td><td>STA_PWP</td><td></td><td></td></tr><tr><td>Land Use (*)</td><td>Grid (optional input)</td><td>LANDUSE</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Soil Moisture</td><td>Grid (output)</td><td>DYN_W</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Default</td><td>Floating point</td><td>STA_FC_DEF</td><td></td><td>Minimum: 0.000000
+Default: 20.000000</td></tr><tr><td>Default</td><td>Floating point</td><td>STA_PWP_DEF</td><td></td><td>Minimum: 0.000000
+Default: 2.000000</td></tr><tr><td>Default</td><td>Integer</td><td>LANDUSE_DEF</td><td></td><td>Default: -1</td></tr><tr><td>Climate Data</td><td>Static table</td><td>DYN_CLIMATE</td><td></td><td>3 Fields:
+- 1. [8 byte floating point number] Precipitation [mm]
+- 2. [8 byte floating point number] Temperature (2pm) [DegreeC]
+- 3. [8 byte floating point number] Air Humidity (2pm) [%%]
+</td></tr><tr><td>Crop Coefficients</td><td>Static table</td><td>STA_KC</td><td></td><td>14 Fields:
+- 1. [signed 4 byte integer] Land Use ID
+- 2. [string] Name
+- 3. [8 byte floating point number] January
+- 4. [8 byte floating point number] February
+- 5. [8 byte floating point number] March
+- 6. [8 byte floating point number] April
+- 7. [8 byte floating point number] May
+- 8. [8 byte floating point number] June
+- 9. [8 byte floating point number] July
+- 10. [8 byte floating point number] August
+- 11. [8 byte floating point number] September
+- 12. [8 byte floating point number] October
+- 13. [8 byte floating point number] November
+- 14. [8 byte floating point number] December
+</td></tr></table>(*) <i>optional</i>

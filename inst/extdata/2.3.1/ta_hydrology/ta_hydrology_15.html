@@ -1,0 +1,20 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">SAGA Wetness Index</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">15</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2001 by J.Boehner, O.Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>The 'SAGA Wetness Index' is, as the name says, similar to the 'Topographic Wetness Index' (TWI), but it is based on a modified catchment area calculation ('Modified Catchment Area'), which does not think of the flow as very thin film. As result it predicts for cells situated in valley floors with a small vertical distance to a channel a more realistic, higher potential soil moisture compared to the standard TWI calculation.
+
+References
+- Boehner, J., Koethe, R. Conrad, O., Gross, J., Ringeler, A., Selige, T. (2002): Soil Regionalisation by Means of Terrain Analysis and Process Parameterisation. In: Micheli, E., Nachtergaele, F., Montanarella, L. [Ed.]: Soil Classification 2001. European Soil Bureau, Research Report No. 7, EUR 20398 EN, Luxembourg. pp.213-222.
+
+- Boehner, J. and Selige, T. (2006): Spatial prediction of soil attributes using terrain analysis and climate regionalisation. In: Boehner, J., McCloy, K.R., Strobl, J. [Ed.]: SAGA - Analysis and Modelling Applications, Goettinger Geographische Abhandlungen, Goettingen: 13-28. (<a target="_blank" href="http://downloads.sourceforge.net/saga-gis/gga115_02.pdf">pdf</a>)
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><td>Weights (*)</td><td>Grid (optional input)</td><td>WEIGHT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Catchment area</td><td>Grid (output)</td><td>AREA</td><td></td><td></td></tr><tr><td>Catchment slope</td><td>Grid (output)</td><td>SLOPE</td><td></td><td></td></tr><tr><td>Modified Catchment Area</td><td>Grid (output)</td><td>AREA_MOD</td><td></td><td></td></tr><tr><td>Topographic Wetness Index</td><td>Grid (output)</td><td>TWI</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Suction</td><td>Floating point</td><td>SUCTION</td><td>the lower this value is the stronger is the suction effect</td><td>Minimum: 0.000000
+Default: 10.000000</td></tr><tr><td>Type of Area</td><td>Choice</td><td>AREA_TYPE</td><td></td><td>Available Choices:
+[0] absolute catchment area
+[1] square root of catchment area
+[2] specific catchment area
+Default: 1</td></tr><tr><td>Type of Slope</td><td>Choice</td><td>SLOPE_TYPE</td><td></td><td>Available Choices:
+[0] local slope
+[1] catchment slope
+Default: 1</td></tr><tr><td>Minimum Slope</td><td>Floating point</td><td>SLOPE_MIN</td><td></td><td>Minimum: 0.000000
+Default: 0.000000</td></tr><tr><td>Offset Slope</td><td>Floating point</td><td>SLOPE_OFF</td><td></td><td>Minimum: 0.000000
+Default: 0.100000</td></tr><tr><td>Slope Weighting</td><td>Floating point</td><td>SLOPE_WEIGHT</td><td>weighting factor for slope in index calculation</td><td>Minimum: 0.000000
+Default: 1.000000</td></tr></table>(*) <i>optional</i>

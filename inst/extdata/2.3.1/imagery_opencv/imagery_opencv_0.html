@@ -1,0 +1,18 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Morphological Filter (OpenCV)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2009</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>References:
+OpenCV - Open Source Computer Vision
+<a target="_blank" href="http://opencv.willowgarage.com">http://opencv.willowgarage.com</a><hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Input </td><td>Grid (input)</td><td>INPUT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Output</td><td>Grid (output)</td><td>OUTPUT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Operation</td><td>Choice</td><td>TYPE</td><td></td><td>Available Choices:
+[0] dilation
+[1] erosion
+[2] opening
+[3] closing
+[4] morpological gradient
+[5] top hat
+[6] black hat
+Default: 0</td></tr><tr><td>Element Shape</td><td>Choice</td><td>SHAPE</td><td></td><td>Available Choices:
+[0] ellipse
+[1] rectangle
+[2] cross
+Default: 0</td></tr><tr><td>Radius (cells)</td><td>Integer</td><td>RADIUS</td><td></td><td>Minimum: 0
+Default: 1</td></tr><tr><td>Iterations</td><td>Integer</td><td>ITERATIONS</td><td></td><td>Minimum: 1
+Default: 1</td></tr></table>

@@ -1,0 +1,32 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Topographic Correction</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">Copyrights (c) 2008 by Olaf Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>
+References:
+Civco, D. L. (1989): 'Topographic Normalization of Landsat Thematic Mapper Digital Imagery', Photogrammetric Engineering and Remote Sensing, 55(9), pp.1303-1309.
+
+Law, K.H., Nichol, J. (2004): 'Topographic Correction for Differential Illumination Effects on Ikonos Satellite Imagery', ISPRS 2004 International Society for Photogrammetry and Remote Sensing, <a href="http://www.cartesia.org/geodoc/isprs2004/comm3/papers/347.pdf">pdf</a>.
+
+Phua, M.-H., Saito, H. (2003): 'Estimation of biomass of a mountainous tropical forest using Landsat TM data', Canadian Journal of Remote Sensing, 29(4), pp.429-440.
+
+Riano, D., Chuvieco, E. Salas, J., Aguado, I. (2003): 'Assessment of Different Topographic Corrections in Landsat-TM Data for Mapping Vegetation Types', IEEE Transactions on Geoscience and Remote Sensing, 41(5), pp.1056-1061, <a href="http://www.geogra.uah.es/~emilio/pdf/Riano2003b.pdf">pdf</a>.
+
+Teillet, P.M., Guindon, B., Goodenough, D.G. (1982): 'On the slope-aspect correction of multispectral scanner data', Canadian Journal of Remote Sensing, 8(2), pp.1537-1540.
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><td>Original Image </td><td>Grid (input)</td><td>ORIGINAL</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Corrected Image</td><td>Grid (output)</td><td>CORRECTED</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Azimuth</td><td>Floating point</td><td>AZI</td><td>direction of sun (degree, clockwise from North)</td><td>Minimum: 0.000000
+Maximum: 360.000000
+Default: 180.000000</td></tr><tr><td>Height</td><td>Floating point</td><td>HGT</td><td>height of sun above horizon (degree)</td><td>Minimum: 0.000000
+Maximum: 90.000000
+Default: 45.000000</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Cosine Correction (Teillet et al. 1982)
+[1] Cosine Correction (Civco 1989)
+[2] Minnaert Correction
+[3] Minnaert Correction with Slope (Riano et al. 2003)
+[4] Minnaert Correction with Slope (Law & Nichol 2004)
+[5] C Correction
+[6] Normalization (after Civco, modified by Law & Nichol)
+Default: 4</td></tr><tr><td>Minnaert Correction</td><td>Floating point</td><td>MINNAERT</td><td></td><td>Minimum: 0.000000
+Maximum: 1.000000
+Default: 0.500000</td></tr><tr><td>Maximum Cells (C Correction Analysis)</td><td>Integer</td><td>MAXCELLS</td><td>Maximum number of grid cells used for trend analysis as required by C correction.</td><td>Minimum: 10
+Default: 1000</td></tr><tr><td>Value Range</td><td>Choice</td><td>MAXVALUE</td><td></td><td>Available Choices:
+[0] 1 byte (0-255)
+[1] 2 byte (0-65535)
+Default: 0</td></tr></table>

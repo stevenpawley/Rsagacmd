@@ -1,0 +1,36 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Mosaicking</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">3</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2003-12</td></tr></table><hr><h4>Description</h4>Merges multiple grids into one single grid.<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Input Grids </td><td>Grid list (input)</td><td>GRIDS</td><td></td><td></td></tr><tr><td>Target System (*)</td><td>Grid (optional input)</td><td>TARGET_TEMPLATE</td><td>use this grid's system for output grids</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target Grid</td><td>Grid (output)</td><td>TARGET_OUT_GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Name</td><td>Text</td><td>NAME</td><td></td><td>Default: Mosaic</td></tr><tr><td>Data Storage Type</td><td>Choice</td><td>TYPE</td><td></td><td>Available Choices:
+[0] 1 bit
+[1] 1 byte unsigned integer
+[2] 1 byte signed integer
+[3] 2 byte unsigned integer
+[4] 2 byte signed integer
+[5] 4 byte unsigned integer
+[6] 4 byte signed integer
+[7] 4 byte floating point
+[8] 8 byte floating point
+Default: 7</td></tr><tr><td>Resampling</td><td>Choice</td><td>RESAMPLING</td><td></td><td>Available Choices:
+[0] Nearest Neighbour
+[1] Bilinear Interpolation
+[2] Bicubic Spline Interpolation
+[3] B-Spline Interpolation
+Default: 3</td></tr><tr><td>Overlapping Areas</td><td>Choice</td><td>OVERLAP</td><td></td><td>Available Choices:
+[0] first
+[1] last
+[2] minimum
+[3] maximum
+[4] mean
+[5] blend boundary
+[6] feathering
+Default: 1</td></tr><tr><td>Blending Distance</td><td>Floating point</td><td>BLEND_DIST</td><td>blending distance given in map units</td><td>Minimum: 0.000000
+Default: 10.000000</td></tr><tr><td>Match</td><td>Choice</td><td>MATCH</td><td></td><td>Available Choices:
+[0] none
+[1] regression
+Default: 0</td></tr><tr><td>Target Grid System</td><td>Choice</td><td>TARGET_DEFINITION</td><td></td><td>Available Choices:
+[0] user defined
+[1] grid or grid system
+Default: 0</td></tr><tr><td>Cellsize</td><td>Floating point</td><td>TARGET_USER_SIZE</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Left</td><td>Floating point</td><td>TARGET_USER_XMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Right</td><td>Floating point</td><td>TARGET_USER_XMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Bottom</td><td>Floating point</td><td>TARGET_USER_YMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Top</td><td>Floating point</td><td>TARGET_USER_YMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Fit</td><td>Choice</td><td>TARGET_USER_FITS</td><td></td><td>Available Choices:
+[0] nodes
+[1] cells
+Default: 0</td></tr></table>(*) <i>optional</i>

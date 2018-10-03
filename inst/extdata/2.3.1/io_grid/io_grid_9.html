@@ -1,0 +1,12 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Import SRTM30 DEM</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">9</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2004 by O.Conrad</td></tr></table><hr><h4>Description</h4>Extracts elevation grids from SRTM30 data.
+
+<i>"SRTM30 is a near-global digital elevation model (DEM) comprising a combination of data from the Shuttle Radar Topography Mission, flown in February, 2000 and the the U.S. Geological Survey's GTOPO30 data set. It can be considered to be either an SRTM data set enhanced with GTOPO30, or as an upgrade to GTOPO30."</i> (NASA)
+
+Further information about the GTOPO30 data set:
+<a target="_blank" href="http://edcdaac.usgs.gov/gtopo30/gtopo30.html">http://edcdaac.usgs.gov/gtopo30/gtopo30.html</a>
+
+SRTM30 data can be downloaded from:
+<a target="_blank" href="ftp://e0srp01u.ecs.nasa.gov/srtm/version2/SRTM30/">ftp://e0srp01u.ecs.nasa.gov/srtm/version2/SRTM30/</a>
+
+A directory, that contains the uncompressed SRTM30 DEM files, can be located using the "Path" Parameter of this module.<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Output</th></tr><tr><td>Grid (*)</td><td>Data Object (optional output)</td><td>GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Path</td><td>File path</td><td>PATH</td><td></td><td></td></tr><tr><td>West []</td><td>Integer</td><td>XMIN</td><td></td><td>Default: 60</td></tr><tr><td>East []</td><td>Integer</td><td>XMAX</td><td></td><td>Default: 120</td></tr><tr><td>South []</td><td>Integer</td><td>YMIN</td><td></td><td>Default: 20</td></tr><tr><td>North []</td><td>Integer</td><td>YMAX</td><td></td><td>Default: 50</td></tr></table>(*) <i>optional</i>

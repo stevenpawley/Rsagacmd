@@ -1,0 +1,13 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Principle Components Based Image Sharpening</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">7</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2011</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Principle components based image sharpening.<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Original Channels </td><td>Grid list (input)</td><td>GRIDS</td><td></td><td></td></tr><tr><td>Panchromatic Channel </td><td>Grid (input)</td><td>PAN</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Sharpened Channels</td><td>Grid list (output)</td><td>SHARPEN</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] correlation matrix
+[1] variance-covariance matrix
+[2] sums-of-squares-and-cross-products matrix
+Default: 2</td></tr><tr><td>Resampling</td><td>Choice</td><td>RESAMPLING</td><td></td><td>Available Choices:
+[0] nearest neighbour
+[1] bilinear
+[2] cubic convolution
+Default: 2</td></tr><tr><td>Panchromatic Channel Matching</td><td>Choice</td><td>PAN_MATCH</td><td></td><td>Available Choices:
+[0] normalized
+[1] standardized
+Default: 1</td></tr><tr><td>Overwrite</td><td>Boolean</td><td>OVERWRITE</td><td>overwrite previous output if adequate</td><td>Default: 1</td></tr></table>

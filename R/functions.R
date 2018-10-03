@@ -29,10 +29,10 @@ sagaVersion = function(saga_cmd) {
 sagaSearch = function() {
   
   # check to see if saga_cmd is recognized (i.e. has been added to path)
-  saga_cmd = ifelse(nchar(Sys.which(names = 'saga_cmd')) > 0, 'saga_cmd', NA)
+  saga_cmd = ifelse(nchar(Sys.which(names = 'saga_cmd')) > 0, 'saga_cmd', NULL)
   
   # otherwise search for saga_cmd in usual install locations
-  if (is.na(saga_cmd)) {
+  if (is.null(saga_cmd)) {
     
     # define search paths
     if (Sys.info()["sysname"] == "Windows") {
@@ -71,8 +71,8 @@ sagaSearch = function() {
   
   # error is saga_cmd not found
   if (length(saga_cmd) == 0) {
-    message(paste('SAGA-GIS installation not found. Need to supply a valid path',
-                  'to the saga_cmd executable'))
+    stop(paste('SAGA-GIS installation not found. Need to supply a valid path',
+               'to the saga_cmd executable'), call. = FALSE)
     return(NULL)
     
     # automatically use newest version if multiple installations are found
@@ -104,9 +104,9 @@ sagaSearch = function() {
 #'
 #' @return sagaInstallation object. Contains paths, settings and a nested list
 #'   of libaries tools and options
-sagaEnv = function(saga_bin = NA, opt_lib = NA) {
+sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
   
-  if (is.na(saga_bin)) {
+  if (is.null(saga_bin)) {
     saga_bin = sagaSearch()
   } else {
     # check that supplied saga_bin location is correct
@@ -123,29 +123,33 @@ sagaEnv = function(saga_bin = NA, opt_lib = NA) {
   ## to create the document pages, i.e. saga will only generate them in the
   ## working directory. In this case we need to manually change the working
   ## directory to tempdir and then restore
-  help_path = file.path(tempdir(), basename(tempfile()))
-  dir.create(help_path)
-  
-  if (saga_version > as.numeric_version('3.0.0')) {
-    msg = system(
-      paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=T)
+  if (saga_version == as.numeric_version('2.3.1')) {
+    help_path = system.file('extdata', '2.3.1', package = 'Rsagacmd')
   } else {
-    olddir = getwd()
-    setwd(help_path)
-    msg = system(paste(shQuote(saga_bin), '--docs'), intern=T)
-    setwd(olddir)
-  }
-  
-  if (!is.null(attr(msg, "status"))) {
-    cat(msg, sep = '\n')
-    stop()
+    help_path = file.path(tempdir(), basename(tempfile()))
+    dir.create(help_path)
+    
+    if (saga_version > as.numeric_version('3.0.0')) {
+      msg = system(
+        paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=TRUE)
+    } else {
+      olddir = getwd()
+      setwd(help_path)
+      msg = system(paste(shQuote(saga_bin), '--docs'), intern=TRUE)
+      setwd(olddir)
+    }
+    
+    if (!is.null(attr(msg, "status"))) {
+      cat(msg, sep = '\n')
+      stop()
+    }
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries = list.dirs(path = help_path)
   docs_libraries = docs_libraries[2:length(docs_libraries)]
   
-  if (!is.na(opt_lib))
+  if (!is.null(opt_lib))
     docs_libraries = docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
   
   libraries = list()
@@ -362,18 +366,18 @@ sagaEnv = function(saga_bin = NA, opt_lib = NA) {
 sagaConfigure = function(senv,
                          grid_caching = FALSE,
                          grid_cache_threshlod = 100,
-                         grid_cache_dir = NA,
-                         cores = NA,
+                         grid_cache_dir = NULL,
+                         cores = NULL,
                          sagaversion) {
   # some checks
   if (missing(senv))
     stop('senv parameter is missing')
   
-  if (is.na(grid_cache_dir))
+  if (is.null(grid_cache_dir))
     grid_cache_dir = gsub('\\\\', '/', tempdir())
   
   # create configuration file if any arguments are supplied
-  if ((grid_caching == TRUE | !is.na(cores)) &
+  if ((grid_caching == TRUE | !is.null(cores)) &
       sagaversion >= as.numeric_version('4.0.0')){
     
     saga_config = tempfile(fileext = '.ini')
@@ -392,7 +396,7 @@ sagaConfigure = function(senv,
       
       # configuration for grid caching
     } else if (grid_caching == TRUE) {
-      if (cores > 1 | is.na(cores)) {
+      if (cores > 1 | is.null(cores)) {
         message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
         cores = 1
       }
@@ -414,7 +418,7 @@ sagaConfigure = function(senv,
     # write configuration file
     writeChar(saga_config_settings, saga_config)
     
-  } else if ((grid_caching == TRUE | !is.na(cores)) &
+  } else if ((grid_caching == TRUE | !is.null(cores)) &
              sagaversion < as.numeric_version('4.0.0')){
     message(
       paste('Cannot enable grid caching or change number cores for SAGA-GIS',
@@ -472,13 +476,15 @@ sagaConfigure = function(senv,
 #' # Optionally run command and do not load result as an R object
 #' saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem, intern = FALSE)
 #' }
-sagaGIS = function(saga_bin = NA,
+sagaGIS = function(saga_bin = NULL,
                    grid_caching = FALSE,
                    grid_cache_threshlod = 100,
-                   grid_cache_dir = NA,
-                   cores = NA,
-                   opt_lib = NA) {
+                   grid_cache_dir = NULL,
+                   cores = NULL,
+                   opt_lib = NULL) {
+  
   senv = sagaEnv(saga_bin, opt_lib)
+  
   senv[['saga_config']] = sagaConfigure(
     senv,
     grid_caching,
@@ -490,6 +496,7 @@ sagaGIS = function(saga_bin = NA,
   
   # dynamically create functions
   tool_libraries = list()
+  
   for (lib in names(senv$libraries)) {
     toolnames = list()
     
@@ -761,7 +768,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         # import grid data
         if (spec_out[i, 'Feature'] %in% c('Grid', 'Raster')){
           if (tools::file_ext(out_i) == 'sg-gds-z'){
-            message('Cannot load SAGA Grid Collection as an R raster object - this is not supported')
+            warning('Cannot load SAGA Grid Collection as an R raster object - this is not supported')
           } else {
             saga_results[[paste0(current_id)]] = raster::raster(out_i)
           }
@@ -774,11 +781,10 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
             saga_results[[paste(current_id, gl, sep='_')]] = raster::raster(out_i[gl])
         }
         
-      }, error = function(e){
-        warning(
+      }, error = function(e) {
+        message(
           paste0('No geoprocessing output for ', spec_out[i, 'Identifier'],
-                 '. Results may require other input parameters to be specified'),
-          call. = FALSE)
+                 '. Results may require other input parameters to be specified'))
       }
       )
       
@@ -923,8 +929,10 @@ RtoSAGA = function(param) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Remove all temporary files generated by Rsagacmd
 #' sagaRemoveTmpFiles(h=0)
+#' }
 sagaRemoveTmpFiles = function(h=0) {
   
   message(paste0('Removing Rsagacmd temporary files h=', h))
@@ -962,8 +970,10 @@ sagaRemoveTmpFiles = function(h=0) {
 #' (e.g. .prj, .shx etc.).
 #' @export
 #' @examples
+#' \dontrun{
 #' # Show all temporary files generated by Rsagacmd
 #' sagaRemoveTmpFiles(h=0)
+#' }
 sagaShowTmpFiles = function() {
   
   message('Rsagacmd temporary files:')

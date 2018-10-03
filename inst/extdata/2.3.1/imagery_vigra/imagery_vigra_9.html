@@ -1,0 +1,21 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Random Forest Classification (ViGrA)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">9</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2013</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>References:
+ViGrA - Vision with Generic Algorithms
+<a target="_blank" href="http://hci.iwr.uni-heidelberg.de/vigra">http://hci.iwr.uni-heidelberg.de</a><hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Features </td><td>Grid list (input)</td><td>FEATURES</td><td></td><td></td></tr><tr><td>Training Areas </td><td>Shapes (input)</td><td>TRAINING</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Random Forest Classification</td><td>Grid (output)</td><td>CLASSES</td><td></td><td></td></tr><tr><td>Prediction Probability (*)</td><td>Grid (optional output)</td><td>PROBABILITY</td><td></td><td></td></tr><tr><td>Feature Probabilities</td><td>Grid list (output)</td><td>PROBABILITIES</td><td></td><td></td></tr><tr><td>Feature Importances</td><td>Table (output)</td><td>IMPORTANCES</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Feature Probabilities</td><td>Boolean</td><td>BPROBABILITIES</td><td></td><td>Default: 0</td></tr><tr><td>Label Field</td><td>Table field</td><td>FIELD</td><td></td><td></td></tr><tr><td>Use Label as Identifier</td><td>Boolean</td><td>LABEL_AS_ID</td><td>Use training area labels as identifier in classification result, assumes all label values are integer numbers!</td><td>Default: 0</td></tr><tr><td>Minimum Redundancy Feature Selection</td><td>Boolean</td><td>DO_MRMR</td><td>Use only features selected by the minimum Redundancy Maximum Relevance (mRMR) algorithm</td><td>Default: 0</td></tr><tr><td>Number of Features</td><td>Integer</td><td>mRMR_NFEATURES</td><td></td><td>Minimum: 1
+Default: 50</td></tr><tr><td>Discretization</td><td>Boolean</td><td>mRMR_DISCRETIZE</td><td>uncheck this means no discretizaton (i.e. data is already integer)</td><td>Default: 1</td></tr><tr><td>Discretization Threshold</td><td>Floating point</td><td>mRMR_THRESHOLD</td><td>a double number of the discretization threshold; set to 0 to make binarization</td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Selection Method</td><td>Choice</td><td>mRMR_METHOD</td><td></td><td>Available Choices:
+[0] Mutual Information Difference (MID)
+[1] Mutual Information Quotient (MIQ)
+Default: 0</td></tr><tr><td>Import from File</td><td>File path</td><td>RF_IMPORT</td><td></td><td></td></tr><tr><td>Export to File</td><td>File path</td><td>RF_EXPORT</td><td></td><td></td></tr><tr><td>Tree Count</td><td>Integer</td><td>RF_TREE_COUNT</td><td>How many trees to create?</td><td>Minimum: 1
+Default: 32</td></tr><tr><td>Samples per Tree</td><td>Floating point</td><td>RF_TREE_SAMPLES</td><td>Specifies the fraction of the total number of samples used per tree for learning.</td><td>Minimum: 0.000000
+Maximum: 1.000000
+Default: 1.000000</td></tr><tr><td>Sample with Replacement</td><td>Boolean</td><td>RF_REPLACE</td><td>Sample from training population with or without replacement?</td><td>Default: 1</td></tr><tr><td>Minimum Node Split Size</td><td>Integer</td><td>RF_SPLIT_MIN_SIZE</td><td>Number of examples required for a node to be split. Choose 1 for complete growing.</td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Features per Node</td><td>Choice</td><td>RF_NODE_FEATURES</td><td></td><td>Available Choices:
+[0] logarithmic
+[1] square root
+[2] all
+Default: 1</td></tr><tr><td>Stratification</td><td>Choice</td><td>RF_STRATIFICATION</td><td>Specifies stratification strategy. Either none, equal amount of class samples, or proportional to fraction of class samples.</td><td>Available Choices:
+[0] none
+[1] equal
+[2] proportional
+Default: 0</td></tr></table>(*) <i>optional</i>

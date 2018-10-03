@@ -1,0 +1,31 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Flow Accumulation (Flow Tracing)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">2</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2001</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Flow tracing algorithms for calculations of flow accumulation and related parameters. These algorithms trace the flow of each cell in a DEM separately until it finally leaves the DEM or ends in a sink.
+
+References:
+
+Rho 8 (this implementation adopted the original algorithm only for the flow routing and will give quite different results):
+- Fairfield, J. / Leymarie, P. (1991):
+    'Drainage networks from grid digital elevation models',
+    Water Resources Research, 27:709-717
+
+Kinematic Routing Algorithm:
+- Lea, N.L. (1992):
+    'An aspect driven kinematic routing algorithm',
+    in: Parsons, A.J., Abrahams, A.D. (Eds.), 'Overland Flow: hydraulics and erosion mechanics', London, 147-175
+
+DEMON:
+- Costa-Cabral, M. / Burges, S.J. (1994):
+    'Digital Elevation Model Networks (DEMON): a model of flow over hillslopes for computation of contributing and dispersal areas',
+    Water Resources Research, 30:1681-1692
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>ELEVATION</td><td></td><td></td></tr><tr><td>Sink Routes (*)</td><td>Grid (optional input)</td><td>SINKROUTE</td><td></td><td></td></tr><tr><td>Weights (*)</td><td>Grid (optional input)</td><td>WEIGHTS</td><td></td><td></td></tr><tr><td>Input for Mean over Catchment (*)</td><td>Grid (optional input)</td><td>VAL_INPUT</td><td></td><td></td></tr><tr><td>Material for Accumulation (*)</td><td>Grid (optional input)</td><td>ACCU_MATERIAL</td><td></td><td></td></tr><tr><td>Accumulation Target </td><td>Grid (input)</td><td>ACCU_TARGET</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Flow Accumulation</td><td>Grid (output)</td><td>FLOW</td><td></td><td></td></tr><tr><td>Mean over Catchment</td><td>Grid (output)</td><td>VAL_MEAN</td><td></td><td></td></tr><tr><td>Accumulated Material (*)</td><td>Grid (optional output)</td><td>ACCU_TOTAL</td><td></td><td></td></tr><tr><td>Accumulated Material (Left Side) (*)</td><td>Grid (optional output)</td><td>ACCU_LEFT</td><td></td><td></td></tr><tr><td>Accumulated Material (Right Side) (*)</td><td>Grid (optional output)</td><td>ACCU_RIGHT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Step</td><td>Integer</td><td>STEP</td><td></td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Flow Accumulation Unit</td><td>Choice</td><td>FLOW_UNIT</td><td></td><td>Available Choices:
+[0] number of cells
+[1] cell area
+Default: 1</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Rho 8
+[1] Kinematic Routing Algorithm
+[2] DEMON
+Default: 1</td></tr><tr><td>DEMON - Min. DQV</td><td>Floating point</td><td>MINDQV</td><td>DEMON - Minimum Drainage Quota Volume (DQV) for traced flow tubes</td><td>Minimum: 0.000000
+Maximum: 1.000000
+Default: 0.000000</td></tr><tr><td>Flow Correction</td><td>Boolean</td><td>CORRECT</td><td></td><td>Default: 0</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,22 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Residual Analysis (Grid)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">1</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2003</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Relations of each grid cell to its neighborhood. Wilson & Gallant (2000) used this type of calculation in terrain analysis.
+
+Reference:
+- Wilson, J.P., Gallant, J.C., [Eds.] (2000): 'Terrain analysis - principles and applications', New York, John Wiley & Sons, Inc.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>GRID</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Mean Value</td><td>Grid (output)</td><td>MEAN</td><td></td><td></td></tr><tr><td>Difference from Mean Value</td><td>Grid (output)</td><td>DIFF</td><td></td><td></td></tr><tr><td>Standard Deviation</td><td>Grid (output)</td><td>STDDEV</td><td></td><td></td></tr><tr><td>Value Range</td><td>Grid (output)</td><td>RANGE</td><td></td><td></td></tr><tr><td>Minimum Value</td><td>Grid (output)</td><td>MIN</td><td></td><td></td></tr><tr><td>Maximum Value</td><td>Grid (output)</td><td>MAX</td><td></td><td></td></tr><tr><td>Deviation from Mean Value</td><td>Grid (output)</td><td>DEVMEAN</td><td></td><td></td></tr><tr><td>Percentile</td><td>Grid (output)</td><td>PERCENT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Search Mode</td><td>Choice</td><td>MODE</td><td></td><td>Available Choices:
+[0] Square
+[1] Circle
+Default: 1</td></tr><tr><td>Radius (Cells)</td><td>Integer</td><td>RADIUS</td><td></td><td>Minimum: 1
+Default: 7</td></tr><tr><td>Include Center Cell</td><td>Boolean</td><td>BCENTER</td><td></td><td>Default: 1</td></tr><tr><td>Weighting</td><td>Parameters</td><td>WEIGHTING</td><td></td><td>4 Parameters:
+- 1. Available Choices:
+[0] no distance weighting
+[1] inverse distance to a power
+[2] exponential
+[3] gaussian weighting
+Default: 0
+- 2. Minimum: 0.000000
+Default: 1.000000
+- 3. Default: 1
+- 4. Minimum: 0.000000
+Default: 1.000000
+</td></tr></table>

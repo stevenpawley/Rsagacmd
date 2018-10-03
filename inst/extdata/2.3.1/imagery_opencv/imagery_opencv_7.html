@@ -1,0 +1,22 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Support Vector Machine Classification (OpenCV)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">7</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2016</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Integration of the OpenCV Machine Learning library for Support Vector Machine classification of gridded features.
+<a href="http://docs.opencv.org">Open Source Computer Vision</a><hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Features </td><td>Grid list (input)</td><td>FEATURES</td><td></td><td></td></tr><tr><td>Training Areas </td><td>Shapes (input)</td><td>TRAIN_AREAS</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Classification</td><td>Grid (output)</td><td>CLASSES</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Normalize</td><td>Boolean</td><td>NORMALIZE</td><td></td><td>Default: 0</td></tr><tr><td>Class Identifier</td><td>Table field</td><td>TRAIN_CLASS</td><td></td><td></td></tr><tr><td>SVM Type</td><td>Choice</td><td>SVM_TYPE</td><td></td><td>Available Choices:
+[0] c-support vector classification
+[1] nu support vector classification
+[2] distribution estimation (one class)
+[3] epsilon support vector regression
+[4] nu support vector regression
+Default: 0</td></tr><tr><td>C</td><td>Floating point</td><td>C</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Nu</td><td>Floating point</td><td>NU</td><td></td><td>Minimum: 0.000000
+Default: 0.500000</td></tr><tr><td>P</td><td>Floating point</td><td>P</td><td></td><td>Minimum: 0.000000
+Default: 0.500000</td></tr><tr><td>Kernel Type</td><td>Choice</td><td>KERNEL</td><td></td><td>Available Choices:
+[0] linear
+[1] polynomial
+[2] radial basis function
+[3] sigmoid
+[4] exponential chi2
+[5] histogram intersection
+Default: 1</td></tr><tr><td>Coefficient 0</td><td>Floating point</td><td>COEF0</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Degree</td><td>Floating point</td><td>DEGREE</td><td></td><td>Minimum: 0.000000
+Default: 0.500000</td></tr><tr><td>Gamma</td><td>Floating point</td><td>GAMMA</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr></table>

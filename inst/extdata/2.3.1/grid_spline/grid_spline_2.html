@@ -1,0 +1,20 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Thin Plate Spline (TIN)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">2</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2006</td></tr></table><hr><h4>Description</h4>Creates a 'Thin Plate Spline' function for each triangle of a TIN and uses it for subsequent gridding. The TIN is internally created from the scattered data points input. The 'Neighbourhood' option determines the number of points used for the spline generation. 'Immediate neighbourhood' includes the points of the triangle as well as the immediate neighbour points. 'Level 1' adds the neighbours of the immediate neighbourhood and 'level 2' adds the neighbours of 'level 1' neighbours too. A higher neighbourhood degree reduces sharp breaks but also increases the computation time. 
+
+References:
+- Donato G., Belongie S. (2002): 'Approximation Methods for Thin Plate Spline Mappings and Principal Warps', In Heyden, A., Sparr, G., Nielsen, M., Johansen, P. (Eds.): 'Computer Vision - ECCV 2002: 7th European Conference on Computer Vision, Copenhagen, Denmark, May 28-31, 2002', Proceedings, Part III, Lecture Notes in Computer Science. Springer-Verlag Heidelberg; pp.21-31.
+
+- Elonen, J. (2005): 'Thin Plate Spline editor - an example program in C++', <a target="_blank" href="http://elonen.iki.fi/code/tpsdemo/index.html">http://elonen.iki.fi/code/tpsdemo/index.html</a>.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Points </td><td>Shapes (input)</td><td>SHAPES</td><td></td><td></td></tr><tr><td>Target System (*)</td><td>Grid (optional input)</td><td>TARGET_TEMPLATE</td><td>use this grid's system for output grids</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target Grid</td><td>Grid (output)</td><td>TARGET_OUT_GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Attribute</td><td>Table field</td><td>FIELD</td><td></td><td></td></tr><tr><td>Target Grid System</td><td>Choice</td><td>TARGET_DEFINITION</td><td></td><td>Available Choices:
+[0] user defined
+[1] grid or grid system
+Default: 0</td></tr><tr><td>Cellsize</td><td>Floating point</td><td>TARGET_USER_SIZE</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Left</td><td>Floating point</td><td>TARGET_USER_XMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Right</td><td>Floating point</td><td>TARGET_USER_XMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Bottom</td><td>Floating point</td><td>TARGET_USER_YMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Top</td><td>Floating point</td><td>TARGET_USER_YMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Fit</td><td>Choice</td><td>TARGET_USER_FITS</td><td></td><td>Available Choices:
+[0] nodes
+[1] cells
+Default: 0</td></tr><tr><td>Regularisation</td><td>Floating point</td><td>REGULARISATION</td><td></td><td>Minimum: 0.000000
+Default: 0.000100</td></tr><tr><td>Neighbourhood</td><td>Choice</td><td>LEVEL</td><td></td><td>Available Choices:
+[0] immediate
+[1] level 1
+[2] level 2
+Default: 1</td></tr><tr><td>Add Frame</td><td>Boolean</td><td>FRAME</td><td></td><td>Default: 1</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,31 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Upslope Area</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">3</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2001 by O.Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid, interactive</td></tr></table><hr><h4>Description</h4>This module allows you to specify target cells, for which the upslope contributing area shall be identified. The result will give for each cell the percentage of its flow that reaches the target cell(s).
+
+References:
+
+Deterministic 8
+- O'Callaghan, J.F. / Mark, D.M. (1984):
+    'The extraction of drainage networks from digital elevation data',
+    Computer Vision, Graphics and Image Processing, 28:323-344
+
+Deterministic Infinity:
+- Tarboton, D.G. (1997):
+    'A new method for the determination of flow directions and upslope areas in grid digital elevation models',
+    Water Resources Research, Vol.33, No.2, p.309-319
+
+Multiple Flow Direction:
+- Freeman, G.T. (1991):
+    'Calculating catchment area with divergent flow based on a regular grid',
+    Computers and Geosciences, 17:413-22
+
+- Quinn, P.F. / Beven, K.J. / Chevallier, P. / Planchon, O. (1991):
+    'The prediction of hillslope flow paths for distributed hydrological modelling using digital terrain models',
+    Hydrological Processes, 5:59-79
+
+_______
+Interactive version (left mouse clicks will trigger the calculation for the selected cell).<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>ELEVATION</td><td></td><td></td></tr><tr><td>Sink Routes (*)</td><td>Grid (optional input)</td><td>SINKROUTE</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Upslope Area</td><td>Grid (output)</td><td>AREA</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Deterministic 8
+[1] Deterministic Infinity
+[2] Multiple Flow Direction
+Default: 2</td></tr><tr><td>Convergence</td><td>Floating point</td><td>CONVERGE</td><td>Convergence factor for Multiple Flow Direction algorithm</td><td>Minimum: 0.001000
+Default: 1.100000</td></tr></table>(*) <i>optional</i>

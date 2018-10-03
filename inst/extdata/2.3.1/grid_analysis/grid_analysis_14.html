@@ -1,0 +1,19 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Soil Texture Classification</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">14</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">Gianluca Massei (c) 2007 (g_massa@libero.it)</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Derive soil texture classes with USDA scheme from sand, silt and clay contents.
+
+  1 - Clay
+  2 - Silty Clay
+  3 - Silty Clay Loam
+  4 - Sandy Clay
+  5 - Sandy Clay Loam
+  6 - Clay Loam
+  7 - Silt
+  8 - Silt Loam
+  9 - Loam
+ 10 - Sand
+ 11 - Loamy Sand
+ 12 - Sandy Loam
+
+Reference:
+<a target="_blank" href="http://soils.usda.gov/technical/aids/investigations/texture/">USDA NRCS Soils Website</a>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Sand (*)</td><td>Grid (optional input)</td><td>SAND</td><td>sand content given as percentage</td><td></td></tr><tr><td>Silt (*)</td><td>Grid (optional input)</td><td>SILT</td><td>silt content given as percentage</td><td></td></tr><tr><td>Clay (*)</td><td>Grid (optional input)</td><td>CLAY</td><td>clay content given as percentage</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Soil Texture</td><td>Grid (output)</td><td>TEXTURE</td><td>soil texture</td><td></td></tr><tr><td>Sum (*)</td><td>Grid (optional output)</td><td>SUM</td><td>Sum of percentages</td><td></td></tr></table>(*) <i>optional</i>

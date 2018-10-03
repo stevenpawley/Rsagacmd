@@ -1,0 +1,24 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Multilevel B-Spline Interpolation (from Grid)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">5</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2006</td></tr></table><hr><h4>Description</h4>Multilevel B-spline algorithm for spatial interpolation of scattered data as proposed by Lee, Wolberg and Shin (1997). The algorithm makes use of a coarse-to-fine hierarchy of control lattices to generate a sequence of bicubic B-spline functions, whose sum approaches the desired interpolation function. Large performance gains are realized by using B-spline refinement to reduce the sum of these functions into one equivalent B-spline function. 
+
+The 'Maximum Level' determines the maximum size of the final B-spline matrix and increases exponential with each level. Where level=10 requires about 1mb level=12 needs about 16mb and level=14 about 256mb(!) of additional memory. 
+
+Reference:
+ - Lee, S., Wolberg, G., Shin, S.Y. (1997): 'Scattered Data Interpolation with Multilevel B-Splines', IEEE Transactions On Visualisation And Computer Graphics, Vol.3, No.3
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>GRID</td><td></td><td></td></tr><tr><td>Target System (*)</td><td>Grid (optional input)</td><td>TARGET_TEMPLATE</td><td>use this grid's system for output grids</td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target Grid</td><td>Grid (output)</td><td>TARGET_OUT_GRID</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Target Grid System</td><td>Choice</td><td>TARGET_DEFINITION</td><td></td><td>Available Choices:
+[0] user defined
+[1] grid or grid system
+Default: 0</td></tr><tr><td>Cellsize</td><td>Floating point</td><td>TARGET_USER_SIZE</td><td></td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Left</td><td>Floating point</td><td>TARGET_USER_XMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Right</td><td>Floating point</td><td>TARGET_USER_XMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Bottom</td><td>Floating point</td><td>TARGET_USER_YMIN</td><td></td><td>Default: 0.000000</td></tr><tr><td>Top</td><td>Floating point</td><td>TARGET_USER_YMAX</td><td></td><td>Default: 100.000000</td></tr><tr><td>Fit</td><td>Choice</td><td>TARGET_USER_FITS</td><td></td><td>Available Choices:
+[0] nodes
+[1] cells
+Default: 0</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] without B-spline refinement
+[1] with B-spline refinement
+Default: 1</td></tr><tr><td>Threshold Error</td><td>Floating point</td><td>EPSILON</td><td></td><td>Minimum: 0.000000
+Default: 0.000100</td></tr><tr><td>Maximum Level</td><td>Integer</td><td>LEVEL_MAX</td><td></td><td>Minimum: 1
+Maximum: 14
+Default: 11</td></tr><tr><td>Update View</td><td>Boolean</td><td>UPDATE</td><td></td><td>Default: 0</td></tr><tr><td>Data Type</td><td>Choice</td><td>DATATYPE</td><td></td><td>Available Choices:
+[0] same as input grid
+[1] floating point
+Default: 1</td></tr></table>(*) <i>optional</i>

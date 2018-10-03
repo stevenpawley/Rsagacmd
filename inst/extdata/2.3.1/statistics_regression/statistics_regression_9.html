@@ -1,0 +1,9 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Polynomial Trend from Grids</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">9</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O. Conrad (c) 2011</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Fits for each cell a polynomial trend function. Outputs are the polynomial coefficients for the polynomial trend function of chosen order. <hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Dependent Variables </td><td>Grid list (input)</td><td>Y_GRIDS</td><td></td><td></td></tr><tr><td>Independent Variable (per Grid and Cell) (*)</td><td>Grid list (optional input)</td><td>X_GRIDS</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Polynomial Coefficients</td><td>Grid list (output)</td><td>COEFF</td><td></td><td></td></tr><tr><td>Coefficient of Determination (*)</td><td>Grid (optional output)</td><td>R2</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Polynomial Order</td><td>Integer</td><td>ORDER</td><td></td><td>Minimum: 1
+Default: 1</td></tr><tr><td>Get Independent Variable from ...</td><td>Choice</td><td>XSOURCE</td><td></td><td>Available Choices:
+[0] list order
+[1] table
+[2] grid list
+Default: 0</td></tr><tr><td>Independent Variable (per Grid)</td><td>Static table</td><td>X_TABLE</td><td></td><td>1 Fields:
+- 1. [8 byte floating point number] Value
+</td></tr></table>(*) <i>optional</i>

@@ -1,0 +1,10 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Grid Skeletonization</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">1</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2002</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Simple skeletonisation methods for grids.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>INPUT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Skeleton</td><td>Grid (output)</td><td>RESULT</td><td></td><td></td></tr><tr><td>Skeleton (*)</td><td>Shapes (optional output)</td><td>VECTOR</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] Standard
+[1] Hilditch's Algorithm
+[2] Channel Skeleton
+Default: 0</td></tr><tr><td>Initialisation</td><td>Choice</td><td>INIT_METHOD</td><td></td><td>Available Choices:
+[0] Less than
+[1] Greater than
+Default: 1</td></tr><tr><td>Threshold (Init.)</td><td>Floating point</td><td>INIT_THRESHOLD</td><td></td><td>Default: 0.000000</td></tr><tr><td>Convergence</td><td>Integer</td><td>CONVERGENCE</td><td></td><td>Default: 3</td></tr></table>(*) <i>optional</i>

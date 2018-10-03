@@ -1,0 +1,537 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">[deprecated] Proj.4 (Dialog, Shapes)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">6</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O. Conrad (c) 2004-8</td></tr></table><hr><h4>Description</h4>Coordinate Transformation for Shapes.
+Based on the PROJ.4 Cartographic Projections library originally written by Gerald Evenden and later continued by the United States Department of the Interior, Geological Survey (USGS).
+<a target="_blank" href="http://trac.osgeo.org/proj/">Proj.4 Homepage</a>
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Source </td><td>Shapes (input)</td><td>SOURCE</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Target</td><td>Shapes (output)</td><td>TARGET</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Source Projection Parameters</td><td>Parameters</td><td>SOURCE_PROJ</td><td></td><td>28 Parameters:
+- 1. Available Choices:
+[0] Albers Equal Area
+[1] Azimuthal Equidistant
+[2] Airy
+[3] Aitoff
+[4] Mod. Stereographic of Alaska
+[5] Apian Globular I
+[6] August Epicycloidal
+[7] Bacon Globular
+[8] Bipolar conic of western hemisphere
+[9] Boggs Eumorphic
+[10] Bonne (Werner lat_1=90)
+[11] Cal Coop Ocean Fish Invest Lines/Stations
+[12] Cassini
+[13] Central Cylindrical
+[14] Equal Area Cylindrical
+[15] Chamberlin Trimetric
+[16] Collignon
+[17] Compact Miller
+[18] Craster Parabolic (Putnins P4)
+[19] Denoyer Semi-Elliptical
+[20] Eckert I
+[21] Eckert II
+[22] Eckert III
+[23] Eckert IV
+[24] Eckert V
+[25] Eckert VI
+[26] Equidistant Cylindrical (Plate Caree)
+[27] Equidistant Conic
+[28] Euler
+[29] Extended Transverse Mercator
+[30] Fahey
+[31] Foucaut
+[32] Foucaut Sinusoidal
+[33] Gall (Gall Stereographic)
+[34] Geocentric
+[35] Geostationary Satellite View
+[36] Ginsburg VIII (TsNIIGAiK)
+[37] General Sinusoidal Series
+[38] Gnomonic
+[39] Goode Homolosine
+[40] Mod. Stereographic of 48 U.S.
+[41] Mod. Stereographic of 50 U.S.
+[42] Hammer & Eckert-Greifendorff
+[43] Hatano Asymmetrical Equal Area
+[44] HEALPix
+[45] rHEALPix
+[46] Interrupted Goode Homolosine
+[47] International Map of the World Polyconic
+[48] Icosahedral Snyder Equal Area
+[49] Kavraisky V
+[50] Kavraisky VII
+[51] Krovak
+[52] Laborde
+[53] Lambert Azimuthal Equal Area
+[54] Lagrange
+[55] Larrivee
+[56] Laskowski
+[57] Lat/long (Geodetic)
+[58] Lat/long (Geodetic alias)
+[59] Lat/long (Geodetic alias)
+[60] Lat/long (Geodetic alias)
+[61] Lambert Conformal Conic
+[62] Lambert Conformal Conic Alternative
+[63] Lambert Equal Area Conic
+[64] Lee Oblated Stereographic
+[65] Loximuthal
+[66] Space oblique for LANDSAT
+[67] McBryde-Thomas Flat-Polar Sine (No. 1)
+[68] McBryde-Thomas Flat-Pole Sine (No. 2)
+[69] McBride-Thomas Flat-Polar Parabolic
+[70] McBryde-Thomas Flat-Polar Quartic
+[71] McBryde-Thomas Flat-Polar Sinusoidal
+[72] Mercator
+[73] Miller Oblated Stereographic
+[74] Miller Cylindrical
+[75] Space oblique for MISR
+[76] Mollweide
+[77] Murdoch I
+[78] Murdoch II
+[79] Murdoch III
+[80] Natural Earth
+[81] Natural Earth 2
+[82] Nell
+[83] Nell-Hammer
+[84] Nicolosi Globular
+[85] Near-sided perspective
+[86] New Zealand Map Grid
+[87] General Oblique Transformation
+[88] Oblique Cylindrical Equal Area
+[89] Oblated Equal Area
+[90] Oblique Mercator
+[91] Ortelius Oval
+[92] Orthographic
+[93] Perspective Conic
+[94] Patterson Cylindrical
+[95] Polyconic (American)
+[96] Putnins P1
+[97] Putnins P2
+[98] Putnins P3
+[99] Putnins P3'
+[100] Putnins P4'
+[101] Putnins P5
+[102] Putnins P5'
+[103] Putnins P6
+[104] Putnins P6'
+[105] Quartic Authalic
+[106] Quadrilateralized Spherical Cube
+[107] Robinson
+[108] Roussilhe Stereographic
+[109] Rectangular Polyconic
+[110] Spherical Cross-track Height
+[111] Sinusoidal (Sanson-Flamsteed)
+[112] Swiss. Obl. Mercator
+[113] Stereographic
+[114] Oblique Stereographic Alternative
+[115] Gauss-Schreiber Transverse Mercator (aka Gauss-Laborde Reunion)
+[116] Transverse Central Cylindrical
+[117] Transverse Cylindrical Equal Area
+[118] Times
+[119] Tissot
+[120] Transverse Mercator
+[121] Two Point Equidistant
+[122] Tilted perspective
+[123] Universal Polar Stereographic
+[124] Urmaev V
+[125] Urmaev Flat-Polar Sinusoidal
+[126] Universal Transverse Mercator (UTM)
+[127] van der Grinten (I)
+[128] van der Grinten II
+[129] van der Grinten III
+[130] van der Grinten IV
+[131] Vitkovsky I
+[132] Wagner I (Kavraisky VI)
+[133] Wagner II
+[134] Wagner III
+[135] Wagner IV
+[136] Wagner V
+[137] Wagner VI
+[138] Wagner VII
+[139] Werenskiold I
+[140] Winkel I
+[141] Winkel II
+[142] Winkel Tripel
+Default: 0
+- 2. Available Choices:
+[0] Predefined Datum
+[1] User Defined Datum
+Default: 0
+- 3. Available Choices:
+[0] [WGS84] 
+[1] [GGRS87] Greek_Geodetic_Reference_System_1987
+[2] [NAD83] North_American_Datum_1983
+[3] [NAD27] North_American_Datum_1927
+[4] [potsdam] Potsdam Rauenberg 1950 DHDN
+[5] [carthage] Carthage 1934 Tunisia
+[6] [hermannskogel] Hermannskogel
+[7] [ire65] Ireland 1965
+[8] [nzgd49] New Zealand Geodetic Datum 1949
+[9] [OSGB36] Airy 1830
+Default: 0
+- 4. 
+- 5. 
+- 6. Available Choices:
+[0] Predefined Standard Ellipsoids
+[1] Semimajor Axis and Semiminor Axis
+[2] Semimajor Axis and Flattening
+[3] Semimajor Axis and Reciprocal Flattening
+[4] Semimajor Axis and Eccentricity
+[5] Semimajor Axis and Eccentricity Squared
+Default: 0
+- 7. Available Choices:
+[0] [MERIT] MERIT 1983 (a=6378137.0, rf=298.257)
+[1] [SGS85] Soviet Geodetic System 85 (a=6378136.0, rf=298.257)
+[2] [GRS80] GRS 1980(IUGG, 1980) (a=6378137.0, rf=298.257222101)
+[3] [IAU76] IAU 1976 (a=6378140.0, rf=298.257)
+[4] [airy] Airy 1830 (a=6377563.396, b=6356256.910)
+[5] [APL4.9] Appl. Physics. 1965 (a=6378137.0., rf=298.25)
+[6] [NWL9D] Naval Weapons Lab., 1965 (a=6378145.0., rf=298.25)
+[7] [mod_airy] Modified Airy (a=6377340.189, b=6356034.446)
+[8] [andrae] Andrae 1876 (Den., Iclnd.) (a=6377104.43, rf=300.0)
+[9] [aust_SA] Australian Natl & S. Amer. 1969 (a=6378160.0, rf=298.25)
+[10] [GRS67] GRS 67(IUGG 1967) (a=6378160.0, rf=298.2471674270)
+[11] [bessel] Bessel 1841 (a=6377397.155, rf=299.1528128)
+[12] [bess_nam] Bessel 1841 (Namibia) (a=6377483.865, rf=299.1528128)
+[13] [clrk66] Clarke 1866 (a=6378206.4, b=6356583.8)
+[14] [clrk80] Clarke 1880 mod. (a=6378249.145, rf=293.4663)
+[15] [clrk80ign] Clarke 1880 (IGN). (a=6378249.2, rf=293.4660212936269)
+[16] [CPM] Comm. des Poids et Mesures 1799 (a=6375738.7, rf=334.29)
+[17] [delmbr] Delambre 1810 (Belgium) (a=6376428., rf=311.5)
+[18] [engelis] Engelis 1985 (a=6378136.05, rf=298.2566)
+[19] [evrst30] Everest 1830 (a=6377276.345, rf=300.8017)
+[20] [evrst48] Everest 1948 (a=6377304.063, rf=300.8017)
+[21] [evrst56] Everest 1956 (a=6377301.243, rf=300.8017)
+[22] [evrst69] Everest 1969 (a=6377295.664, rf=300.8017)
+[23] [evrstSS] Everest (Sabah & Sarawak) (a=6377298.556, rf=300.8017)
+[24] [fschr60] Fischer (Mercury Datum) 1960 (a=6378166., rf=298.3)
+[25] [fschr60m] Modified Fischer 1960 (a=6378155., rf=298.3)
+[26] [fschr68] Fischer 1968 (a=6378150., rf=298.3)
+[27] [helmert] Helmert 1906 (a=6378200., rf=298.3)
+[28] [hough] Hough (a=6378270.0, rf=297.)
+[29] [intl] International 1909 (Hayford) (a=6378388.0, rf=297.)
+[30] [krass] Krassovsky, 1942 (a=6378245.0, rf=298.3)
+[31] [kaula] Kaula 1961 (a=6378163., rf=298.24)
+[32] [lerch] Lerch 1979 (a=6378139., rf=298.257)
+[33] [mprts] Maupertius 1738 (a=6397300., rf=191.)
+[34] [new_intl] New International 1967 (a=6378157.5, b=6356772.2)
+[35] [plessis] Plessis 1817 (France) (a=6376523., b=6355863.)
+[36] [SEasia] Southeast Asia (a=6378155.0, b=6356773.3205)
+[37] [walbeck] Walbeck (a=6376896.0, b=6355834.8467)
+[38] [WGS60] WGS 60 (a=6378165.0, rf=298.3)
+[39] [WGS66] WGS 66 (a=6378145.0, rf=298.25)
+[40] [WGS72] WGS 72 (a=6378135.0, rf=298.26)
+[41] [WGS84] WGS 84 (a=6378137.0, rf=298.257223563)
+[42] [sphere] Normal Sphere (r=6370997) (a=6370997.0, b=6370997.0)
+Default: 0
+- 8. Default: 6377397.160000
+- 9. Default: 6356078.760000
+- 10. Default: 0.003343
+- 11. Default: 299.149897
+- 12. Default: 9003939.789875
+- 13. Default: 81070931739699.203125
+- 14. Available Choices:
+[0] none
+[1] 3 parameters (translation only)
+[2] 7 parameters
+[3] Datum Shift Grid
+Default: 0
+- 15. Default: 0.000000
+- 16. Default: 0.000000
+- 17. Default: 0.000000
+- 18. Default: 0.000000
+- 19. Default: 0.000000
+- 20. Default: 0.000000
+- 21. Default: 1.000000
+- 22. 
+- 23. Default: 0.000000
+- 24. Default: 0.000000
+- 25. Default: 0.000000
+- 26. Default: 0.000000
+- 27. Minimum: 0.000000
+Default: 1.000000
+- 28. Available Choices:
+[0] Kilometer (1000.)
+[1] Meter (1.)
+[2] Decimeter (1/10)
+[3] Centimeter (1/100)
+[4] Millimeter (1/1000)
+[5] International Nautical Mile (1852.0)
+[6] International Inch (0.0254)
+[7] International Foot (0.3048)
+[8] International Yard (0.9144)
+[9] International Statute Mile (1609.344)
+[10] International Fathom (1.8288)
+[11] International Chain (20.1168)
+[12] International Link (0.201168)
+[13] U.S. Surveyor's Inch (1./39.37)
+[14] U.S. Surveyor's Foot (0.304800609601219)
+[15] U.S. Surveyor's Yard (0.914401828803658)
+[16] U.S. Surveyor's Chain (20.11684023368047)
+[17] U.S. Surveyor's Statute Mile (1609.347218694437)
+[18] Indian Yard (0.91439523)
+[19] Indian Foot (0.30479841)
+[20] Indian Chain (20.11669506)
+Default: 1
+</td></tr><tr><td>Target Projection Parameters</td><td>Parameters</td><td>TARGET_PROJ</td><td></td><td>28 Parameters:
+- 1. Available Choices:
+[0] Albers Equal Area
+[1] Azimuthal Equidistant
+[2] Airy
+[3] Aitoff
+[4] Mod. Stereographic of Alaska
+[5] Apian Globular I
+[6] August Epicycloidal
+[7] Bacon Globular
+[8] Bipolar conic of western hemisphere
+[9] Boggs Eumorphic
+[10] Bonne (Werner lat_1=90)
+[11] Cal Coop Ocean Fish Invest Lines/Stations
+[12] Cassini
+[13] Central Cylindrical
+[14] Equal Area Cylindrical
+[15] Chamberlin Trimetric
+[16] Collignon
+[17] Compact Miller
+[18] Craster Parabolic (Putnins P4)
+[19] Denoyer Semi-Elliptical
+[20] Eckert I
+[21] Eckert II
+[22] Eckert III
+[23] Eckert IV
+[24] Eckert V
+[25] Eckert VI
+[26] Equidistant Cylindrical (Plate Caree)
+[27] Equidistant Conic
+[28] Euler
+[29] Extended Transverse Mercator
+[30] Fahey
+[31] Foucaut
+[32] Foucaut Sinusoidal
+[33] Gall (Gall Stereographic)
+[34] Geocentric
+[35] Geostationary Satellite View
+[36] Ginsburg VIII (TsNIIGAiK)
+[37] General Sinusoidal Series
+[38] Gnomonic
+[39] Goode Homolosine
+[40] Mod. Stereographic of 48 U.S.
+[41] Mod. Stereographic of 50 U.S.
+[42] Hammer & Eckert-Greifendorff
+[43] Hatano Asymmetrical Equal Area
+[44] HEALPix
+[45] rHEALPix
+[46] Interrupted Goode Homolosine
+[47] International Map of the World Polyconic
+[48] Icosahedral Snyder Equal Area
+[49] Kavraisky V
+[50] Kavraisky VII
+[51] Krovak
+[52] Laborde
+[53] Lambert Azimuthal Equal Area
+[54] Lagrange
+[55] Larrivee
+[56] Laskowski
+[57] Lat/long (Geodetic)
+[58] Lat/long (Geodetic alias)
+[59] Lat/long (Geodetic alias)
+[60] Lat/long (Geodetic alias)
+[61] Lambert Conformal Conic
+[62] Lambert Conformal Conic Alternative
+[63] Lambert Equal Area Conic
+[64] Lee Oblated Stereographic
+[65] Loximuthal
+[66] Space oblique for LANDSAT
+[67] McBryde-Thomas Flat-Polar Sine (No. 1)
+[68] McBryde-Thomas Flat-Pole Sine (No. 2)
+[69] McBride-Thomas Flat-Polar Parabolic
+[70] McBryde-Thomas Flat-Polar Quartic
+[71] McBryde-Thomas Flat-Polar Sinusoidal
+[72] Mercator
+[73] Miller Oblated Stereographic
+[74] Miller Cylindrical
+[75] Space oblique for MISR
+[76] Mollweide
+[77] Murdoch I
+[78] Murdoch II
+[79] Murdoch III
+[80] Natural Earth
+[81] Natural Earth 2
+[82] Nell
+[83] Nell-Hammer
+[84] Nicolosi Globular
+[85] Near-sided perspective
+[86] New Zealand Map Grid
+[87] General Oblique Transformation
+[88] Oblique Cylindrical Equal Area
+[89] Oblated Equal Area
+[90] Oblique Mercator
+[91] Ortelius Oval
+[92] Orthographic
+[93] Perspective Conic
+[94] Patterson Cylindrical
+[95] Polyconic (American)
+[96] Putnins P1
+[97] Putnins P2
+[98] Putnins P3
+[99] Putnins P3'
+[100] Putnins P4'
+[101] Putnins P5
+[102] Putnins P5'
+[103] Putnins P6
+[104] Putnins P6'
+[105] Quartic Authalic
+[106] Quadrilateralized Spherical Cube
+[107] Robinson
+[108] Roussilhe Stereographic
+[109] Rectangular Polyconic
+[110] Spherical Cross-track Height
+[111] Sinusoidal (Sanson-Flamsteed)
+[112] Swiss. Obl. Mercator
+[113] Stereographic
+[114] Oblique Stereographic Alternative
+[115] Gauss-Schreiber Transverse Mercator (aka Gauss-Laborde Reunion)
+[116] Transverse Central Cylindrical
+[117] Transverse Cylindrical Equal Area
+[118] Times
+[119] Tissot
+[120] Transverse Mercator
+[121] Two Point Equidistant
+[122] Tilted perspective
+[123] Universal Polar Stereographic
+[124] Urmaev V
+[125] Urmaev Flat-Polar Sinusoidal
+[126] Universal Transverse Mercator (UTM)
+[127] van der Grinten (I)
+[128] van der Grinten II
+[129] van der Grinten III
+[130] van der Grinten IV
+[131] Vitkovsky I
+[132] Wagner I (Kavraisky VI)
+[133] Wagner II
+[134] Wagner III
+[135] Wagner IV
+[136] Wagner V
+[137] Wagner VI
+[138] Wagner VII
+[139] Werenskiold I
+[140] Winkel I
+[141] Winkel II
+[142] Winkel Tripel
+Default: 0
+- 2. Available Choices:
+[0] Predefined Datum
+[1] User Defined Datum
+Default: 0
+- 3. Available Choices:
+[0] [WGS84] 
+[1] [GGRS87] Greek_Geodetic_Reference_System_1987
+[2] [NAD83] North_American_Datum_1983
+[3] [NAD27] North_American_Datum_1927
+[4] [potsdam] Potsdam Rauenberg 1950 DHDN
+[5] [carthage] Carthage 1934 Tunisia
+[6] [hermannskogel] Hermannskogel
+[7] [ire65] Ireland 1965
+[8] [nzgd49] New Zealand Geodetic Datum 1949
+[9] [OSGB36] Airy 1830
+Default: 0
+- 4. 
+- 5. 
+- 6. Available Choices:
+[0] Predefined Standard Ellipsoids
+[1] Semimajor Axis and Semiminor Axis
+[2] Semimajor Axis and Flattening
+[3] Semimajor Axis and Reciprocal Flattening
+[4] Semimajor Axis and Eccentricity
+[5] Semimajor Axis and Eccentricity Squared
+Default: 0
+- 7. Available Choices:
+[0] [MERIT] MERIT 1983 (a=6378137.0, rf=298.257)
+[1] [SGS85] Soviet Geodetic System 85 (a=6378136.0, rf=298.257)
+[2] [GRS80] GRS 1980(IUGG, 1980) (a=6378137.0, rf=298.257222101)
+[3] [IAU76] IAU 1976 (a=6378140.0, rf=298.257)
+[4] [airy] Airy 1830 (a=6377563.396, b=6356256.910)
+[5] [APL4.9] Appl. Physics. 1965 (a=6378137.0., rf=298.25)
+[6] [NWL9D] Naval Weapons Lab., 1965 (a=6378145.0., rf=298.25)
+[7] [mod_airy] Modified Airy (a=6377340.189, b=6356034.446)
+[8] [andrae] Andrae 1876 (Den., Iclnd.) (a=6377104.43, rf=300.0)
+[9] [aust_SA] Australian Natl & S. Amer. 1969 (a=6378160.0, rf=298.25)
+[10] [GRS67] GRS 67(IUGG 1967) (a=6378160.0, rf=298.2471674270)
+[11] [bessel] Bessel 1841 (a=6377397.155, rf=299.1528128)
+[12] [bess_nam] Bessel 1841 (Namibia) (a=6377483.865, rf=299.1528128)
+[13] [clrk66] Clarke 1866 (a=6378206.4, b=6356583.8)
+[14] [clrk80] Clarke 1880 mod. (a=6378249.145, rf=293.4663)
+[15] [clrk80ign] Clarke 1880 (IGN). (a=6378249.2, rf=293.4660212936269)
+[16] [CPM] Comm. des Poids et Mesures 1799 (a=6375738.7, rf=334.29)
+[17] [delmbr] Delambre 1810 (Belgium) (a=6376428., rf=311.5)
+[18] [engelis] Engelis 1985 (a=6378136.05, rf=298.2566)
+[19] [evrst30] Everest 1830 (a=6377276.345, rf=300.8017)
+[20] [evrst48] Everest 1948 (a=6377304.063, rf=300.8017)
+[21] [evrst56] Everest 1956 (a=6377301.243, rf=300.8017)
+[22] [evrst69] Everest 1969 (a=6377295.664, rf=300.8017)
+[23] [evrstSS] Everest (Sabah & Sarawak) (a=6377298.556, rf=300.8017)
+[24] [fschr60] Fischer (Mercury Datum) 1960 (a=6378166., rf=298.3)
+[25] [fschr60m] Modified Fischer 1960 (a=6378155., rf=298.3)
+[26] [fschr68] Fischer 1968 (a=6378150., rf=298.3)
+[27] [helmert] Helmert 1906 (a=6378200., rf=298.3)
+[28] [hough] Hough (a=6378270.0, rf=297.)
+[29] [intl] International 1909 (Hayford) (a=6378388.0, rf=297.)
+[30] [krass] Krassovsky, 1942 (a=6378245.0, rf=298.3)
+[31] [kaula] Kaula 1961 (a=6378163., rf=298.24)
+[32] [lerch] Lerch 1979 (a=6378139., rf=298.257)
+[33] [mprts] Maupertius 1738 (a=6397300., rf=191.)
+[34] [new_intl] New International 1967 (a=6378157.5, b=6356772.2)
+[35] [plessis] Plessis 1817 (France) (a=6376523., b=6355863.)
+[36] [SEasia] Southeast Asia (a=6378155.0, b=6356773.3205)
+[37] [walbeck] Walbeck (a=6376896.0, b=6355834.8467)
+[38] [WGS60] WGS 60 (a=6378165.0, rf=298.3)
+[39] [WGS66] WGS 66 (a=6378145.0, rf=298.25)
+[40] [WGS72] WGS 72 (a=6378135.0, rf=298.26)
+[41] [WGS84] WGS 84 (a=6378137.0, rf=298.257223563)
+[42] [sphere] Normal Sphere (r=6370997) (a=6370997.0, b=6370997.0)
+Default: 0
+- 8. Default: 6377397.160000
+- 9. Default: 6356078.760000
+- 10. Default: 0.003343
+- 11. Default: 299.149897
+- 12. Default: 9003939.789875
+- 13. Default: 81070931739699.203125
+- 14. Available Choices:
+[0] none
+[1] 3 parameters (translation only)
+[2] 7 parameters
+[3] Datum Shift Grid
+Default: 0
+- 15. Default: 0.000000
+- 16. Default: 0.000000
+- 17. Default: 0.000000
+- 18. Default: 0.000000
+- 19. Default: 0.000000
+- 20. Default: 0.000000
+- 21. Default: 1.000000
+- 22. 
+- 23. Default: 0.000000
+- 24. Default: 0.000000
+- 25. Default: 0.000000
+- 26. Default: 0.000000
+- 27. Minimum: 0.000000
+Default: 1.000000
+- 28. Available Choices:
+[0] Kilometer (1000.)
+[1] Meter (1.)
+[2] Decimeter (1/10)
+[3] Centimeter (1/100)
+[4] Millimeter (1/1000)
+[5] International Nautical Mile (1852.0)
+[6] International Inch (0.0254)
+[7] International Foot (0.3048)
+[8] International Yard (0.9144)
+[9] International Statute Mile (1609.344)
+[10] International Fathom (1.8288)
+[11] International Chain (20.1168)
+[12] International Link (0.201168)
+[13] U.S. Surveyor's Inch (1./39.37)
+[14] U.S. Surveyor's Foot (0.304800609601219)
+[15] U.S. Surveyor's Yard (0.914401828803658)
+[16] U.S. Surveyor's Chain (20.11684023368047)
+[17] U.S. Surveyor's Statute Mile (1609.347218694437)
+[18] Indian Yard (0.91439523)
+[19] Indian Foot (0.30479841)
+[20] Indian Chain (20.11669506)
+Default: 1
+</td></tr></table>

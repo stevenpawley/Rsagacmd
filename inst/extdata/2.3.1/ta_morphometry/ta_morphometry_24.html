@@ -1,0 +1,12 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Valley and Ridge Detection (Top Hat Approach)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">24</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2013</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Calculating fuzzy valley and ridge class memberships using the Top Hat approach. Based on the AML script 'tophat' by Jochen Schmidt, Landcare Research. 
+
+References:
+Rodriguez, F., Maire, E., Courjault-Rad'e, P., Darrozes, J. (2002): The Black Top Hat function applied to a DEM: a tool to estimate recent incision in a mountainous watershed. (Estib`ere Watershed, Central Pyrenees). Geophysical Research Letters, 29(6), 9-1 - 9-4.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Valley Depth (*)</td><td>Grid (optional output)</td><td>VALLEY</td><td></td><td></td></tr><tr><td>Hill Height (*)</td><td>Grid (optional output)</td><td>HILL</td><td></td><td></td></tr><tr><td>Valley Index</td><td>Grid (output)</td><td>VALLEY_IDX</td><td></td><td></td></tr><tr><td>Hill Index</td><td>Grid (output)</td><td>HILL_IDX</td><td></td><td></td></tr><tr><td>Hillslope Index (*)</td><td>Grid (optional output)</td><td>SLOPE_IDX</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Valley Radius</td><td>Floating point</td><td>RADIUS_VALLEY</td><td>radius given in map units used to fill valleys</td><td>Minimum: 0.000000
+Default: 1000.000000</td></tr><tr><td>Hill Radius</td><td>Floating point</td><td>RADIUS_HILL</td><td>radius given in map units used to cut hills</td><td>Minimum: 0.000000
+Default: 1000.000000</td></tr><tr><td>Elevation Threshold</td><td>Floating point</td><td>THRESHOLD</td><td>elevation threshold used to identify hills/valleys</td><td>Minimum: 0.000000
+Default: 100.000000</td></tr><tr><td>Slope Index</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] default
+[1] alternative
+Default: 0</td></tr></table>(*) <i>optional</i>

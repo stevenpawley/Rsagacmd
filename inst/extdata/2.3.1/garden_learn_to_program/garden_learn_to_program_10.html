@@ -1,0 +1,11 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">11: Dynamic Simulation - Soil Nitrogen Dynamics</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">10</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">Copyrights (c) 2003 by Olaf Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Spatially Distributed Simulation of Soil Nitrogen Dynamics. 
+Reference:
+Hugget, R.J. (1993): 'Modelling the Human Impact on Nature', Oxford University Press.
+
+(c) 2003 by Olaf Conrad, Goettingen
+email: oconrad@gwdg.de<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Soil Nitrogen</td><td>Grid (output)</td><td>NSTORE</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Time Span [a]</td><td>Floating point</td><td>TIME_SPAN</td><td></td><td>Minimum: 0.000000
+Default: 100.000000</td></tr><tr><td>Time Interval [a]</td><td>Floating point</td><td>TIME_STEP</td><td></td><td>Minimum: 0.000000
+Default: 0.100000</td></tr><tr><td>Update View</td><td>Boolean</td><td>UPDATE</td><td></td><td>Default: 1</td></tr><tr><td>Initial Nitrogen Content [kg/ha]</td><td>Floating point</td><td>NINIT</td><td></td><td>Minimum: 0.000000
+Default: 5000.000000</td></tr><tr><td>Nitrogen in Rainfall [kg/ha/a]</td><td>Floating point</td><td>NRAIN</td><td></td><td>Minimum: 0.000000
+Default: 16.000000</td></tr></table>

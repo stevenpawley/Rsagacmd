@@ -1,0 +1,30 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Function Fit</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">0</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top"></td></tr></table><hr><h4>Description</h4>CFit
+(created by SAGA Wizard).<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Source </td><td>Table (input)</td><td>SOURCE</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>y - Values</td><td>Table field</td><td>YFIELD</td><td></td><td></td></tr><tr><td>Use x -Values</td><td>Choice</td><td>USE_X</td><td></td><td>Available Choices:
+[0] No
+[1] Yes
+Default: 0</td></tr><tr><td>x - Values</td><td>Table field</td><td>XFIELD</td><td></td><td></td></tr><tr><td>Formula</td><td>Text</td><td>FORMEL</td><td>The following operators are available for the formula definition:
++ Addition
+- Subtraction
+* Multiplication
+/ Division
+^ power
+sin(x)
+cos(x)
+tan(x)
+asin(x)
+acos(x)
+atan(x)
+abs(x)
+sqrt(x)
+
+For Variogram - Fitting you can use the following Variogram - Models:
+NUG(x)
+SPH(x,a)
+EXP(x,a)
+LIN(x,a)
+The Fitting variables are single characters like a,b,m .. alphabetical order with the grid list order ('a'= first var, 'b' = second grid, ...)
+Example: m*x+a 
+</td><td>Default: m*x+c</td></tr><tr><td>Iterationen</td><td>Integer</td><td>ITER</td><td></td><td>Minimum: 1
+Default: 1000</td></tr><tr><td>Max Lamda</td><td>Floating point</td><td>LAMDA</td><td></td><td>Minimum: 1.000000
+Default: 10000.000000</td></tr></table>

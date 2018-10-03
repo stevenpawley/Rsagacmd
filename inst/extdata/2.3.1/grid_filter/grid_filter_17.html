@@ -1,0 +1,22 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Wombling for Multiple Features (Edge Detection)</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">17</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2015</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Continuous Wombling for edge detection. Uses magnitude of gradient to detect edges between adjacent cells. Edge segments connect such edges, when the difference of their gradient directions is below given threshold.
+
+References:
+- Fitzpatrick, M.C., Preisser, E.L., Porter, A., Elkinton, J., Waller, L.A., Carlin, B.P., Ellison, A.M. (2010): Ecological boundary detection using Bayesian areal wombling. Ecology 91(12): 3448-3455. doi:10.1890/10-0807.1
+- Fortin, M.-J. and Dale, M.R.T (2005): Spatial Analysis - A Guide for Ecologists. Cambridge University Press.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Features </td><td>Grid list (input)</td><td>FEATURES</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Edges</td><td>Grid list (output)</td><td>EDGE_CELLS</td><td></td><td></td></tr><tr><td>Output (*)</td><td>Grid list (optional output)</td><td>OUTPUT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Minimum Magnitude</td><td>Floating point</td><td>TMAGNITUDE</td><td>Minimum magnitude as percentile.</td><td>Minimum: 0.000000
+Maximum: 100.000000
+Default: 90.000000</td></tr><tr><td>Maximum Angle</td><td>Floating point</td><td>TDIRECTION</td><td>Maximum angular difference as degree between adjacent segment points.</td><td>Minimum: 0.000000
+Maximum: 180.000000
+Default: 30.000000</td></tr><tr><td>Minimum Neighbours</td><td>Integer</td><td>TNEIGHBOUR</td><td>Minimum number of neighbouring potential edge cells with similar direction.</td><td>Minimum: 0
+Default: 1</td></tr><tr><td>Alignment</td><td>Choice</td><td>ALIGNMENT</td><td></td><td>Available Choices:
+[0] between cells
+[1] on cell
+Default: 1</td></tr><tr><td>Edge Connectivity</td><td>Choice</td><td>NEIGHBOUR</td><td></td><td>Available Choices:
+[0] Rooke's case
+[1] Queen's case
+Default: 1</td></tr><tr><td>Additional Output</td><td>Choice</td><td>OUTPUT_ADD</td><td></td><td>Available Choices:
+[0] none
+[1] gradients
+[2] edge cells
+Default: 0</td></tr><tr><td>Zero as No-Data</td><td>Boolean</td><td>ZERO_AS_NODATA</td><td></td><td>Default: 1</td></tr></table>(*) <i>optional</i>

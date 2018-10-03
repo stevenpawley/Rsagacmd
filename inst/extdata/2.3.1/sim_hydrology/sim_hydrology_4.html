@@ -1,0 +1,15 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Diffuse Pollution Risk</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">4</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">Cosima Berger, Olaf Conrad (c) 2014</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Diffuse Pollution Risk Mapping.
+This tool tries to reproduce in parts the methodology of the <a target="_blank" href="http://www.scimap.org.uk/">SCIMAP - Diffuse Pollution Risk Mapping - Framework</a>.
+
+References:
+Lane, S.N.; Brookes, C.J.; Kirkby, M.J.; Holden, J. (2004): A network-index-based version of TOPMODEL for use with high-resolution digital topographic data. In: Hydrological processes. Vol. 18, S. 191-201.
+
+Milledge, D.G.; Lane, N.S.; Heathwait, A.L.; Reaney, S.M. (2012): A monte carlo approach to the invers problem of diffuse pollution risk in agricultural catchments. In: Science of the Total Environment. Vol. 433, S. 434-449.
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><td>Channel Network (*)</td><td>Grid (optional input)</td><td>CHANNEL</td><td></td><td></td></tr><tr><td>Land Cover Weights (*)</td><td>Grid (optional input)</td><td>WEIGHT</td><td></td><td></td></tr><tr><td>Rainfall (*)</td><td>Grid (optional input)</td><td>RAIN</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Delivery Index</td><td>Grid (output)</td><td>DELIVERY</td><td></td><td></td></tr><tr><td>Locational Risk</td><td>Grid (output)</td><td>RISK_POINT</td><td></td><td></td></tr><tr><td>Diffuse Pollution Risk</td><td>Grid (output)</td><td>RISK_DIFFUSE</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Default</td><td>Floating point</td><td>WEIGHT_DEFAULT</td><td>default value if no grid has been selected</td><td>Minimum: 0.000000
+Default: 1.000000</td></tr><tr><td>Default</td><td>Floating point</td><td>RAIN_DEFAULT</td><td>default value if no grid has been selected</td><td>Minimum: 0.000000
+Default: 500.000000</td></tr><tr><td>Flow Direction Algorithm</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] single
+[1] multiple
+Default: 1</td></tr><tr><td>Channel Initiation Threshold</td><td>Integer</td><td>CHANNEL_START</td><td>minimum number of upslope contributing cells to start a channel</td><td>Minimum: 1
+Default: 150</td></tr></table>(*) <i>optional</i>

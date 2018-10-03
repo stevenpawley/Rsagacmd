@@ -1,0 +1,17 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Topographic Openness</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">5</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">O.Conrad (c) 2012</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Topographic openness expresses the dominance (positive) or enclosure (negative) of a landscape location. See Yokoyama et al. (2002) for a precise definition. Openness has been related to how wide a landscape can be viewed from any position. It has been proven to be a meaningful input for computer aided geomorphological mapping.
+
+References:
+Anders, N. S. / Seijmonsbergen, A. C. / Bouten, W. (2009): Multi-Scale and Object-Oriented Image Analysis of High-Res LiDAR Data for Geomorphological Mapping in Alpine Mountains. Proceedings of Geomorphometry 2009. <a target="_blank" href="http://geomorphometry.org/system/files/anders2009geomorphometry.pdf">online at geomorphometry.org</a>.
+
+Prima, O.D.A / Echigo, A. / Yokoyama, R. / Yoshida, T. (2006): Supervised landform classification of Northeast Honshu from DEM-derived thematic maps. Geomorphology, vol.78, pp.373-386.
+
+Yokoyama, R. / Shirasawa, M. / Pike, R.J. (2002): Visualizing topography by openness: A new application of image processing to digital elevation models. Photogrammetric Engineering and Remote Sensing, Vol.68, pp.251-266. <a target="_blank" href="http://www.asprs.org/a/publications/pers/2002journal/march/2002_mar_257-265.pdf">online at ASPRS</a>.
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Elevation </td><td>Grid (input)</td><td>DEM</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Positive Openness</td><td>Grid (output)</td><td>POS</td><td></td><td></td></tr><tr><td>Negative Openness</td><td>Grid (output)</td><td>NEG</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Radial Limit</td><td>Floating point</td><td>RADIUS</td><td></td><td>Minimum: 0.000000
+Default: 10000.000000</td></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] multi scale
+[1] sectors
+Default: 1</td></tr><tr><td>Multi Scale Factor</td><td>Floating point</td><td>DLEVEL</td><td></td><td>Minimum: 1.250000
+Default: 3.000000</td></tr><tr><td>Number of Sectors</td><td>Integer</td><td>NDIRS</td><td></td><td>Minimum: 2
+Default: 8</td></tr></table>

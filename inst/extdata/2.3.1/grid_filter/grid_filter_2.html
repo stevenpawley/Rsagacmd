@@ -1,0 +1,35 @@
+<h4>Tool</h4><table border="0"><tr><td valign="top"><b>Name</b></td><td valign="top">Laplacian Filter</td></tr><tr><td valign="top"><b>ID</b></td><td valign="top">2</td></tr><tr><td valign="top"><b>Author</b></td><td valign="top">(c) 2003 by A. Ringeler, (c) 2008 by O. Conrad</td></tr><tr><td valign="top"><b>Specification</b></td><td valign="top">grid</td></tr></table><hr><h4>Description</h4>Other Common Names: Laplacian, Laplacian of Gaussian, LoG, Marr Filter
+
+Standard kernel 1 (3x3):
+ 0 | -1 |  0
+-- + -- + --
+-1 |  4 | -1
+-- + -- + --
+ 0 | -1 |  0
+
+Standard kernel 2 (3x3):
+-1 | -1 | -1
+-- + -- + --
+-1 |  8 | -1
+-- + -- + --
+-1 | -1 | -1
+
+Standard kernel 3 (3x3):
+-1 | -2 | -1
+-- + -- + --
+-2 | 12 | -2
+-- + -- + --
+-1 | -2 | -1
+
+<hr><h4>Parameters</h4><table border="1" width="100%" valign="top" cellpadding="5" rules="all"><tr><th>Name</th><th>Type</th><th>Identifier</th><th>Description</th><th>Constraints</th></tr>
+<tr><th colspan="5">Input</th></tr><tr><td>Grid </td><td>Grid (input)</td><td>INPUT</td><td></td><td></td></tr><tr><th colspan="5">Output</th></tr><tr><td>Filtered Grid (*)</td><td>Grid (optional output)</td><td>RESULT</td><td></td><td></td></tr><tr><th colspan="5">Options</th></tr><tr><td>Method</td><td>Choice</td><td>METHOD</td><td></td><td>Available Choices:
+[0] standard kernel 1
+[1] standard kernel 2
+[2] Standard kernel 3
+[3] user defined kernel
+Default: 3</td></tr><tr><td>Standard Deviation (Percent of Radius)</td><td>Floating point</td><td>SIGMA</td><td></td><td>Minimum: 0.000010
+Default: 50.000000</td></tr><tr><td>Radius</td><td>Integer</td><td>RADIUS</td><td></td><td>Minimum: 1
+Default: 3</td></tr><tr><td>Search Mode</td><td>Choice</td><td>MODE</td><td></td><td>Available Choices:
+[0] square
+[1] circle
+Default: 1</td></tr></table>(*) <i>optional</i>
