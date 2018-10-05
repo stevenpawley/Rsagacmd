@@ -105,7 +105,7 @@
 #'    sagaRemoveTmpFiles(h=0)
 #' }
 #' 
-#' @author Steven Pawley, \email{dr.stevenpawley@gmail.com}
+#' @author Steven Pawley, \email{dr.stevenpawley@@gmail.com}
 
 #' @docType package
 #' @name Rsagacmd
