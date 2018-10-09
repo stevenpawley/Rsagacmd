@@ -27,7 +27,7 @@ testthat::test_that("Initiation of saga S3 class using opt_lib ", {
 
 testthat::test_that("Test file caching ", {
   testthat::skip_on_cran()
-  saga_bin = Rsagacmd:::sagaSearch()
+  saga_bin = sagaSearch()
   
   if(!is.null(saga_bin)) {
   
@@ -60,12 +60,18 @@ testthat::test_that("Test file caching ", {
       )
       
       start_time = Sys.time()
-      tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
+      tri = replicate(
+        n = 10,
+        expr = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem),
+        simplify = TRUE)
       end_time = Sys.time()
       elapsed_ram = end_time - start_time
       
       start_time = Sys.time()
-      tri_fc = saga_fc$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
+      tri_fc = replicate(
+        n = 10,
+        expr = saga_fc$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem),
+        simplify = TRUE)
       end_time = Sys.time()
       elapsed_fc = end_time - start_time
       

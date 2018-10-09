@@ -396,8 +396,14 @@ sagaConfigure = function(senv,
       
       # configuration for grid caching
     } else if (grid_caching == TRUE) {
-      if (cores > 1 | is.null(cores)) {
-        message('SAGA-GIS file caching is not thread-safe. Setting cores = 1')
+      if (is.null(cores)) {
+        message('Number of processing cores not specified')
+        message('SAGA-GIS file caching is not thread-safe. Using cores = 1')
+        cores = 1
+      }
+      
+      if (cores > 1) {
+        message('cores > 1. SAGA-GIS file caching is not thread-safe. Setting cores = 1')
         cores = 1
       }
       
