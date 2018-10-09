@@ -12,10 +12,11 @@ Description: Provides a fully functional approach of scripting with the open-sou
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
-LazyData: false
+LazyData: true
 RoxygenNote: 6.1.0
 Depends:
-    raster
+    raster,
+    R (>= 2.10)
 Imports:
     XML,
     sf,
@@ -33,3 +34,4 @@ Collate:
     'Rsagacmd.R'
     'functions.R'
     'utils.R'
+    'data.R'
