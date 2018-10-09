@@ -123,26 +123,22 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
   ## to create the document pages, i.e. saga will only generate them in the
   ## working directory. In this case we need to manually change the working
   ## directory to tempdir and then restore
-  if (saga_version == as.numeric_version('2.3.1')) {
-    help_path = system.file('extdata', '2.3.1', package = 'Rsagacmd')
+  help_path = file.path(tempdir(), basename(tempfile()))
+  dir.create(help_path)
+  
+  if (saga_version > as.numeric_version('3.0.0')) {
+    msg = system(
+      paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=TRUE)
   } else {
-    help_path = file.path(tempdir(), basename(tempfile()))
-    dir.create(help_path)
-    
-    if (saga_version > as.numeric_version('3.0.0')) {
-      msg = system(
-        paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=TRUE)
-    } else {
-      olddir = getwd()
-      setwd(help_path)
-      msg = system(paste(shQuote(saga_bin), '--docs'), intern=TRUE)
-      setwd(olddir)
-    }
-    
-    if (!is.null(attr(msg, "status"))) {
-      cat(msg, sep = '\n')
-      stop()
-    }
+    olddir = getwd()
+    setwd(help_path)
+    msg = system(paste(shQuote(saga_bin), '--docs'), intern=TRUE)
+    setwd(olddir)
+  }
+  
+  if (!is.null(attr(msg, "status"))) {
+    cat(msg, sep = '\n')
+    stop()
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
