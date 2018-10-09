@@ -60,18 +60,12 @@ testthat::test_that("Test file caching ", {
       )
       
       start_time = Sys.time()
-      tri = replicate(
-        n = 10,
-        expr = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem),
-        simplify = TRUE)
+      tri = saga$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
       end_time = Sys.time()
       elapsed_ram = end_time - start_time
       
       start_time = Sys.time()
-      tri_fc = replicate(
-        n = 10,
-        expr = saga_fc$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem),
-        simplify = TRUE)
+      tri_fc = saga_fc$ta_morphometry$Terrain_Ruggedness_Index_TRI(DEM = dem)
       end_time = Sys.time()
       elapsed_fc = end_time - start_time
       
