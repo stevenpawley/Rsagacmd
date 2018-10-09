@@ -579,6 +579,7 @@ sagaGIS = function(saga_bin = NULL,
 #' @param ... Additional arguments to pass to print. Currently not used.
 #'
 #' @return NULL
+#' @method print sagaTool
 #' @export
 #' @examples 
 #' \dontrun{
