@@ -56,19 +56,16 @@ sagaSearch = function() {
     }
     
     # search for saga_cmd executable
-    saga_cmd = lapply(search_paths, function(x)
-      list.files(
-        path = x,
+    saga_cmd = c()
+    for (f in search_paths) {
+      saga_cmd = c(saga_cmd, list.files(
+        path = f,
         pattern = saga_executable,
         recursive = TRUE,
         full.names = TRUE))
-    
-    saga_cmd = saga_cmd[which(length(saga_cmd) > 0)] # remove empty results
-    
-    if (length(saga_cmd) == 1)
-      saga_cmd = unlist(saga_cmd)
+    }
   }
-  
+
   # error is saga_cmd not found
   if (length(saga_cmd) == 0) {
     stop(paste('SAGA-GIS installation not found. Need to supply a valid path',
@@ -78,9 +75,9 @@ sagaSearch = function() {
     # automatically use newest version if multiple installations are found
   } else if (length(saga_cmd) > 1) {
     message('Multiple installations of SAGA-GIS were found at:')
-    message(saga_cmd)
+    message(paste(saga_cmd, collapse = '\n'))
     message(paste('Choosing newest version. Manually specify the location when',
-                  'calling SAGA() to use an older version'))
+                  'calling sagaGIS() to use an older version'))
     saga_version = list()
     for (saga_inst in saga_cmd)
       saga_version = append(saga_version, sagaVersion(saga_inst))
