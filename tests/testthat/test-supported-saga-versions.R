@@ -4,16 +4,30 @@ library(raster)
 
 download_saga = function(surl) {
   # Downloads a saga windows x64 binary from sourceforge
-  saga_zipdir = file.path(tempdir(), basename(surl))
+  saga_zipdir = file.path(tempdir(), tools::file_path_sans_ext(basename(surl)))
   dir.create(saga_zipdir, showWarnings = FALSE)
-  download.file(
-    url = surl,
-    destfile = tempfile(tmpdir = saga_zipdir, fileext = '.zip'), quiet = TRUE)
-  unzip(zipfile = list.files(saga_zipdir, full.names = TRUE), exdir = saga_zipdir)
-  saga_bin = file.path(list.dirs(path = saga_zipdir, recursive = FALSE), 'saga_cmd.exe')
+  
+  err = tryCatch({
+    download.file(
+      url = surl,
+      destfile = tempfile(tmpdir = saga_zipdir, fileext = '.zip'),
+      quiet = TRUE)
+    
+    unzip(zipfile = list.files(saga_zipdir, full.names = TRUE), exdir = saga_zipdir)
+    
+    }, error = function(e) {
+      return(NULL)
+    })
+  
+  if (!is.null(err)) {
+    saga_bin = file.path(list.dirs(path = saga_zipdir, recursive = FALSE), 'saga_cmd.exe')
+  } else {
+    saga_bin = NULL
+  }
   
   return(saga_bin)
 }
+
 
 testthat::test_that("initiation of all supported SAGA-GIS versions", {
   testthat::skip_on_cran()
@@ -35,11 +49,14 @@ testthat::test_that("initiation of all supported SAGA-GIS versions", {
     
     lapply(saga_urls, function(surl) {
       saga_bin = download_saga(surl)
-      saga = sagaGIS(saga_bin)
-      testthat::expect_false(is.null(saga))
-      testthat::expect_gt(length(saga), 0)
-      testthat::expect_is(saga$grid_calculus$Random_Terrain(ITERATIONS = 1, RADIUS = 1), 'RasterLayer')
-      unlink(dirname(saga_bin), recursive = TRUE)
+      
+      if (!is.null(saga_bin)) {
+        saga = sagaGIS(saga_bin)
+        testthat::expect_false(is.null(saga))
+        testthat::expect_gt(length(saga), 0)
+        testthat::expect_is(saga$grid_calculus$Random_Terrain(ITERATIONS = 1, RADIUS = 1), 'RasterLayer')
+        unlink(dirname(saga_bin), recursive = TRUE)
+      }
     })
   }
   
