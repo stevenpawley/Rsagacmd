@@ -876,17 +876,24 @@ RtoSAGA = function(param) {
     param = temp
     return(param)
   }
-    
-  param = switch(class(param),
-                 'sf' = sf_to_saga(param),
-                 'RasterLayer' = rasterlayer_to_saga(param),
-                 'RasterStack' = rasterstack_to_saga(param),
-                 'RasterBrick' = rasterstack_to_saga(param),
-                 'SpatialLinesDataFrame' = shape_to_saga(param),
-                 'SpatialPolygonsDataFrame' = shape_to_saga(param),
-                 'SpatialPointsDataFrame' = shape_to_saga(param),
-                 'data.frame' = dataframe_to_saga(param),
-                 param)
+  
+  if (methods::is(param, 'sf')) {
+    param = sf_to_saga(param)
+  } else if (methods::is(param, 'RasterLayer')) {
+    param = rasterlayer_to_saga(param) 
+  } else if (methods::is(param, 'RasterStack')) {
+    param = rasterstack_to_saga(param)
+  } else if (methods::is(param, 'RasterBrick')) {
+    param = rasterstack_to_saga(param)
+  } else if (methods::is(param, 'SpatialLinesDataFrame')) {
+    param = shape_to_saga(param)
+  } else if (methods::is(param, 'SpatialPolygonsDataFrame')) {
+    param = shape_to_saga(param)
+  } else if (methods::is(param, 'SpatialPointsDataFrame')) {
+    param = shape_to_saga(param)
+  } else if (methods::is(param, 'data.frame')) {
+    param = dataframe_to_saga(param)
+  }
   
   return(param)
 }
