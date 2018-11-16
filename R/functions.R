@@ -801,7 +801,6 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   return(saga_results)
 }
 
-
 #' Saves R objects to temporary files for processing by SAGA-GIS.
 #'
 #' Intended to be used internally. Raster objects are checked to see if the
@@ -814,81 +813,50 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
 #' @return character. Character string of filename of saved object
 RtoSAGA = function(param) {
   
-  # raster package objects
-  # ? raster stored as file
-  #   ? does the file contain a single band
-  #     - TRUE :
-  #       ? does the filename refer to an raster tmpfile grd
-  #         - TRUE : resave raster as a geotiff in tempdir
-  #         - FALSE : get filename of single band
-  #     - FALSE:
-  #       ? is just a single layer selected
-  #         - TRUE : write layer to temporary file
-  #         - FALSE : error message that SAGA-GIS needs single bands as inputs
-  #
-  # ? raster stored in memory
-  #   ? does the inMemory object contain a single band?
-  #     - TRUE: write RasterLayer to temporary file
-  #     - FALSE: error message that SAGA-GIS needs single bands as inputs
-  
-  # Simple features objects
-  if (methods::is(param, 'sf') == TRUE) {
+  sf_to_saga = function(param) {
     temp = tempfile(fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     sf::st_write(obj = param, dsn = temp, quiet = TRUE)
-    param = temp
-    
-    # Raster objects
-  } else if (methods::is(param, 'RasterLayer') |
-             methods::is(param, 'RasterStack') | methods::is(param, 'RasterBrick')) {
-    
-    # Rasters stored as files
-    if (raster::inMemory(param) == FALSE) {
-      if (raster::nbands(param) == 1) {
-        if (tools::file_ext(raster::filename(param)) == 'grd') {
-          temp = tempfile(fileext = '.tif')
-          raster::writeRaster(raster::raster(param), filename = temp)
-          param = temp
-        } else {
-          param = raster::filename(param)
-        }
-      } else {
-        if (raster::nlayers(param) == 1) {
-          temp = tempfile(fileext = '.tif')
-          raster::writeRaster(param, filename = temp)
-          param = temp
-        } else {
-          stop(
-            paste(
-              'Raster object contains multiple bands;',
-              'SAGA-GIS requires single band rasters as inputs'),
-            call. = FALSE
-          )
-        }
-      }
-      
-      # Rasters stored in memory
-    } else if (raster::inMemory(param) == TRUE) {
-      if (raster::nlayers(param) == 1) {
-        temp = tempfile(fileext = '.tif')
-        raster::writeRaster(param, filename = temp)
-        param = temp
-      } else {
-        stop(
-          paste(
-            'Raster object contains multiple bands;',
-            'SAGA-GIS requires single band rasters as inputs'
-          ),
-          call. = FALSE
-        )
-      }
+    return(temp)
+  }
+  
+  rasterlayer_to_saga = function(param) {
+    # pass filename to saga if RasterLayer from singleband raster
+    if (raster::nbands(param) == 1 &
+        raster::inMemory(param) == FALSE &
+        tools::file_ext(raster::filename(param)) != 'grd') {
+      param = raster::filename(param)
+
+    # else save band as a singleband temp file and pass temp filename
+    } else if (raster::nbands(param) != 1 |
+               raster::inMemory(param) == TRUE |
+               tools::file_ext(raster::filename(param)) == 'grd')  {
+      temp = tempfile(fileext = '.tif')
+      raster::writeRaster(param, filename = temp)
+      param = temp
     }
     
-    # Spatial objects
-  } else if (methods::is(param, 'SpatialLinesDataFrame') |
-             methods::is(param, 'SpatialPolygonsDataFrame') |
-             methods::is(param, 'SpatialPointsDataFrame')) {
+    return(param)
+  }
+  
+  rasterstack_to_saga = function(param) {
+    # check to see if RasterStack or RasterBrick contains only a single layer
+    if (raster::nlayers(param) == 1) {
+      param = raster::raster(param)
+      param = rasterlayer_to_saga(param)
+    } else {
+      stop(
+        paste(
+          'Raster object contains multiple layers;',
+          'SAGA-GIS requires single layer rasters as inputs'),
+        call. = FALSE
+      )
+    }
     
+    return(param)
+  }
+  
+  shape_to_saga = function(param) {
     temp = tempfile(fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     rgdal::writeOGR(
@@ -898,14 +866,27 @@ RtoSAGA = function(param) {
       driver = "ESRI Shapefile"
     )
     param = temp
-    
-    # Tables
-  } else if (methods::is(param, "data.frame")) {
+    return(param)
+  }
+
+  dataframe_to_saga = function(param) {
     temp = tempfile(fileext = '.txt')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     utils::write.table(x = param, file = temp, sep = "\t")
     param = temp
+    return(param)
   }
+    
+  param = switch(class(param),
+                 'sf' = sf_to_saga(param),
+                 'RasterLayer' = rasterlayer_to_saga(param),
+                 'RasterStack' = rasterstack_to_saga(param),
+                 'RasterBrick' = rasterstack_to_saga(param),
+                 'SpatialLinesDataFrame' = shape_to_saga(param),
+                 'SpatialPolygonsDataFrame' = shape_to_saga(param),
+                 'SpatialPointsDataFrame' = shape_to_saga(param),
+                 'data.frame' = dataframe_to_saga(param),
+                 param)
   
   return(param)
 }

@@ -35,16 +35,17 @@ testthat::test_that("initiation of all supported SAGA-GIS versions", {
   if (Sys.info()["sysname"] == "Windows" & Sys.info()["machine"] == 'x86-64') {
     saga_urls = c(
       'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%202/SAGA%202.3.1/saga_2.3.1_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%203/SAGA%20-%203.0.0/saga_3.0.0_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%203/SAGA%20-%203.0.0/saga_3.0.0_x64.zip',
       'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%204/SAGA%20-%204.0.0/saga_4.0.0_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%204/SAGA%20-%204.0.1/saga-4.0.1_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%204/SAGA%20-%204.1.0/saga-4.1.0_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%204/SAGA%20-%204.0.1/saga-4.0.1_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%204/SAGA%20-%204.1.0/saga-4.1.0_x64.zip',
       'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%205/SAGA%20-%205.0.0/saga-5.0.0_x64.zip',
       'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.0.0/saga-6.0.0_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.1.0/saga-6.1.0_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.2.0/saga-6.2.0_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.3.0/saga-6.3.0_x64.zip',
-      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.4.0/saga-6.4.0_x64.zip'
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.1.0/saga-6.1.0_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.2.0/saga-6.2.0_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.3.0/saga-6.3.0_x64.zip',
+      #'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%206/SAGA%20-%206.4.0/saga-6.4.0_x64.zip',
+      'https://sourceforge.net/projects/saga-gis/files/SAGA%20-%207/SAGA%20-%207.0.0/saga-7.0.0_x64.zip'
     )
     
     lapply(saga_urls, function(surl) {
