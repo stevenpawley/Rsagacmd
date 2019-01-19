@@ -5,7 +5,7 @@ Rsagacmd
 
 Rsagacmd: A package for linking R with the open-source SAGA-GIS.
 
-Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (https://sourceforge.net/projects/saga-gis/) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0, 6.0.0-6.3.0 on Windows (x64), OS X and Linux.
+Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (https://sourceforge.net/projects/saga-gis/) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 7.1.1 on Windows (x64), OS X and Linux.
 
 ## Description
 
