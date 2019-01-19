@@ -57,7 +57,7 @@ pisr = dem %>%
 ```
 In the above example, three tools are joined together using pipes, and only the PISR grid is returned as a RasterLayer object. The intermediate processing steps are dealt with automatically by saving the outputs as tempfiles. When dealing with high-resolution and/or larger raster data, these tempfiles can start to consume a significant amount of disk space over a session. If required, temporary files can be cleaned during the session in a similar way to the raster package, using:
 ```
-saga.removeTmpFiles(h=0)
+sagaRemoveTmpFiles(h=0)
 ```
 where h is minimum age (in number of hours) of tempfiles for removal, so h=0 will remove all tempfiles that were automatically created by Rsagacmd.
 
