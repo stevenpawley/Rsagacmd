@@ -89,12 +89,13 @@ searchTools = function(x, pattern) {
 #' processing. This is a function to make the the SAGA-GIS 
 #' grid_tools / tiling tool more convenient to use.
 #'
-#' @param x saga R3 object 
+#' @param x saga S3 object 
 #' @param grid character, or RasterLayer. GDAL-supported raster, as as a path to
 #'   the raster or representing a RasterLayer object
 #' @param nx numeric. Number of x-pixels per tile
 #' @param ny numeric. Number of y-pixels per tile
 #' @param overlap numeric. Number of overlapping pixels
+#' @param file_path character. Optional file path to store raster tiles
 #'
 #' @return list. List of RasterLayer objects representing tiled data
 #' @export
@@ -109,7 +110,7 @@ searchTools = function(x, pattern) {
 #' # Return tiled version of DEM
 #' tiles = tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 #' }
-tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
+tileGeoprocessor = function(x, grid, nx, ny, overlap=0, file_path=NULL) {
   
   # get local environment of sagaGIS object (first tool)
   env = environment(x[[1]][[1]])
@@ -122,7 +123,9 @@ tileGeoprocessor = function(x, grid, nx, ny, overlap=0) {
   # create list of temporary files for tiles
   tile_outputs = c()
   for (i in 1:n_tiles) {
-    temp = tempfile(fileext = '.sgrd')
+    if (is.null(file_path))
+      temp = tempfile(fileext = '.sgrd') else
+      temp = tempfile(tmpdir = file_path, fileext = '.sgrd')
     tile_outputs = c(tile_outputs, temp)
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
   }
