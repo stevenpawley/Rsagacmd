@@ -511,7 +511,7 @@ sagaGIS = function(saga_bin = NULL,
       # define tool arguments
       tool_options = senv$libraries[[lib]][[tool]][['options']]
       tool_cmd = senv[['libraries']][[lib]][[tool]][['tool_cmd']]
-      args = paste0(tool_options$identifierR, collapse = ',')
+      args = paste0(tool_options$identifierR, "=NULL", collapse = ', ')
       
       # define function body
       # deparse tool settings into function and create code to call sagaExecute
@@ -522,10 +522,13 @@ sagaGIS = function(saga_bin = NULL,
         "
         # remove intern and help from saga args list
         if ('intern' %in% names(args))
-        args = args[-which(names(args) == 'intern')]
+            args = args[-which(names(args) == 'intern')]
+        
+        if ('all_outputs' %in% names(args))
+            args = args[-which(names(args) == 'all_outputs')]
         
         # call the saga geoprocessor
-        saga_results = sagaExecute(lib, tool, senv, intern, args)
+        saga_results = sagaExecute(lib, tool, senv, intern, all_outputs, args)
         return (saga_results)
         ",
         sep = "\n"
@@ -543,7 +546,7 @@ sagaGIS = function(saga_bin = NULL,
       # that it needs from within its own environment
       tryCatch(
         expr = {
-          func_code = paste0('function(', args, ', intern = TRUE', ') {',
+          func_code = paste0('function(', args, ', intern = TRUE, all_outputs = TRUE', ') {',
                              '\n', body, '\n', '}')
           func = structure(
             eval(expr = parse(text = func_code)),
@@ -632,7 +635,7 @@ print.sagaTool = function(x, ...) {
 #'
 #' @return Output of SAGA-GIS tool loaded as an R object
 #'   (RasterLayer/sf/dataframe)
-sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
+sagaExecute = function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...) {
   args = c(...)
   
   # sagaInstallation settings
@@ -649,10 +652,9 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
     y = tool_options, by.x = 'arg_names', by.y = 'identifierR',
     sort = FALSE)$Identifier
   args = stats::setNames(args, arg_names)
-  
-  # strip missing arguments and update arg_names
-  args[args == ''] = NULL
-  args = args[!is.null(args)]
+
+  # strip other missing arguments and update arg_names
+  args = args[sapply(args, function(x) !is.null(x))]
   arg_names = names(args)
   
   # save loaded R objects to files for SAGA-GIS to access
@@ -691,9 +693,14 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   }
   
   # determine any outputs that have not been specified as function args
-  req_out = tool_options[which(tool_options$IO == "Output"), ]
-  unspec_ind = which(!(req_out$Identifier %in% spec_out$Identifier))
-  n_temps = length(unspec_ind)
+  if (all_outputs == TRUE) {
+    '%ni%' <- Negate('%in%')
+    req_out = tool_options[which(tool_options$IO == "Output"), ]
+    unspec_ind = which(req_out$Identifier %ni% spec_out$Identifier)
+    n_temps = length(unspec_ind)
+  } else {
+    n_temps = 0
+  }
   
   # use tempfiles if any outputs are not specified
   if (n_temps > 0) {
@@ -791,9 +798,13 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         }
         
       }, error = function(e) {
-        message(
-          paste0('No geoprocessing output for ', spec_out[i, 'Identifier'],
-                 '. Results may require other input parameters to be specified'))
+        if (nrow(spec_out) > 0) {
+          message(
+            paste0('No geoprocessing output for ', spec_out[i, 'Identifier'],
+                   '. Results may require other input parameters to be specified'))
+        } else {
+          message("No geoprocessing outputs specified")
+        }
       }
       )
       
