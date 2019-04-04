@@ -758,7 +758,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...) 
   
   # load SAGA results as list of R objects
   saga_results = list()
-  for (i in 1:nrow(spec_out)) {
+  for (i in seq_along(nrow(spec_out))) {
     out_i = spec_out[i, 'args']
     out_i = gsub('.sgrd', '.sdat', out_i)
     current_id = spec_out[i, 'Identifier']
