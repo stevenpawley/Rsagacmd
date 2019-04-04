@@ -4,11 +4,13 @@
 \alias{RtoSAGA}
 \title{Saves R objects to temporary files for processing by SAGA-GIS.}
 \usage{
-RtoSAGA(param)
+RtoSAGA(param, temp_path)
 }
 \arguments{
 \item{param}{A single variable that may be a raster object, sp object, sf
 object or dataframe}
+
+\item{temp_path}{character. Path to directory to store temporary files.}
 }
 \value{
 character. Character string of filename of saved object

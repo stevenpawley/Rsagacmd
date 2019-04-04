@@ -11,7 +11,7 @@ sagaVersion = function(saga_cmd) {
   saga_version = stringr::str_extract(saga_version, '\\d.\\d.\\d')
   saga_version = stringr::str_trim(saga_version)
   
-  return (as.numeric_version(saga_version))
+  return(as.numeric_version(saga_version))
 }
 
 
@@ -84,7 +84,7 @@ sagaSearch = function() {
     saga_cmd = saga_cmd[which(saga_version == max(saga_version))]
   }
   
-  return (saga_cmd)
+  return(saga_cmd)
 }
 
 
@@ -125,11 +125,11 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
   
   if (saga_version > as.numeric_version('3.0.0')) {
     msg = system(
-      paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern=TRUE)
+      paste0(paste(shQuote(saga_bin), '--create-docs='), help_path), intern = TRUE)
   } else {
     olddir = getwd()
     setwd(help_path)
-    msg = system(paste(shQuote(saga_bin), '--docs'), intern=TRUE)
+    msg = system(paste(shQuote(saga_bin), '--docs'), intern = TRUE)
     setwd(olddir)
   }
   
@@ -260,7 +260,7 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
           # extract minimum values for tool parameters
           options['Minimum'] = NA
           constraints_split = strsplit(options$Constraints, ';')
-          for (i in seq_len(length(constraints_split))){
+          for (i in seq_len(length(constraints_split))) {
             constraints_line = constraints_split[i][[1]]
             
             if (any(grepl('Minimum:', constraints_line))) {
@@ -273,7 +273,7 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
           # extract maximum values for tool parameters
           options['Maximum'] = NA
           constraints_split = strsplit(options$Constraints, ';')
-          for (i in seq_len(length(constraints_split))){
+          for (i in seq_len(length(constraints_split))) {
             constraints_line = constraints_split[i][[1]]
             
             if (any(grepl('Maximum:', constraints_line))) {
@@ -285,7 +285,7 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
           
           # add parameter options to nested list
           libraries[[basename(libdir)]][[valid_toolname]] = list(
-            options=options, tool_cmd=toolName)
+            options = options, tool_cmd = toolName)
         } # interactive
       } # length of file
       
@@ -294,18 +294,18 @@ sagaEnv = function(saga_bin = NULL, opt_lib = NULL) {
   }
   
   # remove tools that produce no outputs
-  for (lib in names(libraries)){
+  for (lib in names(libraries)) {
     tools = names(libraries[[lib]])
-    for (tool in tools){
+    for (tool in tools) {
       selected_tool = libraries[[lib]][[tool]]$options
       
-      if(nrow(selected_tool[which(selected_tool$IO == 'Output'),]) == 0)
+      if (nrow(selected_tool[which(selected_tool$IO == 'Output'),]) == 0)
         libraries[[lib]] = libraries[[lib]][!names(libraries[[lib]]) == tool]
     }
   }
   
   # remove libraries with no tools
-  for (lib in names(libraries)){
+  for (lib in names(libraries)) {
     n_tools = length(libraries[[lib]])
     if (n_tools == 0)
       libraries = libraries[names(libraries) != lib]
@@ -371,7 +371,7 @@ sagaConfigure = function(senv,
   
   # create configuration file if any arguments are supplied
   if ((grid_caching == TRUE | !is.null(cores)) &
-      sagaversion >= as.numeric_version('4.0.0')){
+      sagaversion >= as.numeric_version('4.0.0')) {
     
     saga_config = tempfile(fileext = '.ini')
     msg = system(paste(
@@ -418,16 +418,16 @@ sagaConfigure = function(senv,
     writeChar(saga_config_settings, saga_config)
     
   } else if ((grid_caching == TRUE | !is.null(cores)) &
-             sagaversion < as.numeric_version('4.0.0')){
+             sagaversion < as.numeric_version('4.0.0')) {
     message(
       paste('Cannot enable grid caching or change number cores for SAGA-GIS',
             'versions < 4.0.0. Please use a more recent version of SAGA-GIS'))
   }
   
-  if(!exists('saga_config'))
+  if (!exists('saga_config'))
     saga_config = NA
   
-  return (saga_config)
+  return(saga_config)
 }
 
 
@@ -451,8 +451,11 @@ sagaConfigure = function(senv,
 #' @param opt_lib character vector. Names of SAGA-GIS libraries. Used to
 #' link only a subset of named SAGA-GIS tool libraries, rather than
 #' creating functions for all available tool libraries.
+#' @param temp_path character vector, optional. Path to use to store any temporary files
+#' that are generated as data is passed between R and SAGA-GIS. If not specified, then the 
+#' system tempdir is used.
 #' @return S3 saga object containing a nested list of functions for SAGA-GIS
-#' libraries and tools
+#' libraries and tools.
 #' @export
 #' @import raster
 #' @examples 
@@ -480,7 +483,8 @@ sagaGIS = function(saga_bin = NULL,
                    grid_cache_threshlod = 100,
                    grid_cache_dir = NULL,
                    cores = NULL,
-                   opt_lib = NULL) {
+                   opt_lib = NULL,
+                   temp_path = NULL) {
   
   senv = sagaEnv(saga_bin, opt_lib)
   
@@ -492,6 +496,10 @@ sagaGIS = function(saga_bin = NULL,
     cores,
     senv$saga_version
   )
+  
+  if (!is.null(temp_path))
+    senv[['temp_path']] = temp_path else
+    senv[['temp_path']] = tempdir()
   
   # dynamically create functions
   tool_libraries = list()
@@ -632,28 +640,29 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   tool_cmd = senv$libraries[[lib]][[tool]][['tool_cmd']]
   saga_cmd = senv$saga_cmd
   saga_config = senv$saga_config
+  temp_path = senv$temp_path
   
   # match the identifierR to the identifier used by SAGA-GIS
   arg_names = names(args)
   arg_names = merge(
     x = data.frame(arg_names, stringsAsFactors = FALSE),
-    y = tool_options, by.x='arg_names', by.y = 'identifierR',
-    sort=FALSE)$Identifier
+    y = tool_options, by.x = 'arg_names', by.y = 'identifierR',
+    sort = FALSE)$Identifier
   args = stats::setNames(args, arg_names)
   
   # strip missing arguments and update arg_names
-  args[args == ''] = NA
-  args = args[!is.na(args)]
+  args[args == ''] = NULL
+  args = args[!is.null(args)]
   arg_names = names(args)
   
   # save loaded R objects to files for SAGA-GIS to access
   for (i in seq_along(args)) {
     # if list split list into separate files
-    if (any(class(args[[i]]) == "list")){
+    if (any(class(args[[i]]) == "list")) {
       for (j in seq_along(args[[i]]))
-        args[[i]][[j]] = RtoSAGA(args[[i]][[j]])
+        args[[i]][[j]] = RtoSAGA(args[[i]][[j]], temp_path)
     } else {
-      args[[i]] = RtoSAGA(args[[i]])
+      args[[i]] = RtoSAGA(args[[i]], temp_path)
     }
   }
   
@@ -674,8 +683,8 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   if (n_outputs > 0) {
     # create dataframe of containing tool settings merged with the Rsagacmd
     # function specified arguments
-    spec_out = merge(x=spec_out, y=cbind.data.frame(arg_names, args),
-                     by.x='Identifier', by.y='arg_names', sort=FALSE)
+    spec_out = merge(x = spec_out, y = cbind.data.frame(arg_names, args),
+                     by.x = 'Identifier', by.y = 'arg_names', sort = FALSE)
     
     # convert factors to character
     spec_out$args = as.character(spec_out$args)
@@ -692,14 +701,14 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
     unspec_out['args'] = NA
     
     for (i in 1:nrow(unspec_out)) {
-      if (unspec_out[i, 'Feature'] %in% c('Grid', 'Grid list', 'Raster')){
-        tfile = tempfile(fileext = '.sgrd')
+      if (unspec_out[i, 'Feature'] %in% c('Grid', 'Grid list', 'Raster')) {
+        tfile = tempfile(tmpdir = temp_path, fileext = '.sgrd')
         unspec_out[i, 'args'] = tfile
-      } else if (unspec_out[i, 'Feature'] %in% c('Shape', 'Shapes list')){
-        tfile = tempfile(fileext = '.shp')
+      } else if (unspec_out[i, 'Feature'] %in% c('Shape', 'Shapes list')) {
+        tfile = tempfile(tmpdir = temp_path, fileext = '.shp')
         unspec_out[i, 'args'] = tfile
-      } else if (unspec_out[i, 'Feature'] == 'Table'){
-        tfile = tempfile(fileext = '.csv')
+      } else if (unspec_out[i, 'Feature'] == 'Table') {
+        tfile = tempfile(tmpdir = temp_path, fileext = '.csv')
         unspec_out[i, 'args'] = tfile
       }
       
@@ -723,7 +732,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   param_string = paste("-", arg_names, ':', params, sep = "", collapse = " ")
   
   if (!is.na(saga_config)) {
-    config =  paste('-C', shQuote(saga_config), sep='=')
+    config = paste('-C', shQuote(saga_config), sep = '=')
   } else {
     config = ''
   }
@@ -735,14 +744,14 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
   
   # execute system call
   msg = system(saga_cmd, intern = T)
-  if (!is.null(attr(msg, "status"))){
+  if (!is.null(attr(msg, "status"))) {
     cat(msg, sep = '\n')
     stop()
   }
   
   # load SAGA results as list of R objects
   saga_results = list()
-  for (i in 1:nrow(spec_out)){
+  for (i in 1:nrow(spec_out)) {
     out_i = spec_out[i, 'args']
     out_i = gsub('.sgrd', '.sdat', out_i)
     current_id = spec_out[i, 'Identifier']
@@ -756,7 +765,7 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
           saga_results[[paste0(current_id)]] = sf::st_read(out_i, quiet = TRUE)
         
         # import table data
-        if (spec_out[i, 'Feature'] == 'Table'){
+        if (spec_out[i, 'Feature'] == 'Table') {
           if (tools::file_ext(out_i) == 'txt')
             saga_results[[paste0(current_id)]] = utils::read.table(out_i, header = T, sep = '\t')
           if (tools::file_ext(out_i) == 'csv')
@@ -766,8 +775,8 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         }
         
         # import grid data
-        if (spec_out[i, 'Feature'] %in% c('Grid', 'Raster')){
-          if (tools::file_ext(out_i) == 'sg-gds-z'){
+        if (spec_out[i, 'Feature'] %in% c('Grid', 'Raster')) {
+          if (tools::file_ext(out_i) == 'sg-gds-z') {
             warning('Cannot load SAGA Grid Collection as an R raster object - this is not supported')
           } else {
             saga_results[[paste0(current_id)]] = raster::raster(out_i)
@@ -775,10 +784,10 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
         }
         
         # import grid lists data
-        if (spec_out[i, 'Feature'] == 'Grid list'){
+        if (spec_out[i, 'Feature'] == 'Grid list') {
           out_i = strsplit(out_i, ';')[[1]]
           for (gl in seq_along(out_i))
-            saga_results[[paste(current_id, gl, sep='_')]] = raster::raster(out_i[gl])
+            saga_results[[paste(current_id, gl, sep = '_')]] = raster::raster(out_i[gl])
         }
         
       }, error = function(e) {
@@ -809,12 +818,13 @@ sagaExecute = function(lib, tool, senv, intern = TRUE, ...) {
 #'
 #' @param param A single variable that may be a raster object, sp object, sf
 #'   object or dataframe
+#' @param temp_path character. Path to directory to store temporary files.
 #'
 #' @return character. Character string of filename of saved object
-RtoSAGA = function(param) {
+RtoSAGA = function(param, temp_path) {
   
   sf_to_saga = function(param) {
-    temp = tempfile(fileext = '.shp')
+    temp = tempfile(tmpdir = temp_path, fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     sf::st_write(obj = param, dsn = temp, quiet = TRUE)
     return(temp)
@@ -831,7 +841,7 @@ RtoSAGA = function(param) {
     } else if (raster::nbands(param) != 1 |
                raster::inMemory(param) == TRUE |
                tools::file_ext(raster::filename(param)) == 'grd')  {
-      temp = tempfile(fileext = '.tif')
+      temp = tempfile(tmpdir = temp_path, fileext = '.tif')
       raster::writeRaster(param, filename = temp)
       param = temp
     }
@@ -857,7 +867,7 @@ RtoSAGA = function(param) {
   }
   
   shape_to_saga = function(param) {
-    temp = tempfile(fileext = '.shp')
+    temp = tempfile(tmpdir = temp_path, fileext = '.shp')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     rgdal::writeOGR(
       obj = param,
@@ -870,7 +880,7 @@ RtoSAGA = function(param) {
   }
 
   dataframe_to_saga = function(param) {
-    temp = tempfile(fileext = '.txt')
+    temp = tempfile(tmpdir = temp_path, fileext = '.txt')
     pkg.env$sagaTmpFiles = append(pkg.env$sagaTmpFiles, temp)
     utils::write.table(x = param, file = temp, sep = "\t")
     param = temp
@@ -926,8 +936,8 @@ sagaRemoveTmpFiles = function(h=0) {
   message(paste0('Removing Rsagacmd temporary files h=', h))
   for (f in pkg.env$sagaTmpFiles) {
     if (file.exists(f) == TRUE) {
-      tdelay = difftime(Sys.time(), file.mtime(f), units='hours')
-      if (tdelay > h){
+      tdelay = difftime(Sys.time(), file.mtime(f), units = 'hours')
+      if (tdelay > h) {
         message(f)
         assoc_files = list.files(
           path = dirname(f),
@@ -965,7 +975,7 @@ sagaRemoveTmpFiles = function(h=0) {
 sagaShowTmpFiles = function() {
   
   message('Rsagacmd temporary files:')
-  for (f in pkg.env$sagaTmpFiles){
+  for (f in pkg.env$sagaTmpFiles) {
     message(f)
   }
   return(pkg.env$sagaTmpFiles)
