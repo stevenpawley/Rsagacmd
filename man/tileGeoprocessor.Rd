@@ -4,10 +4,10 @@
 \alias{tileGeoprocessor}
 \title{Split a raster grid into tiles for tile-based processing}
 \usage{
-tileGeoprocessor(x, grid, nx, ny, overlap = 0)
+tileGeoprocessor(x, grid, nx, ny, overlap = 0, file_path = NULL)
 }
 \arguments{
-\item{x}{saga R3 object}
+\item{x}{saga S3 object}
 
 \item{grid}{character, or RasterLayer. GDAL-supported raster, as as a path to
 the raster or representing a RasterLayer object}
@@ -17,6 +17,8 @@ the raster or representing a RasterLayer object}
 \item{ny}{numeric. Number of y-pixels per tile}
 
 \item{overlap}{numeric. Number of overlapping pixels}
+
+\item{file_path}{character. Optional file path to store raster tiles}
 }
 \value{
 list. List of RasterLayer objects representing tiled data
