@@ -24,7 +24,6 @@ Imports:
     rgdal,
     foreign,
     minpack.lm,
-    stringr,
     methods,
     magrittr
 Suggests:
