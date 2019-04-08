@@ -18,12 +18,11 @@ saga_version <- function(saga_cmd) {
 
 #' Automatic search for the path to a SAGA-GIS installation
 #'
-#' Returns the path to the saga_cmd executable On windows, automatic searching
-#' will occur first in 'C:/Program Files/SAGA-GIS'; 'C:/Program Files
-#' (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
-#' OS X, saga_cmd is usually included in PATH, if not an automatic search is
-#' performed in the '/usr' folder. If multiple versions of SAGA-GIS are
-#' installed on the system, the path to the newest version is returned.
+#' Returns the path to the saga_cmd executable On windows, automatic searching will occur first in
+#' 'C:/Program Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and
+#' 'C:/OSGeo4W64'. On linux or OS X, saga_cmd is usually included in PATH, if not an automatic
+#' search is performed in the '/usr' folder. If multiple versions of SAGA-GIS are installed on the
+#' system, the path to the newest version is returned.
 #'
 #' @return character. Path to installed saga_cmd binary
 #' @export
@@ -104,17 +103,17 @@ saga_search <- function() {
 
 #' Parses valid SAGA-GIS libraries and tools into a nested list of functions
 #'
-#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-#' all libraries, tools and options from the help files into a nested list of
-#' library, module and options, that are contained within an saga environment object
-#' object. Intended to be used internally by \code{\link{saga_gis}}
+#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing all libraries, tools
+#' and options from the help files into a nested list of library, module and options, that are
+#' contained within an saga environment object object. Intended to be used internally by
+#' \code{\link{saga_gis}}
 #'
 #' @param saga_bin character. Optional path to saga_cmd executable
 #' @param opt_lib character vector. List of subset of SAGA-GIS tool libraries
 #' to generate links to.
 #'
-#' @return saga environment object object. Contains paths, settings and a nested list
-#'   of libaries tools and options
+#' @return saga environment object object. Contains paths, settings and a nested list of libaries
+#'   tools and options
 saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   
   if (is.null(saga_bin)) {
@@ -130,11 +129,10 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   # detect saga version
   saga_vers <- saga_version(saga_bin)
 
-  # generate SAGA help files in temporary directory
-  ## note that prior to saga version 3.0.0 a path cannot be specified in which
-  ## to create the document pages, i.e. saga will only generate them in the
-  ## working directory. In this case we need to manually change the working
-  ## directory to tempdir and then restore
+  # generate SAGA help files in temporary directory # note that prior to saga version 3.0.0 a path
+  # cannot be specified in which # to create the document pages, i.e. saga will only generate them in
+  # the working directory. In this case we need to manually change the working # directory to
+  # tempdir and then restore
   help_path <- file.path(tempdir(), basename(tempfile()))
   dir.create(help_path)
 
@@ -357,19 +355,19 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 
 #' Generates a custom saga_cmd configuration file
 #'
-#' Creates and edits a saga_cmd coniguration file in order to change saga_cmd
-#' settings related to file caching and number of available processor cores.
-#' Intended to be used internally by \code{\link{saga_gis}}.
+#' Creates and edits a saga_cmd coniguration file in order to change saga_cmd settings related to
+#' file caching and number of available processor cores. Intended to be used internally by
+#' \code{\link{saga_gis}}.
 #'
 #' @param senv saga environment object object. SAGA-GIS environment and settings
 #' @param grid_caching logical. Optionally use file caching
-#' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching
-#'   for loaded raster data is activated
+#' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching for loaded raster data
+#'   is activated
 #' @param grid_cache_dir character. Path to directory for temporary files
-#' @param cores numeric. Maximum number of processing cores. Needs to be set to
-#'   1 if file caching is activated
-#' @param saga_vers numeric_version. Version of SAGA-GIS. The generation of a
-#'   saga_cmd configuration file is only valid for versions > 4.0.0
+#' @param cores numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
+#'   activated
+#' @param saga_vers numeric_version. Version of SAGA-GIS. The generation of a saga_cmd configuration
+#'   file is only valid for versions > 4.0.0
 #'
 #' @return character. Path to custom saga_cmd initiation file
 saga_configure <- function(senv,
@@ -458,29 +456,25 @@ saga_configure <- function(senv,
 
 #' Initiate a SAGA-GIS geoprocessor object
 #'
-#' Dynamically generates functions to all valid SAGA-GIS libraries and tools.
-#' These functions are stored within a saga S3 object as a named list of
-#' functions.
+#' Dynamically generates functions to all valid SAGA-GIS libraries and tools. These functions are
+#' stored within a saga S3 object as a named list of functions.
 #'
-#' @param saga_bin character, optional. Path to saga_cmd executable. If this
-#'   argument is not supplied then an automatic search for the saga_cmd
-#'   executable will be performed.
-#' @param grid_caching logical, optional. Use file caching in saga_cmd
-#'   geoprocessing operations for rasters that are too large to fit into memory.
-#' @param grid_cache_threshlod numeric, optional. Threshold (in Mb) before file
-#'   caching is activated for loaded raster data.
-#' @param grid_cache_dir character, optional. Path to directory for temporary
-#'   files generated by file caching.
-#' @param cores numeric. Maximum number of processing cores. Needs to be set to
-#'   1 if file caching is activated.
-#' @param opt_lib character vector. Names of SAGA-GIS libraries. Used to
-#' link only a subset of named SAGA-GIS tool libraries, rather than
-#' creating functions for all available tool libraries.
-#' @param temp_path character vector, optional. Path to use to store any temporary files
-#' that are generated as data is passed between R and SAGA-GIS. If not specified, then the
-#' system tempdir is used.
-#' @return S3 saga object containing a nested list of functions for SAGA-GIS
-#' libraries and tools.
+#' @param saga_bin character, optional. Path to saga_cmd executable. If this argument is not
+#'   supplied then an automatic search for the saga_cmd executable will be performed.
+#' @param grid_caching logical, optional. Use file caching in saga_cmd geoprocessing operations for
+#'   rasters that are too large to fit into memory.
+#' @param grid_cache_threshold numeric, optional. Threshold (in Mb) before file caching is activated
+#'   for loaded raster data.
+#' @param grid_cache_dir character, optional. Path to directory for temporary files generated by
+#'   file caching.
+#' @param cores numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
+#'   activated.
+#' @param opt_lib character vector. Names of SAGA-GIS libraries. Used to link only a subset of named
+#'   SAGA-GIS tool libraries, rather than creating functions for all available tool libraries.
+#' @param temp_path character vector, optional. Path to use to store any temporary files that are
+#'   generated as data is passed between R and SAGA-GIS. If not specified, then the system tempdir
+#'   is used.
+#' @return S3 saga object containing a nested list of functions for SAGA-GIS libraries and tools.
 #' @export
 #' @import raster
 #' @examples
@@ -562,15 +556,13 @@ saga_gis <- function(saga_bin = NULL,
       )
 
       # parse function
-      # here we are creating functions by evaluating expressions
-      # these functions have some additional attributes used to printing tool
-      # information etc.
+      # here we are creating functions by evaluating expressions these functions have some
+      # additional attributes used to printing tool information etc.
 
-      # The functions are stored as a nested list which is returned as a saga
-      # class. These functions exist within the environment of the class object,
-      # along with the variables/tools/libraries needed by each
-      # function. Thus, when each function is called, it can find the variables
-      # that it needs from within its own environment
+      # The functions are stored as a nested list which is returned as a saga class. These functions
+      # exist within the environment of the class object, along with the variables/tools/libraries
+      # needed by each function. Thus, when each function is called, it can find the variables that
+      # it needs from within its own environment
       tryCatch(
         expr = {
           func_code <- paste0(
@@ -871,12 +863,10 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
 
 #' Saves R objects to temporary files for processing by SAGA-GIS.
 #'
-#' Intended to be used internally. Raster objects are checked to see if the
-#' object is linked to a file or exists only in memory. Spatial, sf objects and
-#' dataframes are saved to temporary files.
+#' Intended to be used internally. Raster objects are checked to see if the object is linked to a
+#' file or exists only in memory. Spatial, sf objects and dataframes are saved to temporary files.
 #'
-#' @param param A single variable that may be a raster object, sp object, sf
-#'   object or dataframe
+#' @param param A single variable that may be a raster object, sp object, sf object or dataframe
 #' @param temp_path character. Path to directory to store temporary files.
 #'
 #' @return character. Character string of filename of saved object
@@ -970,15 +960,14 @@ r_to_saga <- function(param, temp_path) {
 
 #' Removes temporary files created by Rsagacmd
 #'
-#' For convenience, functions in the Rsagacmd package create temporary files if
-#' any outputs for a SAGA-GIS tool are not specified as arguments.
-#' Temporary files in R are automatically removed at the end of each session.
-#' However, when dealing with raster data, these temporary files potentially can
-#' consume large amounts of disk space. These temporary files can be observed
-#' during a session by using the saga_show_tmpfiles function, and can be removed
-#' using the saga_remove_tmpfiles function. Note that this function also removes
-#' any accompanying files, i.e. the '.prj' and '.shx' files that may be written
-#' as part of writing a ESRI Shapefile '.shp' format.
+#' For convenience, functions in the Rsagacmd package create temporary files if any outputs for a
+#' SAGA-GIS tool are not specified as arguments. Temporary files in R are automatically removed at
+#' the end of each session. However, when dealing with raster data, these temporary files
+#' potentially can consume large amounts of disk space. These temporary files can be observed during
+#' a session by using the saga_show_tmpfiles function, and can be removed using the
+#' saga_remove_tmpfiles function. Note that this function also removes any accompanying files, i.e.
+#' the '.prj' and '.shx' files that may be written as part of writing a ESRI Shapefile '.shp'
+#' format.
 #'
 #' @param h Remove temporary files that are older than h (in number of hours)
 #'
@@ -1014,18 +1003,16 @@ saga_remove_tmpfiles <- function(h = 0) {
 
 #' List temporary files created by Rsagacmd
 #'
-#' For convenience, functions in the Rsagacmd package create temporary files if
-#' any outputs for a SAGA-GIS tool are not specified as arguments.
-#' Temporary files in R are automatically removed at the end of each session.
-#' However, when dealing with raster data, these temporary files potentially can
-#' consume large amounts of disk space. These temporary files can be observed
-#' during a session by using the saga_show_tmpfiles function, and can be removed
-#' using the saga_remove_tmpfiles function.
+#' For convenience, functions in the Rsagacmd package create temporary files if any outputs for a
+#' SAGA-GIS tool are not specified as arguments. Temporary files in R are automatically removed at
+#' the end of each session. However, when dealing with raster data, these temporary files
+#' potentially can consume large amounts of disk space. These temporary files can be observed during
+#' a session by using the saga_show_tmpfiles function, and can be removed using the
+#' saga_remove_tmpfiles function.
 #'
-#' @return returns the file names of the files in the temp directory that have
-#' been generated by Rsagacmd. Note this list of files only includes the primary
-#' file extension, i.e. '.shp' for a shapefile without the accessory files
-#' (e.g. .prj, .shx etc.).
+#' @return returns the file names of the files in the temp directory that have been generated by
+#'   Rsagacmd. Note this list of files only includes the primary file extension, i.e. '.shp' for a
+#'   shapefile without the accessory files (e.g. .prj, .shx etc.).
 #' @export
 #' @examples
 #' \dontrun{
