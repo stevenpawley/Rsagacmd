@@ -723,9 +723,8 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
 
   # determine any outputs that have not been specified as function args
   if (all_outputs == TRUE) {
-    "%ni%" <- Negate("%in%")
     req_out <- tool_options[which(tool_options$IO == "Output"), ]
-    unspec_ind <- which(req_out$Identifier %ni% spec_out$Identifier)
+    unspec_ind <- which(!(req_out$Identifier %in% spec_out$Identifier))
     n_temps <- length(unspec_ind)
   } else {
     n_temps <- 0
@@ -793,7 +792,7 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
 
   # load SAGA results as list of R objects
   saga_results <- list()
-  for (i in seq_along(nrow(spec_out))) {
+  for (i in seq_len(nrow(spec_out))) {
     out_i <- spec_out[i, "args"]
     out_i <- gsub(".sgrd", ".sdat", out_i)
     current_id <- spec_out[i, "Identifier"]
