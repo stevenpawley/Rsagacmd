@@ -13,12 +13,12 @@ saga_env(saga_bin = NULL, opt_lib = NULL)
 to generate links to.}
 }
 \value{
-saga environment object object. Contains paths, settings and a nested list
-  of libaries tools and options
+saga environment object object. Contains paths, settings and a nested list of libaries
+  tools and options
 }
 \description{
-Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a nested list of
-library, module and options, that are contained within an saga environment object
-object. Intended to be used internally by \code{\link{saga_gis}}
+Establishes the link to SAGA GIS by generating a SAGA help file and parsing all libraries, tools
+and options from the help files into a nested list of library, module and options, that are
+contained within an saga environment object object. Intended to be used internally by
+\code{\link{saga_gis}}
 }

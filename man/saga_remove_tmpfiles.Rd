@@ -13,15 +13,14 @@ saga_remove_tmpfiles(h = 0)
 Nothing is returned
 }
 \description{
-For convenience, functions in the Rsagacmd package create temporary files if
-any outputs for a SAGA-GIS tool are not specified as arguments.
-Temporary files in R are automatically removed at the end of each session.
-However, when dealing with raster data, these temporary files potentially can
-consume large amounts of disk space. These temporary files can be observed
-during a session by using the saga_show_tmpfiles function, and can be removed
-using the saga_remove_tmpfiles function. Note that this function also removes
-any accompanying files, i.e. the '.prj' and '.shx' files that may be written
-as part of writing a ESRI Shapefile '.shp' format.
+For convenience, functions in the Rsagacmd package create temporary files if any outputs for a
+SAGA-GIS tool are not specified as arguments. Temporary files in R are automatically removed at
+the end of each session. However, when dealing with raster data, these temporary files
+potentially can consume large amounts of disk space. These temporary files can be observed during
+a session by using the saga_show_tmpfiles function, and can be removed using the
+saga_remove_tmpfiles function. Note that this function also removes any accompanying files, i.e.
+the '.prj' and '.shx' files that may be written as part of writing a ESRI Shapefile '.shp'
+format.
 }
 \examples{
 \dontrun{

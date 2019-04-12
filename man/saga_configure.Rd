@@ -4,7 +4,7 @@
 \alias{saga_configure}
 \title{Generates a custom saga_cmd configuration file}
 \usage{
-saga_configure(senv, grid_caching = FALSE, grid_cache_threshlod = 100,
+saga_configure(senv, grid_caching = FALSE, grid_cache_threshold = 100,
   grid_cache_dir = NULL, cores = NULL, saga_vers)
 }
 \arguments{
@@ -12,22 +12,22 @@ saga_configure(senv, grid_caching = FALSE, grid_cache_threshlod = 100,
 
 \item{grid_caching}{logical. Optionally use file caching}
 
-\item{grid_cache_threshlod}{numeric. Threshold (in Mb) before file caching
-for loaded raster data is activated}
+\item{grid_cache_threshold}{numeric. Threshold (in Mb) before file caching for loaded raster data
+is activated}
 
 \item{grid_cache_dir}{character. Path to directory for temporary files}
 
-\item{cores}{numeric. Maximum number of processing cores. Needs to be set to
-1 if file caching is activated}
+\item{cores}{numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
+activated}
 
-\item{saga_vers}{numeric_version. Version of SAGA-GIS. The generation of a
-saga_cmd configuration file is only valid for versions > 4.0.0}
+\item{saga_vers}{numeric_version. Version of SAGA-GIS. The generation of a saga_cmd configuration
+file is only valid for versions > 4.0.0}
 }
 \value{
 character. Path to custom saga_cmd initiation file
 }
 \description{
-Creates and edits a saga_cmd coniguration file in order to change saga_cmd
-settings related to file caching and number of available processor cores.
-Intended to be used internally by \code{\link{saga_gis}}.
+Creates and edits a saga_cmd coniguration file in order to change saga_cmd settings related to
+file caching and number of available processor cores. Intended to be used internally by
+\code{\link{saga_gis}}.
 }

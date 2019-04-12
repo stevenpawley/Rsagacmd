@@ -7,8 +7,7 @@
 r_to_saga(param, temp_path)
 }
 \arguments{
-\item{param}{A single variable that may be a raster object, sp object, sf
-object or dataframe}
+\item{param}{A single variable that may be a raster object, sp object, sf object or dataframe}
 
 \item{temp_path}{character. Path to directory to store temporary files.}
 }
@@ -16,7 +15,6 @@ object or dataframe}
 character. Character string of filename of saved object
 }
 \description{
-Intended to be used internally. Raster objects are checked to see if the
-object is linked to a file or exists only in memory. Spatial, sf objects and
-dataframes are saved to temporary files.
+Intended to be used internally. Raster objects are checked to see if the object is linked to a
+file or exists only in memory. Spatial, sf objects and dataframes are saved to temporary files.
 }

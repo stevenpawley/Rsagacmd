@@ -361,7 +361,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 #'
 #' @param senv saga environment object object. SAGA-GIS environment and settings
 #' @param grid_caching logical. Optionally use file caching
-#' @param grid_cache_threshlod numeric. Threshold (in Mb) before file caching for loaded raster data
+#' @param grid_cache_threshold numeric. Threshold (in Mb) before file caching for loaded raster data
 #'   is activated
 #' @param grid_cache_dir character. Path to directory for temporary files
 #' @param cores numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
@@ -372,7 +372,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 #' @return character. Path to custom saga_cmd initiation file
 saga_configure <- function(senv,
                           grid_caching = FALSE,
-                          grid_cache_threshlod = 100,
+                          grid_cache_threshold = 100,
                           grid_cache_dir = NULL,
                           cores = NULL,
                           saga_vers) {
@@ -421,7 +421,7 @@ saga_configure <- function(senv,
       )
       saga_config_settings <- gsub(
         "GRID_CACHE_THRESHLOD=[0-9]*",
-        paste0("GRID_CACHE_THRESHLOD=", grid_cache_threshlod),
+        paste0("GRID_CACHE_THRESHLOD=", grid_cache_threshold),
         saga_config_settings
       )
       saga_config_settings <- gsub(
@@ -484,7 +484,7 @@ saga_configure <- function(senv,
 #' 
 #' # Alternatively intialize a saga object using file caching to handle large
 #' # raster files
-#' saga <- saga_gis(grid_caching = TRUE, grid_cache_threshlod = 250, cores = 1)
+#' saga <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 250, cores = 1)
 #' 
 #' # Example terrain analysis
 #' # Generate a random DEM
@@ -499,7 +499,7 @@ saga_configure <- function(senv,
 #' }
 saga_gis <- function(saga_bin = NULL,
                      grid_caching = FALSE,
-                     grid_cache_threshlod = 100,
+                     grid_cache_threshold = 100,
                      grid_cache_dir = NULL,
                      cores = NULL,
                      opt_lib = NULL,
@@ -510,7 +510,7 @@ saga_gis <- function(saga_bin = NULL,
   senv[["saga_config"]] <- saga_configure(
     senv,
     grid_caching,
-    grid_cache_threshlod,
+    grid_cache_threshold,
     grid_cache_dir,
     cores,
     senv$saga_vers
@@ -592,7 +592,7 @@ saga_gis <- function(saga_bin = NULL,
   # clean local environment
   remove(
     args, body, cores, func, func_code, grid_cache_dir,
-    grid_cache_threshlod, grid_caching, lib, saga_bin, tool, tool_cmd,
+    grid_cache_threshold, grid_caching, lib, saga_bin, tool, tool_cmd,
     tool_options, toolnames
   )
 

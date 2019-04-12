@@ -36,11 +36,11 @@ testthat::test_that("Test file caching ", {
 
       # check that file caching is only possible for saga versions > 4.0.0
       output <- "Cannot enable grid caching or change number cores for SAGA-GIS versions < 4.0.0. Please use a more recent version of SAGA-GIS"
-      testthat::expect_message(saga_gis(grid_caching = T, grid_cache_threshlod = 20), output)
+      testthat::expect_message(saga_gis(grid_caching = T, grid_cache_threshold = 20), output)
     } else {
 
       # check that saga S3 class can be initiated using file caching
-      saga_fc <- saga_gis(grid_caching = T, grid_cache_threshlod = 0.001)
+      saga_fc <- saga_gis(grid_caching = T, grid_cache_threshold = 0.001)
       testthat::expect_true(!is.null(saga_fc))
       testthat::expect_is(saga_fc, "saga")
       testthat::expect_gt(length(saga_fc), 0)
