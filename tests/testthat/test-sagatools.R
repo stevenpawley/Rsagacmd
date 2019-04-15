@@ -81,16 +81,23 @@ testthat::test_that("handling of single and multiband rasters", {
     )
 
     # create rasterbrick, rasterstacks, and layers from each
-    rasterbrick <- writeRaster(stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
-      filename = tempfile(fileext = ".tif")
-    )
+    rasterbrick <- 
+      writeRaster(
+        stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
+        filename = tempfile(fileext = ".tif"))
     rasterstack <- stack(rasterlayer_from_singleband, rasterlayer_from_singleband)
     rasterlayer_from_rasterbrick <- rasterbrick[[1]]
     rasterlayer_from_rasterstack <- rasterstack[[1]]
 
     # tests
-    testthat::expect_is(saga$grid_filter$simple_filter(INPUT = rasterlayer_from_singleband), "RasterLayer")
-    testthat::expect_is(saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterbrick), "RasterLayer")
-    testthat::expect_is(saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterstack), "RasterLayer")
+    testthat::expect_is(
+      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_singleband), 
+      "RasterLayer")
+    testthat::expect_is(
+      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterbrick), 
+      "RasterLayer")
+    testthat::expect_is(
+      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterstack), 
+      "RasterLayer")
   }
 })

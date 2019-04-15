@@ -25,7 +25,8 @@ Imports:
     foreign,
     minpack.lm,
     methods,
-    magrittr
+    magrittr,
+    stringr
 Suggests:
     dplyr,
     testthat
@@ -33,3 +34,4 @@ Collate:
     'Rsagacmd.R'
     'functions.R'
     'utils.R'
+    'translate.R'

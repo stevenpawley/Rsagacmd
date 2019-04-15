@@ -20,9 +20,9 @@ Generic function to display help and usage information for any SAGA-GIS tool
 saga <- saga_gis()
 
 # Display usage information on a tool
-print(saga$ta_morphometry$Slope_Aspect_Curvature)
+print(saga$ta_morphometry$slope_aspect_curvature)
 
 # Or simply:
-saga$ta_morphometry$Slope_Aspect_Curvature
+saga$ta_morphometry$slope_aspect_curvature
 }
 }
