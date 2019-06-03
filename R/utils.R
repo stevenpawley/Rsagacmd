@@ -44,7 +44,8 @@ mrvbf_threshold <- function(res, plot = FALSE) {
     graphics::lines(x = c(0, res), y = c(stats::predict(m, list(dem_res = res)), stats::predict(m, list(dem_res = res))))
   }
 
-  stats::predict(m, list(dem_res = res))
+  val <- stats::predict(m, list(dem_res = res))
+  as.numeric(val)
 }
 
 
