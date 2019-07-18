@@ -61,7 +61,7 @@ mrvbf_threshold <- function(res, plot = FALSE) {
 #' \dontrun{
 #' # initialize Rsagacmd
 #' saga <- sagaGIS()
-#' 
+#'
 #' # search for a tool
 #' search_tools(x = saga, pattern = "Terrain")
 #' }
@@ -73,7 +73,7 @@ search_tools <- function(x, pattern) {
   matches <- list()
 
   for (lib in names(env$tool_libraries)) {
-    match_text <- grep(pattern, names(env$tool_libraries[[lib]]), ignore.case = T)
+    match_text <- grep(pattern, names(env$tool_libraries[[lib]]), ignore.case = TRUE)
     if (length(match_text) > 0) {
       matches[[lib]] <- names(env$tool_libraries[[lib]])[match_text]
     }
@@ -81,7 +81,7 @@ search_tools <- function(x, pattern) {
 
   matches_df <- data.frame(
     library = rep(names(matches), lapply(matches, length)),
-    tool = unlist(matches, use.names = F)
+    tool = unlist(matches, use.names = FALSE)
   )
   return(matches_df)
 }
@@ -108,10 +108,10 @@ search_tools <- function(x, pattern) {
 #' \dontrun{
 #' # Initialize a saga object
 #' saga <- sagaGIS()
-#' 
+#'
 #' # Generate a random DEM
 #' dem <- saga$grid_calculus$Random_Terrain(RADIUS = 15, ITERATIONS = 500)
-#' 
+#'
 #' # Return tiled version of DEM
 #' tiles <- tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 #' }

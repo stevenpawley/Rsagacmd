@@ -7,9 +7,9 @@ testthat::test_that("Initiation of saga S3 class ", {
 
   if (!is.null(saga_search())) {
     saga <- saga_gis()
-    testthat::expect_true(!is.null(saga))  # check that saga class was produced
-    testthat::expect_is(saga, "saga")      # check that saga is a S3 class saga
-    testthat::expect_gt(length(saga), 0)   # check that saga contains libraries
+    testthat::expect_true(!is.null(saga)) # check that saga class was produced
+    testthat::expect_is(saga, "saga") # check that saga is a S3 class saga
+    testthat::expect_gt(length(saga), 0) # check that saga contains libraries
   }
 })
 

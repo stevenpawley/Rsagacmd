@@ -24,19 +24,19 @@ translate.sf <- function(param, temp_path = tempdir()) {
 translate.RasterLayer <- function(param, temp_path = tempdir()) {
   # pass filename to saga if RasterLayer from singleband raster
   if (raster::nbands(param) == 1 &
-      raster::inMemory(param) == FALSE &
-      tools::file_ext(raster::filename(param)) != "grd") {
+    raster::inMemory(param) == FALSE &
+    tools::file_ext(raster::filename(param)) != "grd") {
     param <- raster::filename(param)
-    
+
     # else save band as a singleband temp file and pass temp filename
   } else if (raster::nbands(param) != 1 |
-             raster::inMemory(param) == TRUE |
-             tools::file_ext(raster::filename(param)) == "grd") {
+    raster::inMemory(param) == TRUE |
+    tools::file_ext(raster::filename(param)) == "grd") {
     temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
     raster::writeRaster(param, filename = temp)
     param <- temp
   }
-  
+
   return(param)
 }
 
@@ -53,7 +53,7 @@ translate.RasterStack <- function(param, temp_path = tempdir()) {
       call. = FALSE
     )
   }
-  
+
   return(param)
 }
 

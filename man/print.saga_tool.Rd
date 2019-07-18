@@ -15,14 +15,12 @@
 Generic function to display help and usage information for any SAGA-GIS tool
 }
 \examples{
-\dontrun{
 # Intialize a saga object
-saga <- saga_gis()
+saga <- saga_gis(opt_lib = "ta_morphometry")
 
 # Display usage information on a tool
 print(saga$ta_morphometry$slope_aspect_curvature)
 
 # Or simply:
 saga$ta_morphometry$slope_aspect_curvature
-}
 }
