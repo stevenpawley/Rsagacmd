@@ -90,7 +90,7 @@ library(Rsagacmd)
 library(magrittr)
 
 # initialize a saga object
-saga <- saga_gis()
+saga <- saga_gis(opt_lib = c("grid_calculus", "ta_morphometry"))
 
 # example of executing a tool using a tempfile to store the tool outputs
 dem <- saga$grid_calculus$random_terrain(RADIUS = 100, ITERATIONS = 500)

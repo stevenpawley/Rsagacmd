@@ -216,7 +216,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
           identifiers_r <- gsub(" ", "_", identifiers_r)
 
           # convert to nested list
-          params <- rep(list(NA), nrow(tool_options)) %>% setNames(identifiers_r)
+          params <- rep(list(NA), nrow(tool_options)) %>% stats::setNames(identifiers_r)
 
           for (i in seq_len(length(identifiers_r))) {
             identifier_r <- identifiers_r[[i]]
@@ -673,7 +673,7 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
   arg_names <- names(args)
   identifiers_r <- sapply(tool_options, function(x) x$identifier)
   arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
-  args <- setNames(args, arg_names)
+  args <- stats::setNames(args, arg_names)
 
   # strip other missing arguments and update arg_names
   args <- args[sapply(args, function(x) !is.null(x))]

@@ -31,8 +31,3 @@ Imports:
 Suggests:
     dplyr,
     testthat
-Collate:
-    'Rsagacmd.R'
-    'functions.R'
-    'utils.R'
-    'translate.R'

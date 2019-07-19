@@ -17,9 +17,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' mrvbf_threshold(res = 10, plot = TRUE)
-#' }
 mrvbf_threshold <- function(res, plot = FALSE) {
   # slope decreases by factor of 2 per every 'step' above a 25 m dem resolution
   # a step consists of a 3 factor increase in the dem cell size

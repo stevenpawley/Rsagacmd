@@ -26,7 +26,5 @@ to maintain the relationship between slope and DEM resolution. This function
 provides a convenient way to perform that calculation.
 }
 \examples{
-\dontrun{
 mrvbf_threshold(res = 10, plot = TRUE)
-}
 }

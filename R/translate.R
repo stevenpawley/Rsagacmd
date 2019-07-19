@@ -2,15 +2,7 @@ translate <- function(x, ...) {
   UseMethod("translate", x)
 }
 
-translate.numeric <- function(param, ...) {
-  return(param)
-}
-
-translate.character <- function(param, ...) {
-  return(param)
-}
-
-translate.logical <- function(param, ...) {
+translate.default <- function(param, ...) {
   return(param)
 }
 
