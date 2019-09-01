@@ -17,11 +17,12 @@ saga_version <- function(saga_cmd) {
 
 #' Automatic search for the path to a SAGA-GIS installation
 #'
-#' Returns the path to the saga_cmd executable On windows, automatic searching will occur first in
-#' 'C:/Program Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and
-#' 'C:/OSGeo4W64'. On linux or OS X, saga_cmd is usually included in PATH, if not an automatic
-#' search is performed in the '/usr' folder. If multiple versions of SAGA-GIS are installed on the
-#' system, the path to the newest version is returned.
+#' Returns the path to the saga_cmd executable On windows, automatic searching
+#' will occur first in 'C:/Program Files/SAGA-GIS'; 'C:/Program Files
+#' (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
+#' OS X, saga_cmd is usually included in PATH, if not an automatic search is
+#' performed in the '/usr' folder. If multiple versions of SAGA-GIS are
+#' installed on the system, the path to the newest version is returned.
 #'
 #' @return character. Path to installed saga_cmd binary
 #' @export
@@ -101,18 +102,17 @@ saga_search <- function() {
 
 #' Parses valid SAGA-GIS libraries and tools into a nested list of functions
 #'
-#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing all libraries, tools
-#' and options from the help files into a nested list of library, module and options, that are
-#' contained within an saga environment object object. Intended to be used internally by
-#' \code{\link{saga_gis}}
+#' Establishes the link to SAGA GIS by generating a SAGA help file and parsing
+#' all libraries, tools and options from the help files into a nested list of
+#' library, module and options, that are contained within an saga environment
+#' object object. Intended to be used internally by \code{\link{saga_gis}}
 #'
 #' @param saga_bin character. Optional path to saga_cmd executable
-#' @param opt_lib character vector. List of subset of SAGA-GIS tool libraries
-#' to generate links to.
+#' @param opt_lib character vector. List of subset of SAGA-GIS tool libraries to
+#'   generate links to.
 #'
-#' @return saga environment object object. Contains paths, settings and a nested list of libaries
-#'   tools and options
-#' @importFrom stringr str_replace_all str_extract str_detect
+#' @return saga environment object object. Contains paths, settings and a nested
+#'   list of libaries tools and options
 #' @importFrom XML readHTMLTable
 saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   if (is.null(saga_bin)) {
@@ -154,9 +154,8 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   docs_libraries <- list.dirs(path = help_path)
   docs_libraries <- docs_libraries[2:length(docs_libraries)]
   
-  if (!is.null(opt_lib)) {
+  if (!is.null(opt_lib))
     docs_libraries <- docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
-  }
 
   libraries <- list()
 
@@ -183,131 +182,8 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
         tool_options <- options[[length(options)]]
 
         if (!any(grepl("interactive", x = options[[1]][, 2]))) {
-
-          # create syntactically valid tool_name
-          saga_tool_cmd <- colnames(tool_information)[2]
-          tool_name <- saga_tool_cmd %>%
-            str_replace_all("^[0-9]+", "") %>% # remove digits from start of tool name
-            str_replace_all(" ", "_") %>% # replace spaces with underscores
-            str_replace_all("\\(", "") %>% # replace spaces with underscores
-            str_replace_all("\\)", "") %>% # replace spaces with underscores
-            str_replace_all("\\(", "") %>% # remove parenthesis
-            str_replace_all("\\)", "") %>% # remove parenthesis
-            str_replace_all("'", "") %>% # remove single quotations
-            str_replace_all(",", "_") %>% # remove commas
-            str_replace_all("/", "_") %>% # replace forward slash with underscore
-            str_replace_all("-", "_") %>% # replace minus with underscore
-            str_replace_all(":", "_") %>% # replace colon with underscore
-            str_replace_all("\\[", "_") %>% # replace square brackets with underscore
-            str_replace_all("\\]", "_") %>% # replace square brackets with underscore
-            str_replace_all("&", "_") %>% # replace ampersand with underscore
-            str_replace_all("_+", "_") %>% # replace multiple underscores due to above with single _
-            str_replace_all("^_+", "") %>% # remove underscore from start of tool name
-            tolower()
-
-          # strip input, output and options lines from table
-          tool_options <-
-            tool_options[which(apply(tool_options[, 2:5], 1, function(x)
-              any(is.na(x))) == FALSE), ]
-
-          # replace tool arguments with synatically-correct version
-          identifiers_saga <- tool_options$Identifier
-          identifiers_r <- sapply(identifiers_saga, function(x)
-            if (grepl("^[[:digit:]]", x)) paste0("x", x) else x, USE.NAMES = FALSE)
-          identifiers_r <- gsub(" ", "_", identifiers_r)
-
-          # convert to nested list
-          params <- rep(list(NA), nrow(tool_options)) %>% stats::setNames(identifiers_r)
-
-          for (i in seq_len(length(identifiers_r))) {
-            identifier_r <- identifiers_r[[i]]
-            identifier_saga <- identifiers_saga[[i]]
-
-            params[[identifier_r]] <- list(
-              type = tool_options[tool_options$Identifier == identifier_saga, "Type"],
-              name = tool_options[tool_options$Identifier == identifier_saga, "Name"],
-              identifier_r = identifier_r,
-              identifier = identifier_saga,
-              description = tool_options[tool_options$Identifier == identifier_saga, "Description"],
-              constraints = tool_options[tool_options$Identifier == identifier_saga, "Constraints"],
-              io = NA,
-              feature = NA,
-              default = NA,
-              minimum = NA,
-              maximum = NA
-            )
-
-            # clean constraints
-            if (params[[identifier_r]]$constraints == "") {
-              params[[identifier_r]]$constraints <- NA
-            }
-
-            params[[identifier_r]]$constraints <-
-              params[[identifier_r]]$constraints %>%
-              str_replace_all("Available Choices:", "")
-
-            params[[identifier_r]]$constraints <-
-              params[[identifier_r]]$constraints %>%
-              str_replace_all("^\n", "")
-
-            params[[identifier_r]]$constraints <-
-              params[[identifier_r]]$constraints %>%
-              str_replace_all("\n", ";")
-
-            params[[identifier_r]]$default <-
-              params[[identifier_r]]$constraints %>%
-              str_extract("(?<=Default: \\s{0,1})[-0-9.]+")
-            params[[identifier_r]]$default <-
-              suppressWarnings(as.numeric(params[[identifier_r]]$default))
-
-            params[[identifier_r]]$minimum <-
-              params[[identifier_r]]$constraints %>%
-              str_extract("(?<=Minimum: \\s{0,1})[-0-9.]+")
-            params[[identifier_r]]$minimum <-
-              suppressWarnings(as.numeric(params[[identifier_r]]$minimum))
-
-            params[[identifier_r]]$maximum <-
-              params[[identifier_r]]$constraints %>%
-              str_extract("(?<=Maximum: \\s{0,1})[-0-9.]+")
-            params[[identifier_r]]$maximum <-
-              suppressWarnings(as.numeric(params[[identifier_r]]$maximum))
-          }
-
-          # parse additional parameters
-          for (n in names(params)) {
-            if (str_detect(params[[n]]$type, "input")) params[[n]]$io <- "Input"
-            if (str_detect(params[[n]]$type, "output")) params[[n]]$io <- "Output"
-            if (str_detect(params[[n]]$type, "Grid")) params[[n]]$feature <- "Grid"
-            if (str_detect(params[[n]]$type, "Grid list")) params[[n]]$feature <- "Grid list"
-            if (str_detect(params[[n]]$type, "Shapes")) params[[n]]$feature <- "Shape"
-            if (str_detect(params[[n]]$type, "Shapes list")) params[[n]]$feature <- "Shapes list"
-            if (str_detect(params[[n]]$type, "Table")) params[[n]]$feature <- "Table"
-            if (str_detect(params[[n]]$type, "Static table")) params[[n]]$feature <- "Table"
-            if (str_detect(params[[n]]$type, "Table list")) params[[n]]$feature <- "Table list"
-            if (str_detect(params[[n]]$type, "File path")) params[[n]]$feature <- "File path"
-            if (str_detect(params[[n]]$type, "field")) params[[n]]$feature <- "Table field"
-            if (str_detect(params[[n]]$type, "Integer")) params[[n]]$feature <- "Integer"
-            if (str_detect(params[[n]]$type, "Choice")) params[[n]]$feature <- "Choice"
-            if (str_detect(params[[n]]$type, "Floating point")) params[[n]]$feature <- "numeric"
-            if (str_detect(params[[n]]$type, "Boolean")) params[[n]]$feature <- "logical"
-            if (str_detect(params[[n]]$type, "Long text")) params[[n]]$feature <- "character"
-            if (str_detect(params[[n]]$type, "Text")) params[[n]]$feature <- "character"
-          }
-
-          # exceptions
-          if (tool_name == "export_geotiff" | tool_name == "export_raster") {
-            params$FILE$io <- "Output"
-            params$FILE$feature <- "Grid"
-          } else if (tool_name == "export_shapes" | tool_name == "export_shapes_to_kml") {
-            params$FILE$io <- "Output"
-            params$FILE$feature <- "Shapes"
-          } else if (tool_name == "clip_grid_with_rectangle") {
-            params$OUTPUT$feature <- "Grid"
-          }
-
-          # add parameter options to nested list
-          libraries[[basename(libdir)]][[tool_name]] <-
-            list(options = params, tool_cmd = saga_tool_cmd)
+          tool_obj <- create_tool(tool_information, tool_options)
+          libraries[[basename(libdir)]][[tool_obj$tool_name]] <- tool_obj[2:3]
         }
       }
       close(f)
@@ -360,19 +236,19 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 
 #' Generates a custom saga_cmd configuration file
 #'
-#' Creates and edits a saga_cmd coniguration file in order to change saga_cmd settings related to
-#' file caching and number of available processor cores. Intended to be used internally by
-#' \code{\link{saga_gis}}.
+#' Creates and edits a saga_cmd coniguration file in order to change saga_cmd
+#' settings related to file caching and number of available processor cores.
+#' Intended to be used internally by \code{\link{saga_gis}}.
 #'
 #' @param senv saga environment object object. SAGA-GIS environment and settings
 #' @param grid_caching logical. Optionally use file caching
-#' @param grid_cache_threshold numeric. Threshold (in Mb) before file caching for loaded raster data
-#'   is activated
+#' @param grid_cache_threshold numeric. Threshold (in Mb) before file caching
+#'   for loaded raster data is activated
 #' @param grid_cache_dir character. Path to directory for temporary files
-#' @param cores numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
-#'   activated
-#' @param saga_vers numeric_version. Version of SAGA-GIS. The generation of a saga_cmd configuration
-#'   file is only valid for versions > 4.0.0
+#' @param cores numeric. Maximum number of processing cores. Needs to be set to
+#'   1 if file caching is activated
+#' @param saga_vers numeric_version. Version of SAGA-GIS. The generation of a
+#'   saga_cmd configuration file is only valid for versions > 4.0.0
 #'
 #' @return character. Path to custom saga_cmd initiation file
 saga_configure <- function(senv,
@@ -461,25 +337,29 @@ saga_configure <- function(senv,
 
 #' Initiate a SAGA-GIS geoprocessor object
 #'
-#' Dynamically generates functions to all valid SAGA-GIS libraries and tools. These functions are
-#' stored within a saga S3 object as a named list of functions.
+#' Dynamically generates functions to all valid SAGA-GIS libraries and tools.
+#' These functions are stored within a saga S3 object as a named list of
+#' functions.
 #'
-#' @param saga_bin character, optional. Path to saga_cmd executable. If this argument is not
-#'   supplied then an automatic search for the saga_cmd executable will be performed.
-#' @param grid_caching logical, optional. Use file caching in saga_cmd geoprocessing operations for
-#'   rasters that are too large to fit into memory.
-#' @param grid_cache_threshold numeric, optional. Threshold (in Mb) before file caching is activated
-#'   for loaded raster data.
-#' @param grid_cache_dir character, optional. Path to directory for temporary files generated by
-#'   file caching.
-#' @param cores numeric. Maximum number of processing cores. Needs to be set to 1 if file caching is
-#'   activated.
-#' @param opt_lib character vector. Names of SAGA-GIS libraries. Used to link only a subset of named
-#'   SAGA-GIS tool libraries, rather than creating functions for all available tool libraries.
-#' @param temp_path character vector, optional. Path to use to store any temporary files that are
-#'   generated as data is passed between R and SAGA-GIS. If not specified, then the system tempdir
-#'   is used.
-#' @return S3 saga object containing a nested list of functions for SAGA-GIS libraries and tools.
+#' @param saga_bin character, optional. Path to saga_cmd executable. If this
+#'   argument is not supplied then an automatic search for the saga_cmd
+#'   executable will be performed.
+#' @param grid_caching logical, optional. Use file caching in saga_cmd
+#'   geoprocessing operations for rasters that are too large to fit into memory.
+#' @param grid_cache_threshold numeric, optional. Threshold (in Mb) before file
+#'   caching is activated for loaded raster data.
+#' @param grid_cache_dir character, optional. Path to directory for temporary
+#'   files generated by file caching.
+#' @param cores numeric. Maximum number of processing cores. Needs to be set to
+#'   1 if file caching is activated.
+#' @param opt_lib character vector. Names of SAGA-GIS libraries. Used to link
+#'   only a subset of named SAGA-GIS tool libraries, rather than creating
+#'   functions for all available tool libraries.
+#' @param temp_path character vector, optional. Path to use to store any
+#'   temporary files that are generated as data is passed between R and
+#'   SAGA-GIS. If not specified, then the system tempdir is used.
+#' @return S3 saga object containing a nested list of functions for SAGA-GIS
+#'   libraries and tools.
 #' @export
 #' @import raster
 #' @examples
@@ -536,8 +416,9 @@ saga_gis <- function(saga_bin = NULL,
     for (tool in names(senv$libraries[[lib]])) {
       tool_options <- senv$libraries[[lib]][[tool]][["options"]]
       tool_cmd <- senv[["libraries"]][[lib]][[tool]][["tool_cmd"]]
+      
       args <- tool_options %>%
-        sapply(function(x) x$identifier_r, USE.NAMES = FALSE) %>%
+        sapply(function(x) x$alias, USE.NAMES = FALSE) %>%
         paste0("=NULL", collapse = ", ")
 
       # define function body
@@ -562,13 +443,14 @@ saga_gis <- function(saga_bin = NULL,
       )
 
       # parse function
-      # here we are creating functions by evaluating expressions these functions have some
-      # additional attributes used to printing tool information etc.
+      # here we are creating functions by evaluating expressions these functions
+      # have some additional attributes used to printing tool information etc.
 
-      # The functions are stored as a nested list which is returned as a saga class. These functions
-      # exist within the environment of the class object, along with the variables/tools/libraries
-      # needed by each function. Thus, when each function is called, it can find the variables that
-      # it needs from within its own environment
+      # The functions are stored as a nested list which is returned as a saga
+      # class. These functions exist within the environment of the class object,
+      # along with the variables/tools/libraries needed by each function. Thus,
+      # when each function is called, it can find the variables that it needs
+      # from within its own environment
       tryCatch(
         expr = {
           func_code <- paste0(
@@ -655,9 +537,10 @@ print.saga_tool <- function(x, ...) {
 #' @param tool character. Name of SAGA-GIS tool to execute
 #' @param senv saga environment object object
 #' @param intern logical. Load outputs as R objects
-#' @param all_outputs logical (default = TRUE). Automatically output all results from the selected
-#' SAGA tool and load them results as R objects. If all_outputs = FALSE then the file paths to store
-#' the tool's results will have to be manually specified in the arguments
+#' @param all_outputs logical (default = TRUE). Automatically output all results
+#'   from the selected SAGA tool and load them results as R objects. If
+#'   all_outputs = FALSE then the file paths to store the tool's results will
+#'   have to be manually specified in the arguments
 #' @param ... Named arguments and values for SAGA tool
 #'
 #' @return Output of SAGA-GIS tool loaded as an R object
@@ -672,10 +555,10 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
   saga_config <- senv$saga_config
   temp_path <- senv$temp_path
 
-  # match the syntactically-correct arg_name to the identifier used by saga_cmd
+  # convert syntactically-correct arg_names to the identifier used by saga_cmd
   arg_names <- names(args)
-  identifiers_r <- sapply(tool_options, function(x) x$identifier)
-  arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
+  identifiers <- sapply(tool_options, function(x) x$identifier)
+  arg_names <- identifiers[intersect(arg_names, names(identifiers))]
   args <- stats::setNames(args, arg_names)
 
   # strip other missing arguments and update arg_names
@@ -835,14 +718,15 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
 
 #' Removes temporary files created by Rsagacmd
 #'
-#' For convenience, functions in the Rsagacmd package create temporary files if any outputs for a
-#' SAGA-GIS tool are not specified as arguments. Temporary files in R are automatically removed at
-#' the end of each session. However, when dealing with raster data, these temporary files
-#' potentially can consume large amounts of disk space. These temporary files can be observed during
-#' a session by using the saga_show_tmpfiles function, and can be removed using the
-#' saga_remove_tmpfiles function. Note that this function also removes any accompanying files, i.e.
-#' the '.prj' and '.shx' files that may be written as part of writing a ESRI Shapefile '.shp'
-#' format.
+#' For convenience, functions in the Rsagacmd package create temporary files if
+#' any outputs for a SAGA-GIS tool are not specified as arguments. Temporary
+#' files in R are automatically removed at the end of each session. However,
+#' when dealing with raster data, these temporary files potentially can consume
+#' large amounts of disk space. These temporary files can be observed during a
+#' session by using the saga_show_tmpfiles function, and can be removed using
+#' the saga_remove_tmpfiles function. Note that this function also removes any
+#' accompanying files, i.e. the '.prj' and '.shx' files that may be written as
+#' part of writing a ESRI Shapefile '.shp' format.
 #'
 #' @param h Remove temporary files that are older than h (in number of hours)
 #'
@@ -876,16 +760,18 @@ saga_remove_tmpfiles <- function(h = 0) {
 
 #' List temporary files created by Rsagacmd
 #'
-#' For convenience, functions in the Rsagacmd package create temporary files if any outputs for a
-#' SAGA-GIS tool are not specified as arguments. Temporary files in R are automatically removed at
-#' the end of each session. However, when dealing with raster data, these temporary files
-#' potentially can consume large amounts of disk space. These temporary files can be observed during
-#' a session by using the saga_show_tmpfiles function, and can be removed using the
-#' saga_remove_tmpfiles function.
+#' For convenience, functions in the Rsagacmd package create temporary files if
+#' any outputs for a SAGA-GIS tool are not specified as arguments. Temporary
+#' files in R are automatically removed at the end of each session. However,
+#' when dealing with raster data, these temporary files potentially can consume
+#' large amounts of disk space. These temporary files can be observed during a
+#' session by using the saga_show_tmpfiles function, and can be removed using
+#' the saga_remove_tmpfiles function.
 #'
-#' @return returns the file names of the files in the temp directory that have been generated by
-#'   Rsagacmd. Note this list of files only includes the primary file extension, i.e. '.shp' for a
-#'   shapefile without the accessory files (e.g. .prj, .shx etc.).
+#' @return returns the file names of the files in the temp directory that have
+#'   been generated by Rsagacmd. Note this list of files only includes the
+#'   primary file extension, i.e. '.shp' for a shapefile without the accessory
+#'   files (e.g. .prj, .shx etc.).
 #' @export
 #' @examples
 #' # Show all temporary files generated by Rsagacmd
