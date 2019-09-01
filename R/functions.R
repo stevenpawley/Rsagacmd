@@ -153,6 +153,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   # parse SAGA help files into nested list of libraries, tools and options
   docs_libraries <- list.dirs(path = help_path)
   docs_libraries <- docs_libraries[2:length(docs_libraries)]
+  
   if (!is.null(opt_lib)) {
     docs_libraries <- docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
   }
@@ -212,7 +213,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
           # replace tool arguments with synatically-correct version
           identifiers_saga <- tool_options$Identifier
           identifiers_r <- sapply(identifiers_saga, function(x)
-            if (grepl("^[[:digit:]]", x)) paste0("_", x) else x, USE.NAMES = FALSE)
+            if (grepl("^[[:digit:]]", x)) paste0("x", x) else x, USE.NAMES = FALSE)
           identifiers_r <- gsub(" ", "_", identifiers_r)
 
           # convert to nested list
@@ -225,6 +226,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
             params[[identifier_r]] <- list(
               type = tool_options[tool_options$Identifier == identifier_saga, "Type"],
               name = tool_options[tool_options$Identifier == identifier_saga, "Name"],
+              identifier_r = identifier_r,
               identifier = identifier_saga,
               description = tool_options[tool_options$Identifier == identifier_saga, "Description"],
               constraints = tool_options[tool_options$Identifier == identifier_saga, "Constraints"],
@@ -507,6 +509,7 @@ saga_gis <- function(saga_bin = NULL,
                      cores = NULL,
                      opt_lib = NULL,
                      temp_path = NULL) {
+  
   senv <- saga_env(saga_bin, opt_lib)
 
   senv[["saga_config"]] <- saga_configure(
@@ -534,7 +537,7 @@ saga_gis <- function(saga_bin = NULL,
       tool_options <- senv$libraries[[lib]][[tool]][["options"]]
       tool_cmd <- senv[["libraries"]][[lib]][[tool]][["tool_cmd"]]
       args <- tool_options %>%
-        sapply(function(x) x$identifier, USE.NAMES = FALSE) %>%
+        sapply(function(x) x$identifier_r, USE.NAMES = FALSE) %>%
         paste0("=NULL", collapse = ", ")
 
       # define function body
