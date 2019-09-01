@@ -39,8 +39,7 @@ saga_search <- function() {
         "C:/Program Files (x86)/SAGA-GIS/",
         "C:/SAGA-GIS/",
         "C:/OSGeo4W/",
-        "C:/OSGeo4W64/",
-        "C:/Program Files/SAGA-GIS/"
+        "C:/OSGeo4W64/"
       )
       saga_executable <- "saga_cmd.exe"
     } else if (Sys.info()["sysname"] == "Linux") {
@@ -58,6 +57,7 @@ saga_search <- function() {
 
     # search for saga_cmd executable
     saga_cmd <- c()
+    
     for (f in search_paths) {
       saga_cmd <- c(saga_cmd, list.files(
         path = f,
