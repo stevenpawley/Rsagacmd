@@ -7,9 +7,9 @@
 create_tool(tool_information, tool_options)
 }
 \arguments{
-\item{tool_information}{}
+\item{tool_information}{list}
 
-\item{tool_options}{}
+\item{tool_options}{list}
 }
 \value{
 named list, containing three items:
