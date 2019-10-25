@@ -58,6 +58,7 @@ create_tool <- function(tool_information, tool_options) {
   tool_identifiers <- tool_options$Identifier
   tool_aliases <- sapply(tool_identifiers, function(x)
     if (grepl("^[[:digit:]]", x)) paste0("x", x) else x, USE.NAMES = FALSE)
+  
   # tool_aliases <- tolower(tool_aliases)
   tool_aliases <- gsub(" ", "_", tool_aliases)
   
