@@ -68,59 +68,62 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
     tool_files <- tool_files[tool_files != tool_names_file]
     
     for (tool in tool_files) {
-      options <- XML::readHTMLTable(
-        doc = paste(libdir, tool, sep = "/"),
-        header = TRUE,
-        stringsAsFactors = FALSE)
-      
-      tool_information <- options[[1]]
-      tool_options <- options[[length(options)]]
-      
-      if (!any(grepl("interactive", x = options[[1]][, 2]))) {
-        tool_config <- create_tool(tool_information, tool_options)
+      tryCatch(expr = {
+        options <- XML::readHTMLTable(
+          doc = paste(libdir, tool, sep = "/"),
+          header = TRUE,
+          stringsAsFactors = FALSE)
         
-        libraries[[basename(libdir)]][[tool_config$tool_name]] <- 
-          tool_config
-      }
-    }
-  }
-  
-  # remove tools that produce no outputs
-  for (lib in names(libraries)) {
-    tools <- names(libraries[[lib]])
-    
-    for (tool in tools) {
-      selected_tool <- libraries[[lib]][[tool]]$options
+        tool_information <- options[[1]]
+        tool_options <- options[[length(options)]]
+        
+        if (!any(grepl("interactive", x = options[[1]][, 2]))) {
+          tool_config <- create_tool(tool_information, tool_options)
+          libraries[[basename(libdir)]][[tool_config$tool_name]] <-
+            tool_config
+        }
       
-      if (any(selected_tool$io != "Output"))
-        libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
+        # remove tools that produce no outputs
+        for (lib in names(libraries)) {
+          tools <- names(libraries[[lib]])
+          
+          for (tool in tools) {
+            selected_tool <- libraries[[lib]][[tool]]$options
+            
+            if (any(selected_tool$io != "Output"))
+              libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
+          }
+        }
+        
+        # remove libraries with no tools
+        for (lib in names(libraries)) {
+          n_tools <- length(libraries[[lib]])
+          
+          if (n_tools == 0)
+            libraries <- libraries[names(libraries) != lib]
+        }
+        
+        # remove invalid libraries for saga_cmd
+        invalid_libs <- list(
+          "db_odbc",
+          "db_pgsql",
+          "docs_html",
+          "docs_pdf",
+          "garden_3d_viewer",
+          "garden_games",
+          "garden_learn_to_program",
+          "garden_webservices",
+          "grid_calculus_bsl",
+          "pointcloud_viewer",
+          "tin_viewer"
+        )
+        
+        libraries <- libraries[!names(libraries) %in% invalid_libs]
+        
+      }, 
+      error = function(e) e)
     }
   }
-  
-  # remove libraries with no tools
-  for (lib in names(libraries)) {
-    n_tools <- length(libraries[[lib]])
-    
-    if (n_tools == 0)
-      libraries <- libraries[names(libraries) != lib]
-  }
-  
-  # remove invalid libraries for saga_cmd
-  invalid_libs <- list(
-    "db_odbc",
-    "db_pgsql",
-    "docs_html",
-    "docs_pdf",
-    "garden_3d_viewer",
-    "garden_games",
-    "garden_learn_to_program",
-    "garden_webservices",
-    "grid_calculus_bsl",
-    "pointcloud_viewer",
-    "tin_viewer"
-  )
-  
-  libraries <- libraries[!names(libraries) %in% invalid_libs]
   
   return(list(saga_cmd = saga_bin,
               saga_vers = saga_vers,

@@ -57,11 +57,20 @@ create_tool <- function(tool_information, tool_options) {
   tool_identifiers <- tool_options$Identifier
   tool_aliases <- sapply(tool_identifiers, function(x)
     if (grepl("^[[:digit:]]", x)) paste0("x", x) else x, USE.NAMES = FALSE)
-  
-  # tool_aliases <- tolower(tool_aliases)
   tool_aliases <- gsub(" ", "_", tool_aliases)
   
-  # convert to nested list
+  # check for duplicated arguments that occur in some saga tools
+  if (any(duplicated(tool_identifiers))) {
+    warning(
+      paste(
+        "Cannot parse SAGA-GIS tool", 
+        tool_name,
+        "due to duplicated identifiers being as arguments")
+      )
+    return()
+  }
+  
+  # convert options table to nested list
   params <- rep(list(NA), nrow(tool_options)) %>% setNames(tool_aliases)
   
   for (i in seq_len(length(tool_aliases))) {
