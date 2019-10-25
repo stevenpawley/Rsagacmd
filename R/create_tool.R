@@ -3,28 +3,27 @@
 #' Parses the html table for a saga-gis tool into a list of 
 #' identifiers, options, defaults and constraints
 #'
-#' @param tool_information 
-#' @param tool_options 
+#' @param tool_information list
+#' @param tool_options list
 #'
 #' @return named list, containing three items:
-#'     tool_name : syntactically-correct name for the tool
-#'     tool_cmd : command to use for saga_cmd to execute tool
-#'     options : named list of the tool's parameters. Each parameter has the
-#'               the following specification:
-#'    
-#'        type : data type of parameter
-#'        name : long name of the parameter
-#'        alias : synatically correct alias for the SAGA's identifier
-#'        identifier : identifier used by saga_cmd
-#'        description : tool description
-#'        constraints : description of the parameters constraints
-#'        default : default parameter value
-#'        minimum : minimum permissible value
-#'        maximum : maximum permissible value
-#'        feature : type of feature, e.g. Shapes, Shapes List, Grid etc.
-#'        io : whether the parameter represents an input or output
+#' `tool_name` syntactically-correct name for the tool
+#' `tool_cmd` command to use for saga_cmd to execute tool
+#' `options` named list of the tool's parameters containing:
+#'    `type` data type of parameter
+#'    `name` long name of the parameter
+#'    `alias` synatically correct alias for the SAGA's identifier
+#'    `identifier` identifier used by saga_cmd
+#'    `description` tool description
+#'    `constraints` description of the parameters constraints
+#'    `default` default parameter value
+#'    `minimum` minimum permissible value
+#'    `maximum` maximum permissible value
+#'    `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
+#'    `io` whether the parameter represents an input or output
 #'        
 #' @importFrom stringr str_replace_all str_extract str_detect
+#' @importFrom stats setNames
 create_tool <- function(tool_information, tool_options) {
   
   # create syntactically valid tool_name
@@ -63,7 +62,7 @@ create_tool <- function(tool_information, tool_options) {
   tool_aliases <- gsub(" ", "_", tool_aliases)
   
   # convert to nested list
-  params <- rep(list(NA), nrow(tool_options)) %>% stats::setNames(tool_aliases)
+  params <- rep(list(NA), nrow(tool_options)) %>% setNames(tool_aliases)
   
   for (i in seq_len(length(tool_aliases))) {
     alias <- tool_aliases[[i]]

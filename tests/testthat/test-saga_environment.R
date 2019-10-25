@@ -35,8 +35,13 @@ testthat::test_that("Test file caching ", {
     if (saga_version < as.numeric_version("4.0.0")) {
 
       # check that file caching is only possible for saga versions > 4.0.0
-      output <- "Cannot enable grid caching or change number cores for SAGA-GIS versions < 4.0.0. Please use a more recent version of SAGA-GIS"
-      testthat::expect_message(saga_gis(grid_caching = T, grid_cache_threshold = 20), output)
+      output <- "Cannot enable grid caching or change number cores for 
+      SAGA-GIS versions < 4.0.0. Please use a more recent version of SAGA-GIS"
+      
+      testthat::expect_message(
+        saga_gis(grid_caching = T, grid_cache_threshold = 20), 
+        output)
+      
     } else {
 
       # check that saga S3 class can be initiated using file caching
@@ -45,8 +50,8 @@ testthat::test_that("Test file caching ", {
       testthat::expect_is(saga_fc, "saga")
       testthat::expect_gt(length(saga_fc), 0)
 
-      # check that file caching is working by checking time for running a process
-      # compared to not using file caching
+      # check that file caching is working by checking time for running a
+      # process compared to not using file caching
       saga <- saga_gis()
       dem <- saga$grid_calculus$random_terrain(
         TARGET_USER_XMIN = 0,

@@ -18,6 +18,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       RADIUS = 100,
       ITERATIONS = 500
     )
+    
     testthat::expect_is(dem, "RasterLayer")
 
     # table output
@@ -28,15 +29,18 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
     flowacc <- dem %>%
       saga$ta_preprocessor$sink_removal() %>%
       saga$ta_hydrology$flow_accumulation_top_down()
+    
     testthat::expect_is(flowacc[["FLOW"]], "RasterLayer")
 
     # test loading simple features object and pipes
     dem_mean <- cellStats(dem, mean)
+    
     shapes <- dem %>%
       saga$grid_calculus$grid_calculator(
         FORMULA = gsub("z", dem_mean, "ifelse(g1>z,1,0)")
       ) %>%
       saga$shapes_grid$vectorising_grid_classes()
+    
     testthat::expect_is(shapes, "sf")
   }
 })
@@ -86,7 +90,10 @@ testthat::test_that("handling of single and multiband rasters", {
         stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
         filename = tempfile(fileext = ".tif")
       )
-    rasterstack <- stack(rasterlayer_from_singleband, rasterlayer_from_singleband)
+    rasterstack <- stack(
+      rasterlayer_from_singleband, 
+      rasterlayer_from_singleband)
+    
     rasterlayer_from_rasterbrick <- rasterbrick[[1]]
     rasterlayer_from_rasterstack <- rasterstack[[1]]
 

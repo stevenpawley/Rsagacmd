@@ -14,13 +14,19 @@ download_saga <- function(surl) {
       quiet = TRUE
     )
 
-    unzip(zipfile = list.files(saga_zipdir, full.names = TRUE), exdir = saga_zipdir)
+    unzip(
+      zipfile = list.files(saga_zipdir, full.names = TRUE), 
+      exdir = saga_zipdir)
+    
   }, error = function(e) {
     return(NULL)
   })
 
   if (!is.null(err)) {
-    saga_bin <- file.path(list.dirs(path = saga_zipdir, recursive = FALSE), "saga_cmd.exe")
+    saga_bin <- file.path(
+      list.dirs(path = saga_zipdir, recursive = FALSE), 
+      "saga_cmd.exe")
+    
   } else {
     saga_bin <- NULL
   }
@@ -55,7 +61,9 @@ testthat::test_that("initiation of all supported SAGA-GIS versions", {
         saga <- saga_gis(saga_bin)
         testthat::expect_false(is.null(saga))
         testthat::expect_gt(length(saga), 0)
-        testthat::expect_is(saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1), "RasterLayer")
+        testthat::expect_is(
+          saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1), 
+          "RasterLayer")
         unlink(dirname(saga_bin), recursive = TRUE)
       }
     })

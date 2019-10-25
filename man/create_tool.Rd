@@ -13,22 +13,20 @@ create_tool(tool_information, tool_options)
 }
 \value{
 named list, containing three items:
-    tool_name : syntactically-correct name for the tool
-    tool_cmd : command to use for saga_cmd to execute tool
-    options : named list of the tool's parameters. Each parameter has the
-              the following specification:
-   
-       type : data type of parameter
-       name : long name of the parameter
-       alias : synatically correct alias for the SAGA's identifier
-       identifier : identifier used by saga_cmd
-       description : tool description
-       constraints : description of the parameters constraints
-       default : default parameter value
-       minimum : minimum permissible value
-       maximum : maximum permissible value
-       feature : type of feature, e.g. Shapes, Shapes List, Grid etc.
-       io : whether the parameter represents an input or output
+`tool_name` syntactically-correct name for the tool
+`tool_cmd` command to use for saga_cmd to execute tool
+`options` named list of the tool's parameters containing:
+   `type` data type of parameter
+   `name` long name of the parameter
+   `alias` synatically correct alias for the SAGA's identifier
+   `identifier` identifier used by saga_cmd
+   `description` tool description
+   `constraints` description of the parameters constraints
+   `default` default parameter value
+   `minimum` minimum permissible value
+   `maximum` maximum permissible value
+   `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
+   `io` whether the parameter represents an input or output
 }
 \description{
 Parses the html table for a saga-gis tool into a list of 
