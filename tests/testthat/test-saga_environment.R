@@ -35,8 +35,10 @@ testthat::test_that("Test file caching ", {
     if (saga_version < as.numeric_version("4.0.0")) {
 
       # check that file caching is only possible for saga versions > 4.0.0
-      output <- "Cannot enable grid caching or change number cores for 
-      SAGA-GIS versions < 4.0.0. Please use a more recent version of SAGA-GIS"
+      output <- paste(
+        "Cannot enable grid caching or change number cores for SAGA-GIS",
+        "versions < 4.0.0. Please use a more recent version of SAGA-GIS"
+        )
       
       testthat::expect_message(
         saga_gis(grid_caching = T, grid_cache_threshold = 20), 
