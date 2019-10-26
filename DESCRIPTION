@@ -26,8 +26,7 @@ Imports:
     minpack.lm,
     methods,
     magrittr,
-    stringr,
-    rlang
+    stringr
 Suggests:
     dplyr,
     testthat
