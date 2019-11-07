@@ -30,7 +30,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       saga$ta_preprocessor$sink_removal() %>%
       saga$ta_hydrology$flow_accumulation_top_down()
     
-    testthat::expect_is(flowacc[["FLOW"]], "RasterLayer")
+    testthat::expect_is(flowacc[["flow"]], "RasterLayer")
 
     # test loading simple features object and pipes
     dem_mean <- cellStats(dem, mean)
