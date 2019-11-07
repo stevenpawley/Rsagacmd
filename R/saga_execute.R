@@ -126,7 +126,7 @@ saga_execute <- function(lib, tool, senv, .intern = TRUE, .all_outputs = TRUE,
   for (i in seq_along(tool_outputs)) {
     out_i <- tool_outputs[[i]]$args
     out_i <- gsub(".sgrd", ".sdat", out_i)
-    current_id <- tool_outputs[[i]]$identifier
+    current_id <- tool_outputs[[i]]$alias
     
     if (.intern == TRUE) {
       tryCatch(expr = {
