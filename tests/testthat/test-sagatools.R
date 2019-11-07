@@ -11,12 +11,12 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
 
     # test execution of a SAGA-GIS tool
     dem <- saga$grid_calculus$random_terrain(
-      TARGET_USER_XMIN = 0,
-      TARGET_USER_XMAX = 1000,
-      TARGET_USER_YMIN = 0,
-      TARGET_USER_YMAX = 1000,
-      RADIUS = 100,
-      ITERATIONS = 500
+      target_user_xmin = 0,
+      target_user_xmax = 1000,
+      target_user_ymin = 0,
+      target_user_ymax = 1000,
+      radius = 100,
+      iterations = 500
     )
     
     testthat::expect_is(dem, "RasterLayer")
@@ -37,7 +37,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
     
     shapes <- dem %>%
       saga$grid_calculus$grid_calculator(
-        FORMULA = gsub("z", dem_mean, "ifelse(g1>z,1,0)")
+        formula = gsub("z", dem_mean, "ifelse(g1>z,1,0)")
       ) %>%
       saga$shapes_grid$vectorising_grid_classes()
     
@@ -53,12 +53,12 @@ testthat::test_that("tile geoprocessor function", {
     saga <- saga_gis()
 
     dem <- saga$grid_calculus$random_terrain(
-      TARGET_USER_XMIN = 0,
-      TARGET_USER_XMAX = 1000,
-      TARGET_USER_YMIN = 0,
-      TARGET_USER_YMAX = 1000,
-      RADIUS = 100,
-      ITERATIONS = 500
+      target_user_xmin = 0,
+      target_user_xmax = 1000,
+      target_user_ymin = 0,
+      target_user_ymax = 1000,
+      radius = 100,
+      iterations = 500
     )
 
     tiles <- tile_geoprocessor(saga, dem, nx = 100, ny = 100)
@@ -76,13 +76,13 @@ testthat::test_that("handling of single and multiband rasters", {
 
     # generate a singleband raster
     rasterlayer_from_singleband <- saga$grid_calculus$random_terrain(
-      TARGET_USER_XMIN = 0,
-      TARGET_USER_XMAX = 1000,
-      TARGET_USER_YMIN = 0,
-      TARGET_USER_YMAX = 1000,
-      RADIUS = 100,
-      ITERATIONS = 500
-    )
+      target_user_xmin = 0,
+      target_user_xmax = 1000,
+      target_user_ymin = 0,
+      target_user_ymax = 1000,
+      radius = 100,
+      iterations = 500
+      )
 
     # create rasterbrick, rasterstacks, and layers from each
     rasterbrick <-
@@ -90,24 +90,26 @@ testthat::test_that("handling of single and multiband rasters", {
         stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
         filename = tempfile(fileext = ".tif")
       )
+    
     rasterstack <- stack(
       rasterlayer_from_singleband, 
-      rasterlayer_from_singleband)
+      rasterlayer_from_singleband
+      )
     
     rasterlayer_from_rasterbrick <- rasterbrick[[1]]
     rasterlayer_from_rasterstack <- rasterstack[[1]]
 
     # tests
     testthat::expect_is(
-      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_singleband),
+      saga$grid_filter$simple_filter(input = rasterlayer_from_singleband),
       "RasterLayer"
     )
     testthat::expect_is(
-      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterbrick),
+      saga$grid_filter$simple_filter(input = rasterlayer_from_rasterbrick),
       "RasterLayer"
     )
     testthat::expect_is(
-      saga$grid_filter$simple_filter(INPUT = rasterlayer_from_rasterstack),
+      saga$grid_filter$simple_filter(input = rasterlayer_from_rasterstack),
       "RasterLayer"
     )
   }

@@ -9,19 +9,19 @@ tile_geoprocessor(x, grid, nx, ny, overlap = 0, file_path = NULL)
 \arguments{
 \item{x}{saga S3 object}
 
-\item{grid}{character, or RasterLayer. GDAL-supported raster, as as a path to
+\item{grid}{character, or RasterLayer. GDAL-supported raster as as a path to
 the raster or representing a RasterLayer object}
 
-\item{nx}{numeric. Number of x-pixels per tile}
+\item{nx}{numeric, number of x-pixels per tile}
 
-\item{ny}{numeric. Number of y-pixels per tile}
+\item{ny}{numeric, number of y-pixels per tile}
 
-\item{overlap}{numeric. Number of overlapping pixels}
+\item{overlap}{numeric, number of overlapping pixels}
 
-\item{file_path}{character. Optional file path to store raster tiles}
+\item{file_path}{character, optional file path to store raster tiles}
 }
 \value{
-list. List of RasterLayer objects representing tiled data
+list of RasterLayer objects representing tiled data
 }
 \description{
 Split a raster grid into tiles. The tiles are saved as Rsagacmd
@@ -32,12 +32,12 @@ grid_tools / tiling tool more convenient to use.
 \examples{
 \dontrun{
 # Initialize a saga object
-saga <- sagaGIS()
+saga <- saga_gis()
 
 # Generate a random DEM
-dem <- saga$grid_calculus$Random_Terrain(RADIUS = 15, ITERATIONS = 500)
+dem <- saga$grid_calculus$random_terrain(radius = 15, iterations = 500)
 
 # Return tiled version of DEM
-tiles <- tileGeoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
+tiles <- tile_geoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 }
 }

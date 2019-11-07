@@ -1,20 +1,22 @@
-#' Function to execute SAGA-GIS commands through the command line tool.
+#' Function to execute SAGA-GIS commands through the command line tool
 #'
 #' Intended to be used internally
 #'
-#' @param lib character. Name of SAGA-GIS library to execute
-#' @param tool character. Name of SAGA-GIS tool to execute
+#' @param lib character, name of SAGA-GIS library to execute
+#' @param tool character, name of SAGA-GIS tool to execute
 #' @param senv saga environment object object
-#' @param intern logical. Load outputs as R objects
-#' @param all_outputs logical (default = TRUE). Automatically output all results
-#'   from the selected SAGA tool and load them results as R objects. If
-#'   all_outputs = FALSE then the file paths to store the tool's results will
-#'   have to be manually specified in the arguments
-#' @param ... Named arguments and values for SAGA tool
+#' @param .intern logical, whether to load the outputs from the SAGA-GIS
+#' geoprocessing operatioon as an R object
+#' @param .all_outputs logical, default = TRUE, automatically output all
+#' results from the selected SAGA tool and load them results as R objects. If
+#' .all_outputs = FALSE then the file paths to store the tool's results will
+#' have to be manually specified in the arguments
+#' @param ... named arguments and values for SAGA tool
 #'
-#' @return Output of SAGA-GIS tool loaded as an R object
-#'   (RasterLayer/sf/dataframe)
-saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...) {
+#' @return output of SAGA-GIS tool loaded as an R object 
+#' (RasterLayer/sf/dataframe)
+saga_execute <- function(lib, tool, senv, .intern = TRUE, .all_outputs = TRUE, 
+                         ...) {
   args <- c(...)
   
   # saga installation settings
@@ -29,6 +31,7 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
   identifiers_r <- sapply(tool_options, function(x) x$identifier)
   arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
   args <- setNames(args, arg_names)
+  tool_options <- setNames(tool_options, identifiers_r) # rename to identifiers
   
   # strip other missing arguments and update arg_names
   args <- args[sapply(args, function(x) !is.null(x))]
@@ -57,8 +60,8 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
     if (tool_options[[n]]$identifier %in% names(args)) {
       tool_options[[n]]$args <- args[[n]] 
       
-      # use tempfiles for other outputs if all_outputs   
-    } else if (all_outputs == TRUE & !is.na(tool_options[[n]]$io)) {
+      # use tempfiles for other outputs if .all_outputs   
+    } else if (.all_outputs == TRUE & !is.na(tool_options[[n]]$io)) {
       if (tool_options[[n]]$io == "Output") {
         if (tool_options[[n]]$feature %in% c("Grid", "Grid list", "Raster")) {
           tool_options[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".sgrd") 
@@ -78,12 +81,13 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
   n_outputs <- length(tool_outputs)
   
   if (n_outputs == 0) {
-    stop("No outputs have been specified and automatic outputs to tempfiles are disabled (all_outputs = FALSE)")
+    stop("No outputs have been specified and automatic outputs to tempfiles are disabled (.all_outputs = FALSE)")
     return(NULL)
   }
   
   # update the arguments and expected outputs for tool
-  updated_args <- sapply(tool_options, function(x) if (!is.na(x$args)) x$args)
+  updated_args <- sapply(tool_options, function(x) 
+    if (!is.na(x$args)) x$args)
   args <- updated_args[sapply(updated_args, function(x) !is.null(x))]
   arg_names <- names(args)
   
@@ -124,7 +128,7 @@ saga_execute <- function(lib, tool, senv, intern = TRUE, all_outputs = TRUE, ...
     out_i <- gsub(".sgrd", ".sdat", out_i)
     current_id <- tool_outputs[[i]]$identifier
     
-    if (intern == TRUE) {
+    if (.intern == TRUE) {
       tryCatch(expr = {
         # shapes
         if ("Shape" %in% tool_outputs[[i]]$feature) {

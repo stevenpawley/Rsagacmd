@@ -10,21 +10,22 @@ saga_configure(senv, grid_caching = FALSE, grid_cache_threshold = 100,
 \arguments{
 \item{senv}{saga environment object object. SAGA-GIS environment and settings}
 
-\item{grid_caching}{logical. Optionally use file caching}
+\item{grid_caching}{logical, whether to optionally use file caching, 
+default = FALSE}
 
-\item{grid_cache_threshold}{numeric. Threshold (in Mb) before file caching
+\item{grid_cache_threshold}{numeric, threshold (in Mb) before file caching
 for loaded raster data is activated}
 
-\item{grid_cache_dir}{character. Path to directory for temporary files}
+\item{grid_cache_dir}{character, path to directory for temporary files}
 
-\item{cores}{numeric. Maximum number of processing cores. Needs to be set to
+\item{cores}{numeric, maximum number of processing cores. Needs to be set to
 1 if file caching is activated}
 
-\item{saga_vers}{numeric_version. Version of SAGA-GIS. The generation of a
+\item{saga_vers}{numeric_version, version of SAGA-GIS. The generation of a
 saga_cmd configuration file is only valid for versions > 4.0.0}
 }
 \value{
-character. Path to custom saga_cmd initiation file
+character, path to custom saga_cmd initiation file
 }
 \description{
 Creates and edits a saga_cmd coniguration file in order to change saga_cmd

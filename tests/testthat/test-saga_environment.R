@@ -56,21 +56,21 @@ testthat::test_that("Test file caching ", {
       # process compared to not using file caching
       saga <- saga_gis()
       dem <- saga$grid_calculus$random_terrain(
-        TARGET_USER_XMIN = 0,
-        TARGET_USER_XMAX = 1000,
-        TARGET_USER_YMIN = 0,
-        TARGET_USER_YMAX = 1000,
-        RADIUS = 100,
-        ITERATIONS = 500
+        target_user_xmin = 0,
+        target_user_xmax = 1000,
+        target_user_ymin = 0,
+        target_user_ymax = 1000,
+        radius = 100,
+        iterations = 500
       )
 
       start_time <- Sys.time()
-      tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(DEM = dem)
+      tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
       end_time <- Sys.time()
       elapsed_ram <- end_time - start_time
 
       start_time <- Sys.time()
-      tri_fc <- saga_fc$ta_morphometry$terrain_ruggedness_index_tri(DEM = dem)
+      tri_fc <- saga_fc$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
       end_time <- Sys.time()
       elapsed_fc <- end_time - start_time
 

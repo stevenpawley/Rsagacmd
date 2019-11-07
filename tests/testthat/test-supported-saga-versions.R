@@ -50,7 +50,7 @@ testthat::test_that("initiation of SAGA-GIS 2.3.1", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -72,7 +72,7 @@ testthat::test_that("initiation of SAGA-GIS 3.0.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -94,7 +94,7 @@ testthat::test_that("initiation of SAGA-GIS 4.0.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -116,7 +116,7 @@ testthat::test_that("initiation of SAGA-GIS 5.0.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -138,7 +138,7 @@ testthat::test_that("initiation of SAGA-GIS 6.0.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -160,7 +160,7 @@ testthat::test_that("initiation of SAGA-GIS 7.0.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }
@@ -182,7 +182,7 @@ testthat::test_that("initiation of SAGA-GIS 7.4.0", {
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
     testthat::expect_is(
-      saga$grid_calculus$random_terrain(ITERATIONS = 1, RADIUS = 1),
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
   }

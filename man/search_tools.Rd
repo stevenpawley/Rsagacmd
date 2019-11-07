@@ -9,10 +9,10 @@ search_tools(x, pattern)
 \arguments{
 \item{x}{saga object}
 
-\item{pattern}{character. Pattern of text to search for within the tool name}
+\item{pattern}{character, pattern of text to search for within the tool name}
 }
 \value{
-dataframe of tools that match the pattern of the search text and
+dataframe, tools that match the pattern of the search text and
 their host library
 }
 \description{
@@ -21,9 +21,9 @@ Search for a SAGA-GIS tool
 \examples{
 \dontrun{
 # initialize Rsagacmd
-saga <- sagaGIS()
+saga <- saga_gis()
 
 # search for a tool
-search_tools(x = saga, pattern = "Terrain")
+search_tools(x = saga, pattern = "terrain")
 }
 }

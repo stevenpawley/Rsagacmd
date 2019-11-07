@@ -92,7 +92,7 @@
 #' saga <- saga_gis(opt_lib = c("grid_calculus", "ta_morphometry"))
 #'
 #' # example of executing a tool using a tempfile to store the tool outputs
-#' dem <- saga$grid_calculus$random_terrain(RADIUS = 100, ITERATIONS = 500)
+#' dem <- saga$grid_calculus$random_terrain(radius = 100, iterations = 500)
 #'
 #' # Example of chaining operations using pipes and using tempfile to
 #' # store tool outputs

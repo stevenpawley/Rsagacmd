@@ -58,17 +58,8 @@ create_tool <- function(tool_information, tool_options) {
   tool_aliases <- sapply(tool_identifiers, function(x)
     if (grepl("^[[:digit:]]", x)) paste0("x", x) else x, USE.NAMES = FALSE)
   tool_aliases <- gsub(" ", "_", tool_aliases)
-  
-  # check for duplicated arguments that occur in some saga tools
-  if (any(duplicated(tool_identifiers))) {
-    warning(
-      paste(
-        "Cannot parse SAGA-GIS tool", 
-        tool_name,
-        "due to duplicated identifiers being as arguments")
-      )
-    return()
-  }
+  tool_aliases <- tolower(tool_aliases)
+  tool_aliases <- make.names(tool_aliases, unique = TRUE)
   
   # convert options table to nested list
   params <- rep(list(NA), nrow(tool_options)) %>% setNames(tool_aliases)
@@ -153,13 +144,13 @@ create_tool <- function(tool_information, tool_options) {
   
   # exceptions
   if (tool_name == "export_geotiff" | tool_name == "export_raster") {
-    params$FILE$io <- "Output"
-    params$FILE$feature <- "Grid"
+    params$file$io <- "Output"
+    params$file$feature <- "Grid"
   } else if (tool_name == "export_shapes" | tool_name == "export_shapes_to_kml") {
-    params$FILE$io <- "Output"
-    params$FILE$feature <- "Shapes"
+    params$file$io <- "Output"
+    params$file$feature <- "Shapes"
   } else if (tool_name == "clip_grid_with_rectangle") {
-    params$OUTPUT$feature <- "Grid"
+    params$output$feature <- "Grid"
   }
   
   list(

@@ -5,12 +5,12 @@
 #' library, module and options, that are contained within an saga environment
 #' object object. Intended to be used internally by \code{\link{saga_gis}}
 #'
-#' @param saga_bin character. Optional path to saga_cmd executable
-#' @param opt_lib character vector. List of subset of SAGA-GIS tool libraries
-#' to generate links to.
+#' @param saga_bin character, optional path to saga_cmd executable
+#' @param opt_lib character vector of subset of SAGA-GIS tool libraries
+#' to generate links to
 #'
-#' @return saga environment object object. Contains paths, settings and a nested
-#'   list of libaries tools and options
+#' @return saga environment S3 object containing paths, settings and a nested
+#' list of libaries tools and options
 saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   
   if (is.null(saga_bin)) {
@@ -82,48 +82,48 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
           libraries[[basename(libdir)]][[tool_config$tool_name]] <-
             tool_config
         }
-      
-        # remove tools that produce no outputs
-        for (lib in names(libraries)) {
-          tools <- names(libraries[[lib]])
-          
-          for (tool in tools) {
-            selected_tool <- libraries[[lib]][[tool]]$options
-            
-            if (any(selected_tool$io != "Output"))
-              libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
-          }
-        }
-        
-        # remove libraries with no tools
-        for (lib in names(libraries)) {
-          n_tools <- length(libraries[[lib]])
-          
-          if (n_tools == 0)
-            libraries <- libraries[names(libraries) != lib]
-        }
-        
-        # remove invalid libraries for saga_cmd
-        invalid_libs <- list(
-          "db_odbc",
-          "db_pgsql",
-          "docs_html",
-          "docs_pdf",
-          "garden_3d_viewer",
-          "garden_games",
-          "garden_learn_to_program",
-          "garden_webservices",
-          "grid_calculus_bsl",
-          "pointcloud_viewer",
-          "tin_viewer"
-        )
-        
-        libraries <- libraries[!names(libraries) %in% invalid_libs]
-        
       }, 
-      error = function(e) e)
+      error = function(e) 
+        e)
     }
   }
+  
+  # remove tools that produce no outputs
+  for (lib in names(libraries)) {
+    tools <- names(libraries[[lib]])
+    
+    for (tool in tools) {
+      selected_tool <- libraries[[lib]][[tool]]$options
+      
+      if (any(selected_tool$io != "Output"))
+        libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
+    }
+  }
+  
+  # remove libraries with no tools
+  for (lib in names(libraries)) {
+    n_tools <- length(libraries[[lib]])
+    
+    if (n_tools == 0)
+      libraries <- libraries[names(libraries) != lib]
+  }
+  
+  # remove invalid libraries for saga_cmd
+  invalid_libs <- list(
+    "db_odbc",
+    "db_pgsql",
+    "docs_html",
+    "docs_pdf",
+    "garden_3d_viewer",
+    "garden_games",
+    "garden_learn_to_program",
+    "garden_webservices",
+    "grid_calculus_bsl",
+    "pointcloud_viewer",
+    "tin_viewer"
+  )
+  
+  libraries <- libraries[!names(libraries) %in% invalid_libs]
   
   return(list(saga_cmd = saga_bin,
               saga_vers = saga_vers,
@@ -138,16 +138,17 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 #' Intended to be used internally by \code{\link{saga_gis}}.
 #'
 #' @param senv saga environment object object. SAGA-GIS environment and settings
-#' @param grid_caching logical. Optionally use file caching
-#' @param grid_cache_threshold numeric. Threshold (in Mb) before file caching
-#'   for loaded raster data is activated
-#' @param grid_cache_dir character. Path to directory for temporary files
-#' @param cores numeric. Maximum number of processing cores. Needs to be set to
-#'   1 if file caching is activated
-#' @param saga_vers numeric_version. Version of SAGA-GIS. The generation of a
-#'   saga_cmd configuration file is only valid for versions > 4.0.0
+#' @param grid_caching logical, whether to optionally use file caching, 
+#' default = FALSE
+#' @param grid_cache_threshold numeric, threshold (in Mb) before file caching
+#' for loaded raster data is activated
+#' @param grid_cache_dir character, path to directory for temporary files
+#' @param cores numeric, maximum number of processing cores. Needs to be set to
+#' 1 if file caching is activated
+#' @param saga_vers numeric_version, version of SAGA-GIS. The generation of a
+#' saga_cmd configuration file is only valid for versions > 4.0.0
 #'
-#' @return character. Path to custom saga_cmd initiation file
+#' @return character, path to custom saga_cmd initiation file
 saga_configure <- function(senv,
                            grid_caching = FALSE,
                            grid_cache_threshold = 100,
@@ -278,14 +279,14 @@ saga_configure <- function(senv,
 #' 
 #' # Example terrain analysis
 #' # Generate a random DEM
-#' dem <- saga$grid_calculus$random_terrain(RADIUS = 100)
+#' dem <- saga$grid_calculus$random_terrain(radius = 100)
 #' 
 #' # Use Rsagacmd to calculate the Terrain Ruggedness Index
-#' tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(DEM = dem)
+#' tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
 #' plot(tri)
 #' 
 #' # Optionally run command and do not load result as an R object
-#' saga$ta_morphometry$terrain_ruggedness_index_tri(DEM = dem, intern = FALSE)
+#' saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, .intern = FALSE)
 #' }
 saga_gis <- function(saga_bin = NULL, grid_caching = FALSE, 
                      grid_cache_threshold = 100, grid_cache_dir = NULL,
@@ -315,18 +316,18 @@ saga_gis <- function(saga_bin = NULL, grid_caching = FALSE,
     for (tool in names(senv$libraries[[lib]])) {
       tool_options <- senv$libraries[[lib]][[tool]][["options"]]
       tool_cmd <- senv[["libraries"]][[lib]][[tool]][["tool_cmd"]]
-      
-      args <- tool_options %>% 
-        sapply(function(x) x$alias, USE.NAMES = FALSE) %>%
-        paste0(" = NULL", collapse = ", ")
-      
-      # parse function
-      body <- create_function(lib, tool)
-      
+
       tryCatch(
         expr = {
+          args <- tool_options %>% 
+            sapply(function(x) x$alias, USE.NAMES = FALSE) %>%
+            paste0(" = NULL", collapse = ", ")
+          
+          # parse function
+          body <- create_function(lib, tool)
+          
           func_code <- paste0(
-            "function(", args, ", intern = TRUE, all_outputs = TRUE", ") {",
+            "function(", args, ", .intern = TRUE, .all_outputs = TRUE", ") {",
             "\n", body, "\n", "}"
           )
           func <- structure(
@@ -338,6 +339,8 @@ saga_gis <- function(saga_bin = NULL, grid_caching = FALSE,
           
           tool_libraries[[lib]] <- append(tool_libraries[[lib]], func)
           toolnames <- append(toolnames, tool)
+          
+          names(tool_libraries[[lib]]) <- toolnames
         },
         error = function(e)
           warning(
@@ -350,7 +353,7 @@ saga_gis <- function(saga_bin = NULL, grid_caching = FALSE,
           )
       )
     }
-    names(tool_libraries[[lib]]) <- toolnames
+    
   }
   
   # clean local environment
