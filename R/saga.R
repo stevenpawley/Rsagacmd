@@ -401,7 +401,8 @@ print.saga_tool <- function(x, ...) {
   cat(paste0("Help for library = ", lib, "; tool = ", tool, ":", "\n"))
   for (i in seq_along(tool_options)) {
     cat(paste0("Name of tool: ", tool_options[[i]]$name), "\n")
-    cat(paste0("Identifier: ", tool_options[[i]]$identifier, "\n"))
+    cat(paste0("Argument name: ", tool_options[[i]]$alias, "\n"))
+    cat(paste0("Identifier used by SAGA-GIS: ", tool_options[[i]]$identifier, "\n"))
     cat(paste0("Type: ", tool_options[[i]]$type, "\n"))
     cat(paste0("Description: ", tool_options[[i]]$description, "\n"))
     cat(paste0("Constraints: ", tool_options[[i]]$constraints, "\n"))
