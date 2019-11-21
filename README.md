@@ -1,8 +1,6 @@
 <!-- badges: start -->
 [![Build Status](https://travis-ci.org/stevenpawley/Rsagacmd.svg?branch=master)](https://travis-ci.org/stevenpawley/Rsagacmd)
-
 [![CRAN status](https://www.r-pkg.org/badges/version/Rsagacmd)](https://cran.r-project.org/package=Rsagacmd)
-
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd)
 <!-- badges: end -->
 
