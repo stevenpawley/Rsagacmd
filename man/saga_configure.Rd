@@ -4,8 +4,14 @@
 \alias{saga_configure}
 \title{Generates a custom saga_cmd configuration file}
 \usage{
-saga_configure(senv, grid_caching = FALSE, grid_cache_threshold = 100,
-  grid_cache_dir = NULL, cores = NULL, saga_vers)
+saga_configure(
+  senv,
+  grid_caching = FALSE,
+  grid_cache_threshold = 100,
+  grid_cache_dir = NULL,
+  cores = NULL,
+  saga_vers
+)
 }
 \arguments{
 \item{senv}{saga environment object object. SAGA-GIS environment and settings}

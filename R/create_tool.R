@@ -1,30 +1,32 @@
-#' Generates list of options for a saga-gis tool
-#' 
-#' Parses the html table for a saga-gis tool into a list of 
-#' identifiers, options, defaults and constraints
-#'
-#' @param tool_information list
-#' @param tool_options list
-#'
-#' @return named list, containing three items:
-#' `tool_name` syntactically-correct name for the tool
-#' `tool_cmd` command to use for saga_cmd to execute tool
-#' `options` named list of the tool's parameters containing:
-#'    `type` data type of parameter
-#'    `name` long name of the parameter
-#'    `alias` synatically correct alias for the SAGA's identifier
-#'    `identifier` identifier used by saga_cmd
-#'    `description` tool description
-#'    `constraints` description of the parameters constraints
-#'    `default` default parameter value
-#'    `minimum` minimum permissible value
-#'    `maximum` maximum permissible value
-#'    `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
-#'    `io` whether the parameter represents an input or output
-#'        
 #' @importFrom stringr str_replace_all str_extract str_detect
 #' @importFrom stats setNames
 create_tool <- function(tool_information, tool_options) {
+  # Generates list of options for a saga-gis tool
+  # Parses the html table for a saga-gis tool into a list of 
+  # identifiers, options, defaults and constraints
+  #
+  # Parameters
+  # ----------
+  # `tool_information` list
+  # `tool_options` list
+  #
+  # Returns
+  # -------
+  # named list, containing three items:
+  # `tool_name` syntactically-correct name for the tool
+  # `tool_cmd` command to use for saga_cmd to execute tool
+  # `options` named list of the tool's parameters containing:
+  #    `type` data type of parameter
+  #    `name` long name of the parameter
+  #    `alias` synatically correct alias for the SAGA's identifier
+  #    `identifier` identifier used by saga_cmd
+  #    `description` tool description
+  #    `constraints` description of the parameters constraints
+  #    `default` default parameter value
+  #    `minimum` minimum permissible value
+  #    `maximum` maximum permissible value
+  #    `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
+  #    `io` whether the parameter represents an input or output
   
   # create syntactically valid tool_name
   saga_tool_cmd <- colnames(tool_information)[2]
