@@ -87,7 +87,7 @@ saga_execute <-
   n_outputs <- length(tool_outputs)
   
   if (n_outputs == 0) {
-    stop("No outputs have been specified and automatic outputs to tempfiles are disabled (.all_outputs = FALSE)")
+    rlang::abort("No outputs have been specified and automatic outputs to tempfiles are disabled (.all_outputs = FALSE)")
     return(NULL)
   }
   
@@ -122,8 +122,7 @@ saga_execute <-
   # execute system call
   msg <- system(saga_cmd, intern = T)
   if (!is.null(attr(msg, "status"))) {
-    cat(msg, sep = "\n")
-    stop()
+    rlang::abort(msg)
   }
   
   # load SAGA results as list of R objects

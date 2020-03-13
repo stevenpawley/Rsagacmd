@@ -55,10 +55,11 @@ saga_search <- function() {
   
   # error is saga_cmd not found
   if (length(saga_cmd) == 0) {
-    stop(paste(
-      "SAGA-GIS installation not found. Need to supply a valid path",
-      "to the saga_cmd executable"
-    ), call. = FALSE)
+    rlang::abort(
+      paste(
+        "SAGA-GIS installation not found. Need to supply a valid path",
+        "to the saga_cmd executable"
+    ))
     
     return(NULL)
     
