@@ -168,7 +168,7 @@ saga_execute <-
       }, error = function(e) {
         message(
           paste0(
-            "No geoprocessing output for ", names(tool_outputs)[[i]],
+            "No geoprocessing output for ", tool_outputs[[i]]$alias,
             ". Results may require other input parameters to be specified"))
       })
     } else {
