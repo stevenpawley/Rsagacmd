@@ -14,3 +14,6 @@ addons:
     - libudunits2-dev
     - libgdal-dev
     - python-gdal
+
+after_success:
+  - Rscript -e 'covr::codecov()'
