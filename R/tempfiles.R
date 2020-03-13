@@ -8,11 +8,11 @@
 #' session by using the saga_show_tmpfiles function, and can be removed using
 #' the saga_remove_tmpfiles function. Note that this function also removes any
 #' accompanying files, i.e. the '.prj' and '.shx' files that may be written as
-#' part of writing a ESRI Shapefile '.shp' format.
+#' part of writing a ESRI Shapefile '.shp' format
 #'
-#' @param h Remove temporary files that are older than h (in number of hours)
+#' @param h Remove temporary files that are older than h (in number of hours).
 #'
-#' @return Nothing is returned
+#' @return Nothing is returned.
 #' @export
 #'
 #' @examples

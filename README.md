@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/stevenpawley/Rsagacmd.svg?branch=master)](https://travis-ci.org/stevenpawley/Rsagacmd)
 [![CRAN status](https://www.r-pkg.org/badges/version/Rsagacmd)](https://cran.r-project.org/package=Rsagacmd)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd)
+[![Codecov test coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
 

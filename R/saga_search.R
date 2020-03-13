@@ -5,9 +5,9 @@
 #' (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
 #' OS X, saga_cmd is usually included in PATH, if not an automatic search is
 #' performed in the '/usr' folder. If multiple versions of SAGA-GIS are
-#' installed on the system, the path to the newest version is returned.
+#' installed on the system, the path to the newest version is returned
 #'
-#' @return character, path to installed saga_cmd binary
+#' @return The path to installed saga_cmd binary.
 #' @export
 saga_search <- function() {
   

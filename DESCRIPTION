@@ -29,4 +29,5 @@ Imports:
     stringr
 Suggests:
     dplyr,
-    testthat
+    testthat,
+    covr
