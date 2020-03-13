@@ -21,9 +21,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   } else {
     
     if (nchar(Sys.which(names = saga_bin)) == 0)
-      stop(
-        "The supplied path to the saga_cmd binary is not correct", 
-        call. = FALSE)
+      rlang::abort("The supplied path to the saga_cmd binary is not correct")
   }
   
   saga_vers <- saga_version(saga_bin)
@@ -47,8 +45,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   }
   
   if (!is.null(attr(msg, "status"))) {
-    cat(msg, sep = "\n")
-    stop()
+    rlang::abort(msg)
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
@@ -163,7 +160,7 @@ saga_configure <- function(senv,
                            saga_vers) {
   # some checks
   if (missing(senv)) {
-    stop("senv parameter is missing")
+    rlang::abort("senv parameter is missing")
   }
   
   if (is.null(grid_cache_dir)) {
