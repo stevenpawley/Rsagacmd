@@ -123,62 +123,15 @@ saga_execute <-
   )
   
   # execute system call
-  msg <- system(saga_cmd, intern = T)
+  msg <- system(saga_cmd, intern = TRUE)
   if (!is.null(attr(msg, "status"))) {
     rlang::abort(msg)
   }
   
   # load SAGA results as list of R objects
-  saga_results <- list()
-  
-  for (i in seq_along(tool_outputs)) {
-    out_i <- tool_outputs[[i]]$args
-    out_i <- gsub(".sgrd", ".sdat", out_i)
-    current_id <- tool_outputs[[i]]$alias
-    
-    if (isTRUE(.intern)) {
-      tryCatch(expr = {
-        # shapes
-        if ("Shape" %in% tool_outputs[[i]]$feature) {
-          saga_results[[paste0(current_id)]] <- sf::st_read(out_i, quiet = TRUE)
-          
-        # tables
-        } else if (tool_outputs[[i]]$feature == "Table") {
-          if (tools::file_ext(out_i) == "txt") {
-            saga_results[[paste0(current_id)]] <- 
-              utils::read.table(out_i, header = T, sep = "\t")
-          } else if (tools::file_ext(out_i) == "csv") {
-            saga_results[[paste0(current_id)]] <- utils::read.csv(out_i)
-          } else if (tools::file_ext(out_i) == "dbf") {
-            saga_results[[paste0(current_id)]] <- foreign::read.dbf(out_i)
-          }
-          
-        # grids
-        } else if (tool_outputs[[i]]$feature %in% c("Grid", "Raster")) {
-          if (tools::file_ext(out_i) == "sg-gds-z") {
-            warning("Cannot load SAGA Grid Collection as an R raster object - this is not supported")
-          } else {
-            saga_results[[paste0(current_id)]] <- raster::raster(out_i)
-          }
-          
-        # grid lists
-        } else if (tool_outputs[[i]]$feature  == "Grid list") {
-          out_i <- strsplit(out_i, ";")[[1]]
-          for (gl in seq_along(out_i))
-            saga_results[[paste(current_id, gl, sep = "_")]] <- 
-              raster::raster(out_i[gl])
-        }
-        
-      }, error = function(e) {
-        message(
-          paste0(
-            "No geoprocessing output for ", tool_outputs[[i]]$alias,
-            ". Results may require other input parameters to be specified"))
-      })
-    } else {
-      saga_results[[paste0(current_id)]] <- out_i
-    }
-  }
+  saga_results <- lapply(tool_outputs, read_output, .intern = .intern)
+  alias_names <- sapply(tool_outputs, function(x) x$alias)
+  saga_results <- rlang::set_names(saga_results, alias_names)
   
   # summarize outputs
   if (length(saga_results) == 1) {
@@ -187,4 +140,3 @@ saga_execute <-
   
   saga_results
 }
-

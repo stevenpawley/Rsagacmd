@@ -7,7 +7,7 @@
 save_object(x, ...)
 }
 \arguments{
-\item{x}{An R object}
+\item{x}{An R object.}
 
 \item{...}{Other parameters such as the temporary directory to use for
 storage.}

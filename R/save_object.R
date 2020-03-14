@@ -108,13 +108,13 @@ save_object.data.frame <- function(x, ...) {
 }
 
 spatial_to_saga <- function(x, temp_path) {
-  temp <- tempfile(tmpdir = temp_path, fileext = ".gpkg")
+  temp <- tempfile(tmpdir = temp_path, fileext = ".shp")
   pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
   rgdal::writeOGR(
     obj = x,
     dsn = temp,
     layer = 1,
-    driver = "GPKG"
+    driver = "ESRI Shapefile"
   )
   
   temp

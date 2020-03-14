@@ -22,7 +22,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
 
     # table output
     orb <- saga$climate_tools$earths_orbital_parameters()
-    testthat::expect_is(orb, "data.frame")
+    testthat::expect_is(orb, "tbl_df")
 
     # optional outputs with conditions on inputs
     flowacc <- dem %>%
