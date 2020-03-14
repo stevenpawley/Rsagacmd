@@ -38,7 +38,7 @@
 <meta property="og:title" content="Generates a custom saga_cmd configuration file — saga_configure" />
 <meta property="og:description" content="Creates and edits a saga_cmd coniguration file in order to change saga_cmd
 settings related to file caching and number of available processor cores.
-Intended to be used internally by saga_gis." />
+Intended to be used internally by saga_gis" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -110,7 +110,7 @@ Intended to be used internally by saga_gis." />
     <div class="ref-description">
     <p>Creates and edits a saga_cmd coniguration file in order to change saga_cmd
 settings related to file caching and number of available processor cores.
-Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></code>.</p>
+Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></code></p>
     </div>
 
     <pre class="usage"><span class='fu'>saga_configure</span>(
@@ -127,37 +127,41 @@ Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></co
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>senv</th>
-      <td><p>saga environment object object. SAGA-GIS environment and settings</p></td>
+      <td><p>A saga environment object. Contains the SAGA-GIS environment and
+settings.</p></td>
     </tr>
     <tr>
       <th>grid_caching</th>
-      <td><p>logical, whether to optionally use file caching, 
-default = FALSE</p></td>
+      <td><p>Whether to use file caching. The default is FALSE.</p></td>
     </tr>
     <tr>
       <th>grid_cache_threshold</th>
-      <td><p>numeric, threshold (in Mb) before file caching
-for loaded raster data is activated</p></td>
+      <td><p>Any number to use as a threshold (in Mb) before
+file caching for loaded raster data is activated.</p></td>
     </tr>
     <tr>
       <th>grid_cache_dir</th>
-      <td><p>character, path to directory for temporary files</p></td>
+      <td><p>Optionally specify a path to the used directory for
+temporary files. The default uses `base::tempdir`.</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>numeric, maximum number of processing cores. Needs to be set to
-1 if file caching is activated</p></td>
+      <td><p>An integer specifying the maximum number of processing cores.
+Needs to be set to 1 if file caching is activated because file caching in
+SAGA-GIS is not thread-safe.</p></td>
     </tr>
     <tr>
       <th>saga_vers</th>
-      <td><p>numeric_version, version of SAGA-GIS. The generation of a
-saga_cmd configuration file is only valid for versions &gt; 4.0.0</p></td>
+      <td><p>A `numeric_version` that specifies the version of SAGA-GIS.
+The generation of a saga_cmd configuration file is only valid for versions
+&gt; 4.0.0.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>character, path to custom saga_cmd initiation file</p>
+    <p>A character that specifies the path to custom saga_cmd initiation
+  file.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

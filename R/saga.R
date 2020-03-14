@@ -15,11 +15,10 @@
 #' @return A saga environment S3 object containing paths, settings and a nested
 #'   list of libraries tools and options.
 saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
+  
   if (is.null(saga_bin)) {
     saga_bin <- saga_search()
-  
   } else {
-    
     if (nchar(Sys.which(names = saga_bin)) == 0)
       rlang::abort("The supplied path to the saga_cmd binary is not correct")
   }
@@ -30,14 +29,12 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   help_path <- file.path(tempdir(), basename(tempfile()))
   dir.create(help_path)
   
+  # version < 3.0.0 need to use working directory
   if (saga_vers > as.numeric_version("3.0.0")) {
-    # generate help files in a temp path
-    msg <- system(
-      paste0(paste(shQuote(saga_bin), "--create-docs="), help_path),
-      intern = TRUE)
+    msg <-
+      system(paste0(paste(shQuote(saga_bin), "--create-docs="), help_path), intern = TRUE)
     
   } else {
-    # version < 3.0.0 need to use working directory
     olddir <- getwd()
     setwd(help_path)
     msg <- system(paste(shQuote(saga_bin), "--docs"), intern = TRUE)

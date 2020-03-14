@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parses valid SAGA-GIS libraries and tools into a nested list of functions — saga_env • Rsagacmd</title>
+<title>Generic methods to save R in-memory objects to file to SAGA-GIS to access — save_object • Rsagacmd</title>
 
 
 <!-- jquery -->
@@ -35,11 +35,9 @@
 
 
 
-<meta property="og:title" content="Parses valid SAGA-GIS libraries and tools into a nested list of functions — saga_env" />
-<meta property="og:description" content="Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a nested list of
-library, module and options, that are contained within an saga environment
-object object. Intended to be used internally by saga_gis" />
+<meta property="og:title" content="Generic methods to save R in-memory objects to file to SAGA-GIS to access — save_object" />
+<meta property="og:description" content="Designed to be used internally by Rsagacmd for automatically pass data to
+SAGA-GIS for geoprocessing" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,41 +101,36 @@ object object. Intended to be used internally by saga_gis" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parses valid SAGA-GIS libraries and tools into a nested list of functions</h1>
+    <h1>Generic methods to save R in-memory objects to file to SAGA-GIS to access</h1>
     
-    <div class="hidden name"><code>saga_env.Rd</code></div>
+    <div class="hidden name"><code>save_object.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Establishes the link to SAGA GIS by generating a SAGA help file and parsing
-all libraries, tools and options from the help files into a nested list of
-library, module and options, that are contained within an saga environment
-object object. Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></code></p>
+    <p>Designed to be used internally by Rsagacmd for automatically pass data to
+SAGA-GIS for geoprocessing</p>
     </div>
 
-    <pre class="usage"><span class='fu'>saga_env</span>(<span class='kw'>saga_bin</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>opt_lib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>save_object</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>saga_bin</th>
-      <td><p>An optional character vector to specify the path to the
-saga_cmd executable. Otherwise the function will perform a search for
-saga_cmd.</p></td>
+      <th>x</th>
+      <td><p>An R object</p></td>
     </tr>
     <tr>
-      <th>opt_lib</th>
-      <td><p>A character vector of a subset of SAGA-GIS tool libraries to
-generate dynamic functions that map to each tool. Used to save time if you
-only want to import a single library.</p></td>
+      <th>...</th>
+      <td><p>Other parameters such as the temporary directory to use for
+storage.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A saga environment S3 object containing paths, settings and a nested
-  list of libraries tools and options.</p>
+    <p>A character that specifies the file path to where the R object was
+  saved.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

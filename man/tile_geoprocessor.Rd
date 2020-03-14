@@ -7,21 +7,21 @@
 tile_geoprocessor(x, grid, nx, ny, overlap = 0, file_path = NULL)
 }
 \arguments{
-\item{x}{saga S3 object}
+\item{x}{A `saga` object.}
 
-\item{grid}{character, or RasterLayer. GDAL-supported raster as as a path to
-the raster or representing a RasterLayer object}
+\item{grid}{A path to a GDAL-supported raster to apply tiling, or a
+RasterLayer.}
 
-\item{nx}{numeric, number of x-pixels per tile}
+\item{nx}{An integer with the number of x-pixels per tile.}
 
-\item{ny}{numeric, number of y-pixels per tile}
+\item{ny}{An integer with the number of y-pixels per tile.}
 
-\item{overlap}{numeric, number of overlapping pixels}
+\item{overlap}{An integer with the number of overlapping pixels.}
 
-\item{file_path}{character, optional file path to store raster tiles}
+\item{file_path}{An optional file file path to store raster tiles.}
 }
 \value{
-list of RasterLayer objects representing tiled data
+A list of RasterLayer objects representing tiled data.
 }
 \description{
 Split a raster grid into tiles. The tiles are saved as Rsagacmd

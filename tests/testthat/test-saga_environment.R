@@ -1,4 +1,3 @@
-context("test-saga_environment")
 library(Rsagacmd)
 library(raster)
 

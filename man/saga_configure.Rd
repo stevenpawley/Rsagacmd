@@ -14,27 +14,31 @@ saga_configure(
 )
 }
 \arguments{
-\item{senv}{saga environment object object. SAGA-GIS environment and settings}
+\item{senv}{A saga environment object. Contains the SAGA-GIS environment and
+settings.}
 
-\item{grid_caching}{logical, whether to optionally use file caching, 
-default = FALSE}
+\item{grid_caching}{Whether to use file caching. The default is FALSE.}
 
-\item{grid_cache_threshold}{numeric, threshold (in Mb) before file caching
-for loaded raster data is activated}
+\item{grid_cache_threshold}{Any number to use as a threshold (in Mb) before
+file caching for loaded raster data is activated.}
 
-\item{grid_cache_dir}{character, path to directory for temporary files}
+\item{grid_cache_dir}{Optionally specify a path to the used directory for
+temporary files. The default uses `base::tempdir`.}
 
-\item{cores}{numeric, maximum number of processing cores. Needs to be set to
-1 if file caching is activated}
+\item{cores}{An integer specifying the maximum number of processing cores.
+Needs to be set to 1 if file caching is activated because file caching in
+SAGA-GIS is not thread-safe.}
 
-\item{saga_vers}{numeric_version, version of SAGA-GIS. The generation of a
-saga_cmd configuration file is only valid for versions > 4.0.0}
+\item{saga_vers}{A `numeric_version` that specifies the version of SAGA-GIS.
+The generation of a saga_cmd configuration file is only valid for versions
+> 4.0.0.}
 }
 \value{
-character, path to custom saga_cmd initiation file
+A character that specifies the path to custom saga_cmd initiation
+  file.
 }
 \description{
 Creates and edits a saga_cmd coniguration file in order to change saga_cmd
 settings related to file caching and number of available processor cores.
-Intended to be used internally by \code{\link{saga_gis}}.
+Intended to be used internally by \code{\link{saga_gis}}
 }

@@ -115,15 +115,15 @@ search_tools <- function(x, pattern) {
 #' processing. This is a function to make the the SAGA-GIS
 #' grid_tools / tiling tool more convenient to use.
 #'
-#' @param x saga S3 object
-#' @param grid character, or RasterLayer. GDAL-supported raster as as a path to
-#'   the raster or representing a RasterLayer object
-#' @param nx numeric, number of x-pixels per tile
-#' @param ny numeric, number of y-pixels per tile
-#' @param overlap numeric, number of overlapping pixels
-#' @param file_path character, optional file path to store raster tiles
+#' @param x A `saga` object.
+#' @param grid A path to a GDAL-supported raster to apply tiling, or a
+#'   RasterLayer.
+#' @param nx An integer with the number of x-pixels per tile.
+#' @param ny An integer with the number of y-pixels per tile.
+#' @param overlap An integer with the number of overlapping pixels.
+#' @param file_path An optional file file path to store raster tiles.
 #'
-#' @return list of RasterLayer objects representing tiled data
+#' @return A list of RasterLayer objects representing tiled data.
 #' @export
 #' @examples
 #' \dontrun{
@@ -138,7 +138,7 @@ search_tools <- function(x, pattern) {
 #' }
 tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
 
-  # get local environment of sagaGIS object (first tool)
+  # get environment of saga_gis object
   env <- environment(x[[1]][[1]])
 
   # calculate number of tiles required
@@ -148,7 +148,8 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
 
   # create list of temporary files for tiles
   tile_outputs <- c()
-  for (i in 1:n_tiles) {
+
+  for (i in seq_len(n_tiles)) {
     if (is.null(file_path)) {
       temp <- tempfile(fileext = ".sgrd")
     } else {
@@ -159,17 +160,11 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
   }
 
   # grid tiling
-  saga_execute(
-    lib = "grid_tools", 
-    tool = "tiling", 
-    senv = env$senv, 
-    .intern = TRUE, 
-    .all_outputs = TRUE, 
-    list(
-      grid = grid, 
-      tiles = tile_outputs, 
-      overlap = overlap, 
-      nx = nx,
-      ny = ny)
+  x$grid_tools$tiling(
+    grid = grid,
+    tiles = tile_outputs,
+    overlap = 0,
+    nx = nx,
+    ny = ny
   )
 }

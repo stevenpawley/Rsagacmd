@@ -7,25 +7,24 @@
 saga_execute(lib, tool, senv, .intern = TRUE, .all_outputs = TRUE, ...)
 }
 \arguments{
-\item{lib}{character, name of SAGA-GIS library to execute}
+\item{lib}{A character specifying the name of SAGA-GIS library to execute.}
 
-\item{tool}{character, name of SAGA-GIS tool to execute}
+\item{tool}{A character specifying the name of SAGA-GIS tool to execute.}
 
-\item{senv}{saga environment object object}
+\item{senv}{A saga environment object.}
 
-\item{.intern}{logical, whether to load the outputs from the SAGA-GIS
-geoprocessing operatioon as an R object}
+\item{.intern}{A logical specifying whether to load the outputs from the
+SAGA-GIS geoprocessing operation as an R object.}
 
-\item{.all_outputs}{logical, default = TRUE, automatically output all
-results from the selected SAGA tool and load them results as R objects. If
-.all_outputs = FALSE then the file paths to store the tool's results will
-have to be manually specified in the arguments}
+\item{.all_outputs}{A logical to specify whether to automatically output all
+results from the selected SAGA tool and load them results as R objects
+(default = TRUE). If .all_outputs = FALSE then the file paths to store the
+tool's results will have to be manually specified in the arguments.}
 
-\item{...}{named arguments and values for SAGA tool}
+\item{...}{Named arguments and values for SAGA tool.}
 }
 \value{
-output of SAGA-GIS tool loaded as an R object 
-(RasterLayer/sf/dataframe)
+output of SAGA-GIS tool loaded as an R object.
 }
 \description{
 Intended to be used internally

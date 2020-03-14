@@ -7,14 +7,17 @@
 saga_env(saga_bin = NULL, opt_lib = NULL)
 }
 \arguments{
-\item{saga_bin}{character, optional path to saga_cmd executable}
+\item{saga_bin}{An optional character vector to specify the path to the
+saga_cmd executable. Otherwise the function will perform a search for
+saga_cmd.}
 
-\item{opt_lib}{character vector of subset of SAGA-GIS tool libraries
-to generate links to}
+\item{opt_lib}{A character vector of a subset of SAGA-GIS tool libraries to
+generate dynamic functions that map to each tool. Used to save time if you
+only want to import a single library.}
 }
 \value{
-saga environment S3 object containing paths, settings and a nested
-list of libaries tools and options
+A saga environment S3 object containing paths, settings and a nested
+  list of libraries tools and options.
 }
 \description{
 Establishes the link to SAGA GIS by generating a SAGA help file and parsing

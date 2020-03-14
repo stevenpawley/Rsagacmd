@@ -1,4 +1,3 @@
-context("test-supported-saga-versions")
 library(Rsagacmd)
 library(raster)
 

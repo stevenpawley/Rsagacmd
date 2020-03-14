@@ -7,7 +7,7 @@
 saga_search()
 }
 \value{
-character, path to installed saga_cmd binary
+The path to installed saga_cmd binary.
 }
 \description{
 Returns the path to the saga_cmd executable On windows, automatic searching
@@ -15,5 +15,5 @@ will occur first in 'C:/Program Files/SAGA-GIS'; 'C:/Program Files
 (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
 OS X, saga_cmd is usually included in PATH, if not an automatic search is
 performed in the '/usr' folder. If multiple versions of SAGA-GIS are
-installed on the system, the path to the newest version is returned.
+installed on the system, the path to the newest version is returned
 }

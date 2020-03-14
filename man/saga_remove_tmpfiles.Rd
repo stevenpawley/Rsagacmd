@@ -7,10 +7,10 @@
 saga_remove_tmpfiles(h = 0)
 }
 \arguments{
-\item{h}{Remove temporary files that are older than h (in number of hours)}
+\item{h}{Remove temporary files that are older than h (in number of hours).}
 }
 \value{
-Nothing is returned
+Nothing is returned.
 }
 \description{
 For convenience, functions in the Rsagacmd package create temporary files if
@@ -21,7 +21,7 @@ large amounts of disk space. These temporary files can be observed during a
 session by using the saga_show_tmpfiles function, and can be removed using
 the saga_remove_tmpfiles function. Note that this function also removes any
 accompanying files, i.e. the '.prj' and '.shx' files that may be written as
-part of writing a ESRI Shapefile '.shp' format.
+part of writing a ESRI Shapefile '.shp' format
 }
 \examples{
 \dontrun{

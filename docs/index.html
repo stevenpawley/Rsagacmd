@@ -60,12 +60,12 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><a href="https://travis-ci.org/stevenpawley/Rsagacmd"><img src="https://travis-ci.org/stevenpawley/Rsagacmd.svg?branch=master" alt="Build Status"></a> <a href="https://cran.r-project.org/package=Rsagacmd"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><!-- badges: end --></p>
+<p><a href="https://travis-ci.org/stevenpawley/Rsagacmd"><img src="https://travis-ci.org/stevenpawley/Rsagacmd.svg?branch=master" alt="Build Status"></a> <a href="https://cran.r-project.org/package=Rsagacmd"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <!-- badges: end --></p>
 <div id="rsagacmd" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#rsagacmd" class="anchor"></a>Rsagacmd</h1></div>
 <p>Rsagacmd: A package for linking R with the open-source SAGA-GIS.</p>
-<p>Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (<a href="https://sourceforge.net/projects/saga-gis/" class="uri">https://sourceforge.net/projects/saga-gis/</a>) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 7.1.1 on Windows (x64), OS X and Linux.</p>
+<p>Rsagacmd is intended to provide an R scripting interface to the open-source SAGA-GIS (<a href="https://sourceforge.net/projects/saga-gis/" class="uri">https://sourceforge.net/projects/saga-gis/</a>) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 7.6.0 on Windows (x64), OS X and Linux.</p>
 <div id="description" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description" class="anchor"></a>Description</h2>
@@ -78,8 +78,8 @@
 <p>Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing operations. Therefore, all of the Rsagacmd tools allow paths to the input data to be used as arguments, if the data is stored in the appropriate file formats (e.g. GDAL-supported single-band rasters, OGR supported vector data, and comma- or tab-delimited text files for tabular data). In addition, Rsagacmd currently supports the following R object classes to pass data to SAGA-GIS, and to load the results back into the R environment:</p>
 <ul>
 <li>Raster data handling is provided by the R raster package. Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects. For more details, see the ‘Handling of raster data’.</li>
-<li>Vector features that result from SAGA-GIS geoprocessing operations are output in ESRI Shapefile format and are loaded into the R environment as simple features objects</li>
-<li>Tabular data from SAGA-GIS tools are loaded as dataframes</li>
+<li>Vector features that result from SAGA-GIS geoprocessing operations are output in ESRI Shapefile format and are loaded into the R environment as simple features objects.</li>
+<li>Tabular data from SAGA-GIS tools are loaded as dataframes.</li>
 </ul>
 <p>The results from tools that return multiple outputs are loaded into the R environment as a named list of the appropriate R object classes.</p>
 </div>
@@ -91,10 +91,8 @@
 <div id="combining-saga-gis-tools-with-pipes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#combining-saga-gis-tools-with-pipes" class="anchor"></a>Combining SAGA-GIS tools with pipes</h2>
-<p>For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, e.g.:</p>
-<pre><code><a href="https://rdrr.io/r/base/library.html"># Initialize SAGA-GIS as a S3 object
-
-library(Rsagacmd)
+<p>For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated:</p>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(Rsagacmd)
 saga &lt;- saga_gis("C:/SAGA-GIS/saga_cmd.exe")
 
 # Generate random terrain and save to file

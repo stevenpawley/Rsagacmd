@@ -7,7 +7,7 @@
 \method{print}{saga_tool}(x, ...)
 }
 \arguments{
-\item{x}{saga_tool object}
+\item{x}{A `saga_tool` object.}
 
 \item{...}{Additional arguments to pass to print. Currently not used.}
 }
