@@ -1,6 +1,6 @@
 #' Function to execute SAGA-GIS commands through the command line tool
 #'
-#' Intended to be used internally
+#' Intended to be used internally by each function
 #'
 #' @param lib A character specifying the name of SAGA-GIS library to execute.
 #' @param tool A character specifying the name of SAGA-GIS tool to execute.
