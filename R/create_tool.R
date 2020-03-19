@@ -18,7 +18,7 @@ create_tool <- function(tool_information, tool_options) {
   # `options` named list of the tool's parameters containing:
   #    `type` data type of parameter
   #    `name` long name of the parameter
-  #    `alias` synatically correct alias for the SAGA's identifier
+  #    `alias` syntactically correct alias for the SAGA's identifier
   #    `identifier` identifier used by saga_cmd
   #    `description` tool description
   #    `constraints` description of the parameters constraints
