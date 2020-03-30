@@ -1,8 +1,15 @@
+# This file contains functions for reading the geoprocessing results from 
+# SAGA-GIS back into the R environment
+
 read_shapes <- function(x) {
+  # read a vector data output
+  
   sf::st_read(x$args, quiet = TRUE)
 }
 
 read_table <- function(x) {
+  # read a tabular data output
+  
   if (tools::file_ext(x$args) == "txt") {
     object <- 
       utils::read.table(x$args, header = T, sep = "\t") %>%
@@ -23,6 +30,8 @@ read_table <- function(x) {
 }
 
 read_grid <- function(x) {
+  # read a raster grid output
+  # returns a RasterLayer object
   
   if (tools::file_ext(x$args) == "sg-gds-z") {
     warning(paste(
@@ -37,6 +46,9 @@ read_grid <- function(x) {
 }
 
 read_grid_list <- function(x) {
+  # read a semi-colon separated list of grids
+  # returns a RasterBrick object
+  
   x$args <- strsplit(x$args, ";")[[1]]
   object <- lapply(x$args, raster::raster)
   names(object) <- paste(x$alias, seq_along(x$args), sep = "_")
@@ -45,6 +57,7 @@ read_grid_list <- function(x) {
 }
 
 read_output <- function(output, .intern) {
+  # Reads different output datatypes in R
   
   output$args <- gsub(".sgrd", ".sdat", output$args)
 

@@ -27,5 +27,5 @@ tool's results will have to be manually specified in the arguments.}
 output of SAGA-GIS tool loaded as an R object.
 }
 \description{
-Intended to be used internally
+Intended to be used internally by each function
 }

@@ -324,27 +324,38 @@ saga_gis <- function(saga_bin = NULL,
 
       tryCatch(
         expr = {
-          args <- tool_options %>% 
-            sapply(function(x) x$alias, USE.NAMES = FALSE) %>%
-            paste0(" = NULL", collapse = ", ")
+          # create function body
+          body <- create_function(lib = lib, tool = tool)
+          
+          # create list of arguments and default values
+          args <- lapply(tool_options, function(x) NULL)
+          args <- c(args, list(.intern = TRUE, .all_outputs = TRUE))
+          
+          # coerce arguments to comma-separated character
+          args <- mapply(
+            function(k, v) paste(k, deparse(v), sep = " = "), 
+            names(args), 
+            args, 
+            USE.NAMES = FALSE
+          )
+          args <- paste(args, collapse = ", ")
           
           # parse function
-          body <- create_function(lib, tool)
+          func_code <- paste0("function(", args, ") {", body, "}")
           
-          func_code <- paste0(
-            "function(", args, ", .intern = TRUE, .all_outputs = TRUE", ") {",
-            "\n", body, "\n", "}"
-          )
+          tool_env <- new.env()
+          tool_env$senv <- senv
+          
           func <- structure(
-            eval(expr = parse(text = func_code)),
+            eval(expr = parse(text = func_code), envir = tool_env),
             lib = lib,
             tool = tool,
             class = "saga_tool"
           )
           
+          # append function to lists
           tool_libraries[[lib]] <- append(tool_libraries[[lib]], func)
           toolnames <- append(toolnames, tool)
-          
           names(tool_libraries[[lib]]) <- toolnames
         },
         error = function(e)
@@ -359,13 +370,6 @@ saga_gis <- function(saga_bin = NULL,
       )
     }
   }
-  
-  # clean local environment
-  remove(
-    args, body, cores, func, func_code, grid_cache_dir,
-    grid_cache_threshold, grid_caching, lib, saga_bin, tool, tool_cmd,
-    tool_options, toolnames
-  )
   
   #  return S3 saga object
   structure(
