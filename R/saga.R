@@ -91,7 +91,9 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
     for (tool in tools) {
       selected_tool <- libraries[[lib]][[tool]]$options
       
-      if (any(selected_tool$io != "Output"))
+      has_output <- sapply(selected_tool, function(x) x$io)
+      
+      if (!"Output" %in% has_output)
         libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
     }
   }
