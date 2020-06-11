@@ -3,7 +3,6 @@
 
 read_shapes <- function(x) {
   # read a vector data output
-  
   sf::st_read(x$args, quiet = TRUE)
 }
 
@@ -53,6 +52,10 @@ read_grid_list <- function(x) {
   object <- lapply(x$args, raster::raster)
   names(object) <- paste(x$alias, seq_along(x$args), sep = "_")
   
+  # unlist if grid list but just a single output
+  if (length(object) == 1)
+    object <- object[[1]]
+  
   object
 }
 
@@ -90,3 +93,4 @@ read_output <- function(output, .intern) {
   
   object
 }
+
