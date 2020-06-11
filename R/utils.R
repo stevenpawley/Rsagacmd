@@ -89,14 +89,14 @@ search_tools <- function(x, pattern) {
 
   matches <- list()
 
-  for (lib in names(env$tool_libraries)) {
+  for (lib in names(env$senv$libraries)) {
     match_text <- grep(
       pattern, 
-      names(env$tool_libraries[[lib]]), 
+      names(env$senv$libraries[[lib]]), 
       ignore.case = TRUE)
     
     if (length(match_text) > 0) {
-      matches[[lib]] <- names(env$tool_libraries[[lib]])[match_text]
+      matches[[lib]] <- names(env$senv$libraries[[lib]])[match_text]
     }
   }
 
