@@ -131,7 +131,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
 
 #' Generates a custom saga_cmd configuration file
 #'
-#' Creates and edits a saga_cmd coniguration file in order to change saga_cmd
+#' Creates and edits a saga_cmd configuration file in order to change saga_cmd
 #' settings related to file caching and number of available processor cores.
 #' Intended to be used internally by \code{\link{saga_gis}}
 #'

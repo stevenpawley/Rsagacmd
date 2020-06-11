@@ -111,7 +111,7 @@ search_tools <- function(x, pattern) {
 #' Split a raster grid into tiles for tile-based processing
 #'
 #' Split a raster grid into tiles. The tiles are saved as Rsagacmd
-#' temporary files, and are loaded as a list of R objects for futher
+#' temporary files, and are loaded as a list of R objects for further
 #' processing. This is a function to make the the SAGA-GIS
 #' grid_tools / tiling tool more convenient to use.
 #'

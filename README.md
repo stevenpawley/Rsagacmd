@@ -40,7 +40,7 @@ generating R functions for every SAGA-GIS tool that is contained in the user\'s
 installed SAGA-GIS version. This means that every SAGA-GIS tool is available for
 use within R (other than the interactive tools), and Rsagacmd always remains
 up-to-date with new versions of SAGA-GIS. Custom tools that have been created
-using SAGAs `toolchains` (https://rohanfisher.wordpress.com/saga-tool-chains/)
+using SAGA\'s `toolchains` (https://rohanfisher.wordpress.com/saga-tool-chains/)
 will also be accessible via Rsagacmd.
 
 ## Package installation
@@ -132,7 +132,7 @@ format (.sgrd) supports only single band data. Therefore when passing raster
 data to most SAGA-GIS tools using Rsagacmd, the data should represent single
 raster bands, specified as either the path to the single raster band, or when
 using the R raster package, a RasterLayer (or less commonly a RasterStack or
-RasterBrick) object that contains onthely a single layer. Subsetting of raster
+RasterBrick) object that contains on-the-fly a single layer. Subsetting of raster
 data is performed automatically by Rsagacmd in the case of when a single band
 from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This
 occurs in by either passing the filename of the raster to the SAGA-GIS command

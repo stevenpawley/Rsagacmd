@@ -38,7 +38,7 @@ A character that specifies the path to custom saga_cmd initiation
   file.
 }
 \description{
-Creates and edits a saga_cmd coniguration file in order to change saga_cmd
+Creates and edits a saga_cmd configuration file in order to change saga_cmd
 settings related to file caching and number of available processor cores.
 Intended to be used internally by \code{\link{saga_gis}}
 }
