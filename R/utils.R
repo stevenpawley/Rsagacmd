@@ -121,7 +121,7 @@ search_tools <- function(x, pattern) {
 #' @param nx An integer with the number of x-pixels per tile.
 #' @param ny An integer with the number of y-pixels per tile.
 #' @param overlap An integer with the number of overlapping pixels.
-#' @param file_path An optional file file path to store raster tiles.
+#' @param file_path An optional file file path to store the raster tiles.
 #'
 #' @return A list of RasterLayer objects representing tiled data.
 #' @export
@@ -138,33 +138,26 @@ search_tools <- function(x, pattern) {
 #' }
 tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
 
-  # get environment of saga_gis object
-  env <- environment(x[[1]][[1]])
-
-  # calculate number of tiles required
-  n_widths <- ceiling(1 / (nx / (ncol(grid) + overlap)))
-  n_heights <- ceiling(1 / (ny / (nrow(grid) + overlap)))
-  n_tiles <- n_widths * n_heights
-
-  # create list of temporary files for tiles
-  tile_outputs <- c()
-
-  for (i in seq_len(n_tiles)) {
-    if (is.null(file_path)) {
-      temp <- tempfile(fileext = ".sgrd")
-    } else {
-      temp <- tempfile(tmpdir = file_path, fileext = ".sgrd")
-    }
-    tile_outputs <- c(tile_outputs, temp)
-    pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
+  if (is.null(file_path)) {
+    file_path <- file.path(tempdir(), paste0("tiles", floor(runif(1, 0, 1e6))))
+    
+    if (!dir.exists(file_path))
+      dir.create(file_path)
   }
-
-  # grid tiling
+  
   x$grid_tools$tiling(
     grid = grid,
-    tiles = tile_outputs,
-    overlap = 0,
+    overlap = overlap,
     nx = nx,
-    ny = ny
+    ny = ny, 
+    tiles_path = file_path,
+    tiles_save = TRUE,
+    .all_outputs = FALSE, 
+    .intern = FALSE
   )
+  
+  tile_sdats <- list.files(file_path, pattern = "*.sdat", full.names = TRUE)
+  pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, tile_sdats)
+  
+  sapply(tile_sdats, raster::raster)
 }

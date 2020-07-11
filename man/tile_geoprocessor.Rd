@@ -18,7 +18,7 @@ RasterLayer.}
 
 \item{overlap}{An integer with the number of overlapping pixels.}
 
-\item{file_path}{An optional file file path to store raster tiles.}
+\item{file_path}{An optional file file path to store the raster tiles.}
 }
 \value{
 A list of RasterLayer objects representing tiled data.
