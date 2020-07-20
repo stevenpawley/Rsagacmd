@@ -24,6 +24,7 @@ saga_execute <-
   
   args <- c(...)
   
+  # get tool and saga settings
   tools_in_library <- senv$libraries[[lib]]
   selected_tool <- tools_in_library[[tool]]
   tool_options <- selected_tool$options
@@ -31,10 +32,11 @@ saga_execute <-
   saga_cmd <- senv$saga_cmd
   saga_config <- senv$saga_config
   temp_path <- senv$temp_path
+  raster_lib <- senv$raster_lib
   
   # match the syntactically-correct arg_name to the identifier used by saga_cmd
   arg_names <- names(args)
-  identifiers_r <- sapply(tool_options, function(x) 
+  identifiers_r <- sapply(tool_options, function(x)
     x$identifier)
   arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
   args <- setNames(args, arg_names)

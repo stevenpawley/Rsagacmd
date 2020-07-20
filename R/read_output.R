@@ -1,6 +1,3 @@
-# This file contains functions for reading the geoprocessing results from 
-# SAGA-GIS back into the R environment
-
 read_shapes <- function(x) {
   # read a vector data output
   sf::st_read(x$args, quiet = TRUE)

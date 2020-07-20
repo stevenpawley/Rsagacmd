@@ -152,3 +152,8 @@ save_object.SpatialPolygonsDataFrame <- function(x, ...) {
   
   spatial_to_saga(x, temp_path)
 }
+
+#' @export
+save_object.list <- function(x, ...) {
+  lapply(x, save_object)
+}

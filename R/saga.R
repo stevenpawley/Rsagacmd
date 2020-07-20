@@ -11,10 +11,13 @@
 #' @param opt_lib A character vector of a subset of SAGA-GIS tool libraries to
 #'   generate dynamic functions that map to each tool. Used to save time if you
 #'   only want to import a single library.
+#' @param rasterlib A character vector to specify the library to use for handling
+#'   raster data. Currently, either "raster" or "terra" is supported. The
+#'   default is "raster".
 #'
 #' @return A saga environment S3 object containing paths, settings and a nested
 #'   list of libraries tools and options.
-saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
+saga_env <- function(saga_bin = NULL, opt_lib = NULL, raster_lib = "raster") {
   
   if (is.null(saga_bin)) {
     saga_bin <- saga_search()
@@ -123,9 +126,14 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL) {
   
   libraries <- libraries[!names(libraries) %in% invalid_libs]
   
-  return(list(saga_cmd = saga_bin,
-              saga_vers = saga_vers,
-              libraries = libraries))
+  return(
+    list(
+      saga_cmd = saga_bin,
+      saga_vers = saga_vers,
+      raster_lib = raster_lib,
+      libraries = libraries
+    )
+  )
 }
 
 
@@ -261,6 +269,9 @@ saga_configure <- function(senv,
 #' @param cores An integer for the maximum number of processing cores. By
 #'   default all cores are utilized. Needs to be set to 1 if file caching is
 #'   activated.
+#' @param raster_lib A character vector to specify the library to use for handling
+#'   raster data. Currently, either "raster" or "terra" is supported. The
+#'   default is "raster".
 #' @param opt_lib A character vector with the names of a subset of SAGA-GIS
 #'   libraries. Used to link only a subset of named SAGA-GIS tool libraries,
 #'   rather than creating functions for all available tool libraries.
@@ -296,10 +307,11 @@ saga_gis <- function(saga_bin = NULL,
                      grid_cache_threshold = 100,
                      grid_cache_dir = NULL,
                      cores = NULL,
+                     raster_lib = "raster",
                      opt_lib = NULL,
                      temp_path = NULL) {
   
-  senv <- saga_env(saga_bin, opt_lib)
+  senv <- saga_env(saga_bin, opt_lib, raster_lib)
   
   senv[["saga_config"]] <- saga_configure(
     senv,
@@ -310,8 +322,7 @@ saga_gis <- function(saga_bin = NULL,
     senv$saga_vers
   )
   
-  if (!is.null(temp_path)) 
-    senv[["temp_path"]] <- temp_path else
+  if (!is.null(temp_path)) senv[["temp_path"]] <- temp_path else
       senv[["temp_path"]] <- tempdir()
   
   # dynamically create functions

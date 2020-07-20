@@ -4,7 +4,7 @@
 \alias{saga_env}
 \title{Parses valid SAGA-GIS libraries and tools into a nested list of functions}
 \usage{
-saga_env(saga_bin = NULL, opt_lib = NULL)
+saga_env(saga_bin = NULL, opt_lib = NULL, raster_lib = "raster")
 }
 \arguments{
 \item{saga_bin}{An optional character vector to specify the path to the
@@ -14,6 +14,10 @@ saga_cmd.}
 \item{opt_lib}{A character vector of a subset of SAGA-GIS tool libraries to
 generate dynamic functions that map to each tool. Used to save time if you
 only want to import a single library.}
+
+\item{rasterlib}{A character vector to specify the library to use for handling
+raster data. Currently, either "raster" or "terra" is supported. The
+default is "raster".}
 }
 \value{
 A saga environment S3 object containing paths, settings and a nested

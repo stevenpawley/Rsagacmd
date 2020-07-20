@@ -10,6 +10,7 @@ saga_gis(
   grid_cache_threshold = 100,
   grid_cache_dir = NULL,
   cores = NULL,
+  raster_lib = "raster",
   opt_lib = NULL,
   temp_path = NULL
 )
@@ -32,6 +33,10 @@ used.}
 \item{cores}{An integer for the maximum number of processing cores. By
 default all cores are utilized. Needs to be set to 1 if file caching is
 activated.}
+
+\item{raster_lib}{A character vector to specify the library to use for handling
+raster data. Currently, either "raster" or "terra" is supported. The
+default is "raster".}
 
 \item{opt_lib}{A character vector with the names of a subset of SAGA-GIS
 libraries. Used to link only a subset of named SAGA-GIS tool libraries,
