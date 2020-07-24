@@ -40,17 +40,35 @@ testthat::test_that("Test file caching ", {
         )
       
       testthat::expect_message(
-        saga_gis(grid_caching = T, grid_cache_threshold = 20), 
+        saga_gis(grid_caching = TRUE, grid_cache_threshold = 20), 
         output)
       
     } else {
 
       # check that saga S3 class can be initiated using file caching
-      saga_fc <- saga_gis(grid_caching = T, grid_cache_threshold = 0.001)
+      cache_dir <- file.path(tempdir(), paste0("test_caching", as.integer(runif(1, 0, 1e6))))
+      cache_dir <- gsub("//", "/", cache_dir)
+      cache_dir <- gsub("\\\\", "/", cache_dir)
+      dir.create(cache_dir)
+      
+      saga_fc <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 0.001, grid_cache_dir = cache_dir)
+      
       testthat::expect_true(!is.null(saga_fc))
       testthat::expect_is(saga_fc, "saga")
       testthat::expect_gt(length(saga_fc), 0)
 
+      # check that caching dir is set correctly
+      senv <- environment(saga_fc[[1]][[1]])$senv
+      config_char <- readChar(
+        con = senv$saga_config,
+        nchars = file.info(senv$saga_config)$size - 1
+      )
+      config_char <- strsplit(config_char, "\n")[[1]]
+      idx <- grep("GRID_CACHE_TMPDIR", config_char)
+      config_cache_dir <- strsplit(config_char[idx], "=")[[1]][2]
+      
+      testthat::expect_equal(shQuote(cache_dir), config_cache_dir)
+      
       # check that file caching is working by checking time for running a
       # process compared to not using file caching
       saga <- saga_gis()

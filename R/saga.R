@@ -171,7 +171,9 @@ saga_configure <- function(senv,
   }
   
   if (is.null(grid_cache_dir)) {
-    grid_cache_dir <- gsub("\\\\", "/", tempdir())
+    grid_cache_dir <- tempdir()
+    grid_cache_dir <- gsub("//", "/", grid_cache_dir)
+    grid_cache_dir <- gsub("\\\\", "/", grid_cache_dir)
   }
   
   # create configuration file if any arguments are supplied
@@ -222,7 +224,7 @@ saga_configure <- function(senv,
       
       saga_config_settings <- gsub(
         "GRID_CACHE_TMPDIR=;*",
-        paste0("GRID_CACHE_TMPDIR=", shQuote(gsub("\\\\", "/", tempdir()))),
+        paste0("GRID_CACHE_TMPDIR=", shQuote(grid_cache_dir)),
         saga_config_settings)
       
       saga_config_settings <- gsub(
@@ -243,7 +245,7 @@ saga_configure <- function(senv,
   }
   
   if (!exists("saga_config")) {
-    saga_config <- NA
+    saga_config <- NULL
   }
   
   return(saga_config)

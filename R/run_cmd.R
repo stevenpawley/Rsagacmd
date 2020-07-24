@@ -9,12 +9,10 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   
   # add flag to load projections library
   flags <- "--flags=p"
-  cmd <- paste(cmd, flags)
 
   # add optional configuration flag
-  if (!is.na(saga_config)) {
-    config <- paste("-C", shQuote(saga_config), sep = "=")
-    cmd <- paste(cmd, config)
+  if (!is.null(saga_config)) {
+    saga_config <- paste("-C", saga_config, sep = "=")
   }
     
   # create options:value character vector
@@ -22,8 +20,8 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   
   # execute command  
   msg <- processx::run(
-    command = saga_cmd, 
-    args = c(lib, tool_cmd, param_string), 
+    command = cmd, 
+    args = c(flags, saga_config, lib, tool_cmd, param_string), 
     echo_cmd = verbose, 
     echo = verbose, 
     spinner = TRUE, 
