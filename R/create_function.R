@@ -27,7 +27,7 @@ create_function <- function(lib, tool) {
             args = args[-which(names(args) == '.all_outputs')]
         
         # call the saga geoprocessor
-        saga_results = saga_execute(lib, tool, senv, .intern, .all_outputs, args)
+        saga_results = saga_execute(lib, tool, senv, .intern, .all_outputs, .verbose, args)
         return (saga_results)
         ",
     sep = "\n"

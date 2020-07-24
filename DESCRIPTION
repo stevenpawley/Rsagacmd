@@ -27,8 +27,10 @@ Imports:
     magrittr,
     stringr,
     rlang,
-    tibble
+    tibble,
+    processx
 Suggests:
     dplyr,
     testthat,
-    covr
+    covr,
+    terra

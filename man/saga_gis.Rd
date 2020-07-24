@@ -12,7 +12,8 @@ saga_gis(
   cores = NULL,
   backend = "raster",
   opt_lib = NULL,
-  temp_path = NULL
+  temp_path = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ rather than creating functions for all available tool libraries.}
 \item{temp_path}{The path to use to store any temporary files that are
 generated as data is passed between R and SAGA-GIS. If not specified, then
 the system `base::tempdir()` is used.}
+
+\item{verbose}{Logical to indicate whether to output all messages made during
+SAGA-GIS commmands to the R console. Default is FALSE.}
 }
 \value{
 A S3 `saga` object containing a nested list of functions for SAGA-GIS

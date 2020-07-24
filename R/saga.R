@@ -45,7 +45,7 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL, backend = "raster") {
   }
   
   if (!is.null(attr(msg, "status"))) {
-    rlang::abort(msg)
+    rlang::abort()
   }
   
   # parse SAGA help files into nested list of libraries, tools and options
@@ -278,8 +278,12 @@ saga_configure <- function(senv,
 #' @param temp_path The path to use to store any temporary files that are
 #'   generated as data is passed between R and SAGA-GIS. If not specified, then
 #'   the system `base::tempdir()` is used.
+#' @param verbose Logical to indicate whether to output all messages made during
+#'   SAGA-GIS commmands to the R console. Default is FALSE.
+#'   
 #' @return A S3 `saga` object containing a nested list of functions for SAGA-GIS
 #'   libraries and tools.
+#' 
 #' @export
 #' @import raster
 #' @examples
@@ -309,9 +313,11 @@ saga_gis <- function(saga_bin = NULL,
                      cores = NULL,
                      backend = "raster",
                      opt_lib = NULL,
-                     temp_path = NULL) {
+                     temp_path = NULL,
+                     verbose = FALSE) {
   
   senv <- saga_env(saga_bin, opt_lib, backend)
+  senv$verbose <- verbose
   
   senv[["saga_config"]] <- saga_configure(
     senv,
@@ -342,7 +348,7 @@ saga_gis <- function(saga_bin = NULL,
           
           # create list of arguments and default values
           args <- lapply(tool_options, function(x) NULL)
-          args <- c(args, list(.intern = TRUE, .all_outputs = TRUE))
+          args <- c(args, list(.intern = TRUE, .all_outputs = TRUE, .verbose = FALSE))
           
           # coerce arguments to comma-separated character
           args <- mapply(

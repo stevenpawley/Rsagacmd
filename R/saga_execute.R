@@ -11,6 +11,8 @@
 #'   results from the selected SAGA tool and load them results as R objects
 #'   (default = TRUE). If .all_outputs = FALSE then the file paths to store the
 #'   tool's results will have to be manually specified in the arguments.
+#' @param .verbose Option to output all message during the execution of
+#'   saga_cmd. Overrides the saga environment setting.
 #' @param ... Named arguments and values for SAGA tool.
 #'
 #' @return output of SAGA-GIS tool loaded as an R object.
@@ -20,6 +22,7 @@ saga_execute <-
            senv,
            .intern = TRUE,
            .all_outputs = TRUE,
+           .verbose = NULL,
            ...) {
   
   args <- c(...)
@@ -33,7 +36,12 @@ saga_execute <-
   saga_config <- senv$saga_config
   temp_path <- senv$temp_path
   backend <- senv$backend
+  verbose <- senv$verbose
   
+  # override senv verbosity
+  if (!is.null(.verbose))
+    verbose <- .verbose
+    
   # match the syntactically-correct arg_name to the identifier used by saga_cmd
   arg_names <- names(args)
   identifiers_r <- sapply(tool_options, function(x) x$identifier)
@@ -46,11 +54,18 @@ saga_execute <-
     args <- args[sapply(args, function(x) !is.null(x))]
   arg_names <- names(args)
   
-  # save in-memory R objects to files for SAGA-GIS to access
+  # save in-memory R objects to files for saga_cmd to access
   args <- lapply(args, save_object, temp_path = temp_path, backend = backend)
-  args <- lapply(args, paste, collapse = ";")
-  args <- lapply(args, function(x) gsub(".sdat", ".sgrd", x))
   
+  # process character strings for use with saga_cmd
+  args <- lapply(args, function(x) {
+    if (inherits(x, "character")) {
+      x <- paste(x, collapse = ";")
+      x <- gsub(".sdat", ".sgrd", x)
+    }
+    x
+  })
+
   # merge output args with tool options
   for (n in names(tool_options)) {
     tool_options[[n]]$args <- NA
@@ -102,33 +117,13 @@ saga_execute <-
   args <- updated_args[sapply(updated_args, function(x) !is.null(x))]
   arg_names <- names(args)
   
-  # add saga_cmd arguments to the command line call
-  flags <- "--flags=p"
-  
-  # create string with argument values within quotes
-  quote_type <- ifelse(Sys.info()["sysname"] == "Windows", "cmd", "csh")
-  params <- shQuote(string = args, type = quote_type)
-  
-  # prepare system call
-  param_string <- paste("-", arg_names, ":", params, sep = "", collapse = " ")
-  
-  if (!is.na(saga_config)) {
-    config <- paste("-C", shQuote(saga_config), sep = "=")
-  } else {
-    config <- ""
-  }
-  
-  saga_cmd <- paste(
-    shQuote(saga_cmd), config, flags, lib,
-    shQuote(tool_cmd, type = quote_type),
-    param_string
-  )
-  
   # execute system call
-  msg <- system(saga_cmd, intern = TRUE)
-  
-  if (!is.null(attr(msg, "status"))) {
-    rlang::abort(msg)
+  msg <- run_cmd(saga_cmd, saga_config, lib, tool_cmd, args, verbose)
+
+  if (msg$status == 1) {
+    if (verbose)
+      message(msg$stdout)
+    rlang::abort(msg$stderr)
   }
   
   # load SAGA results as list of R objects
