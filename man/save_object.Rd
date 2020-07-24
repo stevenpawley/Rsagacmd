@@ -18,5 +18,6 @@ A character that specifies the file path to where the R object was
 }
 \description{
 Designed to be used internally by Rsagacmd for automatically pass data to
-SAGA-GIS for geoprocessing
+SAGA-GIS for geoprocessing.
 }
+\keyword{internal}

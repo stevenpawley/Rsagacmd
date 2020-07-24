@@ -1,7 +1,7 @@
 #' Generic methods to save R in-memory objects to file to SAGA-GIS to access
 #' 
 #' Designed to be used internally by Rsagacmd for automatically pass data to
-#' SAGA-GIS for geoprocessing
+#' SAGA-GIS for geoprocessing.
 #'
 #' @param x An R object.
 #' @param ... Other parameters such as the temporary directory to use for
@@ -10,24 +10,29 @@
 #' @return A character that specifies the file path to where the R object was
 #'   saved.
 #' @export
+#' 
+#' @keywords internal
 save_object <- function(x, ...) {
   UseMethod("save_object", x)
 }
 
 
 #' @export
+#' @keywords internal
 save_object.default <- function(x, ...) {
   x
 }
 
 
 #' @export
+#' @keywords internal
 save_object.character <- function(x, ...) {
   paste(x, collapse = ";")
 }
 
 
 #' @export
+#' @keywords internal
 save_object.sf <- function(x, ...) {
   
   args <- list(...)
@@ -45,6 +50,7 @@ save_object.sf <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.RasterLayer <- function(x, ...) {
   
   args <- list(...)
@@ -73,6 +79,7 @@ save_object.RasterLayer <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.SpatRaster <- function(x, ...) {
   
   args <- list(...)
@@ -114,6 +121,7 @@ save_object.SpatRaster <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.RasterStack <- function(x, ...) {
   
   args <- list(...)
@@ -134,6 +142,7 @@ save_object.RasterStack <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.data.frame <- function(x, ...) {
   
   args <- list(...)
@@ -163,6 +172,7 @@ spatial_to_saga <- function(x, temp_path) {
 
 
 #' @export
+#' @keywords internal
 save_object.SpatialPointsDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
@@ -175,6 +185,7 @@ save_object.SpatialPointsDataFrame <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.SpatialLinesDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
@@ -187,6 +198,7 @@ save_object.SpatialLinesDataFrame <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.SpatialPolygonsDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
@@ -199,6 +211,7 @@ save_object.SpatialPolygonsDataFrame <- function(x, ...) {
 
 
 #' @export
+#' @keywords internal
 save_object.list <- function(x, ...) {
   lapply(x, save_object)
 }

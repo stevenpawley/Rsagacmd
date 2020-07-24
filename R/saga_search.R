@@ -8,6 +8,7 @@
 #' installed on the system, the path to the newest version is returned
 #'
 #' @return The path to installed saga_cmd binary.
+#' 
 #' @export
 saga_search <- function() {
   

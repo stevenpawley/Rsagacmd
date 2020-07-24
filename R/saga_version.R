@@ -6,6 +6,8 @@
 #' @param saga_cmd The path of the saga_cmd binary.
 #'
 #' @return A numeric_version with the version of SAGA-GIS found at the cmd path.
+#' 
+#' @export
 saga_version <- function(saga_cmd) {
   
   saga_vers <- system(paste(shQuote(saga_cmd), "--version"), intern = T)[1]

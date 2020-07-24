@@ -16,6 +16,8 @@
 #' @param ... Named arguments and values for SAGA tool.
 #'
 #' @return output of SAGA-GIS tool loaded as an R object.
+#' 
+#' @export
 saga_execute <-
   function(lib,
            tool,

@@ -1,11 +1,27 @@
+#' Read a spatial vector data set that is output by saga_cmd
+#'
+#' @param x list, a `options` object that was created by the `create_tool`
+#'   function that contains the parameters for a particular tool and its
+#'   outputs.
+#'
+#' @return an `sf` object.
+#' 
+#' @keywords internal
 read_shapes <- function(x) {
-  # read a vector data output
   sf::st_read(x$args, quiet = TRUE)
 }
 
+
+#' Read a tabular data set that is output by saga_cmd
+#'
+#' @param x list, a `options` object that was created by the `create_tool`
+#'   function that contains the parameters for a particular tool and its
+#'   outputs.
+#'
+#' @return a `tibble`.
+#' 
+#' @keywords internal
 read_table <- function(x) {
-  # read a tabular data output
-  
   if (tools::file_ext(x$args) == "txt") {
     object <- 
       utils::read.table(x$args, header = T, sep = "\t") %>%
@@ -25,9 +41,18 @@ read_table <- function(x) {
   object
 }
 
-read_grid <- function(x, backend) {
-  # read a raster grid output
 
+#' Read a raster data set that is output by saga_cmd
+#'
+#' @param x list, a `options` object that was created by the `create_tool`
+#'   function that contains the parameters for a particular tool and its
+#'   outputs.
+#' @param backend character, either "raster" or "terra"
+#'
+#' @return either a `raster` or `SpatRaster` object
+#' 
+#' @keywords internal
+read_grid <- function(x, backend) {
   if (tools::file_ext(x$args) == "sg-gds-z") {
     warning(paste(
       "Cannot load SAGA Grid Collection as an R raster object",
@@ -43,8 +68,18 @@ read_grid <- function(x, backend) {
   object
 }
 
+
+#' Read a semi-colon separated list of grids that are output by saga_cmd
+#'
+#' @param x list, a `options` object that was created by the `create_tool`
+#'   function that contains the parameters for a particular tool and its
+#'   outputs.
+#' @param backend character, either "raster" or "terra"
+#'
+#' @return list, containing multile `raster` or `SpatRaster` objects.
+#' 
+#' @keywords internal
 read_grid_list <- function(x, backend) {
-  # read a semi-colon separated list of grids
   x$args <- strsplit(x$args, ";")[[1]]
   
   if (backend == "raster")
@@ -62,8 +97,20 @@ read_grid_list <- function(x, backend) {
   object
 }
 
+
+#' Primary function to read data sets (raster, vector, tabular) that are output
+#' by saga_cmd
+#'
+#' @param output list, a `options` object that was created by the `create_tool`
+#'   function that contains the parameters for a particular tool and its
+#'   outputs.
+#' @param backend character, either "raster" or "terra"
+#' @param .intern logical, whether to load the output as an R object
+#'
+#' @return the loaded objects, or NULL is `.intern = FALSE`.
+#' 
+#' @keywords internal
 read_output <- function(output, backend, .intern) {
-  # reads different output data types in R
   output$args <- gsub(".sgrd", ".sdat", output$args)
 
   if (isTRUE(.intern)) {
@@ -94,4 +141,3 @@ read_output <- function(output, backend, .intern) {
   
   object
 }
-

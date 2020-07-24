@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
       </span>
     </div>
 
@@ -86,6 +86,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,7 +115,15 @@
     <p>Intended to be used internally by each function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>saga_execute</span>(<span class='no'>lib</span>, <span class='no'>tool</span>, <span class='no'>senv</span>, <span class='kw'>.intern</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.all_outputs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>saga_execute</span>(
+  <span class='no'>lib</span>,
+  <span class='no'>tool</span>,
+  <span class='no'>senv</span>,
+  <span class='kw'>.intern</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>.all_outputs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>.verbose</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,6 +153,11 @@ results from the selected SAGA tool and load them results as R objects
 tool's results will have to be manually specified in the arguments.</p></td>
     </tr>
     <tr>
+      <th>.verbose</th>
+      <td><p>Option to output all message during the execution of
+saga_cmd. Overrides the saga environment setting.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Named arguments and values for SAGA tool.</p></td>
     </tr>
@@ -166,7 +182,7 @@ tool's results will have to be manually specified in the arguments.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

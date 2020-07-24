@@ -4,7 +4,15 @@
 \alias{saga_execute}
 \title{Function to execute SAGA-GIS commands through the command line tool}
 \usage{
-saga_execute(lib, tool, senv, .intern = TRUE, .all_outputs = TRUE, ...)
+saga_execute(
+  lib,
+  tool,
+  senv,
+  .intern = TRUE,
+  .all_outputs = TRUE,
+  .verbose = NULL,
+  ...
+)
 }
 \arguments{
 \item{lib}{A character specifying the name of SAGA-GIS library to execute.}
@@ -20,6 +28,9 @@ SAGA-GIS geoprocessing operation as an R object.}
 results from the selected SAGA tool and load them results as R objects
 (default = TRUE). If .all_outputs = FALSE then the file paths to store the
 tool's results will have to be manually specified in the arguments.}
+
+\item{.verbose}{Option to output all message during the execution of
+saga_cmd. Overrides the saga environment setting.}
 
 \item{...}{Named arguments and values for SAGA tool.}
 }

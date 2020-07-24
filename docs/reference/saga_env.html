@@ -75,7 +75,7 @@ object object. Intended to be used internally by saga_gis" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@ object object. Intended to be used internally by saga_gis" />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -118,7 +121,7 @@ library, module and options, that are contained within an saga environment
 object object. Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>saga_env</span>(<span class='kw'>saga_bin</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>opt_lib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>saga_env</span>(<span class='kw'>saga_bin</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>opt_lib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>backend</span> <span class='kw'>=</span> <span class='st'>"raster"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,6 +137,12 @@ saga_cmd.</p></td>
       <td><p>A character vector of a subset of SAGA-GIS tool libraries to
 generate dynamic functions that map to each tool. Used to save time if you
 only want to import a single library.</p></td>
+    </tr>
+    <tr>
+      <th>backend</th>
+      <td><p>A character vector to specify the library to use for handling
+raster data. Currently, either "raster" or "terra" is supported. The
+default is "raster".</p></td>
     </tr>
     </table>
 
@@ -157,7 +166,7 @@ only want to import a single library.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

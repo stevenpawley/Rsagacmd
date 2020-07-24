@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
       </span>
     </div>
 
@@ -45,6 +45,9 @@
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -82,7 +85,7 @@
 <h2 class="hasAnchor">
 <a href="#description" class="anchor"></a>Description</h2>
 <p>Rsagacmd provides a complete interface between R and SAGA-GIS. The package allows all SAGA-GIS tools and libraries to be used from within R. Further, the most common geospatial datatypes within R (rasters, simple features, and sp objects) are seamlessly passed between R and SAGA-GIS during geoprocessing operations.</p>
-<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/web/packages/RSAGA/index.html" class="uri">https://cran.r-project.org/web/packages/RSAGA/index.html</a>), which provides a command line parser and a limited set of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user's installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGAs <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
+<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/web/packages/RSAGA/index.html" class="uri">https://cran.r-project.org/web/packages/RSAGA/index.html</a>), which provides a command line parser and a limited set of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user's installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGA's <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
 </div>
 <div id="package-installation" class="section level2">
 <h2 class="hasAnchor">
@@ -114,7 +117,7 @@ saga &lt;- saga_gis()
 
 # access the libraries and tools
 saga$ta_morphometry$mass_balance_index()</code></pre>
-<p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function's syntax is the same as when using the SAGA-GIS command line tool directly except that Rsagacmd always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in Rstudio, allowing for each toolsâ inputs, outputs and options to be more easily recognized.</p>
+<p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function's syntax is the same as when using the SAGA-GIS command line tool directly except that Rsagacmd always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in Rstudio, allowing for each tools’ inputs, outputs and options to be more easily recognized.</p>
 </div>
 <div id="passing-geospatial-and-tabular-data-between-r-and-saga-gis" class="section level2">
 <h2 class="hasAnchor">
@@ -122,7 +125,7 @@ saga$ta_morphometry$mass_balance_index()</code></pre>
 <p>Rsagacmd aims to facilitate a seamless interface to the open-source SAGA-GIS by providing access to all SAGA-GIS geoprocessing tools in a R-like manner. In addition to mapping R functions to execute SAGA-GIS tools, Rsagacmd automatically handles the passing of geospatial and tabular data contained from the R environment to SAGA-GIS.</p>
 <p>Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing operations. Therefore, all of the Rsagacmd tools allow paths to the input data to be used as arguments, if the data is stored in the appropriate file formats (GDAL-supported single-band rasters, OGR supported vector data, and comma- or tab-delimited text files for tabular data). In addition, Rsagacmd currently supports the following R object classes to pass data to SAGA-GIS, and to load the results back into the R environment:</p>
 <ul>
-<li>Raster data handling is provided by the R raster package. Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects. For more details, see the âHandling of raster dataâ.</li>
+<li>Raster data handling is provided by the R raster package. Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects. For more details, see the ‘Handling of raster data’.</li>
 <li>Vector features that result from SAGA-GIS geoprocessing operations are output in ESRI Shapefile format and are loaded into the R environment as simple features objects.</li>
 <li>Tabular data from SAGA-GIS tools are loaded as dataframes.</li>
 </ul>
@@ -131,7 +134,7 @@ saga$ta_morphometry$mass_balance_index()</code></pre>
 <div id="notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis" class="anchor"></a>Notes on handing multi-band raster datasets by Rsagacmd and SAGA-GIS</h2>
-<p>SAGA-GIS does not handle multi-band rasters and native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains onthely a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the unstack function in the raster package, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.</p>
+<p>SAGA-GIS does not handle multi-band rasters and native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains on-the-fly a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the unstack function in the raster package, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.</p>
 </div>
 <div id="combining-saga-gis-tools-with-pipes" class="section level2">
 <h2 class="hasAnchor">
@@ -213,7 +216,7 @@ pisr &lt;- dem %&gt;%
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
