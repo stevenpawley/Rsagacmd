@@ -25,28 +25,34 @@ read_table <- function(x) {
   object
 }
 
-read_grid <- function(x) {
+read_grid <- function(x, backend) {
   # read a raster grid output
-  # returns a RasterLayer object
-  
+
   if (tools::file_ext(x$args) == "sg-gds-z") {
     warning(paste(
       "Cannot load SAGA Grid Collection as an R raster object",
       "- this is not currently supported"
     ))
   } else {
-    object <- raster::raster(x$args)
+    if (backend == "raster")
+      object <- raster::raster(x$args)
+    if (backend == "terra")
+      object <- terra::rast(x$args)
   }
   
   object
 }
 
-read_grid_list <- function(x) {
+read_grid_list <- function(x, backend) {
   # read a semi-colon separated list of grids
-  # returns a RasterBrick object
-  
   x$args <- strsplit(x$args, ";")[[1]]
-  object <- lapply(x$args, raster::raster)
+  
+  if (backend == "raster")
+    object <- lapply(x$args, raster::raster)
+  
+  if (backend == "terra")
+    object <- lapply(x$args, terra::rast)
+  
   names(object) <- paste(x$alias, seq_along(x$args), sep = "_")
   
   # unlist if grid list but just a single output
@@ -56,22 +62,20 @@ read_grid_list <- function(x) {
   object
 }
 
-read_output <- function(output, .intern) {
-  # Reads different output datatypes in R
-  
+read_output <- function(output, backend, .intern) {
+  # reads different output data types in R
   output$args <- gsub(".sgrd", ".sdat", output$args)
 
   if (isTRUE(.intern)) {
-    
     object <- tryCatch(expr = {
       
       switch(
         output$feature,
         "Shape" = read_shapes(output),
         "Table" = read_table(output),
-        "Grid" = read_grid(output),
-        "Raster" = read_grid(output),
-        "Grid list" = read_grid_list(output)
+        "Grid" = read_grid(output, backend),
+        "Raster" = read_grid(output, backend),
+        "Grid list" = read_grid_list(output, backend)
       )
       
     }, error = function(e) {

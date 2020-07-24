@@ -14,15 +14,18 @@ save_object <- function(x, ...) {
   UseMethod("save_object", x)
 }
 
+
 #' @export
 save_object.default <- function(x, ...) {
   x
 }
 
+
 #' @export
 save_object.character <- function(x, ...) {
   paste(x, collapse = ";")
 }
+
 
 #' @export
 save_object.sf <- function(x, ...) {
@@ -39,6 +42,7 @@ save_object.sf <- function(x, ...) {
   
   temp
 }
+
 
 #' @export
 save_object.RasterLayer <- function(x, ...) {
@@ -67,6 +71,48 @@ save_object.RasterLayer <- function(x, ...) {
   x
 }
 
+
+#' @export
+save_object.SpatRaster <- function(x, ...) {
+  
+  args <- list(...)
+  temp_path <- args$temp_path
+  
+  if (is.null(temp_path))
+    temp_path <- tempdir()
+  
+  # check for multiple layers
+  if (terra::nlyr(x) > 1) {
+    rlang::abort(
+      "SpatRaster object contains multiple layers. SAGA-GIS requires single-layer rasters as inputs"
+    )
+  }
+  
+  # check if layer is in-memory
+  in_memory <- terra::sources(x)$source == ""
+
+  # check if layer is part of a multi-band raster
+  if (!in_memory) {
+    info <- rgdal::GDALinfo(terra::sources(x)$source)
+    n_bands <- nrow(attr(info, "df"))
+    part_of_multiband <- n_bands > 1
+  }
+  
+  # single-band raster on disk -> filename -> saga
+  if (!part_of_multiband & !in_memory)
+    x <- terra::sources(x)$source
+  
+  # otherwise save to temporary file
+  if (part_of_multiband | in_memory) {
+    temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
+    terra::writeRaster(x, filename = temp)
+    x <- temp
+  }
+  
+  x
+}
+
+
 #' @export
 save_object.RasterStack <- function(x, ...) {
   
@@ -80,17 +126,12 @@ save_object.RasterStack <- function(x, ...) {
     x <- raster::raster(x)
     x <- save_object(x)
   } else {
-    stop(
-      paste(
-        "Raster object contains multiple layers;",
-        "SAGA-GIS requires single layer rasters as inputs"
-      ),
-      call. = FALSE
-    )
+    rlang::abort("Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
   }
 
   x
 }
+
 
 #' @export
 save_object.data.frame <- function(x, ...) {
@@ -120,6 +161,7 @@ spatial_to_saga <- function(x, temp_path) {
   temp
 }
 
+
 #' @export
 save_object.SpatialPointsDataFrame <- function(x, ...) {
   args <- list(...)
@@ -130,6 +172,7 @@ save_object.SpatialPointsDataFrame <- function(x, ...) {
   
   spatial_to_saga(x, temp_path)
 }
+
 
 #' @export
 save_object.SpatialLinesDataFrame <- function(x, ...) {
@@ -142,6 +185,7 @@ save_object.SpatialLinesDataFrame <- function(x, ...) {
   spatial_to_saga(x, temp_path)
 }
 
+
 #' @export
 save_object.SpatialPolygonsDataFrame <- function(x, ...) {
   args <- list(...)
@@ -152,6 +196,7 @@ save_object.SpatialPolygonsDataFrame <- function(x, ...) {
   
   spatial_to_saga(x, temp_path)
 }
+
 
 #' @export
 save_object.list <- function(x, ...) {

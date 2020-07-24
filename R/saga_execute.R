@@ -32,22 +32,22 @@ saga_execute <-
   saga_cmd <- senv$saga_cmd
   saga_config <- senv$saga_config
   temp_path <- senv$temp_path
-  raster_lib <- senv$raster_lib
+  backend <- senv$backend
   
   # match the syntactically-correct arg_name to the identifier used by saga_cmd
   arg_names <- names(args)
-  identifiers_r <- sapply(tool_options, function(x)
-    x$identifier)
+  identifiers_r <- sapply(tool_options, function(x) x$identifier)
   arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
   args <- setNames(args, arg_names)
   tool_options <- setNames(tool_options, identifiers_r) # rename to identifiers
   
   # strip other missing arguments and update arg_names
-  args <- args[sapply(args, function(x) !is.null(x))]
+  if (length(args) > 1)
+    args <- args[sapply(args, function(x) !is.null(x))]
   arg_names <- names(args)
   
   # save in-memory R objects to files for SAGA-GIS to access
-  args <- lapply(args, save_object, temp_path = temp_path)
+  args <- lapply(args, save_object, temp_path = temp_path, backend = backend)
   args <- lapply(args, paste, collapse = ";")
   args <- lapply(args, function(x) gsub(".sdat", ".sgrd", x))
   
@@ -126,12 +126,13 @@ saga_execute <-
   
   # execute system call
   msg <- system(saga_cmd, intern = TRUE)
+  
   if (!is.null(attr(msg, "status"))) {
     rlang::abort(msg)
   }
   
   # load SAGA results as list of R objects
-  saga_results <- lapply(tool_outputs, read_output, .intern = .intern)
+  saga_results <- lapply(tool_outputs, read_output, .intern = .intern, backend = backend)
   alias_names <- sapply(tool_outputs, function(x) x$alias)
   saga_results <- rlang::set_names(saga_results, alias_names)
   

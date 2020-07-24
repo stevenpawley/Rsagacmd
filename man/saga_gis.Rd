@@ -10,7 +10,7 @@ saga_gis(
   grid_cache_threshold = 100,
   grid_cache_dir = NULL,
   cores = NULL,
-  raster_lib = "raster",
+  backend = "raster",
   opt_lib = NULL,
   temp_path = NULL
 )
@@ -34,7 +34,7 @@ used.}
 default all cores are utilized. Needs to be set to 1 if file caching is
 activated.}
 
-\item{raster_lib}{A character vector to specify the library to use for handling
+\item{backend}{A character vector to specify the library to use for handling
 raster data. Currently, either "raster" or "terra" is supported. The
 default is "raster".}
 
