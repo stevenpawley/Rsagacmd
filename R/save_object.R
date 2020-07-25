@@ -96,7 +96,10 @@ save_object.SpatRaster <- function(x, ...) {
   }
   
   # check if layer is in-memory
-  in_memory <- terra::sources(x)$source == ""
+  if (terra::sources(x)$source == "") {
+    in_memory <- terra::sources(x)$source == ""
+    part_of_multiband <- FALSE
+  }
 
   # check if layer is part of a multi-band raster
   if (!in_memory) {
