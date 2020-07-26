@@ -159,5 +159,13 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
   tile_sdats <- list.files(file_path, pattern = "*.sdat$", full.names = TRUE)
   pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, tile_sdats)
   
-  sapply(tile_sdats, raster::raster)
+  senv <- environment(x[[1]][[1]])$senv
+  
+  if (senv$backend == "raster")
+    tiles <- sapply(tile_sdats, raster::raster)
+  
+  if (senv$backend == "terra")
+    tiles <- sapply(tile_sdats, terra::rast)
+  
+  tiles
 }
