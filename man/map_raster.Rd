@@ -5,7 +5,7 @@
 \title{Apply a saga_cmd tool over over a list of raster datasets and mosaick the
 results}
 \usage{
-map_raster(.x, .f, filename = NULL, options = NULL, nodata = -99999)
+map_raster(.x, .f, filename = NULL, options = NULL, nodata = NULL)
 }
 \arguments{
 \item{.x}{A list.}
@@ -39,6 +39,7 @@ are too large to fit into memory, and when the
 `saga_gis(grid_caching = TRUE)` option is too slow. The tiles can potentially
 generated using the `Rsagacmd::tile_geoprocessor` tool, or other functions
 that split a dataset.
+pck
 }
 \examples{
 \dontrun{
@@ -66,5 +67,12 @@ tri_func <- function(dem) {
 }
 
 tile_output <- map_raster(dem_tiles, tri_func)
+
+# if the saga tool produces multiple outputs then each output will be
+# mosaicked automatically and returned as a list of raster datasets
+tile_output <- map_raster(
+    dem_tiles, 
+    saga$ta_hydrology$saga_wetness_index
+)
 }
 }
