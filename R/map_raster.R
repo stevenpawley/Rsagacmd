@@ -19,11 +19,7 @@
 #'   specific tool outputs.
 #' @param filename A character to optionally specify the path to save the final
 #'   mosaicked result. If `filename = NULL` then `tempdir()` is used.
-#' @param options A character vector of GDAL creation options used when saving
-#'   the dataset, such as `options = c("COMPRESS=DEFLATE", "BIGTIFF=YES")`.
-#' @param nodata Any number to use as the nodata value for the output raster. If
-#'   `nodata = NULL` then the nodata value will be based on the input raster's
-#'   nodata values.
+#' @param ... Additional arguments to pass to the `raster::writeRaster` function.
 #'
 #' @return Either a `raster::RasterLayer` or `terra::SpatRaster` object.
 #' @export
@@ -66,37 +62,21 @@ map_raster <-
   function(.x,
            .f,
            filename = NULL,
-           options = NULL,
-           nodata = NULL) {
+           ...) {
+    
+    args <- list(...)
     
     # some checks on inputs
     if (all(purrr::map_lgl(.x, ~inherits(.x, "RasterLayer")))) {
       backend <- "raster"
-    
     } else if (all(purrr::map_lgl(.x, ~inherits(.x, "SpatRaster")))) {
       backend <- "terra"
-    
     } else {
       rlang::abort("`.x` must consist of a list of other RasterLayer or SpatRaster objects")
     }
     
-    if (is.null(filename)) {
+    if (is.null(filename))
       filename <- tempfile(fileext = ".tif")
-    }
-    
-    # build initial mosaic call
-    mosaic_call <- rlang::call2(
-      .fn = "mosaic_rasters", 
-      .ns = "gdalUtils",
-      output_Raster = TRUE,
-      r = "nearest"
-    )
-    
-    if (!is.null(options))
-      mosaic_call <- rlang::call_modify(mosaic_call, options = options)
-    
-    if (!is.null(nodata))
-      mosaic_call <- rlang::call_modify(mosaic_call, a_nodata = nodata)
     
     # apply function to each tile
     output_tiles <- purrr::map(.x, .f)
@@ -104,6 +84,7 @@ map_raster <-
     # check if multiple outputs per tile are produced
     output_types <- purrr::map_chr(output_tiles, class)
     
+    # process results from tools with multiple outputs
     if (all(output_types == "list")) {
       n_grids <- purrr::map_int(output_tiles, length)[1]
       
@@ -118,45 +99,48 @@ map_raster <-
           paste(output_name, sep = "_") %>%
           paste(tools::file_ext(filename), sep = ".")
         
-        if (backend == "raster")
-          split_tile_filenames <- purrr::map_chr(split_tiles, raster::filename)
-        if (backend == "terra")
+        if (backend == "raster") {
+          obj <- rlang::exec(mosaic_raster, split_tiles, filename_multi, !!!args)
+          
+        }
+          
+        if (backend == "terra") {
           split_tile_filenames <- purrr::map_chr(split_tiles, ~ terra::sources(.x)$source)
-        
-        mosaic_call_multi <- rlang::call_modify(
-          .call = mosaic_call, 
-          gdalfile = split_tile_filenames,
-          dst_dataset = filename_multi
-        )
-        obj <- rlang::eval_tidy(mosaic_call_multi)
-        
-        if (backend == "terra")
+          raster_objs <- purrr::map(split_tile_filenames, raster::raster)
+          obj <- rlang::exec(mosaic_raster, raster_objs, filename_multi, !!!args)
           obj <- terra::rast(obj)
-        
+        }
         mosaicked_tiles <- append(mosaicked_tiles, obj)
       }
       
       names(mosaicked_tiles) <- names(output_tiles[[1]])
       
+    # process results from tools with a single raster output
     } else {
-      
       if (backend == "raster") {
-        output_files <- purrr::map_chr(output_tiles, raster::filename)
+        mosaicked_tiles <- rlang::exec(mosaic_raster, output_tiles, filename, !!!args)
       }
       if (backend == "terra") {
         output_files <- purrr::map_chr(output_tiles, ~ terra::sources(.x)$source)
+        raster_objs <- purrr::map(output_files, raster::raster)
+        mosaicked_tiles <- rlang::exec(mosaic_raster, raster_objs, filename, !!!args)
+        mosaicked_tiles <- terra::rast(mosaicked_tiles)
       }
-      
-      mosaic_call <- rlang::call_modify(
-        .call = mosaic_call, 
-        gdalfile = output_files, 
-        dst_dataset = filename
-      )
-      obj <- rlang::eval_tidy(mosaic_call)
-      
-      if (backend == "terra")
-        mosaicked_tiles <- terra::rast(obj)
     }
     
     mosaicked_tiles
   }
+
+mosaic_raster <- function(x, filename, ...) {
+  args <- list(...)
+
+  names(x)[1:2] <- c('x', 'y')
+  x$fun <- mean
+  x$na.rm <- TRUE
+  x$filename <- filename
+  
+  if (length(args) > 0)
+    x <- c(x, args)
+  
+  do.call(raster::mosaic, x)
+}

@@ -28,8 +28,7 @@ Imports:
     stringr,
     rlang,
     tibble,
-    processx,
-    gdalUtils
+    processx
 Suggests:
     dplyr,
     testthat,
