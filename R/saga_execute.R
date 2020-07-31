@@ -129,10 +129,22 @@ saga_execute <-
   }
   
   # load SAGA results as list of R objects
-  saga_results <- lapply(tool_outputs, read_output, .intern = .intern, backend = backend)
+  saga_results <-
+    lapply(
+      tool_outputs,
+      read_output,
+      .intern = .intern,
+      .all_outputs = .all_outputs,
+      backend = backend
+    )
+  
+  # rename outputs with aliases
   alias_names <- sapply(tool_outputs, function(x) x$alias)
   saga_results <- rlang::set_names(saga_results, alias_names)
   
+  # discard nulls
+  saga_results <- saga_results[!sapply(saga_results, is.null)]
+
   # summarize outputs
   if (length(saga_results) == 1) {
     saga_results <- saga_results[[1]]

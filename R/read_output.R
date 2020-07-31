@@ -110,10 +110,10 @@ read_grid_list <- function(x, backend) {
 #' @return the loaded objects, or NULL is `.intern = FALSE`.
 #' 
 #' @keywords internal
-read_output <- function(output, backend, .intern) {
+read_output <- function(output, backend, .intern, .all_outputs) {
   output$args <- gsub(".sgrd", ".sdat", output$args)
 
-  if (isTRUE(.intern)) {
+  if (.intern) {
     object <- tryCatch(expr = {
       
       switch(
@@ -126,12 +126,12 @@ read_output <- function(output, backend, .intern) {
       )
       
     }, error = function(e) {
-      message(
-        paste(
-          "No geoprocessing output for", output$alias,
-          ". Results may require other input parameters to be specified"
-          )
-        )
+      
+      if (.all_outputs)
+        message(paste("No geoprocessing output for", 
+                      output$alias, 
+                      ". Results may require other input parameters to be specified"))
+
       return(NULL)
     })
     

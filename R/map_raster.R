@@ -67,10 +67,17 @@ map_raster <-
     args <- list(...)
     
     # some checks on inputs
-    if (all(purrr::map_lgl(.x, ~inherits(.x, "RasterLayer")))) {
+    check_raster <- function(obj) inherits(obj, "RasterLayer")
+    check_terra <- function(obj) inherits(obj, "SpatRaster")
+    get_terra_filename <- function(x) terra::sources(x)$source
+    get_raster_filename <- function(x) raster::filename(x)
+    
+    if (all(sapply(.x, check_raster))) {
       backend <- "raster"
-    } else if (all(purrr::map_lgl(.x, ~inherits(.x, "SpatRaster")))) {
+      
+    } else if (all(sapply(.x, check_terra))) {
       backend <- "terra"
+      
     } else {
       rlang::abort("`.x` must consist of a list of other RasterLayer or SpatRaster objects")
     }
@@ -79,19 +86,19 @@ map_raster <-
       filename <- tempfile(fileext = ".tif")
     
     # apply function to each tile
-    output_tiles <- purrr::map(.x, .f)
+    output_tiles <- lapply(.x, .f)
     
     # check if multiple outputs per tile are produced
-    output_types <- purrr::map_chr(output_tiles, class)
+    output_types <- sapply(output_tiles, class)
     
     # process results from tools with multiple outputs
     if (all(output_types == "list")) {
-      n_grids <- purrr::map_int(output_tiles, length)[1]
+      n_grids <- sapply(output_tiles, length)[1]
       
       mosaicked_tiles <- list()
       
       for (idx in seq_len(n_grids)) {
-        split_tiles <- purrr::map(output_tiles, function(tile) tile[[idx]])
+        split_tiles <- lapply(output_tiles, function(tile) tile[[idx]])
         output_name <- names(output_tiles[[1]])[idx]
         
         filename_multi <- filename %>%
@@ -105,8 +112,8 @@ map_raster <-
         }
           
         if (backend == "terra") {
-          split_tile_filenames <- purrr::map_chr(split_tiles, ~ terra::sources(.x)$source)
-          raster_objs <- purrr::map(split_tile_filenames, raster::raster)
+          split_tile_filenames <- sapply(split_tiles, get_terra_filename)
+          raster_objs <- lapply(split_tile_filenames, raster::raster)
           obj <- rlang::exec(mosaic_raster, raster_objs, filename_multi, !!!args)
           obj <- terra::rast(obj)
         }
@@ -121,8 +128,8 @@ map_raster <-
         mosaicked_tiles <- rlang::exec(mosaic_raster, output_tiles, filename, !!!args)
       }
       if (backend == "terra") {
-        output_files <- purrr::map_chr(output_tiles, ~ terra::sources(.x)$source)
-        raster_objs <- purrr::map(output_files, raster::raster)
+        output_files <- sapply(output_tiles, get_terra_filename)
+        raster_objs <- lapply(output_files, raster::raster)
         mosaicked_tiles <- rlang::exec(mosaic_raster, raster_objs, filename, !!!args)
         mosaicked_tiles <- terra::rast(mosaicked_tiles)
       }
