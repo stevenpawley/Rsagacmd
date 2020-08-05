@@ -1,3 +1,112 @@
+get_filename <- function(x) {
+  terra::sources(x)$source
+}
+
+check_raster <- function(x) {
+  inherits(x, "RasterLayer")
+}
+
+
+check_terra <- function(x) {
+  inherits(x, "SpatRaster")
+}
+
+
+partial <- function(f, ...) {
+  l <- list(...)
+  function(...) {
+    do.call(f, c(l, list(...)))
+  }
+}
+
+
+check_grid_inputs <- function(x) {
+  if (all(sapply(x, check_raster))) {
+    backend <- "raster"
+    
+  } else if (all(sapply(x, check_terra))) {
+    backend <- "terra"
+    
+  } else {
+    msg <- paste(
+      "inputs must consist exclusively of either RasterLayer or SpatRaster objects",
+      "and not a combination of both"
+    )
+    rlang::abort(msg)
+  }
+  
+  return(backend)
+}
+
+
+mosaic_raster <- function(x, filename, ...) {
+  args <- list(...)
+  
+  names(x)[1:2] <- c('x', 'y')
+  x$na.rm <- TRUE
+  x$filename <- filename
+  
+  if (length(args) > 0)
+    x <- c(x, args)
+  
+  do.call(raster::mosaic, x)
+}
+
+
+process_tile_outputs <- function(output_tiles, backend, filename, args) {
+  
+  output_types <- sapply(output_tiles, class)
+  
+  # process results from tools with multiple outputs
+  if (all(output_types == "list")) {
+    n_grids <- sapply(output_tiles, length)[1]
+    
+    mosaicked_tiles <- list()
+    
+    for (idx in seq_len(n_grids)) {
+      
+      split_tiles <- lapply(output_tiles, function(tile) tile[[idx]])
+      output_name <- names(output_tiles[[1]])[idx]
+      
+      filename_multi <- filename %>%
+        tools::file_path_sans_ext() %>%
+        paste(output_name, sep = "_") %>%
+        paste(tools::file_ext(filename), sep = ".")
+      
+      if (backend == "raster") {
+        obj <- rlang::exec(mosaic_raster, split_tiles, filename_multi, !!!args)
+      }
+      
+      if (backend == "terra") {
+        split_tile_filenames <- sapply(split_tiles, get_filename)
+        raster_objs <- lapply(split_tile_filenames, raster::raster)
+        obj <- rlang::exec(mosaic_raster, raster_objs, filename_multi, !!!args)
+        obj <- terra::rast(obj)
+      }
+      mosaicked_tiles <- append(mosaicked_tiles, obj)
+    }
+    
+    names(mosaicked_tiles) <- names(output_tiles[[1]])
+    
+  
+  } else {
+    
+    if (backend == "raster") {
+      mosaicked_tiles <- rlang::exec(mosaic_raster, output_tiles, filename, !!!args)
+    }
+    
+    if (backend == "terra") {
+      output_files <- sapply(output_tiles, get_filename)
+      raster_objs <- lapply(output_files, raster::raster)
+      mosaicked_tiles <- rlang::exec(mosaic_raster, raster_objs, filename, !!!args)
+      mosaicked_tiles <- terra::rast(mosaicked_tiles)
+    }
+  }
+  
+  mosaicked_tiles
+}
+
+
 #' Apply a saga_cmd tool over over a list of raster datasets and mosaick the
 #' results
 #'
@@ -19,7 +128,9 @@
 #'   specific tool outputs.
 #' @param filename A character to optionally specify the path to save the final
 #'   mosaicked result. If `filename = NULL` then `tempdir()` is used.
-#' @param ... Additional arguments to pass to the `raster::writeRaster` function.
+#' @param gdal_options Additional arguments to pass to the `raster::writeRaster`
+#'   function.
+#' @param ... Additional arguments to pass to `.f`.
 #'
 #' @return Either a `raster::RasterLayer` or `terra::SpatRaster` object.
 #' @export
@@ -58,96 +169,108 @@
 #'     saga$ta_hydrology$saga_wetness_index
 #' )
 #' }
-map_raster <-
-  function(.x,
-           .f,
-           filename = NULL,
-           ...) {
-    
-    args <- list(...)
-    
-    # some checks on inputs
-    check_raster <- function(obj) inherits(obj, "RasterLayer")
-    check_terra <- function(obj) inherits(obj, "SpatRaster")
-    get_terra_filename <- function(x) terra::sources(x)$source
-    get_raster_filename <- function(x) raster::filename(x)
-    
-    if (all(sapply(.x, check_raster))) {
-      backend <- "raster"
-      
-    } else if (all(sapply(.x, check_terra))) {
-      backend <- "terra"
-      
-    } else {
-      rlang::abort("`.x` must consist of a list of other RasterLayer or SpatRaster objects")
-    }
-    
-    if (is.null(filename))
-      filename <- tempfile(fileext = ".tif")
-    
-    # apply function to each tile
-    output_tiles <- lapply(.x, .f)
-    
-    # check if multiple outputs per tile are produced
-    output_types <- sapply(output_tiles, class)
-    
-    # process results from tools with multiple outputs
-    if (all(output_types == "list")) {
-      n_grids <- sapply(output_tiles, length)[1]
-      
-      mosaicked_tiles <- list()
-      
-      for (idx in seq_len(n_grids)) {
-        split_tiles <- lapply(output_tiles, function(tile) tile[[idx]])
-        output_name <- names(output_tiles[[1]])[idx]
-        
-        filename_multi <- filename %>%
-          tools::file_path_sans_ext() %>%
-          paste(output_name, sep = "_") %>%
-          paste(tools::file_ext(filename), sep = ".")
-        
-        if (backend == "raster") {
-          obj <- rlang::exec(mosaic_raster, split_tiles, filename_multi, !!!args)
-          
-        }
-          
-        if (backend == "terra") {
-          split_tile_filenames <- sapply(split_tiles, get_terra_filename)
-          raster_objs <- lapply(split_tile_filenames, raster::raster)
-          obj <- rlang::exec(mosaic_raster, raster_objs, filename_multi, !!!args)
-          obj <- terra::rast(obj)
-        }
-        mosaicked_tiles <- append(mosaicked_tiles, obj)
-      }
-      
-      names(mosaicked_tiles) <- names(output_tiles[[1]])
-      
-    # process results from tools with a single raster output
-    } else {
-      if (backend == "raster") {
-        mosaicked_tiles <- rlang::exec(mosaic_raster, output_tiles, filename, !!!args)
-      }
-      if (backend == "terra") {
-        output_files <- sapply(output_tiles, get_terra_filename)
-        raster_objs <- lapply(output_files, raster::raster)
-        mosaicked_tiles <- rlang::exec(mosaic_raster, raster_objs, filename, !!!args)
-        mosaicked_tiles <- terra::rast(mosaicked_tiles)
-      }
-    }
-    
-    mosaicked_tiles
-  }
-
-mosaic_raster <- function(x, filename, ...) {
+map_raster <- function(.x, .f, filename = NULL, gdal_options = NULL, ...) {
   args <- list(...)
-
-  names(x)[1:2] <- c('x', 'y')
-  x$fun <- mean
-  x$na.rm <- TRUE
-  x$filename <- filename
   
-  if (length(args) > 0)
-    x <- c(x, args)
+  backend <- check_grid_inputs(.x)
   
-  do.call(raster::mosaic, x)
+  if (is.null(filename))
+    filename <- tempfile(fileext = ".tif")
+  
+  # apply function to each tile
+  if (length(args) > 0) {
+    .f <- rlang::exec(partial, f = .f, !!!args)
+  }
+  
+  output_tiles <- lapply(.x, .f)
+  
+  mosaicked_tiles <-
+    process_tile_outputs(output_tiles, backend, filename, gdal_options)
+  
+  mosaicked_tiles
 }
+
+
+#' Apply a saga_cmd tool over over a list of raster datasets and mosaick the
+#' results
+#'
+#' A `purrr::map2` style function to iterate over a list of raster datasets and
+#' apply a saga_cmd tool to each raster. The output grids are automatically
+#' mosaicked into a new raster dataset. The `map_raster` function is can help
+#' with conveniently applying terrain analysis functions to lists of rasters.
+#' One potential application is using tiling to deal with raster datasets that
+#' are too large to fit into memory, and when the
+#' `saga_gis(grid_caching = TRUE)` option is too slow. The tiles can potentially
+#' generated using the `Rsagacmd::tile_geoprocessor` tool, or other functions
+#' that split a dataset.
+#'
+#' @param .x A list.
+#' @param .y A list.
+#' @param .f A saga_cmd function that was generated by `Rsagacmd::saga_gis()` to
+#'   apply to each raster dataset in `.x`. The function can be used as it, such
+#'   as `saga$ta_morphometry$terrain_ruggedness_index` or can be wrapped inside
+#'   another as a partial function to set arguments to the tool or select
+#'   specific tool outputs.
+#' @param filename A character to optionally specify the path to save the final
+#'   mosaicked result. If `filename = NULL` then `tempdir()` is used.
+#' @param gdal_options Additional arguments to pass to the `raster::writeRaster` function.
+#' @param ... Additional arguments to pass to `.f`.
+#'
+#' @return Either a `raster::RasterLayer` or `terra::SpatRaster` object.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' library(Rsagacmd)
+#' library(terra)
+#' 
+#' saga <- saga_gis(backend = "terra")
+#' 
+#' # generate a dem and split into tiles
+#' dem <- saga$grid_calculus$random_terrain()
+#' dem_tiles <- tile_geoprocessor(saga, dem, nx = 25, ny = 25)
+#' 
+#' # apply a saga tool function to each tile
+#' tile_output <- map_raster(
+#'     dem_tiles, 
+#'     saga$ta_morphometry$terrain_ruggedness_index
+#' )
+#' 
+#' # alternatively use a partial function to set arguments to the tool
+#' tri_func <- function(dem) {
+#'     saga$ta_morphometry$terrain_ruggedness_index(
+#'         dem = dem, 
+#'         radius = 7
+#'      )
+#' }
+#' 
+#' tile_output <- map_raster(dem_tiles, tri_func)
+#' 
+#' # if the saga tool produces multiple outputs then each output will be
+#' # mosaicked automatically and returned as a list of raster datasets
+#' tile_output <- map_raster(
+#'     dem_tiles, 
+#'     saga$ta_hydrology$saga_wetness_index
+#' )
+#' }
+map2_raster <- function(.x, .y, .f, filename = NULL, gdal_options = NULL, ...) {
+  args <- list(...)
+  
+  backend <- check_grid_inputs(c(.x, .y))
+  
+  if (is.null(filename))
+    filename <- tempfile(fileext = ".tif")
+  
+  # apply function to each tile
+  if (length(args) > 0) {
+    .f <- rlang::exec(partial, f = .f, !!!args)
+  }
+  
+  output_tiles <- mapply(.f, .x, .y)
+  
+  mosaicked_tiles <-
+    process_tile_outputs(output_tiles, backend, filename, gdal_options)
+  
+  mosaicked_tiles
+}
+

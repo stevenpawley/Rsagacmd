@@ -147,8 +147,8 @@ saga_execute <-
 
   message(
     paste(
-      "Outputs produced by tools:",
-      paste(alias_names, collapse = ",")
+      "Outputs produced by tool:",
+      paste(alias_names, collapse = ", ")
     )
   )
   
