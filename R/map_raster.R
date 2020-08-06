@@ -222,6 +222,7 @@ map_raster <- function(.x, .f, filename = NULL, mosaic_opts = NULL, ...) {
 
 
 #' @rdname map_raster
+#' @export
 map2_raster <- function(.x, .y, .f, filename = NULL, mosaic_opts = NULL, ...) {
   args <- list(...)
   backend <- check_grid_inputs(c(.x, .y))
