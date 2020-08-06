@@ -145,13 +145,6 @@ saga_execute <-
   # discard nulls
   saga_results <- saga_results[!sapply(saga_results, is.null)]
 
-  message(
-    paste(
-      "Outputs produced by tool:",
-      paste(alias_names, collapse = ", ")
-    )
-  )
-  
   # summarize outputs
   if (length(saga_results) == 1) {
     saga_results <- saga_results[[1]]
