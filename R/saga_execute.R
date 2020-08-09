@@ -59,9 +59,9 @@ saga_execute <-
   # save in-memory R objects to files for saga_cmd to access
   args <- lapply(args, save_object, temp_path = temp_path, backend = backend)
   
-  # process character strings for use with saga_cmd
+  # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
   args <- lapply(args, function(x) {
-    if (inherits(x, "character")) {
+    if (inherits(x, "list")) {
       x <- paste(x, collapse = ";")
       x <- gsub(".sdat", ".sgrd", x)
     }
