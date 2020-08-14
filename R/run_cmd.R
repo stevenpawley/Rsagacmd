@@ -38,6 +38,9 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   # create options:value character vector
   param_string <- mapply(parse_options, names(args), args, USE.NAMES = FALSE)
   
+  if (length(param_string) == 0)
+    param_string <- NULL
+  
   # execute command  
   msg <- processx::run(
     command = cmd, 

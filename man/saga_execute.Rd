@@ -9,7 +9,7 @@ saga_execute(
   tool,
   senv,
   .intern = TRUE,
-  .all_outputs = TRUE,
+  .all_outputs = FALSE,
   .verbose = NULL,
   ...
 )

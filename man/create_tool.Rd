@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_tool.R
 \name{create_tool}
 \alias{create_tool}
-\title{Generates list of options for a saga-gis tool}
+\title{Generates list of options for a SAGA-GIS tool}
 \usage{
 create_tool(tool_information, tool_options)
 }
@@ -12,24 +12,13 @@ create_tool(tool_information, tool_options)
 \item{tool_options}{list}
 }
 \value{
-named list, containing three items:
-+ `tool_name` syntactically-correct name for the tool
-+ `tool_cmd` command to use for saga_cmd to execute tool
-+ `options` named list of the tool's parameters containing:
-     - `type` data type of parameter
-     - `name` long name of the parameter
-     - `alias` syntactically correct alias for the SAGA's identifier
-     - `identifier` identifier used by saga_cmd
-     - `description` tool description
-     - `constraints` description of the parameters constraints
-     - `default` default parameter value
-     - `minimum` minimum permissible value
-     - `maximum` maximum permissible value
-     - `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
-     - `io` whether the parameter represents an input or output
+A `saga_tool` object containing:
++ `tool_name` A syntactically-correct name for the tool.
++ `tool_cmd` The command to use for saga_cmd to execute tool.
++ `parameters` A named list of the tool's parameter objects.
 }
 \description{
-Parses the html table for a saga-gis tool into a list of identifiers,
+Parses the html table for a SAGA-GIS tool into a list of identifiers,
 options, defaults and constraints
 }
 \keyword{internal}

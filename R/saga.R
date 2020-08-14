@@ -17,124 +17,133 @@
 #'
 #' @return A saga environment S3 object containing paths, settings and a nested
 #'   list of libraries tools and options.
-saga_env <- function(saga_bin = NULL, opt_lib = NULL, backend = "raster") {
-  
-  if (is.null(saga_bin)) {
-    saga_bin <- saga_search()
-  } else {
-    if (nchar(Sys.which(names = saga_bin)) == 0)
-      rlang::abort("The supplied path to the saga_cmd binary is not correct")
-  }
-  
-  saga_vers <- saga_version(saga_bin)
-  
-  # generate SAGA help files in temporary directory
-  help_path <- file.path(tempdir(), basename(tempfile()))
-  dir.create(help_path)
-  
-  # version < 3.0.0 need to use working directory
-  if (saga_vers > as.numeric_version("3.0.0")) {
-    msg <-
-      system(paste0(paste(shQuote(saga_bin), "--create-docs="), help_path), intern = TRUE)
+saga_env <-
+  function(saga_bin = NULL,
+           opt_lib = NULL,
+           backend = "raster") {
     
-  } else {
-    olddir <- getwd()
-    setwd(help_path)
-    msg <- system(paste(shQuote(saga_bin), "--docs"), intern = TRUE)
-    setwd(olddir)
-  }
-  
-  if (!is.null(attr(msg, "status"))) {
-    rlang::abort()
-  }
-  
-  # parse SAGA help files into nested list of libraries, tools and options
-  docs_libraries <- list.dirs(path = help_path)
-  docs_libraries <- docs_libraries[2:length(docs_libraries)]
-  
-  if (!is.null(opt_lib)) {
-    docs_libraries <- 
-      docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
-  }
-  
-  libraries <- list()
-  
-  for (libdir in docs_libraries) {
-    tool_files <- list.files(path = libdir)
-    
-    # get module names from file and remove from parameter list
-    tool_names_file <- tool_files[which.min(nchar(tool_files))]
-    tool_files <- tool_files[tool_files != tool_names_file]
-    
-    for (tool in tool_files) {
-      tryCatch(expr = {
-        options <- XML::readHTMLTable(
-          doc = paste(libdir, tool, sep = "/"),
-          header = TRUE,
-          stringsAsFactors = FALSE)
-        
-        tool_information <- options[[1]]
-        tool_options <- options[[length(options)]]
-        
-        if (!any(grepl("interactive", x = options[[1]][, 2]))) {
-          tool_config <- create_tool(tool_information, tool_options)
-          libraries[[basename(libdir)]][[tool_config$tool_name]] <-
-            tool_config
-        }
-      }, 
-      error = function(e) 
-        e)
+    if (is.null(saga_bin)) {
+      saga_bin <- saga_search()
+    } else {
+      if (nchar(Sys.which(names = saga_bin)) == 0)
+        rlang::abort("The supplied path to the saga_cmd binary is not correct")
     }
-  }
-  
-  # remove tools that produce no outputs
-  for (lib in names(libraries)) {
-    tools <- names(libraries[[lib]])
     
-    for (tool in tools) {
-      selected_tool <- libraries[[lib]][[tool]]$options
+    saga_vers <- saga_version(saga_bin)
+    
+    # generate SAGA help files in temporary directory
+    help_path <- file.path(tempdir(), basename(tempfile()))
+    dir.create(help_path)
+    
+    # version < 3.0.0 need to use working directory
+    if (saga_vers > as.numeric_version("3.0.0")) {
+      msg <-
+        system(paste0(paste(shQuote(saga_bin), "--create-docs="), help_path), intern = TRUE)
       
-      has_output <- sapply(selected_tool, function(x) x$io)
-      
-      if (!"Output" %in% has_output)
-        libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
+    } else {
+      olddir <- getwd()
+      setwd(help_path)
+      msg <- system(paste(shQuote(saga_bin), "--docs"), intern = TRUE)
+      setwd(olddir)
     }
-  }
-  
-  # remove libraries with no tools
-  for (lib in names(libraries)) {
-    n_tools <- length(libraries[[lib]])
     
-    if (n_tools == 0)
-      libraries <- libraries[names(libraries) != lib]
-  }
-  
-  # remove invalid libraries for saga_cmd
-  invalid_libs <- list(
-    "db_odbc",
-    "db_pgsql",
-    "docs_html",
-    "docs_pdf",
-    "garden_3d_viewer",
-    "garden_games",
-    "garden_learn_to_program",
-    "garden_webservices",
-    "grid_calculus_bsl",
-    "pointcloud_viewer",
-    "tin_viewer"
-  )
-  
-  libraries <- libraries[!names(libraries) %in% invalid_libs]
-  
-  return(
-    list(
-      saga_cmd = saga_bin,
-      saga_vers = saga_vers,
-      backend = backend,
-      libraries = libraries
+    if (!is.null(attr(msg, "status"))) {
+      rlang::abort()
+    }
+    
+    # parse SAGA help files into nested list of libraries, tools and options
+    docs_libraries <- list.dirs(path = help_path)
+    docs_libraries <- docs_libraries[2:length(docs_libraries)]
+    
+    if (!is.null(opt_lib)) {
+      docs_libraries <-
+        docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
+    }
+    
+    libraries <- list()
+    
+    for (libdir in docs_libraries) {
+      tool_files <- list.files(path = libdir)
+      
+      # get module names from file and remove from parameter list
+      tool_names_file <- tool_files[which.min(nchar(tool_files))]
+      tool_files <- tool_files[tool_files != tool_names_file]
+      
+      for (tool in tool_files) {
+        tryCatch(
+          expr = {
+            options <- XML::readHTMLTable(
+              doc = paste(libdir, tool, sep = "/"),
+              header = TRUE,
+              stringsAsFactors = FALSE
+            )
+            
+            tool_information <- options[[1]]
+            tool_options <- options[[length(options)]]
+            
+            if (!any(grepl("interactive", x = options[[1]][, 2]))) {
+              tool_config <- create_tool(tool_information, tool_options)
+              libraries[[basename(libdir)]][[tool_config$tool_name]] <-
+                tool_config
+            }
+          },
+          error = function(e)
+            e
+        )
+      }
+    }
+    
+    # remove tools that produce no outputs
+    for (lib in names(libraries)) {
+      tools <- names(libraries[[lib]])
+      
+      for (tool in tools) {
+        params <- libraries[[lib]][[tool]]$params
+        
+        has_output <- sapply(params, function(x)
+          if ("io" %in% names(x))
+            x$io)
+        
+        if (!"Output" %in% has_output)
+          libraries[[lib]] <-
+          libraries[[lib]][!names(libraries[[lib]]) == tool]
+      }
+    }
+    
+    # remove libraries with no tools
+    for (lib in names(libraries)) {
+      n_tools <- length(libraries[[lib]])
+      
+      if (n_tools == 0)
+        libraries <- libraries[names(libraries) != lib]
+    }
+    
+    # remove invalid libraries for saga_cmd
+    invalid_libs <- list(
+      "db_odbc",
+      "db_pgsql",
+      "docs_html",
+      "docs_pdf",
+      "garden_3d_viewer",
+      "garden_games",
+      "garden_learn_to_program",
+      "garden_webservices",
+      "grid_calculus_bsl",
+      "pointcloud_viewer",
+      "tin_viewer"
     )
-  )
-}
+    
+    libraries <- libraries[!names(libraries) %in% invalid_libs]
+    
+    return(
+      list(
+        saga_cmd = saga_bin,
+        saga_vers = saga_vers,
+        backend = backend,
+        libraries = libraries
+      )
+    )
+  }
 
 
 #' Generates a custom saga_cmd configuration file
@@ -159,97 +168,110 @@ saga_env <- function(saga_bin = NULL, opt_lib = NULL, backend = "raster") {
 #'
 #' @return A character that specifies the path to custom saga_cmd initiation
 #'   file.
-saga_configure <- function(senv,
-                           grid_caching = FALSE,
-                           grid_cache_threshold = 100,
-                           grid_cache_dir = NULL,
-                           cores = NULL,
-                           saga_vers) {
-  # some checks
-  if (missing(senv)) {
-    rlang::abort("senv parameter is missing")
-  }
-  
-  if (is.null(grid_cache_dir)) {
-    grid_cache_dir <- tempdir()
-    grid_cache_dir <- gsub("//", "/", grid_cache_dir)
-    grid_cache_dir <- gsub("\\\\", "/", grid_cache_dir)
-  }
-  
-  # create configuration file if any arguments are supplied
-  if ((grid_caching == TRUE | !is.null(cores)) &
-      saga_vers >= as.numeric_version("4.0.0")) {
+saga_configure <- 
+  function(senv,
+           grid_caching = FALSE,
+           grid_cache_threshold = 100,
+           grid_cache_dir = NULL,
+           cores = NULL,
+           saga_vers) {
     
-    saga_config <- tempfile(fileext = ".ini")
-    
-    msg <- system(
-      paste(
-        shQuote(senv$saga_cmd),
-        paste0("--create-config=", saga_config)), 
-      intern = T)
-    
-    saga_config_settings <- readChar(saga_config, file.info(saga_config)$size)
-    
-    # configuration for custom number of cores
-    if (!missing(cores) & grid_caching == FALSE) {
-      
-      saga_config_settings <- gsub(
-        "OMP_THREADS_MAX=[0-9]*",
-        paste0("OMP_THREADS_MAX=", cores),
-        saga_config_settings
-      )
-      
-    # configuration for grid caching
-    } else if (grid_caching == TRUE) {
-      
-      if (is.null(cores)) {
-        message("Number of processing cores not specified")
-        message("SAGA-GIS file caching is not thread-safe. Using cores = 1")
-        cores <- 1
-      }
-      
-      if (cores > 1) {
-        message("cores > 1. SAGA-GIS file caching is not thread-safe.
-                Setting cores = 1")
-        cores <- 1
-      }
-      
-      saga_config_settings <- gsub(
-        "GRID_CACHE_MODE=[0-3]", "GRID_CACHE_MODE=1", saga_config_settings)
-      
-      saga_config_settings <- gsub(
-        "GRID_CACHE_THRESHLOD=[0-9]*",
-        paste0("GRID_CACHE_THRESHLOD=", grid_cache_threshold),
-        saga_config_settings)
-      
-      saga_config_settings <- gsub(
-        "GRID_CACHE_TMPDIR=;*",
-        paste0("GRID_CACHE_TMPDIR=", shQuote(grid_cache_dir)),
-        saga_config_settings)
-      
-      saga_config_settings <- gsub(
-        "OMP_THREADS_MAX=[0-9]*", "OMP_THREADS_MAX=1", saga_config_settings)
+    # some checks
+    if (missing(senv)) {
+      rlang::abort("senv parameter is missing")
     }
     
-    # write configuration file
-    writeChar(saga_config_settings, saga_config)
+    if (is.null(grid_cache_dir)) {
+      grid_cache_dir <- tempdir()
+      grid_cache_dir <- gsub("//", "/", grid_cache_dir)
+      grid_cache_dir <- gsub("\\\\", "/", grid_cache_dir)
+    }
     
-  } else if ((grid_caching == TRUE | !is.null(cores)) &
-             saga_vers < as.numeric_version("4.0.0")) {
-    message(
-      paste(
-        "Cannot enable grid caching or change number cores for SAGA-GIS",
-        "versions < 4.0.0. Please use a more recent version of SAGA-GIS"
+    # create configuration file if any arguments are supplied
+    if ((grid_caching == TRUE | !is.null(cores)) &
+        saga_vers >= as.numeric_version("4.0.0")) {
+      
+      saga_config <- tempfile(fileext = ".ini")
+      
+      msg <- processx::run(
+        command = senv$saga_cmd,
+        args = paste0("--create-config=", saga_config)
       )
-    )
+      
+      if (msg$status == 1) {
+        error_msg <- paste(
+          "There is a problem with generating the SAGA-GIS documentation,",
+          "is the path to the saga_cmd binary set set?"
+        )
+        
+        rlang::abort(error_msg)
+      }
+      
+      saga_config_settings <-
+        readChar(saga_config, file.info(saga_config)$size)
+      
+      # configuration for custom number of cores
+      if (!missing(cores) & grid_caching == FALSE) {
+        saga_config_settings <- gsub(
+          "OMP_THREADS_MAX=[0-9]*",
+          paste0("OMP_THREADS_MAX=", cores),
+          saga_config_settings
+        )
+        
+        # configuration for grid caching
+      } else if (grid_caching == TRUE) {
+        if (is.null(cores)) {
+          message("Number of processing cores not specified")
+          message("SAGA-GIS file caching is not thread-safe. Using cores = 1")
+          cores <- 1
+        }
+        
+        if (cores > 1) {
+          message("cores > 1. SAGA-GIS file caching is not thread-safe.
+                  Setting cores = 1")
+          cores <- 1
+        }
+        
+        saga_config_settings <- gsub("GRID_CACHE_MODE=[0-3]",
+                                     "GRID_CACHE_MODE=1",
+                                     saga_config_settings)
+        
+        saga_config_settings <- gsub(
+          "GRID_CACHE_THRESHLOD=[0-9]*",
+          paste0("GRID_CACHE_THRESHLOD=", grid_cache_threshold),
+          saga_config_settings
+        )
+        
+        saga_config_settings <- gsub(
+          "GRID_CACHE_TMPDIR=;*",
+          paste0("GRID_CACHE_TMPDIR=", shQuote(grid_cache_dir)),
+          saga_config_settings
+        )
+        
+        saga_config_settings <- gsub("OMP_THREADS_MAX=[0-9]*",
+                                     "OMP_THREADS_MAX=1",
+                                     saga_config_settings)
+      }
+      
+      # write configuration file
+      writeChar(saga_config_settings, saga_config)
+      
+    } else if ((grid_caching == TRUE | !is.null(cores)) &
+               saga_vers < as.numeric_version("4.0.0")) {
+      message(
+        paste(
+          "Cannot enable grid caching or change number cores for SAGA-GIS",
+          "versions < 4.0.0. Please use a more recent version of SAGA-GIS"
+        )
+      )
+    }
+    
+    if (!exists("saga_config")) {
+      saga_config <- NULL
+    }
+    
+    return(saga_config)
   }
-  
-  if (!exists("saga_config")) {
-    saga_config <- NULL
-  }
-  
-  return(saga_config)
-}
 
 
 #' Initiate a SAGA-GIS geoprocessor object
@@ -266,7 +288,7 @@ saga_configure <- function(senv,
 #' @param grid_cache_threshold A number to act as a threshold (in Mb) before
 #'   file caching is activated for loaded raster data.
 #' @param grid_cache_dir The path to directory for temporary files generated by
-#'   file caching. If not provided then the result from `base::tempdir()` is 
+#'   file caching. If not provided then the result from `base::tempdir()` is
 #'   used.
 #' @param cores An integer for the maximum number of processing cores. By
 #'   default all cores are utilized. Needs to be set to 1 if file caching is
@@ -274,6 +296,25 @@ saga_configure <- function(senv,
 #' @param backend A character vector to specify the library to use for handling
 #'   raster data. Currently, either "raster" or "terra" is supported. The
 #'   default is "raster".
+#' @param raster_format A character to specify the default format used to save
+#'   raster data sets that are produced by SAGA-GIS. Available options are one
+#'   of "SAGA" or "GeoTIFF". The default is "SAGA".
+#' @param vector_format A character to specify the default format used to save
+#'   vector data sets that are produced by SAGA-GIS. Available options are of of
+#'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "GeoPackage".
+#' @param all_outputs A logical to indicate whether to automatically use
+#'   temporary files to store all output data sets from each SAGA-GIS tool.
+#'   Default = TRUE. This argument can be overriden by the `.all_outputs`
+#'   parameter on each individual SAGA-GIS tool function that is generated by
+#'   `Rsagacmd::saga_gis()`.
+#' @param intern A logical to indicate whether to load the SAGA-GIS
+#'   geoprocessing results as an R object, default = TRUE. For instance, if a
+#'   raster grid is output by SAGA-GIS then this will be loaded as either as
+#'   `RasterLayer` or `SpatRaster` object, depending on the `backend` setting
+#'   that is used. Vector data sets are always loaded as `sf` objects, and
+#'   tabular data sets are loaded as tibbles. The `intern` settings for the
+#'   `saga` object can be overriden for individual tools using the `.intern`
+#'   argument.
 #' @param opt_lib A character vector with the names of a subset of SAGA-GIS
 #'   libraries. Used to link only a subset of named SAGA-GIS tool libraries,
 #'   rather than creating functions for all available tool libraries.
@@ -281,123 +322,146 @@ saga_configure <- function(senv,
 #'   generated as data is passed between R and SAGA-GIS. If not specified, then
 #'   the system `base::tempdir()` is used.
 #' @param verbose Logical to indicate whether to output all messages made during
-#'   SAGA-GIS commmands to the R console. Default is FALSE.
-#'   
+#'   SAGA-GIS commands to the R console. Default = FALSE. This argument can be
+#'   overriden by using the `.verbose` argument on each individual SAGA-GIS tool
+#'   function that is generated by `Rsagacmd::saga_gis()`.
+#'
 #' @return A S3 `saga` object containing a nested list of functions for SAGA-GIS
 #'   libraries and tools.
-#' 
+#'
 #' @export
 #' @import raster
 #' @examples
 #' \dontrun{
 #' # Initialize a saga object
 #' saga <- saga_gis()
-#' 
+#'
 #' # Alternatively intialize a saga object using file caching to handle large
 #' # raster files
 #' saga <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 250, cores = 1)
-#' 
+#'
 #' # Example terrain analysis
 #' # Generate a random DEM
 #' dem <- saga$grid_calculus$random_terrain(radius = 100)
-#' 
+#'
 #' # Use Rsagacmd to calculate the Terrain Ruggedness Index
 #' tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
 #' plot(tri)
-#' 
+#'
 #' # Optionally run command and do not load result as an R object
 #' saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, .intern = FALSE)
 #' }
-saga_gis <- function(saga_bin = NULL,
-                     grid_caching = FALSE,
-                     grid_cache_threshold = 100,
-                     grid_cache_dir = NULL,
-                     cores = NULL,
-                     backend = "raster",
-                     opt_lib = NULL,
-                     temp_path = NULL,
-                     verbose = FALSE) {
+saga_gis <- 
+  function(saga_bin = NULL,
+           grid_caching = FALSE,
+           grid_cache_threshold = 100,
+           grid_cache_dir = NULL,
+           cores = NULL,
+           backend = "raster",
+           raster_format = "SAGA",
+           vector_format = "GeoPackage",
+           all_outputs = TRUE,
+           intern = TRUE,
+           opt_lib = NULL,
+           temp_path = NULL,
+           verbose = FALSE) {
   
-  senv <- saga_env(saga_bin, opt_lib, backend)
-  senv$verbose <- verbose
-  
-  senv[["saga_config"]] <- saga_configure(
-    senv,
-    grid_caching,
-    grid_cache_threshold,
-    grid_cache_dir,
-    cores,
-    senv$saga_vers
-  )
-  
-  if (!is.null(temp_path)) senv[["temp_path"]] <- temp_path else
-      senv[["temp_path"]] <- tempdir()
-  
-  # dynamically create functions
-  tool_libraries <- list()
-  
-  for (lib in names(senv$libraries)) {
-    toolnames <- list()
+    senv <- saga_env(saga_bin, opt_lib, backend)
+    senv$verbose <- verbose
+    senv$all_outputs <- all_outputs
+    senv$intern <- intern
     
-    for (tool in names(senv$libraries[[lib]])) {
-      tool_options <- senv$libraries[[lib]][[tool]][["options"]]
-      tool_cmd <- senv[["libraries"]][[lib]][[tool]][["tool_cmd"]]
+    senv[["saga_config"]] <- saga_configure(senv,
+                                            grid_caching,
+                                            grid_cache_threshold,
+                                            grid_cache_dir,
+                                            cores,
+                                            senv$saga_vers)
+    
+    # check formats
+    if (!raster_format %in% names(supported_raster_formats))
+      rlang::abort(paste("`raster_format` must be one of:", supported_raster_formats))
+    senv$raster_format <- supported_raster_formats[raster_format]
+    
+    if (!vector_format %in% names(supported_vector_formats))
+      rlang::abort(paste("`vector_format` must be one of:", supported_vector_formats))
+    senv$vector_format <- supported_vector_formats[vector_format]
+    
+    if (!is.null(temp_path))
+      senv[["temp_path"]] <- temp_path
+    else
+      senv[["temp_path"]] <- tempdir()
+    
+    # dynamically create functions
+    tool_libraries <- list()
+    
+    for (lib in names(senv$libraries)) {
+      toolnames <- list()
+      
+      for (tool in names(senv$libraries[[lib]])) {
+        params <- senv$libraries[[lib]][[tool]][["params"]]
 
-      tryCatch(
-        expr = {
-          # create function body
-          body <- create_function(lib = lib, tool = tool)
-          
-          # create list of arguments and default values
-          args <- lapply(tool_options, function(x) NULL)
-          args <- c(args, list(.intern = TRUE, .all_outputs = TRUE, .verbose = FALSE))
-          
-          # coerce arguments to comma-separated character
-          args <- mapply(
-            function(k, v) paste(k, deparse(v), sep = " = "), 
-            names(args), 
-            args, 
-            USE.NAMES = FALSE
-          )
-          args <- paste(args, collapse = ", ")
-          
-          # parse function
-          func_code <- paste0("function(", args, ") {", body, "}")
-          
-          tool_env <- new.env()
-          tool_env$senv <- senv
-          
-          func <- structure(
-            eval(expr = parse(text = func_code), envir = tool_env),
-            lib = lib,
-            tool = tool,
-            class = "saga_tool"
-          )
-          
-          # append function to lists
-          tool_libraries[[lib]] <- append(tool_libraries[[lib]], func)
-          toolnames <- append(toolnames, tool)
-          names(tool_libraries[[lib]]) <- toolnames
-        },
-        error = function(e)
-          warning(
-            paste0(
-              "Problem parsing SAGA-GIS library = ", 
-              lib, 
-              "; and tool = ", 
-              tool),
-            call. = FALSE
-          )
-      )
+        tryCatch(
+          expr = {
+            # create function body
+            body <- create_function(lib = lib, tool = tool)
+            
+            # create list of arguments and default values
+            args <- lapply(params, function(x)
+              NULL)
+            args <-
+              c(args,
+                list(
+                  .intern = NULL,
+                  .all_outputs = NULL,
+                  .verbose = NULL
+                ))
+            
+            # coerce arguments to comma-separated character
+            args <- mapply(function(k, v)
+              paste(k, deparse(v), sep = " = "),
+              names(args),
+              args,
+              USE.NAMES = FALSE)
+            args <- paste(args, collapse = ", ")
+            
+            # parse function
+            func_code <- paste0("function(", args, ") {", body, "}")
+            
+            tool_env <- new.env()
+            tool_env$senv <- senv
+            
+            func <- structure(
+              eval(expr = parse(text = func_code), envir = tool_env),
+              lib = lib,
+              tool = tool,
+              class = "saga_tool"
+            )
+            
+            # append function to lists
+            tool_libraries[[lib]] <-
+              append(tool_libraries[[lib]], func)
+            toolnames <- append(toolnames, tool)
+            names(tool_libraries[[lib]]) <- toolnames
+          },
+          error = function(e)
+            warning(
+              paste0(
+                "Problem parsing SAGA-GIS library = ",
+                lib,
+                "; and tool = ",
+                tool
+              ),
+              call. = FALSE
+            )
+        )
+      }
     }
+    
+    #  return S3 saga object
+    structure(tool_libraries,
+              class = "saga")
   }
-  
-  #  return S3 saga object
-  structure(
-    tool_libraries,
-    class = "saga"
-  )
-}
 
 
 #' Generic function to display help and usage information for any SAGA-GIS tool
@@ -412,10 +476,10 @@ saga_gis <- function(saga_bin = NULL,
 #' \dontrun{
 #' # Intialize a saga object
 #' saga <- saga_gis()
-#' 
+#'
 #' # Display usage information on a tool
 #' print(saga$ta_morphometry$slope_aspect_curvature)
-#' 
+#'
 #' # Or simply:
 #' saga$ta_morphometry$slope_aspect_curvature
 #' }
@@ -425,16 +489,16 @@ print.saga_tool <- function(x, ...) {
   
   # get environment of saga_gis object
   env <- environment(x)
-  tool_options <- env$senv$libraries[[lib]][[tool]][["options"]]
+  params <- env$senv$libraries[[lib]][[tool]][["params"]]
   
   cat(paste0("Help for library = ", lib, "; tool = ", tool, ":", "\n"))
-  for (i in seq_along(tool_options)) {
-    cat(paste0("Name of tool: ", tool_options[[i]]$name), "\n")
-    cat(paste0("Argument name: ", tool_options[[i]]$alias, "\n"))
-    cat(paste0("Identifier used by SAGA-GIS: ", tool_options[[i]]$identifier, "\n"))
-    cat(paste0("Type: ", tool_options[[i]]$type, "\n"))
-    cat(paste0("Description: ", tool_options[[i]]$description, "\n"))
-    cat(paste0("Constraints: ", tool_options[[i]]$constraints, "\n"))
+  for (i in seq_along(params)) {
+    cat(paste0("Name of tool: ", params[[i]]$name), "\n")
+    cat(paste0("Argument name: ", params[[i]]$alias, "\n"))
+    cat(paste0("Identifier used by SAGA-GIS: ", params[[i]]$identifier, "\n"))
+    cat(paste0("Type: ", params[[i]]$type, "\n"))
+    cat(paste0("Description: ", params[[i]]$description, "\n"))
+    cat(paste0("Constraints: ", params[[i]]$constraints, "\n"))
     cat("\n")
   }
 }

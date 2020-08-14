@@ -53,17 +53,10 @@ read_table <- function(x) {
 #' 
 #' @keywords internal
 read_grid <- function(x, backend) {
-  if (tools::file_ext(x$args) == "sg-gds-z") {
-    warning(paste(
-      "Cannot load SAGA Grid Collection as an R raster object",
-      "- this is not currently supported"
-    ))
-  } else {
-    if (backend == "raster")
-      object <- raster::raster(x$args)
-    if (backend == "terra")
-      object <- terra::rast(x$args)
-  }
+  if (backend == "raster")
+    object <- raster::raster(x$args)
+  if (backend == "terra")
+    object <- terra::rast(x$args)
   
   object
 }

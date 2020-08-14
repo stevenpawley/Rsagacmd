@@ -23,7 +23,7 @@ saga_execute <-
            tool,
            senv,
            .intern = TRUE,
-           .all_outputs = TRUE,
+           .all_outputs = FALSE,
            .verbose = NULL,
            ...) {
   
@@ -32,24 +32,34 @@ saga_execute <-
   # get tool and saga settings
   tools_in_library <- senv$libraries[[lib]]
   selected_tool <- tools_in_library[[tool]]
-  tool_options <- selected_tool$options
+  params <- selected_tool$params
   tool_cmd <- selected_tool$tool_cmd
   saga_cmd <- senv$saga_cmd
   saga_config <- senv$saga_config
   temp_path <- senv$temp_path
   backend <- senv$backend
   verbose <- senv$verbose
+  intern <- senv$intern
+  all_outputs <- senv$all_outputs
+  raster_format <- senv$raster_format
+  vector_format <- senv$vector_format
   
-  # override senv verbosity
+  # override saga object options with those supplied from tool
   if (!is.null(.verbose))
     verbose <- .verbose
+  
+  if (!is.null(.intern))
+    intern <- .intern
+  
+  if (!is.null(.all_outputs))
+    all_outputs <- .all_outputs
     
   # match the syntactically-correct arg_name to the identifier used by saga_cmd
   arg_names <- names(args)
-  identifiers_r <- sapply(tool_options, function(x) x$identifier)
+  identifiers_r <- sapply(params, function(x) x$identifier)
   arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
   args <- setNames(args, arg_names)
-  tool_options <- setNames(tool_options, identifiers_r) # rename to identifiers
+  params <- setNames(params, identifiers_r) # rename to identifiers
   
   # strip other missing arguments and update arg_names
   if (length(args) > 1)
@@ -61,7 +71,7 @@ saga_execute <-
   
   # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
   args <- lapply(args, function(x) {
-    if (inherits(x, "list")) {
+    if (length(x) > 1) {
       x <- paste(x, collapse = ";")
       x <- gsub(".sdat", ".sgrd", x)
     }
@@ -69,32 +79,32 @@ saga_execute <-
   })
 
   # merge output args with tool options
-  for (n in names(tool_options)) {
-    tool_options[[n]]$args <- NA
+  for (n in names(params)) {
+    params[[n]]$args <- NA
     
-    if (tool_options[[n]]$identifier %in% names(args)) {
-      tool_options[[n]]$args <- args[[n]] 
+    if (params[[n]]$identifier %in% names(args)) {
+      params[[n]]$args <- args[[n]]
       
     # use temporary files for other outputs if .all_outputs   
-    } else if (isTRUE(.all_outputs) & !is.na(tool_options[[n]]$io)) {
+    } else if (isTRUE(all_outputs) & !is.na(params[[n]]$io)) {
       
-      if (tool_options[[n]]$io == "Output") {
-        if (tool_options[[n]]$feature %in% c("Grid", "Grid list", "Raster")) {
-          tool_options[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".sgrd") 
+      if (params[[n]]$io == "Output") {
+        if (params[[n]]$feature %in% c("Grid", "Grid list", "Raster")) {
+          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = raster_format) 
           
-        } else if (tool_options[[n]]$feature %in% c("Shape", "Shapes list")) {
-          tool_options[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".shp") 
+        } else if (params[[n]]$feature %in% c("Shape", "Shapes list")) {
+          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = vector_format)
           
-        } else if (tool_options[[n]]$feature == "Table") {
-          tool_options[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".csv") 
+        } else if (params[[n]]$feature == "Table") {
+          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".csv") 
         }
-        pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, tool_options[[n]]$args)
+        pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, params[[n]]$args)
       }
     }
   }
   
   # check if any outputs will be produced
-  tool_outputs <- lapply(tool_options, function(x) 
+  tool_outputs <- lapply(params, function(x)
     if (!is.na(x$io)) if (x$io == "Output") x)
   
   tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) 
@@ -113,7 +123,7 @@ saga_execute <-
   }
   
   # update the arguments and expected outputs for tool
-  updated_args <- sapply(tool_options, function(x) 
+  updated_args <- sapply(params, function(x) 
     if (!is.na(x$args)) x$args)
   
   args <- updated_args[sapply(updated_args, function(x) !is.null(x))]
@@ -133,8 +143,8 @@ saga_execute <-
     lapply(
       tool_outputs,
       read_output,
-      .intern = .intern,
-      .all_outputs = .all_outputs,
+      .intern = intern,
+      .all_outputs = all_outputs,
       backend = backend
     )
   
