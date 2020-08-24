@@ -298,7 +298,7 @@ saga_configure <-
 #'   default is "raster".
 #' @param raster_format A character to specify the default format used to save
 #'   raster data sets that are produced by SAGA-GIS. Available options are one
-#'   of "SAGA" or "GeoTIFF". The default is "SAGA".
+#'   of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".
 #' @param vector_format A character to specify the default format used to save
 #'   vector data sets that are produced by SAGA-GIS. Available options are of of
 #'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "GeoPackage".
@@ -371,12 +371,15 @@ saga_gis <-
     senv$all_outputs <- all_outputs
     senv$intern <- intern
     
-    senv[["saga_config"]] <- saga_configure(senv,
-                                            grid_caching,
-                                            grid_cache_threshold,
-                                            grid_cache_dir,
-                                            cores,
-                                            senv$saga_vers)
+    senv[["saga_config"]] <- 
+      saga_configure(
+        senv = senv,
+        grid_caching = grid_caching,
+        grid_cache_threshold = grid_cache_threshold,
+        grid_cache_dir = grid_cache_dir,
+        cores = cores,
+        saga_vers = senv$saga_vers
+      )
     
     # check formats
     if (!raster_format %in% names(supported_raster_formats))

@@ -195,7 +195,7 @@ parameter <-
     
     if (stringr::str_detect(param$type, "Text"))
       param$feature <- "character"
-    
+
     class(param) <- "parameter"
     param
   }
