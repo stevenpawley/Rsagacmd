@@ -220,3 +220,111 @@ save_object.SpatialPolygonsDataFrame <- function(x, ...) {
 save_object.list <- function(x, ...) {
   lapply(x, save_object)
 }
+
+
+#' Updates a `parameter` object with file paths to the R data objects.
+#'
+#' @param param A `parameter` object.
+#' @param temp_path A character specifying the tempdir to use for storage (optional).
+#' @param backend A character with the raster backend ('raster' or 'terra).
+#'
+#' @return A `parameter` object with an updated `file` attribute that refers to
+#'   the on-disk file for saga_cmd to access.
+#' @keywords internal
+update_parameter_file <- function(param, temp_path = NULL, backend = NULL) {
+  # update the `files` attribute with the file path to the object in `parameter$value` attribute
+  if (!is.null(param$value))
+    param$files <- save_object(param$value, temp_path = temp_path, backend = backend)
+  
+  # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
+  if (length(param$files) > 1) {
+    param$files <- paste(param$files, collapse = ";")
+    param$files <- gsub(".sdat", ".sgrd", param$files)
+  }
+  
+  param
+}
+
+
+#' Updates a `parameters` object with file paths to the R data objects.
+#'
+#' @param param A `parameters` object.
+#' @param temp_path A character specifying the tempdir to use for storage (optional).
+#' @param backend A character with the raster backend ('raster' or 'terra).
+#' @param all_outputs A logical indicating whether to use tempfiles for unspecified outputs.
+#'
+#' @return A `parameters` object with updated `file` attributes that refers to
+#'   the on-disk file for saga_cmd to access.
+#' @keywords internal
+update_parameters_file <- function(params, temp_path = NULL, backend = NULL) {
+  
+  # update the `file` attribute of each `parameter` object
+  params <- lapply(params, update_parameter_file, temp_path = temp_path, backend = backend)
+  
+  params
+}
+
+
+#' Update a `parameters` object using temporary files for any unspecified output parameters
+#'
+#' @param params A `parameters` object.
+#' @param temp_path A character with the tempdir.
+#' @param raster_format A character specifying the raster format.
+#' @param vector_format A character specifiying the vector format.
+#'
+#' @return A `parameters` object.
+#'
+#' @keywords internal
+update_parameters_tempfiles <- function(params, temp_path, raster_format, vector_format) {
+  parameter_outputs <- params[sapply(params, function(param) !is.na(param$io))]
+  parameter_outputs <- parameter_outputs[sapply(parameter_outputs, function(param) param$io == "Output")]
+  parameter_outputs <- names(parameter_outputs)
+  
+  grid_features <- c("Grid", "Grid list", "Raster")
+  shape_features <- c("Shape", "Shapes list")
+  table_features <- "Table"
+  
+  for (n in parameter_outputs) {
+    if (params[[n]]$io == "Output" & is.null(params[[n]]$files)) {
+      
+      # get tempfile with correct file extension
+      if (params[[n]]$feature %in% grid_features) {
+        params[[n]]$files <- tempfile(tmpdir = temp_path, fileext = raster_format)
+        
+      } else if (params[[n]]$feature %in% shape_features) {
+        params[[n]]$files <- tempfile(tmpdir = temp_path, fileext = vector_format)
+        
+      } else if (params[[n]]$feature == table_features) {
+        params[[n]]$files <- tempfile(tmpdir = temp_path, fileext = ".csv") 
+      }
+      
+      params[[n]]$value <- params[[n]]$files
+      
+      # add to tempfile list
+      tfiles <- params[[n]]$files
+      tfiles <- strsplit(tfiles, ";")
+      pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, tfiles)
+    }
+  }
+  
+  params
+}
+
+
+#' Drops unused/empty parameters from a `parameters` object
+#'
+#' @param params A `parameters` object
+#'
+#' @return A `parameters` object with empty `parameter` objects removed
+#'
+#' @keywords internal
+drop_parameters <- function(params) {
+  
+  params <- params[sapply(params, function(param) 
+    !is.null(param$value))]
+  
+  class(params) <- "parameters"
+  
+  params
+}
+

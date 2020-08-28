@@ -8,8 +8,8 @@ saga_execute(
   lib,
   tool,
   senv,
-  .intern = TRUE,
-  .all_outputs = FALSE,
+  .intern = NULL,
+  .all_outputs = NULL,
   .verbose = NULL,
   ...
 )

@@ -102,7 +102,9 @@ parameter <-
       feature = NA,
       default = NA,
       minimum = NA,
-      maximum = NA
+      maximum = NA,
+      value = NULL,
+      files = NULL
     )
     
     # generate syntactically-correct alias for identifier

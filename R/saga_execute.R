@@ -22,143 +22,99 @@ saga_execute <-
   function(lib,
            tool,
            senv,
-           .intern = TRUE,
-           .all_outputs = FALSE,
+           .intern = NULL,
+           .all_outputs = NULL,
            .verbose = NULL,
            ...) {
-  
-  args <- c(...)
-  
-  # get tool and saga settings
-  tools_in_library <- senv$libraries[[lib]]
-  selected_tool <- tools_in_library[[tool]]
-  params <- selected_tool$params
-  tool_cmd <- selected_tool$tool_cmd
-  saga_cmd <- senv$saga_cmd
-  saga_config <- senv$saga_config
-  temp_path <- senv$temp_path
-  backend <- senv$backend
-  verbose <- senv$verbose
-  intern <- senv$intern
-  all_outputs <- senv$all_outputs
-  raster_format <- senv$raster_format
-  vector_format <- senv$vector_format
-  
-  # override saga object options with those supplied from tool
-  if (!is.null(.verbose))
-    verbose <- .verbose
-  
-  if (!is.null(.intern))
-    intern <- .intern
-  
-  if (!is.null(.all_outputs))
-    all_outputs <- .all_outputs
     
-  # match the syntactically-correct arg_name to the identifier used by saga_cmd
-  arg_names <- names(args)
-  identifiers_r <- sapply(params, function(x) x$identifier)
-  arg_names <- identifiers_r[intersect(arg_names, names(identifiers_r))]
-  args <- setNames(args, arg_names)
-  params <- setNames(params, identifiers_r) # rename to identifiers
-  
-  # strip other missing arguments and update arg_names
-  if (length(args) > 1)
-    args <- args[sapply(args, function(x) !is.null(x))]
-  arg_names <- names(args)
-  
-  # save in-memory R objects to files for saga_cmd to access
-  args <- lapply(args, save_object, temp_path = temp_path, backend = backend)
-  
-  # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
-  args <- lapply(args, function(x) {
-    if (length(x) > 1) {
-      x <- paste(x, collapse = ";")
-      x <- gsub(".sdat", ".sgrd", x)
-    }
-    x
-  })
-
-  # merge output args with tool options
-  for (n in names(params)) {
-    params[[n]]$args <- NA
+    args <- c(...)
     
-    if (params[[n]]$identifier %in% names(args)) {
-      params[[n]]$args <- args[[n]]
-      
-    # use temporary files for other outputs if .all_outputs   
-    } else if (isTRUE(all_outputs) & !is.na(params[[n]]$io)) {
-      
-      if (params[[n]]$io == "Output") {
-        if (params[[n]]$feature %in% c("Grid", "Grid list", "Raster")) {
-          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = raster_format) 
-          
-        } else if (params[[n]]$feature %in% c("Shape", "Shapes list")) {
-          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = vector_format)
-          
-        } else if (params[[n]]$feature == "Table") {
-          params[[n]]$args <- tempfile(tmpdir = temp_path, fileext = ".csv") 
-        }
-        pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, params[[n]]$args)
-      }
+    # get tool and saga settings
+    tools_in_library <- senv$libraries[[lib]]
+    selected_tool <- tools_in_library[[tool]]
+    params <- selected_tool$params
+    tool_cmd <- selected_tool$tool_cmd
+    saga_cmd <- senv$saga_cmd
+    saga_config <- senv$saga_config
+    temp_path <- senv$temp_path
+    backend <- senv$backend
+    verbose <- senv$verbose
+    intern <- senv$intern
+    all_outputs <- senv$all_outputs
+    raster_format <- senv$raster_format
+    vector_format <- senv$vector_format
+    
+    # override saga object options with those supplied from tool
+    if (!is.null(.verbose))
+      verbose <- .verbose
+    
+    if (!is.null(.intern))
+      intern <- .intern
+    
+    if (!is.null(.all_outputs))
+      all_outputs <- .all_outputs
+    
+    # update parameters object with argument values
+    for (arg_name in names(args)) {
+      if (arg_name %in% names(params))
+        params[[arg_name]]$value <- args[[arg_name]]
     }
-  }
-  
-  # check if any outputs will be produced
-  tool_outputs <- lapply(params, function(x)
-    if (!is.na(x$io)) if (x$io == "Output") x)
-  
-  tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) 
-    !is.null(x))]
-  
-  n_outputs <- length(tool_outputs)
-  
-  if (n_outputs == 0) {
-    rlang::abort(
-      paste(
-        "No outputs have been specified and automatic outputs",
-        "to tempfiles are disabled (.all_outputs = FALSE)"
+    
+    # save in-memory R objects to files for saga_cmd to access
+    params <- update_parameters_file(params, temp_path, backend)
+    
+    # optionally use tempfiles for unspecified outputs
+    if (all_outputs)
+      params <- update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
+    
+    # remove unused parameter objects
+    params <- drop_parameters(params)
+    
+    if (length(params) == 0) {
+      rlang::abort("No outputs have been specified")
+    }
+    
+    # check if any outputs will be produced
+    tool_outputs <- params[sapply(params, function(x) !is.na(x$io))]
+    tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) x$io == "Output")]
+    tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) !is.null(x$files))]
+    n_outputs <- length(tool_outputs)
+    
+    if (n_outputs == 0) {
+      rlang::abort("No outputs have been specified")
+      return(NULL)
+    }
+    
+    # update the arguments and expected outputs for tool
+    cmd_args <- sapply(params, function(param) param[["files"]])
+    cmd_args <- setNames(cmd_args, sapply(params, function(param) param[["identifier"]]))
+    
+    # execute system call
+    msg <- run_cmd(saga_cmd, saga_config, lib, tool_cmd, cmd_args, verbose)
+    
+    if (msg$status == 1) {
+      if (verbose)
+        message(msg$stdout)
+      rlang::abort(msg$stderr)
+    }
+    
+    # load SAGA results as list of R objects
+    saga_results <-
+      lapply(
+        tool_outputs,
+        read_output,
+        .intern = intern,
+        .all_outputs = all_outputs,
+        backend = backend
       )
-    )
-    return(NULL)
+    
+    # discard nulls
+    saga_results <- saga_results[!sapply(saga_results, is.null)]
+    
+    # summarize outputs
+    if (length(saga_results) == 1) {
+      saga_results <- saga_results[[1]]
+    }
+    
+    saga_results
   }
-  
-  # update the arguments and expected outputs for tool
-  updated_args <- sapply(params, function(x) 
-    if (!is.na(x$args)) x$args)
-  
-  args <- updated_args[sapply(updated_args, function(x) !is.null(x))]
-  arg_names <- names(args)
-  
-  # execute system call
-  msg <- run_cmd(saga_cmd, saga_config, lib, tool_cmd, args, verbose)
-
-  if (msg$status == 1) {
-    if (verbose)
-      message(msg$stdout)
-    rlang::abort(msg$stderr)
-  }
-  
-  # load SAGA results as list of R objects
-  saga_results <-
-    lapply(
-      tool_outputs,
-      read_output,
-      .intern = intern,
-      .all_outputs = all_outputs,
-      backend = backend
-    )
-  
-  # rename outputs with aliases
-  alias_names <- sapply(tool_outputs, function(x) x$alias)
-  saga_results <- rlang::set_names(saga_results, alias_names)
-  
-  # discard nulls
-  saga_results <- saga_results[!sapply(saga_results, is.null)]
-
-  # summarize outputs
-  if (length(saga_results) == 1) {
-    saga_results <- saga_results[[1]]
-  }
-  
-  saga_results
-}

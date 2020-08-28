@@ -8,7 +8,7 @@
 #' 
 #' @keywords internal
 read_shapes <- function(x) {
-  sf::st_read(x$args, quiet = TRUE)
+  sf::st_read(x$files, quiet = TRUE)
 }
 
 
@@ -22,19 +22,19 @@ read_shapes <- function(x) {
 #' 
 #' @keywords internal
 read_table <- function(x) {
-  if (tools::file_ext(x$args) == "txt") {
+  if (tools::file_ext(x$files) == "txt") {
     object <- 
-      utils::read.table(x$args, header = T, sep = "\t") %>%
+      utils::read.table(x$files, header = T, sep = "\t") %>%
       tibble::as_tibble()
     
-  } else if (tools::file_ext(x$args) == "csv") {
+  } else if (tools::file_ext(x$files) == "csv") {
     object <- 
-      utils::read.csv(x$args) %>% 
+      utils::read.csv(x$files) %>% 
       tibble::as_tibble()
     
-  } else if (tools::file_ext(x$args) == "dbf") {
+  } else if (tools::file_ext(x$files) == "dbf") {
     object <- 
-      foreign::read.dbf(x$args) %>%
+      foreign::read.dbf(x$files) %>%
       tibble::as_tibble()
   }
   
@@ -54,9 +54,9 @@ read_table <- function(x) {
 #' @keywords internal
 read_grid <- function(x, backend) {
   if (backend == "raster")
-    object <- raster::raster(x$args)
+    object <- raster::raster(x$files)
   if (backend == "terra")
-    object <- terra::rast(x$args)
+    object <- terra::rast(x$files)
   
   object
 }
@@ -73,15 +73,15 @@ read_grid <- function(x, backend) {
 #' 
 #' @keywords internal
 read_grid_list <- function(x, backend) {
-  x$args <- strsplit(x$args, ";")[[1]]
+  x$files <- strsplit(x$files, ";")[[1]]
   
   if (backend == "raster")
-    object <- lapply(x$args, raster::raster)
+    object <- lapply(x$files, raster::raster)
   
   if (backend == "terra")
-    object <- lapply(x$args, terra::rast)
+    object <- lapply(x$files, terra::rast)
   
-  names(object) <- paste(x$alias, seq_along(x$args), sep = "_")
+  names(object) <- paste(x$alias, seq_along(x$files), sep = "_")
   
   # unlist if grid list but just a single output
   if (length(object) == 1)
@@ -104,7 +104,7 @@ read_grid_list <- function(x, backend) {
 #' 
 #' @keywords internal
 read_output <- function(output, backend, .intern, .all_outputs) {
-  output$args <- gsub(".sgrd", ".sdat", output$args)
+  output$files <- gsub(".sgrd", ".sdat", output$files)
 
   if (.intern) {
     object <- tryCatch(expr = {
@@ -129,7 +129,7 @@ read_output <- function(output, backend, .intern, .all_outputs) {
     })
     
   } else {
-    object <- output$args
+    object <- output$files
   }
   
   object

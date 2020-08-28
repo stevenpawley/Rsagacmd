@@ -56,8 +56,11 @@ create_tool <- function(tool_information, tool_options) {
     
   } else if (tool_name == "clip_grid_with_rectangle") {
     params$output$feature <- "Grid"
-  }
   
+  } else if (tool_name == "tiling") {
+    params$tiles_path$io <- "Output"
+  }
+
   structure(list(
     tool_name = tool_name,
     tool_cmd = saga_tool_cmd,
