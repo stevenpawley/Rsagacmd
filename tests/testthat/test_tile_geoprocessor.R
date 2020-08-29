@@ -8,6 +8,8 @@ testthat::test_that("tile geoprocessor function", {
   if (!is.null(saga_search())) {
     saga <- saga_gis()
     
+    testthat::skip_if(saga_version(saga_search()) < numeric_version(7.0))
+    
     dem <- saga$grid_calculus$random_terrain(
       target_user_xmin = 0,
       target_user_xmax = 1000,
