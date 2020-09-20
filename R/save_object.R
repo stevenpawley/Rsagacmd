@@ -34,7 +34,6 @@ save_object.character <- function(x, ...) {
 #' @export
 #' @keywords internal
 save_object.sf <- function(x, ...) {
-  
   args <- list(...)
   temp_path <- args$temp_path
   
@@ -52,7 +51,6 @@ save_object.sf <- function(x, ...) {
 #' @export
 #' @keywords internal
 save_object.RasterLayer <- function(x, ...) {
-  
   args <- list(...)
   temp_path <- args$temp_path
   
@@ -69,8 +67,25 @@ save_object.RasterLayer <- function(x, ...) {
   } else if (raster::nbands(x) != 1 |
     raster::inMemory(x) == TRUE |
     tools::file_ext(raster::filename(x)) == "grd") {
-    temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
-    raster::writeRaster(x, filename = temp)
+    
+    dtype <- raster::dataType(x)
+    nodataval = switch(
+      dtype,
+      LOG1S = 0,
+      INT1S = -127,
+      INT1U = 0,
+      INT2S = -32767,
+      INT2U = 0,
+      INT4S = -99999,
+      INT4U = 0,
+      FLT4S = -99999,
+      FLT8S = -99999
+    )
+    
+    temp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
+    raster::NAvalue(x) <- nodataval
+    raster::writeRaster(x, filename = temp, datatype = dtype, NAflag = nodataval)
+    pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
     x <- temp
   }
 
@@ -81,7 +96,6 @@ save_object.RasterLayer <- function(x, ...) {
 #' @export
 #' @keywords internal
 save_object.SpatRaster <- function(x, ...) {
-  
   args <- list(...)
   temp_path <- args$temp_path
   
@@ -116,8 +130,9 @@ save_object.SpatRaster <- function(x, ...) {
   
   # otherwise save to temporary file
   if (part_of_multiband | in_memory) {
-    temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
+    temp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
     terra::writeRaster(x, filename = temp)
+    pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
     x <- temp
   }
   
@@ -128,7 +143,6 @@ save_object.SpatRaster <- function(x, ...) {
 #' @export
 #' @keywords internal
 save_object.RasterStack <- function(x, ...) {
-  
   args <- list(...)
   temp_path <- args$temp_path
   
@@ -149,7 +163,6 @@ save_object.RasterStack <- function(x, ...) {
 #' @export
 #' @keywords internal
 save_object.data.frame <- function(x, ...) {
-  
   args <- list(...)
   temp_path <- args$temp_path
   
@@ -226,20 +239,20 @@ save_object.list <- function(x, ...) {
 #'
 #' @param param A `parameter` object.
 #' @param temp_path A character specifying the tempdir to use for storage (optional).
-#' @param backend A character with the raster backend ('raster' or 'terra).
 #'
 #' @return A `parameter` object with an updated `file` attribute that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
-update_parameter_file <- function(param, temp_path = NULL, backend = NULL) {
+update_parameter_file <- function(param, temp_path = NULL) {
   # update the `files` attribute with the file path to the object in `parameter$value` attribute
   if (!is.null(param$value))
-    param$files <- save_object(param$value, temp_path = temp_path, backend = backend)
+    param$files <- save_object(param$value, temp_path = temp_path)
   
   # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
+  param$files <- gsub(".sdat", ".sgrd", param$files)
+  
   if (length(param$files) > 1) {
     param$files <- paste(param$files, collapse = ";")
-    param$files <- gsub(".sdat", ".sgrd", param$files)
   }
   
   param
@@ -250,17 +263,14 @@ update_parameter_file <- function(param, temp_path = NULL, backend = NULL) {
 #'
 #' @param param A `parameters` object.
 #' @param temp_path A character specifying the tempdir to use for storage (optional).
-#' @param backend A character with the raster backend ('raster' or 'terra).
 #' @param all_outputs A logical indicating whether to use tempfiles for unspecified outputs.
 #'
 #' @return A `parameters` object with updated `file` attributes that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
-update_parameters_file <- function(params, temp_path = NULL, backend = NULL) {
-  
+update_parameters_file <- function(params, temp_path = NULL) {
   # update the `file` attribute of each `parameter` object
-  params <- lapply(params, update_parameter_file, temp_path = temp_path, backend = backend)
-  
+  params <- lapply(params, update_parameter_file, temp_path = temp_path)
   params
 }
 
@@ -319,7 +329,6 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format, vector
 #'
 #' @keywords internal
 drop_parameters <- function(params) {
-  
   params <- params[sapply(params, function(param) 
     !is.null(param$value))]
   
@@ -327,4 +336,3 @@ drop_parameters <- function(params) {
   
   params
 }
-

@@ -61,7 +61,7 @@ saga_execute <-
     }
     
     # save in-memory R objects to files for saga_cmd to access
-    params <- update_parameters_file(params, temp_path, backend)
+    params <- update_parameters_file(params, temp_path)
     
     # optionally use tempfiles for unspecified outputs
     if (all_outputs)
