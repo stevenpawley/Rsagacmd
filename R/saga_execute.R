@@ -28,7 +28,7 @@ saga_execute <-
            ...) {
     
     args <- c(...)
-    
+
     # get tool and saga settings
     tools_in_library <- senv$libraries[[lib]]
     selected_tool <- tools_in_library[[tool]]
@@ -64,8 +64,9 @@ saga_execute <-
     params <- update_parameters_file(params, temp_path)
     
     # optionally use tempfiles for unspecified outputs
-    if (all_outputs)
+    if (all_outputs == TRUE) {
       params <- update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
+    }
     
     # remove unused parameter objects
     params <- drop_parameters(params)
