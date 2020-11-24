@@ -82,7 +82,7 @@ save_object.RasterLayer <- function(x, ...) {
       FLT8S = -99999
     )
     
-    temp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
+    temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
     raster::NAvalue(x) <- nodataval
     raster::writeRaster(x, filename = temp, datatype = dtype, NAflag = nodataval)
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
