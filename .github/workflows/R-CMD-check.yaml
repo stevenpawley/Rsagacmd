@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run : 
           sudo apt-get update
-          sudo apt-get upgrade -y
+          sudo apt-get upgrade
           sudo apt-get install saga libudunits2-dev libgdal-dev
       - name: Install R packages
         run: 
