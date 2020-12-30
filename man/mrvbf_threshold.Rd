@@ -4,12 +4,10 @@
 \alias{mrvbf_threshold}
 \title{Calculate the t_slope value based on DEM resolution for MRVBF}
 \usage{
-mrvbf_threshold(res, plot = FALSE)
+mrvbf_threshold(res)
 }
 \arguments{
 \item{res}{numeric, DEM resolution}
-
-\item{plot}{logical, produce plot of relationship}
 }
 \value{
 numeric, t_slope value for MRVBF
@@ -26,5 +24,5 @@ to maintain the relationship between slope and DEM resolution. This function
 provides a convenient way to perform that calculation.
 }
 \examples{
-mrvbf_threshold(res = 10, plot = TRUE)
+mrvbf_threshold(res = 10)
 }
