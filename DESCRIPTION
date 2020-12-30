@@ -27,8 +27,7 @@ Imports:
     stringr,
     rlang,
     tibble,
-    processx,
-    pbapply
+    processx
 Suggests:
     dplyr,
     testthat,

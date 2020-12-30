@@ -46,12 +46,18 @@ testthat::test_that("Test file caching ", {
     } else {
 
       # check that saga S3 class can be initiated using file caching
-      cache_dir <- file.path(tempdir(), paste0("test_caching", as.integer(runif(1, 0, 1e6))))
+      cache_dir <-
+        file.path(tempdir(), paste0("test_caching", as.integer(runif(1, 0, 1e6))))
       cache_dir <- gsub("//", "/", cache_dir)
       cache_dir <- gsub("\\\\", "/", cache_dir)
       dir.create(cache_dir)
       
-      saga_fc <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 0.001, grid_cache_dir = cache_dir)
+      saga_fc <-
+        saga_gis(
+          grid_caching = TRUE,
+          grid_cache_threshold = 0.001,
+          grid_cache_dir = cache_dir
+        )
       
       testthat::expect_true(!is.null(saga_fc))
       testthat::expect_is(saga_fc, "saga")

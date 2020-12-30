@@ -300,7 +300,7 @@ saga_configure <-
 #'   of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".
 #' @param vector_format A character to specify the default format used to save
 #'   vector data sets that are produced by SAGA-GIS. Available options are of of
-#'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "GeoPackage".
+#'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile".
 #' @param all_outputs A logical to indicate whether to automatically use
 #'   temporary files to store all output data sets from each SAGA-GIS tool.
 #'   Default = TRUE. This argument can be overridden by the `.all_outputs`
@@ -364,7 +364,7 @@ saga_gis <-
            cores = NULL,
            backend = "raster",
            raster_format = "SAGA",
-           vector_format = "GeoPackage",
+           vector_format = "ESRI Shapefile",
            all_outputs = TRUE,
            intern = TRUE,
            opt_lib = NULL,
@@ -394,6 +394,13 @@ saga_gis <-
     if (!vector_format %in% names(supported_vector_formats))
       rlang::abort(paste("`vector_format` must be one of:", supported_vector_formats))
     senv$vector_format <- supported_vector_formats[vector_format]
+    
+    # SAGA versions < 7.0 only allow direct writing to native formats
+    if (senv$saga_vers < 7.0 & raster_format != "SAGA")
+      rlang::abort("SAGA versions < 7.0 only allow directly writing of raster data via the 'SAGA' raster format")
+      
+    if (senv$saga_vers < 7.0 & vector_format != "ESRI Shapefile")
+      rlang::abort("SAGA versions < 7.0 only allow directly writing of vector data via the 'ESRI Shapefile' vector format")
     
     if (!is.null(temp_path))
       senv[["temp_path"]] <- temp_path

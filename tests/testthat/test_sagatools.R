@@ -40,7 +40,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
         formula = gsub("z", dem_mean, "ifelse(g1>z,1,0)"), 
         result = tempfile(fileext = ".sgrd")
       ) %>%
-      saga$shapes_grid$vectorising_grid_classes(polygons = tempfile(fileext = ".gpkg"))
+      saga$shapes_grid$vectorising_grid_classes(polygons = tempfile(fileext = ".shp"))
     
     testthat::expect_is(shapes, "sf")
   }

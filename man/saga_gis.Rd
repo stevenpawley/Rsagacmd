@@ -12,7 +12,7 @@ saga_gis(
   cores = NULL,
   backend = "raster",
   raster_format = "SAGA",
-  vector_format = "GeoPackage",
+  vector_format = "ESRI Shapefile",
   all_outputs = TRUE,
   intern = TRUE,
   opt_lib = NULL,
@@ -49,7 +49,7 @@ of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".}
 
 \item{vector_format}{A character to specify the default format used to save
 vector data sets that are produced by SAGA-GIS. Available options are of of
-"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "GeoPackage".}
+"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile".}
 
 \item{all_outputs}{A logical to indicate whether to automatically use
 temporary files to store all output data sets from each SAGA-GIS tool.
