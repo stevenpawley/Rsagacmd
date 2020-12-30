@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generates list of options for a saga-gis tool — create_tool • Rsagacmd</title>
+<title>Generates list of options for a SAGA-GIS tool — create_tool • Rsagacmd</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Generates list of options for a saga-gis tool — create_tool" />
-<meta property="og:description" content="Parses the html table for a saga-gis tool into a list of identifiers,
+<meta property="og:title" content="Generates list of options for a SAGA-GIS tool — create_tool" />
+<meta property="og:description" content="Parses the html table for a SAGA-GIS tool into a list of identifiers,
 options, defaults and constraints" />
 
 
@@ -73,7 +73,7 @@ options, defaults and constraints" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ options, defaults and constraints" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -107,17 +107,17 @@ options, defaults and constraints" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generates list of options for a saga-gis tool</h1>
+    <h1>Generates list of options for a SAGA-GIS tool</h1>
     
     <div class="hidden name"><code>create_tool.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Parses the html table for a saga-gis tool into a list of identifiers,
+    <p>Parses the html table for a SAGA-GIS tool into a list of identifiers,
 options, defaults and constraints</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_tool</span>(<span class='no'>tool_information</span>, <span class='no'>tool_options</span>)</pre>
+    <pre class="usage"><span class='fu'>create_tool</span><span class='op'>(</span><span class='va'>tool_information</span>, <span class='va'>tool_options</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,21 +134,10 @@ options, defaults and constraints</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>named list, containing three items:
-+ `tool_name` syntactically-correct name for the tool
-+ `tool_cmd` command to use for saga_cmd to execute tool
-+ `options` named list of the tool's parameters containing:
-     - `type` data type of parameter
-     - `name` long name of the parameter
-     - `alias` syntactically correct alias for the SAGA's identifier
-     - `identifier` identifier used by saga_cmd
-     - `description` tool description
-     - `constraints` description of the parameters constraints
-     - `default` default parameter value
-     - `minimum` minimum permissible value
-     - `maximum` maximum permissible value
-     - `feature` type of feature, e.g. Shapes, Shapes List, Grid etc.
-     - `io` whether the parameter represents an input or output</p>
+    <p>A `saga_tool` object containing:
++ `tool_name` A syntactically-correct name for the tool.
++ `tool_cmd` The command to use for saga_cmd to execute tool.
++ `parameters` A named list of the tool's parameter objects.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -165,7 +154,7 @@ options, defaults and constraints</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

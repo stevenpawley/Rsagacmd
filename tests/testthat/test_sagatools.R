@@ -61,8 +61,8 @@ testthat::test_that("handling of single and multiband rasters", {
       target_user_ymax = 1000,
       radius = 100,
       iterations = 500
-      )
-
+    )
+    
     # create rasterbrick, rasterstacks, and layers from each
     rasterbrick <-
       writeRaster(

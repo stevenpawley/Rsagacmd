@@ -74,7 +74,7 @@ Intended to be used internally by saga_gis" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ Intended to be used internally by saga_gis" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,14 +119,14 @@ settings related to file caching and number of available processor cores.
 Intended to be used internally by <code><a href='saga_gis.html'>saga_gis</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>saga_configure</span>(
-  <span class='no'>senv</span>,
-  <span class='kw'>grid_caching</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>grid_cache_threshold</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>grid_cache_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>saga_vers</span>
-)</pre>
+    <pre class="usage"><span class='fu'>saga_configure</span><span class='op'>(</span>
+  <span class='va'>senv</span>,
+  grid_caching <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  grid_cache_threshold <span class='op'>=</span> <span class='fl'>100</span>,
+  grid_cache_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cores <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>saga_vers</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,7 +184,7 @@ The generation of a saga_cmd configuration file is only valid for versions
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

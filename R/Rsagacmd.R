@@ -3,7 +3,7 @@
 #' \pkg{Rsagacmd} provides an R scripting interface to the open-source System
 #' for Automated Geoscientific Analyses Geographical Information System software
 #' \href{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}. The current
-#' version has been tested using SAGA-GIS versions 2.3.1 to 7.6.0 on Windows
+#' version has been tested using SAGA-GIS versions 2.3.1 to 7.9.0 on Windows
 #' (x64), OS X and Linux. Rsagacmd provides a functional approach to scripting
 #' with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
 #' based on the user's current SAGA-GIS installation. These functions are
@@ -79,9 +79,6 @@
 #'   consume a significant amount of disk space during a session. If required,
 #'   these temporary files can be cleaned during the session in a similar way to
 #'   the raster package, using the saga_remove_tmpfiles function.
-#'
-#' @section Notes: SAGA-GIS compressed .sg-grd-z files are not currently
-#'   supported, although support may be added in future package updates.
 #'
 #' @examples
 #' \dontrun{

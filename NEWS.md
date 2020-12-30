@@ -1,9 +1,19 @@
-# Rsagacmd 0.0.9
+# Rsagacmd 0.1.0
 
-Rsagacmd 0.0.9 is a bug fix release that hopefully catches the remaining few bugs before moving onto adding new functionality in future releases. The main changes are:
+Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the
+the internal representation of SAGA-GIS tools and parameter settings using a 
+similar approach as used by the saga_api.
 
-* Bug fix relating to `search_tools` was broken in previous version
-* Bug fix to return a single object (e.g. raster) when a SAGA-GIS 'grid list' contains only a single grid
-* Bug fix to remove linking to any tools within SAGA-GIS that are interactive (i.e. are designed to run within the GUI) or do not produce any outputs (i.e. are designed to modify existing grid loaded into memory when using the GUI).
+Most notably, this release provides support for the use of different raster
+backend, including the existing 'raster' package, as well as the newer 'terra'
+package. Configuration options to use different spatial formats as data is
+passed from R to SAGA (and back) is also provided. For rasters, datasets that
+are saved from R memory to disk for access by the saga command line (and vice
+versa) can be in 'SAGA' format, 'SAGA Compressed', or 'GeoTIFF' (the default),
+which can potentially save disk space when transferring large volumes of data.
+Vector formats now include 'ESRI Shapefile', 'Geopackage' (the default) and
+'GeoJSON'. The default use of the geopackage format eliminates problems when
+transferring spatial datasets which have attribute names that are >10 characters
+in length.
 
-Thanks!
+Enjoy!

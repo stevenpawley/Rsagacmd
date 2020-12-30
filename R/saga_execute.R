@@ -76,10 +76,15 @@ saga_execute <-
     }
     
     # check if any outputs will be produced
-    tool_outputs <- params[sapply(params, function(x) !is.na(x$io))]
-    tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) x$io == "Output")]
-    tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) !is.null(x$files))]
-    n_outputs <- length(tool_outputs)
+    parameters_io <- params[sapply(params, function(x) !is.na(x$io))]
+    
+    if (length(parameters_io) > 0) {
+      tool_outputs <- parameters_io[sapply(parameters_io, function(x) x$io == "Output")]
+      tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) !is.null(x$files))]
+      n_outputs <- length(tool_outputs)
+    } else {
+      n_outputs <- 0
+    }
     
     if (n_outputs == 0) {
       rlang::abort("No outputs have been specified")
