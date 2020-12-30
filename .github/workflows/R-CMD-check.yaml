@@ -16,7 +16,6 @@ jobs:
   R-CMD-check:
     runs-on: 
       ubuntu-latest
-      ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
