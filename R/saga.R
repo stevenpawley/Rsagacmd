@@ -22,23 +22,22 @@ saga_env <-
            opt_lib = NULL,
            backend = "raster") {
     
-    if (is.null(saga_bin)) {
+    if (is.null(saga_bin)) 
       saga_bin <- saga_search()
-    } else {
-      if (nchar(Sys.which(names = saga_bin)) == 0)
-        rlang::abort("The supplied path to the saga_cmd binary is not correct")
-    }
+    
+    if (nchar(Sys.which(names = saga_bin)) == 0)
+      rlang::abort("The supplied path to the saga_cmd binary is not correct")
     
     saga_vers <- saga_version(saga_bin)
     
-    # generate SAGA help files in temporary directory
+    # generate saga help files in temporary directory
     help_path <- file.path(tempdir(), basename(tempfile()))
     dir.create(help_path)
     
     # version < 3.0.0 need to use working directory
     if (saga_vers > as.numeric_version("3.0.0")) {
-      msg <-
-        system(paste0(paste(shQuote(saga_bin), "--create-docs="), help_path), intern = TRUE)
+      cmd <- paste0(paste(shQuote(saga_bin), "--create-docs="), help_path)
+      msg <- system(cmd, intern = TRUE)
       
     } else {
       olddir <- getwd()
@@ -47,18 +46,16 @@ saga_env <-
       setwd(olddir)
     }
     
-    if (!is.null(attr(msg, "status"))) {
+    if (!is.null(attr(msg, "status")))
       rlang::abort()
-    }
     
-    # parse SAGA help files into nested list of libraries, tools and options
+    # parse saga help files into nested list of libraries, tools and options
     docs_libraries <- list.dirs(path = help_path)
     docs_libraries <- docs_libraries[2:length(docs_libraries)]
     
-    if (!is.null(opt_lib)) {
+    if (!is.null(opt_lib))
       docs_libraries <-
         docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
-    }
     
     libraries <- list()
     
@@ -99,7 +96,7 @@ saga_env <-
       
       for (tool in tools) {
         params <- libraries[[lib]][[tool]]$params
-        
+
         has_output <- sapply(params, function(x) if ("io" %in% names(x)) x$io)
         
         if (!"Output" %in% has_output)
@@ -128,8 +125,7 @@ saga_env <-
       "garden_webservices",
       "grid_calculus_bsl",
       "pointcloud_viewer",
-      "tin_viewer",
-      "sim_erosion"
+      "tin_viewer"
     )
     
     libraries <- libraries[!names(libraries) %in% invalid_libs]

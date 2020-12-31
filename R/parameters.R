@@ -40,9 +40,11 @@ parameters <- function(tool_options) {
   # replace tool arguments with syntactically-correct version
   tool_identifiers <- tool_options$Identifier
   tool_aliases <- sapply(tool_identifiers, create_alias)
+  tool_aliases <- make.names(tool_aliases, unique = TRUE)
   
   # convert options table to nested list
-  params <- rep(list(NA), nrow(tool_options)) %>%
+  params <- 
+    rep(list(NA), nrow(tool_options)) %>%
     stats::setNames(tool_aliases)
   
   for (i in seq_len(length(tool_aliases))) {

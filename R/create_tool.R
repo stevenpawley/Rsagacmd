@@ -19,22 +19,22 @@ create_tool <- function(tool_information, tool_options) {
   
   # create syntactically-correct name for the tool
   tool_name <- saga_tool_cmd %>%
-    stringr::str_replace_all("^[0-9]+", "") %>% # remove digits from start of tool name
-    stringr::str_replace_all(" ", "_") %>% # replace spaces with underscores
-    stringr::str_replace_all("\\(", "") %>% # replace spaces with underscores
-    stringr::str_replace_all("\\)", "") %>% # replace spaces with underscores
-    stringr::str_replace_all("\\(", "") %>% # remove parenthesis
-    stringr::str_replace_all("\\)", "") %>% # remove parenthesis
-    stringr::str_replace_all("'", "") %>% # remove single quotations
-    stringr::str_replace_all(",", "_") %>% # remove commas
-    stringr::str_replace_all("/", "_") %>% # replace forward slash with underscore
-    stringr::str_replace_all("-", "_") %>% # replace minus with underscore
-    stringr::str_replace_all(":", "_") %>% # replace colon with underscore
-    stringr::str_replace_all("\\[", "_") %>% # replace square brackets with underscore
-    stringr::str_replace_all("\\]", "_") %>% # replace square brackets with underscore
-    stringr::str_replace_all("&", "_") %>% # replace ampersand with underscore
-    stringr::str_replace_all("_+", "_") %>% # replace multiple underscores due to above with single _
-    stringr::str_replace_all("^_+", "") %>% # remove underscore from start of tool name
+    stringr::str_replace_all("^[0-9]+", "") %>%
+    stringr::str_replace_all(" ", "_") %>%
+    stringr::str_replace_all("\\(", "") %>%
+    stringr::str_replace_all("\\)", "") %>%
+    stringr::str_replace_all("\\(", "") %>%
+    stringr::str_replace_all("\\)", "") %>%
+    stringr::str_replace_all("'", "") %>%
+    stringr::str_replace_all(",", "_") %>%
+    stringr::str_replace_all("/", "_") %>%
+    stringr::str_replace_all("-", "_") %>%
+    stringr::str_replace_all(":", "_") %>%
+    stringr::str_replace_all("\\[", "_") %>%
+    stringr::str_replace_all("\\]", "_") %>%
+    stringr::str_replace_all("&", "_") %>%
+    stringr::str_replace_all("_+", "_") %>%
+    stringr::str_replace_all("^_+", "") %>%
     tolower()
   
   # strip input, output and options lines from table
@@ -45,7 +45,7 @@ create_tool <- function(tool_information, tool_options) {
   # get the parameters object
   params <- parameters(tool_options)
   
-  # apply exceptions for specific SAGA-GIS tools
+  # apply exceptions for specific saga-gis tools
   if (tool_name == "export_geotiff" | tool_name == "export_raster") {
     params$file$io <- "Output"
     params$file$feature <- "Grid"
