@@ -11,7 +11,7 @@
 saga_version <- function(saga_cmd) {
   
   saga_vers <- system(paste(shQuote(saga_cmd), "--version"), intern = T)[1]
-  saga_vers <- regmatches(saga_vers, regexpr("\\d.\\d.\\d", saga_vers))
+  saga_vers <- regmatches(saga_vers, regexpr("\\d.\\d.|dd.\\d", saga_vers))
   saga_vers <- trimws(saga_vers)
   
   as.numeric_version(saga_vers)
