@@ -93,7 +93,7 @@ saga_execute <-
     
     # update the arguments and expected outputs for tool
     cmd_args <- sapply(params, function(param) param[["files"]])
-    cmd_args <- setNames(cmd_args, sapply(params, function(param) param[["identifier"]]))
+    cmd_args <- stats::setNames(cmd_args, sapply(params, function(param) param[["identifier"]]))
     
     # execute system call
     msg <- run_cmd(saga_cmd, saga_config, lib, tool_cmd, cmd_args, verbose)

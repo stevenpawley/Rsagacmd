@@ -97,7 +97,8 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
 
   if (is.null(file_path)) {
     include_as_tempfiles <- TRUE
-    file_path <- file.path(tempdir(), paste0("tiles", floor(runif(1, 0, 1e6))))
+    file_path <-
+      file.path(tempdir(), paste0("tiles", floor(stats::runif(1, 0, 1e6))))
     
     if (!dir.exists(file_path))
       dir.create(file_path)
