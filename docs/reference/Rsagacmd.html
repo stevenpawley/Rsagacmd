@@ -43,7 +43,7 @@
 <meta property="og:description" content="Rsagacmd provides an R scripting interface to the open-source System
 for Automated Geoscientific Analyses Geographical Information System software
 SAGA-GIS. The current
-version has been tested using SAGA-GIS versions 2.3.1 to 7.6.0 on Windows
+version has been tested using SAGA-GIS versions 2.3.1 to 7.9.0 on Windows
 (x64), OS X and Linux. Rsagacmd provides a functional approach to scripting
 with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
 based on the user's current SAGA-GIS installation. These functions are
@@ -135,7 +135,7 @@ geoprocessing operations together in a single statement." />
     <p><span class="pkg">Rsagacmd</span> provides an R scripting interface to the open-source System
 for Automated Geoscientific Analyses Geographical Information System software
 <a href='https://sourceforge.net/projects/saga-gis/'>SAGA-GIS</a>. The current
-version has been tested using SAGA-GIS versions 2.3.1 to 7.6.0 on Windows
+version has been tested using SAGA-GIS versions 2.3.1 to 7.9.0 on Windows
 (x64), OS X and Linux. Rsagacmd provides a functional approach to scripting
 with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
 based on the user's current SAGA-GIS installation. These functions are
@@ -144,7 +144,7 @@ S3 object as a named list of libraries and tools. This structure facilitates
 an easier scripting experience by organizing the large number of SAGA-GIS
 tools (&gt;700) by their respective library. Interactive scripting can also
 fully take advantage of code autocompletion tools (e.g. in
-<a href='http://rstudio.com'>Rstudio</a>), allowing for each tool's syntax to be
+<a href='https://rstudio.com'>Rstudio</a>), allowing for each tool's syntax to be
 quickly recognized. Furthermore, the most common types of spatial data
 (rasters using the <span class="pkg">raster</span> package, and vector data using the <span class="pkg">sp</span>
 or simple features <span class="pkg">sf</span> packages) along with non-spatial data are
@@ -215,10 +215,6 @@ environment as a named list of the appropriate R object classes.</p>
   consume a significant amount of disk space during a session. If required,
   these temporary files can be cleaned during the session in a similar way to
   the raster package, using the saga_remove_tmpfiles function.</p>
-    <h2 class="hasAnchor" id="notes"><a class="anchor" href="#notes"></a>Notes</h2>
-
-    <p>SAGA-GIS compressed .sg-grd-z files are not currently
-  supported, although support may be added in future package updates.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Steven Pawley, <a href='mailto:dr.stevenpawley@gmail.com'>dr.stevenpawley@gmail.com</a></p>
