@@ -16,8 +16,8 @@ generate dynamic functions that map to each tool. Used to save time if you
 only want to import a single library.}
 
 \item{backend}{A character vector to specify the library to use for handling
-raster data. Currently, either "raster" or "terra" is supported. The
-default is "raster".}
+raster data. Currently, either "raster", "terra" or "stars" is supported.
+The default is "raster".}
 }
 \value{
 A saga environment S3 object containing paths, settings and a nested

@@ -12,8 +12,8 @@
 #'   generate dynamic functions that map to each tool. Used to save time if you
 #'   only want to import a single library.
 #' @param backend A character vector to specify the library to use for handling
-#'   raster data. Currently, either "raster" or "terra" is supported. The
-#'   default is "raster".
+#'   raster data. Currently, either "raster", "terra" or "stars" is supported.
+#'   The default is "raster".
 #'
 #' @return A saga environment S3 object containing paths, settings and a nested
 #'   list of libraries tools and options.
@@ -21,6 +21,9 @@ saga_env <-
   function(saga_bin = NULL,
            opt_lib = NULL,
            backend = "raster") {
+    
+    if (!backend %in% c("raster", "terra", "stars"))
+      rlang::abort("The `backend` must be one of 'raster', 'terra' or 'stars'")
     
     if (is.null(saga_bin)) 
       saga_bin <- saga_search()

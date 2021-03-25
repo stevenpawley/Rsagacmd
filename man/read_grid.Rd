@@ -11,7 +11,7 @@ read_grid(x, backend)
 function that contains the parameters for a particular tool and its
 outputs.}
 
-\item{backend}{character, either "raster" or "terra"}
+\item{backend}{character, either "raster", "terra" or "stars".}
 }
 \value{
 either a `raster` or `SpatRaster` object

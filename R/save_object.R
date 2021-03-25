@@ -153,10 +153,37 @@ save_object.RasterStack <- function(x, ...) {
     x <- raster::raster(x)
     x <- save_object(x)
   } else {
-    rlang::abort("Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
+    rlang::abort(
+      "Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
   }
 
   x
+}
+
+
+#' @export
+#' @keywords internal
+save_object.stars <- function(x, ...) {
+  args <- list(...)
+  
+  if (length(x) > 1)
+    rlang::abort(
+      "`stars` object contains multiple attributes. SAGA-GIS requires single layer rasters as inputs")
+  
+  if (inherits(x, "stars_proxy")) {
+    fp <- x[[1]]
+  
+  } else {
+    temp_path <- args$temp_path
+    
+    if (is.null(temp_path))
+      temp_path <- tempdir()
+    
+    fp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
+    stars::write_stars(x, fp)
+  }
+  
+  fp
 }
 
 

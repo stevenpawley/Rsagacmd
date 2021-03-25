@@ -47,7 +47,7 @@ read_table <- function(x) {
 #' @param x list, a `options` object that was created by the `create_tool`
 #'   function that contains the parameters for a particular tool and its
 #'   outputs.
-#' @param backend character, either "raster" or "terra"
+#' @param backend character, either "raster", "terra" or "stars".
 #'
 #' @return either a `raster` or `SpatRaster` object
 #' 
@@ -55,8 +55,12 @@ read_table <- function(x) {
 read_grid <- function(x, backend) {
   if (backend == "raster")
     object <- raster::raster(x$files)
+  
   if (backend == "terra")
     object <- terra::rast(x$files)
+  
+  if (backend == "stars")
+    object <- stars::read_stars(x$files)
   
   object
 }
@@ -80,6 +84,9 @@ read_grid_list <- function(x, backend) {
   
   if (backend == "terra")
     object <- lapply(x$files, terra::rast)
+  
+  if (backend == "stars")
+    object <- lapply(x$files, stars::read_stars)
   
   names(object) <- paste(x$alias, seq_along(x$files), sep = "_")
   
@@ -120,11 +127,12 @@ read_output <- function(output, backend, .intern, .all_outputs) {
       
     }, error = function(e) {
       
-      if (.all_outputs)
-        message(paste("No geoprocessing output for", 
-                      output$alias, 
-                      ". Results may require other input parameters to be specified"))
-
+      if (.all_outputs) {
+        message(
+          paste("No geoprocessing output for", output$alias,
+                ". Results may require other input parameters to be specified"))
+      }
+      
       return(NULL)
     })
     
