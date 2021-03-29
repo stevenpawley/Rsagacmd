@@ -1,6 +1,3 @@
-library(Rsagacmd)
-library(raster)
-
 testthat::test_that("Initiation of saga S3 class ", {
   testthat::skip_on_cran()
 

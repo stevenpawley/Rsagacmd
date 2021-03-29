@@ -1,6 +1,3 @@
-library(Rsagacmd)
-library(testthat)
-
 test_that("search_tools", {
   skip_on_cran()
   

@@ -1,6 +1,4 @@
-library(Rsagacmd)
 library(magrittr)
-library(raster)
 
 testthat::test_that("basic SAGA-GIS tool usage ", {
   testthat::skip_on_cran()

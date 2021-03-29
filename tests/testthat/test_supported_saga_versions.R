@@ -1,6 +1,3 @@
-library(Rsagacmd)
-library(raster)
-
 download_saga <- function(surl) {
   # Downloads a saga windows x64 binary from sourceforge
   saga_zipdir <- file.path(tempdir(), tools::file_path_sans_ext(basename(surl)))

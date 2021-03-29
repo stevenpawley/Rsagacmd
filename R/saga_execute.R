@@ -65,7 +65,8 @@ saga_execute <-
     
     # optionally use tempfiles for unspecified outputs
     if (all_outputs == TRUE) {
-      params <- update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
+      params <- update_parameters_tempfiles(params, temp_path, raster_format, 
+                                            vector_format)
     }
     
     # remove unused parameter objects
@@ -79,8 +80,10 @@ saga_execute <-
     parameters_io <- params[sapply(params, function(x) !is.na(x$io))]
     
     if (length(parameters_io) > 0) {
-      tool_outputs <- parameters_io[sapply(parameters_io, function(x) x$io == "Output")]
-      tool_outputs <- tool_outputs[sapply(tool_outputs, function(x) !is.null(x$files))]
+      tool_outputs <- 
+        parameters_io[sapply(parameters_io, function(x) x$io == "Output")]
+      tool_outputs <- 
+        tool_outputs[sapply(tool_outputs, function(x) !is.null(x$files))]
       n_outputs <- length(tool_outputs)
     } else {
       n_outputs <- 0
@@ -93,7 +96,8 @@ saga_execute <-
     
     # update the arguments and expected outputs for tool
     cmd_args <- sapply(params, function(param) param[["files"]])
-    cmd_args <- stats::setNames(cmd_args, sapply(params, function(param) param[["identifier"]]))
+    cmd_args <- stats::setNames(
+      cmd_args, sapply(params, function(param) param[["identifier"]]))
     
     # execute system call
     msg <- run_cmd(saga_cmd, saga_config, lib, tool_cmd, cmd_args, verbose)

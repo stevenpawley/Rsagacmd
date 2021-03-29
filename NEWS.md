@@ -1,3 +1,9 @@
+# Rsagacmd 0.1.1
+
+New features:
+- Included support for the 'stars' raster backend.
+
+
 # Rsagacmd 0.1.0
 
 Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the

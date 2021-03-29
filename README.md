@@ -215,8 +215,3 @@ tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(
     tri = "somefile.sgrd"
 )
 ```
-
-## Notes
-
-The newer SAGA-GIS compressed .sg-grd-z file format is not currently supported,
-although support may be added in future package updates.

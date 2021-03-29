@@ -18,8 +18,10 @@ parse_options <- function(key, value) {
 #' @param saga_config character, path to the saga configuration "ini" file.
 #' @param lib character, name of the selected library.
 #' @param tool_cmd character, name of the selected tool.
-#' @param args named list of tool options, such as list(DEM = "mygrid.tif", RADIUS = 3).
-#' @param verbose logical, whether to show all saga_cmd messages on the R console.
+#' @param args named list of tool options, such as list(DEM = "mygrid.tif",
+#'   RADIUS = 3).
+#' @param verbose logical, whether to show all saga_cmd messages on the R
+#'   console.
 #'
 #' @return list, output from `processx::run()`
 #' 

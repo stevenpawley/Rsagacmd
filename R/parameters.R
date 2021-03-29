@@ -26,8 +26,9 @@ create_alias <- function(identifier) {
 
 #' Generates a list of `parameter` objects for a SAGA-GIS tool
 #' 
-#' Each `parameter` object contains information about the datatype, permissible values
-#' and input/output settings associated with each identifier for a SAGA-GIS tool.
+#' Each `parameter` object contains information about the datatype, permissible
+#' values and input/output settings associated with each identifier for a
+#' SAGA-GIS tool.
 #'
 #' @param tool_options A data.frame containing the table that refers to the
 #'   SAGA-GIS tool parameter options.
@@ -207,17 +208,20 @@ parameter <-
 #' Updates a `parameter` object with file paths to the R data objects.
 #'
 #' @param param A `parameter` object.
-#' @param temp_path A character specifying the tempdir to use for storage (optional).
+#' @param temp_path A character specifying the tempdir to use for storage
+#'   (optional).
 #'
 #' @return A `parameter` object with an updated `file` attribute that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
 update_parameter_file <- function(param, temp_path = NULL) {
   if (!is.null(param$value)) {
-    # update the `files` attribute with the file path to the object in `parameter$value` attribute
+    # update the `files` attribute with the file path to the object 
+    # in `parameter$value` attribute
     param$files <- save_object(param$value, temp_path = temp_path)
     
-    # convert arguments that contain lists into semi-colon separated character strings for use with saga_cmd
+    # convert arguments that contain lists into semi-colon separated character
+    # strings for use with saga_cmd
     param$files <- gsub(".sdat", ".sgrd", param$files)
   }
   
@@ -233,8 +237,10 @@ update_parameter_file <- function(param, temp_path = NULL) {
 #' Updates a `parameters` object with file paths to the R data objects.
 #'
 #' @param param A `parameters` object.
-#' @param temp_path A character specifying the tempdir to use for storage (optional).
-#' @param all_outputs A logical indicating whether to use tempfiles for unspecified outputs.
+#' @param temp_path A character specifying the tempdir to use for storage
+#'   (optional).
+#' @param all_outputs A logical indicating whether to use tempfiles for
+#'   unspecified outputs.
 #'
 #' @return A `parameters` object with updated `file` attributes that refers to
 #'   the on-disk file for saga_cmd to access.
@@ -246,7 +252,8 @@ update_parameters_file <- function(params, temp_path = NULL) {
 }
 
 
-#' Update a `parameters` object using temporary files for any unspecified output parameters
+#' Update a `parameters` object using temporary files for any unspecified output
+#' parameters
 #'
 #' @param params A `parameters` object.
 #' @param temp_path A character with the tempdir.
@@ -258,7 +265,8 @@ update_parameters_file <- function(params, temp_path = NULL) {
 #' @keywords internal
 update_parameters_tempfiles <- function(params, temp_path, raster_format, vector_format) {
   parameter_outputs <- params[sapply(params, function(param) !is.na(param$io))]
-  parameter_outputs <- parameter_outputs[sapply(parameter_outputs, function(param) param$io == "Output")]
+  parameter_outputs <- 
+    parameter_outputs[sapply(parameter_outputs, function(param) param$io == "Output")]
   parameter_outputs <- names(parameter_outputs)
   
   grid_features <- c("Grid", "Grid list", "Raster")

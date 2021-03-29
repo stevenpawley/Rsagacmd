@@ -12,7 +12,8 @@ supported_vector_formats <- c(
 )
 
 
-#' List the available raster formats that can be set as defaults for a `saga` object.
+#' List the available raster formats that can be set as defaults for a `saga`
+#' object.
 #'
 #' @return tibble
 #' @export
@@ -27,7 +28,8 @@ show_raster_formats <- function() {
 }
 
 
-#' List the available vector formats that can be set as defaults for a `saga` object.
+#' List the available vector formats that can be set as defaults for a `saga`
+#' object.
 #'
 #' @return tibble
 #' @export

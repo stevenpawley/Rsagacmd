@@ -1,6 +1,4 @@
-library(Rsagacmd)
 library(magrittr)
-library(raster)
 
 testthat::test_that("tile geoprocessor function", {
   testthat::skip_on_cran()

@@ -1,6 +1,3 @@
-library(Rsagacmd)
-library(testthat)
-
 test_that("temporary file usage with all_outputs = TRUE", {
   skip_on_cran()
   
