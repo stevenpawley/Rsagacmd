@@ -63,12 +63,12 @@ testthat::test_that("handling of single and multiband rasters", {
     
     # create rasterbrick, rasterstacks, and layers from each
     rasterbrick <-
-      writeRaster(
-        stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
+      raster::writeRaster(
+        raster::stack(rasterlayer_from_singleband, rasterlayer_from_singleband),
         filename = tempfile(fileext = ".tif")
       )
     
-    rasterstack <- stack(
+    rasterstack <- raster::stack(
       rasterlayer_from_singleband, 
       rasterlayer_from_singleband
       )

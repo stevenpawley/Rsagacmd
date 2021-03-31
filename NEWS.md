@@ -1,8 +1,19 @@
 # Rsagacmd 0.1.1
 
 New features:
+
 - Included support for the 'stars' raster backend.
 
+Changes:
+
+- Because 'Rsagacmd' now supports multiple raster backends, the 'raster' package
+is no longer automatically attached when using Rsagacmd. The raster/terra/stars
+objects resulting from geoprocessing operations be still be loaded, but to apply
+additional functions to these objects (e.g. plot) then the user needs to
+explicitly load the desired backend, e.g. `library(stars)` in their script.
+
+- The spinner is now turned off for geoprocessing operations because to avoid
+creating an annoying extra line in Rmarkdown notebooks, jupyter etc.
 
 # Rsagacmd 0.1.0
 

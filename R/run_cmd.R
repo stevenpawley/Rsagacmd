@@ -49,7 +49,7 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
     args = c(flags, saga_config, lib, tool_cmd, param_string), 
     echo_cmd = verbose, 
     echo = verbose, 
-    spinner = TRUE, 
+    spinner = FALSE, 
     error_on_status = FALSE
   )
 

@@ -15,11 +15,13 @@ SystemRequirements: SAGA-GIS (>= 2.3.1)
 LazyData: true
 RoxygenNote: 7.1.1
 Depends:
-    raster,
     R (>= 2.10)
 Imports:
     XML,
     sf,
+    terra,
+    stars,
+    raster,
     tools,
     rgdal,
     foreign,
@@ -31,6 +33,4 @@ Imports:
 Suggests:
     dplyr,
     testthat,
-    covr,
-    terra,
-    stars
+    covr
