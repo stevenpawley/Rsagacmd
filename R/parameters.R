@@ -219,7 +219,7 @@ update_parameter_file <- function(param, temp_path = NULL) {
     # update the `files` attribute with the file path to the object 
     # in `parameter$value` attribute
     param$files <- save_object(param$value, temp_path = temp_path)
-    
+
     # convert arguments that contain lists into semi-colon separated character
     # strings for use with saga_cmd
     param$files <- gsub(".sdat", ".sgrd", param$files)
@@ -308,10 +308,7 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format, vector
 #'
 #' @keywords internal
 drop_parameters <- function(params) {
-  params <- params[sapply(params, function(param) 
-    !is.null(param$value))]
-  
+  params <- params[sapply(params, function(param) !is.null(param$value))]
   class(params) <- "parameters"
-  
   params
 }
