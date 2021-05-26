@@ -7,11 +7,13 @@
 update_parameters_file(params, temp_path = NULL)
 }
 \arguments{
-\item{temp_path}{A character specifying the tempdir to use for storage (optional).}
+\item{temp_path}{A character specifying the tempdir to use for storage
+(optional).}
 
 \item{param}{A `parameters` object.}
 
-\item{all_outputs}{A logical indicating whether to use tempfiles for unspecified outputs.}
+\item{all_outputs}{A logical indicating whether to use tempfiles for
+unspecified outputs.}
 }
 \value{
 A `parameters` object with updated `file` attributes that refers to

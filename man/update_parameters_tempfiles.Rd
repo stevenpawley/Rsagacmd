@@ -2,7 +2,8 @@
 % Please edit documentation in R/parameters.R
 \name{update_parameters_tempfiles}
 \alias{update_parameters_tempfiles}
-\title{Update a `parameters` object using temporary files for any unspecified output parameters}
+\title{Update a `parameters` object using temporary files for any unspecified output
+parameters}
 \usage{
 update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
 }
@@ -19,6 +20,7 @@ update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
 A `parameters` object.
 }
 \description{
-Update a `parameters` object using temporary files for any unspecified output parameters
+Update a `parameters` object using temporary files for any unspecified output
+parameters
 }
 \keyword{internal}

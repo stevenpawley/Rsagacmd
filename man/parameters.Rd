@@ -14,7 +14,8 @@ SAGA-GIS tool parameter options.}
 A `parameters` object
 }
 \description{
-Each `parameter` object contains information about the datatype, permissible values
-and input/output settings associated with each identifier for a SAGA-GIS tool.
+Each `parameter` object contains information about the datatype, permissible
+values and input/output settings associated with each identifier for a
+SAGA-GIS tool.
 }
 \keyword{internal}

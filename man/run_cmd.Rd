@@ -15,9 +15,11 @@ run_cmd(saga_cmd, saga_config, lib, tool_cmd, args, verbose)
 
 \item{tool_cmd}{character, name of the selected tool.}
 
-\item{args}{named list of tool options, such as list(DEM = "mygrid.tif", RADIUS = 3).}
+\item{args}{named list of tool options, such as list(DEM = "mygrid.tif",
+RADIUS = 3).}
 
-\item{verbose}{logical, whether to show all saga_cmd messages on the R console.}
+\item{verbose}{logical, whether to show all saga_cmd messages on the R
+console.}
 }
 \value{
 list, output from `processx::run()`

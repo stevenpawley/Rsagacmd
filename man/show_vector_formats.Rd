@@ -2,7 +2,8 @@
 % Please edit documentation in R/formats.R
 \name{show_vector_formats}
 \alias{show_vector_formats}
-\title{List the available vector formats that can be set as defaults for a `saga` object.}
+\title{List the available vector formats that can be set as defaults for a `saga`
+object.}
 \usage{
 show_vector_formats()
 }
@@ -10,7 +11,8 @@ show_vector_formats()
 tibble
 }
 \description{
-List the available vector formats that can be set as defaults for a `saga` object.
+List the available vector formats that can be set as defaults for a `saga`
+object.
 }
 \examples{
 show_vector_formats()

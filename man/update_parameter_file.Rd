@@ -9,7 +9,8 @@ update_parameter_file(param, temp_path = NULL)
 \arguments{
 \item{param}{A `parameter` object.}
 
-\item{temp_path}{A character specifying the tempdir to use for storage (optional).}
+\item{temp_path}{A character specifying the tempdir to use for storage
+(optional).}
 }
 \value{
 A `parameter` object with an updated `file` attribute that refers to

@@ -2,7 +2,8 @@
 % Please edit documentation in R/formats.R
 \name{show_raster_formats}
 \alias{show_raster_formats}
-\title{List the available raster formats that can be set as defaults for a `saga` object.}
+\title{List the available raster formats that can be set as defaults for a `saga`
+object.}
 \usage{
 show_raster_formats()
 }
@@ -10,7 +11,8 @@ show_raster_formats()
 tibble
 }
 \description{
-List the available raster formats that can be set as defaults for a `saga` object.
+List the available raster formats that can be set as defaults for a `saga`
+object.
 }
 \examples{
 show_raster_formats()
