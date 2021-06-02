@@ -35,11 +35,11 @@ saga_search <- function() {
     } else if (Sys.info()["sysname"] == "Darwin") {
       search_paths <- c(
         "/usr/local/bin/",
-        "/Applications/QGIS/Contents/MacOS/bin/",
+        "/Applications/QGIS.app/Contents/MacOS/bin/",
         "/usr/local/opt/saga-gis/bin/"
       )
       
-      saga_executable <- "saga_cmd$"
+      saga_executable <- "^saga_cmd$"
     }
     
     # search for saga_cmd executable
