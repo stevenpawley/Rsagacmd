@@ -292,14 +292,15 @@ saga_configure <-
 #'   default all cores are utilized. Needs to be set to 1 if file caching is
 #'   activated.
 #' @param backend A character vector to specify the library to use for handling
-#'   raster data. Currently, either "raster" or "terra" is supported. The
+#'   raster data. Currently, "raster", "terra" or "stars" is supported. The
 #'   default is "raster".
 #' @param raster_format A character to specify the default format used to save
 #'   raster data sets that are produced by SAGA-GIS. Available options are one
 #'   of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".
 #' @param vector_format A character to specify the default format used to save
 #'   vector data sets that are produced by SAGA-GIS. Available options are of of
-#'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile".
+#'   "ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI
+#'   Shapefile".
 #' @param all_outputs A logical to indicate whether to automatically use
 #'   temporary files to store all output data sets from each SAGA-GIS tool.
 #'   Default = TRUE. This argument can be overridden by the `.all_outputs`
