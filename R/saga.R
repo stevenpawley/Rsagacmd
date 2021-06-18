@@ -312,7 +312,7 @@ saga_configure <-
 #'   `RasterLayer` or `SpatRaster` object, depending on the `backend` setting
 #'   that is used. Vector data sets are always loaded as `sf` objects, and
 #'   tabular data sets are loaded as tibbles. The `intern` settings for the
-#'   `saga` object can be overriden for individual tools using the `.intern`
+#'   `saga` object can be overridden for individual tools using the `.intern`
 #'   argument.
 #' @param opt_lib A character vector with the names of a subset of SAGA-GIS
 #'   libraries. Used to link only a subset of named SAGA-GIS tool libraries,

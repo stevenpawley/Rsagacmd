@@ -40,7 +40,7 @@ default all cores are utilized. Needs to be set to 1 if file caching is
 activated.}
 
 \item{backend}{A character vector to specify the library to use for handling
-raster data. Currently, either "raster" or "terra" is supported. The
+raster data. Currently, "raster", "terra" or "stars" is supported. The
 default is "raster".}
 
 \item{raster_format}{A character to specify the default format used to save
@@ -49,7 +49,8 @@ of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".}
 
 \item{vector_format}{A character to specify the default format used to save
 vector data sets that are produced by SAGA-GIS. Available options are of of
-"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile".}
+"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI
+Shapefile".}
 
 \item{all_outputs}{A logical to indicate whether to automatically use
 temporary files to store all output data sets from each SAGA-GIS tool.
@@ -63,7 +64,7 @@ raster grid is output by SAGA-GIS then this will be loaded as either as
 `RasterLayer` or `SpatRaster` object, depending on the `backend` setting
 that is used. Vector data sets are always loaded as `sf` objects, and
 tabular data sets are loaded as tibbles. The `intern` settings for the
-`saga` object can be overriden for individual tools using the `.intern`
+`saga` object can be overridden for individual tools using the `.intern`
 argument.}
 
 \item{opt_lib}{A character vector with the names of a subset of SAGA-GIS
