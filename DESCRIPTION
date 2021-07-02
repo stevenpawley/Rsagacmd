@@ -2,7 +2,7 @@ Package: Rsagacmd
 Type: Package
 Title: Linking R with the Open-Source 'SAGA-GIS' Software
 Version: 0.1.1
-Date: 2021-01-08
+Date: 2021-07-02
 Authors@R: c(
     person("Steven", "Pawley",
     email = "dr.stevenpawley@gmail.com",
@@ -12,7 +12,6 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS' (Sy
 License: GPL-3
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
-LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     R (>= 2.10)

@@ -12,7 +12,7 @@
 #' an easier scripting experience by organizing the large number of SAGA-GIS
 #' tools (>700) by their respective library. Interactive scripting can also
 #' fully take advantage of code autocompletion tools (e.g. in
-#' \href{https://rstudio.com}{Rstudio}), allowing for each tool's syntax to be
+#' \href{https://www.rstudio.com}{Rstudio}), allowing for each tool's syntax to be
 #' quickly recognized. Furthermore, the most common types of spatial data
 #' (rasters using the \pkg{raster} package, and vector data using the \pkg{sp}
 #' or simple features \pkg{sf} packages) along with non-spatial data are
