@@ -1,5 +1,5 @@
 supported_raster_formats <- c(
-  `SAGA` = ".sdat",
+  `SAGA` = ".sgrd",
   `SAGA Compressed` = ".sg-grd-z",
   `GeoTIFF` = ".tif"
 )

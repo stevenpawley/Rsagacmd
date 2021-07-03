@@ -395,10 +395,13 @@ saga_gis <-
       rlang::abort(paste("`vector_format` must be one of:", supported_vector_formats))
     senv$vector_format <- supported_vector_formats[vector_format]
     
-    # SAGA versions < 7.0 only allow direct writing to native formats
-    if (senv$saga_vers < 7.0 & raster_format != "SAGA")
-      rlang::abort("SAGA versions < 7.0 only allow directly writing of raster data via the 'SAGA' raster format")
+    # SAGA versions < 7.5 only allow direct writing to native formats
+    if (senv$saga_vers < 7.5 & !raster_format %in% c("SAGA", "SAGA Compressed"))
+      rlang::abort("SAGA versions < 7.5 only allow directly writing of raster data via the 'SAGA' or 'SAGA Compressed' raster formats")
       
+    if (senv$saga_vers < 5.0 & raster_format != "SAGA")
+      rlang::abort("SAGA versions < 5.0 only allow the 'SAGA' raster format")
+    
     if (senv$saga_vers < 7.0 & vector_format != "ESRI Shapefile")
       rlang::abort("SAGA versions < 7.0 only allow directly writing of vector data via the 'ESRI Shapefile' vector format")
     

@@ -85,13 +85,20 @@ saga_execute <-
         if (x$io == "Output" && !is.null(x$files))
           return(x)
       })
+      
       tool_outputs <- tool_outputs[!sapply(tool_outputs, is.null)]
+      
       n_outputs <- length(tool_outputs)
     } else {
       n_outputs <- 0
     }
     
-    if (n_outputs == 0) {
+    # check that output formats are supported
+    if (n_outputs > 0) {
+      for (tool_output in tool_outputs)
+        check_output_format(tool_output, raster_format, vector_format)
+
+    } else {
       rlang::abort("No outputs have been specified")
       return(NULL)
     }

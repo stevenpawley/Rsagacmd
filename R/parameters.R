@@ -265,8 +265,10 @@ update_parameters_file <- function(params, temp_path = NULL) {
 #' @keywords internal
 update_parameters_tempfiles <- function(params, temp_path, raster_format, vector_format) {
   parameter_outputs <- params[sapply(params, function(param) !is.na(param$io))]
+  
   parameter_outputs <- 
     parameter_outputs[sapply(parameter_outputs, function(param) param$io == "Output")]
+  
   parameter_outputs <- names(parameter_outputs)
   
   grid_features <- c("Grid", "Grid list", "Raster")
