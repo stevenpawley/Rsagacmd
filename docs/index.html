@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -63,7 +63,8 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><a href="https://cran.r-project.org/package=Rsagacmd"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <a href="https://github.com/stevenpawley/Rsagacmd/actions"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
+<p><a href="https://cran.r-project.org/package=Rsagacmd"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://github.com/stevenpawley/Rsagacmd/actions"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></p>
+<!-- badges: end -->
 <div id="rsagacmd---a-package-for-linking-r-with-saga-gis" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#rsagacmd---a-package-for-linking-r-with-saga-gis" class="anchor"></a>Rsagacmd - a package for linking R with SAGA-GIS</h1></div>
@@ -85,7 +86,7 @@
 <h2 class="hasAnchor">
 <a href="#description" class="anchor"></a>Description</h2>
 <p>Rsagacmd provides a complete interface between R and SAGA-GIS. The package allows all SAGA-GIS tools and libraries to be used from within R. Further, the most common geospatial datatypes within R (rasters, simple features, and sp objects) are seamlessly passed between R and SAGA-GIS during geoprocessing operations.</p>
-<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/web/packages/RSAGA/index.html" class="uri">https://cran.r-project.org/web/packages/RSAGA/index.html</a>), which provides a command line parser and a subset of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user's installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGA's <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
+<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/package=RSAGA" class="uri">https://cran.r-project.org/package=RSAGA</a>), which provides a command line parser and a subset of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user’s installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGA’s <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
 </div>
 <div id="package-installation" class="section level2">
 <h2 class="hasAnchor">
@@ -94,30 +95,31 @@
 <h4 class="hasAnchor">
 <a href="#cran-version" class="anchor"></a>CRAN version</h4>
 <p><code>Rsagacmd</code> is now available on CRAN. To install this version run :</p>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("Rsagacmd")</a></code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"Rsagacmd"</span>)</span></code></pre></div>
 <p>In your R session.</p>
 </div>
 <div id="development-version" class="section level4">
 <h4 class="hasAnchor">
 <a href="#development-version" class="anchor"></a>Development version</h4>
 <p>First install the <code>devtools</code> package:</p>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span></code></pre></div>
 <p>Then install Rsagacmd from github:</p>
-<pre><code><a href="https://devtools.r-lib.org/">library(devtools)
-install_github("stevenpawley/Rsagacmd")</a></code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"stevenpawley/Rsagacmd"</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>The primary function in Rsagacmd is the <code>saga_gis</code> function that returns an object containing all of the SAGA-GIS libraries and tools in the same structure as what is accessible within the GIS software itself. Each tool is nested within its respective library and can be accessed by:</p>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(Rsagacmd)</a></code></pre>
-<pre><code># initiate a saga object
-saga &lt;- saga_gis()
-
-# access the libraries and tools
-saga$ta_morphometry$mass_balance_index()</code></pre>
-<p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function's syntax is the same as when using the SAGA-GIS command line tool directly except that Rsagacmd always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in Rstudio, allowing for each tools’ inputs, outputs and options to be more easily recognized.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rsagacmd)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># initiate a saga object</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>saga <span class="ot">&lt;-</span> <span class="fu">saga_gis</span>()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># access the libraries and tools</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>saga<span class="sc">$</span>ta_morphometry<span class="sc">$</span><span class="fu">mass_balance_index</span>()</span></code></pre></div>
+<p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function’s syntax is the same as when using the SAGA-GIS command line tool directly except that Rsagacmd always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in Rstudio, allowing for each tools’ inputs, outputs and options to be more easily recognized.</p>
 </div>
 <div id="passing-geospatial-and-tabular-data-between-r-and-saga-gis" class="section level2">
 <h2 class="hasAnchor">
@@ -141,46 +143,41 @@ saga$ta_morphometry$mass_balance_index()</code></pre>
 <a href="#combining-saga-gis-tools-with-pipes" class="anchor"></a>Combining SAGA-GIS tools with pipes</h2>
 <p>For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, and then loaded as the appropriate R object (RasterLayer, sf object, or a tibble).</p>
 <p>This means that Rsagacmd can be used with <code><a href="reference/%&gt;%.html">%&gt;%</a></code> to quickly chain together complex geoprocessing operations:</p>
-<pre><code>saga &lt;- saga_gis()
-
-# Generate random terrain and save to file
-dem &lt;- saga$grid_calculus$random_terrain(target_out_grid = "terrain.sgrd")
-
-# Terrain ruggedness index and automatically save the result to a tempfile
-tri &lt;- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, radius = 3)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>saga <span class="ot">&lt;-</span> <span class="fu">saga_gis</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random terrain and save to file</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dem <span class="ot">&lt;-</span> saga<span class="sc">$</span>grid_calculus<span class="sc">$</span><span class="fu">random_terrain</span>(<span class="at">target_out_grid =</span> <span class="st">"terrain.sgrd"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Terrain ruggedness index and automatically save the result to a tempfile</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>tri <span class="ot">&lt;-</span> saga<span class="sc">$</span>ta_morphometry<span class="sc">$</span><span class="fu">terrain_ruggedness_index_tri</span>(<span class="at">dem =</span> dem, <span class="at">radius =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>This example will write the output terrain ruggedness index to a temporary file, and will automatically load the result into the R environment as a RasterLayer object. This was implemented for convenience, and so that the user can also create complex workflows that require very little code. It is also means that you can combine several processing steps with pipes:</p>
-<pre><code># read project area as a simple features object
-prj_bnd &lt;- st_read('some_shape.shp')
-dem &lt;- raster('some_dem.tif')
-
-# clip dem to shape, resample, and calculate potential incoming solar radiation
-pisr &lt;- dem %&gt;%
-    saga$shapes_grid$clip_grid_with_rectangle(shapes = prj_bnd)) %&gt;%
-    saga$grid_tools$resampling(target_user_size = 100) %&gt;%
-    saga$ta_lighting$potential_incoming_solar_radiation(
-        location = 1, 
-        period = 2, 
-        day = "2013-01-01", 
-        day_stop = "2014-01-01",
-        days_step = 10, 
-        hour_step = 3, 
-        method = 'Hofierka and Suri',
-        grd_linke_default = 3
-    )</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read project area as a simple features object</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>prj_bnd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'some_shape.shp'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dem <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="st">'some_dem.tif'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># clip dem to shape, resample, and calculate potential incoming solar radiation</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pisr <span class="ot">&lt;-</span> dem <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>shapes_grid<span class="sc">$</span><span class="fu">clip_grid_with_rectangle</span>(<span class="at">shapes =</span> prj_bnd)<span class="er">)</span> <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>grid_tools<span class="sc">$</span><span class="fu">resampling</span>(<span class="at">target_user_size =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>ta_lighting<span class="sc">$</span><span class="fu">potential_incoming_solar_radiation</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">location =</span> <span class="dv">1</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">period =</span> <span class="dv">2</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">day =</span> <span class="st">"2013-01-01"</span>, </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">day_stop =</span> <span class="st">"2014-01-01"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">days_step =</span> <span class="dv">10</span>, </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">hour_step =</span> <span class="dv">3</span>, </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">'Hofierka and Suri'</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">grd_linke_default =</span> <span class="dv">3</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
 <p>In the above example, three tools are joined together using pipes, and only the PISR grid is returned as a RasterLayer object. The intermediate processing steps are dealt with automatically by saving the outputs as tempfiles. When dealing with high-resolution and/or larger raster data, these tempfiles can start to consume a significant amount of disk space over a session. If required, temporary files can be cleaned during the session in a similar way to the raster package, using:</p>
-<pre><code><a href="reference/saga_remove_tmpfiles.html">saga_remove_tmpfiles(h = 0)</a></code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saga_remove_tmpfiles</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p>where h is minimum age (in number of hours) of tempfiles for removal, so h=0 will remove all tempfiles that were automatically created by Rsagacmd.</p>
 <p>The behaviour of automatically outputting results to tempfiles can be disabled for any tool by using <code>.all_outputs = FALSE</code>. In this case, the output arguments need to be specified manually, e.g.:</p>
-<pre><code>tri &lt;- saga$ta_morphometry$terrain_ruggedness_index_tri(
-    dem = dem, 
-    radius = 3, 
-    tri = "somefile.sgrd"
-)</code></pre>
-</div>
-<div id="notes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#notes" class="anchor"></a>Notes</h2>
-<p>The newer SAGA-GIS compressed .sg-grd-z file format is not currently supported, although support may be added in future package updates.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tri <span class="ot">&lt;-</span> saga<span class="sc">$</span>ta_morphometry<span class="sc">$</span><span class="fu">terrain_ruggedness_index_tri</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">dem =</span> dem, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius =</span> <span class="dv">3</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">tri =</span> <span class="st">"somefile.sgrd"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 </div>
 

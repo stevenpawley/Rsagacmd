@@ -74,7 +74,7 @@ functions" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -169,7 +169,7 @@ activated.</p></td>
     <tr>
       <th>backend</th>
       <td><p>A character vector to specify the library to use for handling
-raster data. Currently, either "raster" or "terra" is supported. The
+raster data. Currently, "raster", "terra" or "stars" is supported. The
 default is "raster".</p></td>
     </tr>
     <tr>
@@ -182,7 +182,8 @@ of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".</p></td>
       <th>vector_format</th>
       <td><p>A character to specify the default format used to save
 vector data sets that are produced by SAGA-GIS. Available options are of of
-"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile".</p></td>
+"ESRI Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI
+Shapefile".</p></td>
     </tr>
     <tr>
       <th>all_outputs</th>
@@ -200,7 +201,7 @@ raster grid is output by SAGA-GIS then this will be loaded as either as
 `RasterLayer` or `SpatRaster` object, depending on the `backend` setting
 that is used. Vector data sets are always loaded as `sf` objects, and
 tabular data sets are loaded as tibbles. The `intern` settings for the
-`saga` object can be overriden for individual tools using the `.intern`
+`saga` object can be overridden for individual tools using the `.intern`
 argument.</p></td>
     </tr>
     <tr>

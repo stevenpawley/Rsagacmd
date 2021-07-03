@@ -3,10 +3,9 @@ library(magrittr)
 testthat::test_that("tile geoprocessor function", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(saga_version(saga_search()) < numeric_version(7.0))
   
   saga <- saga_gis()
-  
-  testthat::skip_if(saga_version(saga_search()) < numeric_version(7.0))
   
   dem <- saga$grid_calculus$random_terrain(
     target_user_xmin = 0,

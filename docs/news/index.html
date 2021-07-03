@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -109,9 +109,25 @@
       
     </div>
 
+    <div id="rsagacmd-011" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#rsagacmd-011" class="anchor"></a>Rsagacmd 0.1.1<small> Unreleased </small>
+</h1>
+<p>New features:</p>
+<ul>
+<li>Included support for the ‘stars’ raster backend.</li>
+</ul>
+<p>Changes:</p>
+<ul>
+<li><p>Because ‘Rsagacmd’ now supports multiple raster backends, the ‘raster’ package is no longer automatically attached when using Rsagacmd. The raster/terra/stars objects resulting from geoprocessing operations be still be loaded, but to apply additional functions to these objects (e.g. plot) then the user needs to explicitly load the desired backend, e.g. <code><a href="https://r-spatial.github.io/stars/">library(stars)</a></code> in their script.</p></li>
+<li><p>The spinner is now turned off for geoprocessing operations because to avoid creating an annoying extra line in Rmarkdown notebooks, jupyter etc.</p></li>
+<li><p>Rsagacmd now checks the file extensions of tools to ensure that the correct file extension is used relative to the <code>raster_format</code> or <code>vector_format</code>. This ensures that outputs of SAGA-GIS tools will be correctly loaded by R.</p></li>
+<li><p>Rsagacmd saga_search should correctly recognize the location of the saga_cmd binary on MacOS that is included within the QGIS.app bundle, if installed from official sources.</p></li>
+</ul>
+</div>
     <div id="rsagacmd-010" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#rsagacmd-010" class="anchor"></a>Rsagacmd 0.1.0<small> Unreleased </small>
+<a href="#rsagacmd-010" class="anchor"></a>Rsagacmd 0.1.0<small> 2021-01-11 </small>
 </h1>
 <p>Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the the internal representation of SAGA-GIS tools and parameter settings using a similar approach as used by the saga_api.</p>
 <p>Most notably, this release provides support for the use of different raster backend, including the existing ‘raster’ package, as well as the newer ‘terra’ package. Configuration options to use different spatial formats as data is passed from R to SAGA (and back) is also provided. For rasters, datasets that are saved from R memory to disk for access by the saga command line (and vice versa) can be in ‘SAGA’ format (the default), ‘SAGA Compressed’, or ‘GeoTIFF’, which can potentially save disk space when transferring large volumes of data. Vector formats now include ‘ESRI Shapefile’ (the default), ‘Geopackage’ and ‘GeoJSON’. The use of the geopackage format eliminates problems when transferring spatial datasets which have attribute names that are &gt;10 characters in length.</p>

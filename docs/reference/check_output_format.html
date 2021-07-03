@@ -6,7 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convenience function to join together the saga_cmd option:value pairs — parse_options • Rsagacmd</title>
+<title>Check the file extension of the output file to see if it is the same as the
+`raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not 
+know how to read the file. — check_output_format • Rsagacmd</title>
 
 
 <!-- jquery -->
@@ -39,8 +43,16 @@
 
 
 
-<meta property="og:title" content="Convenience function to join together the saga_cmd option:value pairs — parse_options" />
-<meta property="og:description" content="Convenience function to join together the saga_cmd option:value pairs" />
+<meta property="og:title" content="Check the file extension of the output file to see if it is the same as the
+`raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not 
+know how to read the file. — check_output_format" />
+<meta property="og:description" content="Check the file extension of the output file to see if it is the same as the
+`raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not 
+know how to read the file." />
 
 
 
@@ -106,33 +118,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convenience function to join together the saga_cmd option:value pairs</h1>
+    <h1>Check the file extension of the output file to see if it is the same as the
+`raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not 
+know how to read the file.</h1>
     
-    <div class="hidden name"><code>parse_options.Rd</code></div>
+    <div class="hidden name"><code>check_output_format.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Convenience function to join together the saga_cmd option:value pairs</p>
+    <p>Check the file extension of the output file to see if it is the same as the
+`raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not 
+know how to read the file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>parse_options</span><span class='op'>(</span><span class='va'>key</span>, <span class='va'>value</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>check_output_format</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>raster_format</span>, <span class='va'>vector_format</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>key</th>
-      <td><p>character, the saga_cmd option such as "DEM".</p></td>
+      <th>x</th>
+      <td><p>a `parameter` object that is an output parameter of a tool.</p></td>
     </tr>
     <tr>
-      <th>value</th>
-      <td><p>character, the value of the option.</p></td>
+      <th>raster_format</th>
+      <td><p>the raster format.</p></td>
+    </tr>
+    <tr>
+      <th>vector_format</th>
+      <td><p>the vector format.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>character, a joined option:value pair such as "-DEM:mygrid.tif"</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

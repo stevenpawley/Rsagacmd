@@ -19,6 +19,10 @@ creating an annoying extra line in Rmarkdown notebooks, jupyter etc.
 file extension is used relative to the `raster_format` or `vector_format`. 
 This ensures that outputs of SAGA-GIS tools will be correctly loaded by R.
 
+- Rsagacmd saga_search should correctly recognize the location of the saga_cmd binary
+on MacOS that is included within the QGIS.app bundle, if installed from official
+sources.
+
 # Rsagacmd 0.1.0
 
 Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the
