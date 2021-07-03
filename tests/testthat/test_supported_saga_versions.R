@@ -35,7 +35,8 @@ testthat::test_that("initiation of SAGA-GIS 2.3.1", {
   testthat::skip_on_cran()
   testthat::skip_if_not(
     Sys.info()["sysname"] == "Windows" & 
-    Sys.info()["machine"] == "x86-64")
+    Sys.info()["machine"] == "x86-64"
+  )
   
   saga_url <-
     "https://sourceforge.net/projects/saga-gis/files/SAGA%20-%202/SAGA%202.3.1/saga_2.3.1_x64.zip"

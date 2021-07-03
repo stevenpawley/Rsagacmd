@@ -15,6 +15,10 @@ explicitly load the desired backend, e.g. `library(stars)` in their script.
 - The spinner is now turned off for geoprocessing operations because to avoid
 creating an annoying extra line in Rmarkdown notebooks, jupyter etc.
 
+- Rsagacmd now checks the file extensions of tools to ensure that the correct
+file extension is used relative to the `raster_format` or `vector_format`. 
+This ensures that outputs of SAGA-GIS tools will be correctly loaded by R.
+
 # Rsagacmd 0.1.0
 
 Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the

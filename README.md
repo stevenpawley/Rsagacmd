@@ -40,7 +40,7 @@ simple features, and sp objects) are seamlessly passed between R and
 SAGA-GIS during geoprocessing operations.
 
 Rsagacmd is unrelated to the `RSAGA` package
-(<https://cran.r-project.org/web/packages/RSAGA/index.html>), which
+(<https://cran.r-project.org/package=RSAGA>), which
 provides a command line parser and a subset of pre-defined functions to
 interface with SAGA-GIS. In contrast, Rsagacmd provides links with
 SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
