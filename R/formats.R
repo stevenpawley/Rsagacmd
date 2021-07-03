@@ -8,7 +8,7 @@ supported_raster_formats <- c(
 supported_vector_formats <- c(
  `ESRI Shapefile` = ".shp",
  `GeoPackage` = ".gpkg",
- `GeoJSON` = "geojson"
+ `GeoJSON` = ".geojson"
 )
 
 
