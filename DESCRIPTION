@@ -18,8 +18,6 @@ Depends:
 Imports:
     XML,
     sf,
-    terra,
-    stars,
     raster,
     tools,
     rgdal,
@@ -31,6 +29,8 @@ Imports:
     processx
 Suggests:
     dplyr,
+    terra,
+    stars,
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
