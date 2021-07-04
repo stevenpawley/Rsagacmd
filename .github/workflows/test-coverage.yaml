@@ -36,6 +36,12 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
+      - name: Install saga-gis dependencies
+        run : |
+          sudo apt-get update
+          sudo apt-get upgrade
+          sudo apt-get install saga libudunits2-dev libgdal-dev libcurl4-openssl-dev 
+
       - name: Install dependencies
         run: |
           install.packages(c("remotes"))
