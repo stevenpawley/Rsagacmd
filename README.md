@@ -9,6 +9,7 @@ coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
+[![Codecov test coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
 <!-- badges: end -->
 
 # Rsagacmd - a package for linking R with SAGA-GIS

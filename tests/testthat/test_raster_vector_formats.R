@@ -52,13 +52,15 @@ test_that("test vector formats (GeoPackage)", {
   
   saga <- saga_gis(vector_format = "GeoPackage")
   
-  nc <- st_read(system.file("shape/nc.shp", package = "sf"))
+  nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
   
   # incorrect output format
   testthat::expect_error(
-    saga$shapes_polygons$polygon_properties(nc, output = tempfile(fileext = ".shp"))
+    saga$shapes_polygons$polygon_properties(
+      nc, output = tempfile(fileext = ".shp"))
   )
   
   # correct output format
-  result <- saga$shapes_polygons$polygon_properties(nc, output = tempfile(fileext = ".gpkg"))
+  result <- saga$shapes_polygons$polygon_properties(
+    nc, output = tempfile(fileext = ".gpkg"))
 })

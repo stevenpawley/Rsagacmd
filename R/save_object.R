@@ -119,7 +119,7 @@ save_object.SpatRaster <- function(x, ...) {
 
   # check if layer is part of a multi-band raster
   if (!in_memory) {
-    info <- rgdal::GDALinfo(terra::sources(x)$source)
+    info <- rgdal::GDALinfo(terra::sources(x)$source, silent = TRUE)
     n_bands <- nrow(attr(info, "df"))
     part_of_multiband <- n_bands > 1
   }
@@ -158,6 +158,28 @@ save_object.RasterStack <- function(x, ...) {
   }
 
   x
+}
+
+
+#' @export
+#' @keywords internal
+save_object.RasterBrick <- function(x, ...) {
+  args <- list(...)
+  temp_path <- args$temp_path
+  
+  if (is.null(temp_path))
+    temp_path <- tempdir()
+  
+  if (raster::nlayers(x) == 1) {
+    x <- raster::raster(x)
+    x <- save_object(x)
+  } else {
+    rlang::abort(
+      "Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
+  }
+  
+  x
+  
 }
 
 
