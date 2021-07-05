@@ -46,21 +46,8 @@ create_tool <- function(tool_information, tool_options) {
   params <- parameters(tool_options)
   
   # apply exceptions for specific saga-gis tools
-  if (tool_name == "export_geotiff" | tool_name == "export_raster") {
-    params$file$io <- "Output"
-    params$file$feature <- "Grid"
-    
-  } else if (tool_name == "export_shapes" | tool_name == "export_shapes_to_kml") {
-    params$file$io <- "Output"
-    params$file$feature <- "Shapes"
-    
-  } else if (tool_name == "clip_grid_with_rectangle") {
-    params$output$feature <- "Grid"
+  params <- create_tool_overrides(tool_name, params)
   
-  } else if (tool_name == "tiling") {
-    params$tiles_path$io <- "Output"
-  }
-
   structure(list(
     tool_name = tool_name,
     tool_cmd = saga_tool_cmd,

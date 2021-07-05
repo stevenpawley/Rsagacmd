@@ -122,7 +122,8 @@ read_output <- function(output, backend, .intern, .all_outputs) {
         "Table" = read_table(output),
         "Grid" = read_grid(output, backend),
         "Raster" = read_grid(output, backend),
-        "Grid list" = read_grid_list(output, backend)
+        "Grid list" = read_grid_list(output, backend),
+        "File path" = output$files
       )
       
     }, error = function(e) {

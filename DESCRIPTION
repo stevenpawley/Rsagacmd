@@ -19,7 +19,10 @@ Imports:
     XML,
     sf,
     raster,
+    terra,
+    stars,
     tools,
+    utils,
     rgdal,
     foreign,
     magrittr,
@@ -29,8 +32,6 @@ Imports:
     processx
 Suggests:
     dplyr,
-    terra,
-    stars,
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
