@@ -62,5 +62,7 @@ test_that("test vector formats (GeoPackage)", {
   
   # correct output format
   result <- saga$shapes_polygons$polygon_properties(
-    nc, output = tempfile(fileext = ".gpkg"))
+    polygons = nc, 
+    output = tempfile(fileext = ".gpkg")
+  )
 })

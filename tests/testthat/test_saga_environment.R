@@ -8,7 +8,7 @@ testthat::test_that("Initiation of saga S3 class ", {
   testthat::expect_true(!is.null(saga))
   
   # check that saga is a S3 class saga
-  testthat::expect_is(saga, "saga")
+  testthat::expect_type(saga, "saga")
   
   # check that saga contains libraries
   testthat::expect_gt(length(saga), 0)
@@ -62,7 +62,7 @@ testthat::test_that("Test file caching ", {
       )
     
     testthat::expect_true(!is.null(saga_fc))
-    testthat::expect_is(saga_fc, "saga")
+    testthat::expect_type(saga_fc, "saga")
     testthat::expect_gt(length(saga_fc), 0)
 
     # check that caching dir is set correctly
