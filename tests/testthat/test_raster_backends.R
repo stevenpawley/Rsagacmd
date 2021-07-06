@@ -37,13 +37,13 @@ test_that("test stars backend", {
   
   # test writing output from stars
   tif <- system.file("tif/L7_ETMs.tif", package = "stars")
-  tif <- stars::read_stars(tif) |> split()
+  tif <- split(stars::read_stars(tif))
   result <- saga$grid_filter$simple_filter(tif[1])
   testthat::expect_s3_class(result, "stars")
   
   # test writing from stars_proxy
   tif <- system.file("tif/L7_ETMs.tif", package = "stars")
-  tif <- stars::read_stars(tif, proxy = TRUE) |> split()
+  tif <- split(stars::read_stars(tif, proxy = TRUE))
   result <- saga$grid_filter$simple_filter(tif[1])
   testthat::expect_s3_class(result, "stars")
 })
