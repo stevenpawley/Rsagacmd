@@ -16,5 +16,5 @@ testthat::test_that("tile geoprocessor function", {
   
   tiles <- tile_geoprocessor(x = saga, grid = dem, nx = 100, ny = 100, overlap = 0)
   testthat::expect_length(tiles, 100)
-  testthat::expect_type(tiles[[1]], "RasterLayer")
+  testthat::expect_s3_class(tiles[[1]], "RasterLayer")
 })

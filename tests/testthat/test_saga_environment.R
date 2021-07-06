@@ -7,9 +7,6 @@ testthat::test_that("Initiation of saga S3 class ", {
   # check that saga class was produced
   testthat::expect_true(!is.null(saga))
   
-  # check that saga is a S3 class saga
-  testthat::expect_type(saga, "saga")
-  
   # check that saga contains libraries
   testthat::expect_gt(length(saga), 0)
 })
@@ -58,11 +55,11 @@ testthat::test_that("Test file caching ", {
       saga_gis(
         grid_caching = TRUE,
         grid_cache_threshold = 0.001,
-        grid_cache_dir = cache_dir
+        grid_cache_dir = cache_dir, 
+        cores = 1
       )
     
     testthat::expect_true(!is.null(saga_fc))
-    testthat::expect_type(saga_fc, "saga")
     testthat::expect_gt(length(saga_fc), 0)
 
     # check that caching dir is set correctly
