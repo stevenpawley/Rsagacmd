@@ -18,14 +18,22 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
   testthat::expect_s4_class(dem, "RasterLayer")
 
   # table output
-  orb <- saga$climate_tools$earths_orbital_parameters(orbpar = tempfile(fileext = ".csv"))
-  testthat::expect_type(orb, "tbl_df")
+  orb <- saga$climate_tools$earths_orbital_parameters(
+    orbpar = tempfile(fileext = ".csv"))
+  testthat::expect_s3_class(orb, "tbl_df")
 
   # optional outputs with conditions on inputs
   flowacc <- 
-    saga$ta_preprocessor$sink_removal(dem, dem_preproc = tempfile(fileext = ".sgrd"))
+    saga$ta_preprocessor$sink_removal(
+      dem, 
+      dem_preproc = tempfile(fileext = ".sgrd")
+    )
+  
   flowacc <-
-    saga$ta_hydrology$flow_accumulation_top_down(flowacc, flow = tempfile(fileext = ".sgrd"))
+    saga$ta_hydrology$flow_accumulation_top_down(
+      flowacc, 
+      flow = tempfile(fileext = ".sgrd")
+    )
   
   testthat::expect_s4_class(flowacc, "RasterLayer")
 
