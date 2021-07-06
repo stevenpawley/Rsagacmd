@@ -36,7 +36,6 @@ create_alias <- function(identifier) {
 #' @return A `parameters` object
 #'
 #' @keywords internal
-#' @importFrom magrittr %>%
 parameters <- function(tool_options) {
   
   # replace tool arguments with syntactically-correct version
@@ -45,9 +44,8 @@ parameters <- function(tool_options) {
   tool_aliases <- make.names(tool_aliases, unique = TRUE)
   
   # convert options table to nested list
-  params <- 
-    rep(list(NA), nrow(tool_options)) %>%
-    stats::setNames(tool_aliases)
+  params <- rep(list(NA), nrow(tool_options))
+  params <- stats::setNames(params, tool_aliases)
   
   for (i in seq_len(length(tool_aliases))) {
     alias <- tool_aliases[[i]]

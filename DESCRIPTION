@@ -25,7 +25,6 @@ Imports:
     utils,
     rgdal,
     foreign,
-    magrittr,
     stringr,
     rlang,
     tibble,

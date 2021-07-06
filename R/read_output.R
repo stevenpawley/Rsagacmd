@@ -21,22 +21,18 @@ read_shapes <- function(x) {
 #' @return a `tibble`.
 #' 
 #' @keywords internal
-#' @importFrom magrittr %>%
 read_table <- function(x) {
   if (tools::file_ext(x$files) == "txt") {
-    object <- 
-      utils::read.table(x$files, header = T, sep = "\t") %>%
-      tibble::as_tibble()
+    object <- utils::read.table(x$files, header = T, sep = "\t")
+    object <- tibble::as_tibble(object)
     
   } else if (tools::file_ext(x$files) == "csv") {
-    object <- 
-      utils::read.csv(x$files) %>% 
-      tibble::as_tibble()
+    object <- utils::read.csv(x$files)
+    object <- tibble::as_tibble(object)
     
   } else if (tools::file_ext(x$files) == "dbf") {
-    object <- 
-      foreign::read.dbf(x$files) %>%
-      tibble::as_tibble()
+    object <- foreign::read.dbf(x$files)
+    object <- tibble::as_tibble(object)
   }
   
   object

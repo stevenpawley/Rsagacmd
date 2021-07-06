@@ -12,31 +12,30 @@
 #' + `parameters` A named list of the tool's parameter objects.
 #'
 #' @keywords internal
-#' @importFrom magrittr %>%
 create_tool <- function(tool_information, tool_options) {
   
   # get the command to execute the saga_cmd tool
   saga_tool_cmd <- colnames(tool_information)[2]
   
   # create syntactically-correct name for the tool
-  tool_name <- saga_tool_cmd %>%
-    stringr::str_replace_all("^[0-9]+", "") %>%
-    stringr::str_replace_all(" ", "_") %>%
-    stringr::str_replace_all("\\(", "") %>%
-    stringr::str_replace_all("\\)", "") %>%
-    stringr::str_replace_all("\\(", "") %>%
-    stringr::str_replace_all("\\)", "") %>%
-    stringr::str_replace_all("'", "") %>%
-    stringr::str_replace_all(",", "_") %>%
-    stringr::str_replace_all("/", "_") %>%
-    stringr::str_replace_all("-", "_") %>%
-    stringr::str_replace_all(":", "_") %>%
-    stringr::str_replace_all("\\[", "_") %>%
-    stringr::str_replace_all("\\]", "_") %>%
-    stringr::str_replace_all("&", "_") %>%
-    stringr::str_replace_all("_+", "_") %>%
-    stringr::str_replace_all("^_+", "") %>%
-    tolower()
+  tool_name <- gsub("^[0-9]+", "", saga_tool_cmd)
+  tool_name <- gsub("^[0-9]+", "", tool_name)
+  tool_name <- gsub(" ", "_", tool_name)
+  tool_name <- gsub("\\(", "", tool_name)
+  tool_name <- gsub("\\)", "", tool_name)
+  tool_name <- gsub("\\(", "", tool_name)
+  tool_name <- gsub("\\)", "", tool_name)
+  tool_name <- gsub("'", "", tool_name)
+  tool_name <- gsub(",", "_", tool_name)
+  tool_name <- gsub("/", "_", tool_name)
+  tool_name <- gsub("-", "_", tool_name)
+  tool_name <- gsub(":", "_", tool_name)
+  tool_name <- gsub("\\[", "_", tool_name)
+  tool_name <- gsub("\\]", "_", tool_name)
+  tool_name <- gsub("&", "_", tool_name)
+  tool_name <- gsub("_+", "_", tool_name)
+  tool_name <- gsub("^_+", "", tool_name)
+  tool_name <- tolower(tool_name)
   
   # strip input, output and options lines from table
   tool_options <-
