@@ -1,5 +1,3 @@
-library(magrittr)
-
 testthat::test_that("basic SAGA-GIS tool usage ", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
@@ -24,21 +22,27 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
   testthat::expect_is(orb, "tbl_df")
 
   # optional outputs with conditions on inputs
-  flowacc <- dem %>%
-    saga$ta_preprocessor$sink_removal(dem_preproc = tempfile(fileext = ".sgrd")) %>%
-    saga$ta_hydrology$flow_accumulation_top_down(flow = tempfile(fileext = ".sgrd"))
+  flowacc <- 
+    saga$ta_preprocessor$sink_removal(dem, dem_preproc = tempfile(fileext = ".sgrd"))
+  flowacc <-
+    saga$ta_hydrology$flow_accumulation_top_down(flowacc, flow = tempfile(fileext = ".sgrd"))
   
   testthat::expect_is(flowacc, "RasterLayer")
 
   # test loading simple features object and pipes
   dem_mean <- cellStats(dem, mean)
   
-  shapes <- dem %>%
+  shapes <- 
     saga$grid_calculus$grid_calculator(
+      dem,
       formula = gsub("z", dem_mean, "ifelse(g1>z,1,0)"), 
       result = tempfile(fileext = ".sgrd")
-    ) %>%
-    saga$shapes_grid$vectorising_grid_classes(polygons = tempfile(fileext = ".shp"))
+    )
+  shapes <- 
+    saga$shapes_grid$vectorising_grid_classes(
+      shapes, 
+      polygons = tempfile(fileext = ".shp")
+    )
   
   testthat::expect_is(shapes, "sf")
 })

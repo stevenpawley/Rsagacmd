@@ -1,5 +1,3 @@
-library(magrittr)
-
 testthat::test_that("tile geoprocessor function", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
