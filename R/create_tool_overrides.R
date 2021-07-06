@@ -44,12 +44,6 @@ create_tool_overrides <- function(tool_name, params) {
       params$radius_b_max$alias <- "radius_b_max"
       params$radius_b_max$identifier <- "RADIUS_B_MAX"
       params$radius_b_max$default <- 1000
-      
-      args <- c("dem", "landforms", "radius_a_min", "radius_a_max",
-                "radius_b_min", "radius_b_max", "dw_weighting", "dw_idw_power",
-                "dw_idw_offset", "dw_bandwidth")
-      
-      params <- params[args]      
     }
   }
     
