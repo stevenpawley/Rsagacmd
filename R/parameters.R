@@ -36,6 +36,7 @@ create_alias <- function(identifier) {
 #' @return A `parameters` object
 #'
 #' @keywords internal
+#' @importFrom magrittr %>%
 parameters <- function(tool_options) {
   
   # replace tool arguments with syntactically-correct version

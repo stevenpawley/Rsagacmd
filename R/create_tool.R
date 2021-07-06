@@ -12,6 +12,7 @@
 #' + `parameters` A named list of the tool's parameter objects.
 #'
 #' @keywords internal
+#' @importFrom magrittr %>%
 create_tool <- function(tool_information, tool_options) {
   
   # get the command to execute the saga_cmd tool

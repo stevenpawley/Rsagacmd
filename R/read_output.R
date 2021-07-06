@@ -21,6 +21,7 @@ read_shapes <- function(x) {
 #' @return a `tibble`.
 #' 
 #' @keywords internal
+#' @importFrom magrittr %>%
 read_table <- function(x) {
   if (tools::file_ext(x$files) == "txt") {
     object <- 
