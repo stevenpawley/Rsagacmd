@@ -15,11 +15,11 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
     target_out_grid = tempfile(fileext = ".sgrd")
   )
   
-  testthat::expect_is(dem, "RasterLayer")
+  testthat::expect_s4_class(dem, "RasterLayer")
 
   # table output
   orb <- saga$climate_tools$earths_orbital_parameters(orbpar = tempfile(fileext = ".csv"))
-  testthat::expect_is(orb, "tbl_df")
+  testthat::expect_type(orb, "tbl_df")
 
   # optional outputs with conditions on inputs
   flowacc <- 
@@ -27,7 +27,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
   flowacc <-
     saga$ta_hydrology$flow_accumulation_top_down(flowacc, flow = tempfile(fileext = ".sgrd"))
   
-  testthat::expect_is(flowacc, "RasterLayer")
+  testthat::expect_s4_class(flowacc, "RasterLayer")
 
   # test loading simple features object and pipes
   dem_mean <- cellStats(dem, mean)
@@ -44,5 +44,5 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       polygons = tempfile(fileext = ".shp")
     )
   
-  testthat::expect_is(shapes, "sf")
+  testthat::expect_s3_class(shapes, "sf")
 })

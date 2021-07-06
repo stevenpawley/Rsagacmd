@@ -68,7 +68,7 @@ testthat::test_that("initiation of SAGA-GIS 3.0.0", {
     saga <- saga_gis(saga_bin)
     testthat::expect_false(is.null(saga))
     testthat::expect_gt(length(saga), 0)
-    testthat::expect_is(
+    testthat::expect_s4_class(
       saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
       "RasterLayer")
     unlink(dirname(saga_bin), recursive = TRUE)
