@@ -1,88 +1,93 @@
-## Test environments
-* local R installation, R 4.1.0
+## Test Environments
 
-## Results
-ℹ Updating Rsagacmd documentation
-ℹ Loading Rsagacmd
-Writing NAMESPACE
-Writing NAMESPACE
-── Building ────────────────────────────────────────────────────────────────────────────── Rsagacmd ──
-Setting env vars:
-• CFLAGS    : -Wall -pedantic -fdiagnostics-color=always
-• CXXFLAGS  : -Wall -pedantic -fdiagnostics-color=always
-• CXX11FLAGS: -Wall -pedantic -fdiagnostics-color=always
-──────────────────────────────────────────────────────────────────────────────────────────────────────
-✓  checking for file ‘/Users/steven/GitHub/Rsagacmd/DESCRIPTION’ ...
-─  preparing ‘Rsagacmd’:
-✓  checking DESCRIPTION meta-information ...
-─  checking for LF line-endings in source and make files and shell scripts
-─  checking for empty or unneeded directories
-─  building ‘Rsagacmd_0.1.1.tar.gz’
-   
-── Checking ────────────────────────────────────────────────────────────────────────────── Rsagacmd ──
-Setting env vars:
-• _R_CHECK_CRAN_INCOMING_REMOTE_: FALSE
-• _R_CHECK_CRAN_INCOMING_       : FALSE
-• _R_CHECK_FORCE_SUGGESTS_      : FALSE
-• NOT_CRAN                      : true
-── R CMD check ───────────────────────────────────────────────────────────────────────────────────────
-─  using log directory ‘/private/var/folders/5l/3j1jdrfj4cz6m2qgwg96lz6w0000gn/T/RtmpJyOCaw/Rsagacmd.Rcheck’
-─  using R version 4.1.0 (2021-05-18)
-─  using platform: aarch64-apple-darwin20 (64-bit)
-─  using session charset: UTF-8
-─  using options ‘--no-manual --as-cran’
-✓  checking for file ‘Rsagacmd/DESCRIPTION’
-─  checking extension type ... Package
-─  this is package ‘Rsagacmd’ version ‘0.1.1’
-─  package encoding: UTF-8
-✓  checking package namespace information ...
-✓  checking package dependencies (1.4s)
-✓  checking if this is a source package
-✓  checking if there is a namespace
-✓  checking for executable files ...
-✓  checking for hidden files and directories
-✓  checking for portable file names ...
-✓  checking for sufficient/correct file permissions
-✓  checking serialization versions
-✓  checking whether package ‘Rsagacmd’ can be installed (2.6s)
-✓  checking installed package size ...
-✓  checking package directory ...
-✓  checking for future file timestamps (367ms)
-✓  checking DESCRIPTION meta-information ...
-✓  checking top-level files ...
-✓  checking for left-over files
-✓  checking index information
-✓  checking package subdirectories ...
-✓  checking R files for non-ASCII characters ...
-✓  checking R files for syntax errors ...
-✓  checking whether the package can be loaded (531ms)
-✓  checking whether the package can be loaded with stated dependencies (529ms)
-✓  checking whether the package can be unloaded cleanly (524ms)
-✓  checking whether the namespace can be loaded with stated dependencies (534ms)
-✓  checking whether the namespace can be unloaded cleanly (540ms)
-✓  checking dependencies in R code (1.8s)
-✓  checking S3 generic/method consistency (857ms)
-✓  checking replacement functions (509ms)
-✓  checking foreign function calls (539ms)
-✓  checking R code for possible problems (3.1s)
-✓  checking Rd files ...
-✓  checking Rd metadata ...
-✓  checking Rd line widths ...
-✓  checking Rd cross-references ...
-✓  checking for missing documentation entries (512ms)
-✓  checking for code/documentation mismatches (1.6s)
-✓  checking Rd \usage sections (971ms)
-✓  checking Rd contents ...
-✓  checking for unstated dependencies in examples ...
-✓  checking examples (1.2s)
-✓  checking for unstated dependencies in ‘tests’ ...
-─  checking tests ...
-✓  Running ‘testthat.R’ [132s/133s] (2m 12.8s)
-✓  checking for non-standard things in the check directory (2m 12.8s)
-✓  checking for detritus in the temp directory
-   
-   
-── R CMD check results ─────────────────────────────────────────────────────────── Rsagacmd 0.1.1 ────
-Duration: 2m 32s
+### winbuilder (old release)
 
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+devtools::check_win_oldrelease()
+Status: OK
+R version 4.0.5 (2021-03-31)
+
+### winbuilder (release)
+
+devtools::check_win_oldrelease()
+Status: OK
+R version 4.1.0 (2021-05-18)
+
+### local (MacOS 11.4)
+
+R CMD check Rsagacmd_0.1.1.tar.gz --as-cran
+* using log directory ‘/Users/steven/GitHub/Rsagacmd.Rcheck’
+* using R version 4.1.0 (2021-05-18)
+* using platform: aarch64-apple-darwin20 (64-bit)
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘Rsagacmd/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘Rsagacmd’ version ‘0.1.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
+Maintainer: ‘Steven Pawley <dr.stevenpawley@gmail.com>’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘Rsagacmd’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ...
+  Running ‘testthat.R’
+ OK
+* checking PDF version of manual ... OK
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+
+Status: OK
+
+### R-hub builder
+
+Build ID:	Rsagacmd_0.1.1.tar.gz-965f3976a5844600a11a4d9bfa36785f
+Platform:	Ubuntu Linux 20.04.1 LTS, R-release, GCC
+Submitted:	34 minutes 57.3 seconds ago
+Build time:	34 minutes 37.1 seconds
+Rsagacmd 0.1.1: OK
+
+Build ID:	Rsagacmd_0.1.1.tar.gz-5c69b0bca2314973867695a6c6a1fc84
+Platform:	Fedora Linux, R-devel, clang, gfortran
+Submitted:	35 minutes 39.2 seconds ago
+Build time:	35 minutes 11.2 seconds
+Rsagacmd 0.1.1: OK
