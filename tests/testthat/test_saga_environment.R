@@ -68,6 +68,7 @@ testthat::test_that("Test file caching ", {
       con = senv$saga_config,
       nchars = file.info(senv$saga_config)$size - 1
     )
+    config_char <- gsub("[\r]", "", config_char)
     config_char <- strsplit(config_char, "\n")[[1]]
     idx <- grep("GRID_CACHE_TMPDIR", config_char)
     config_cache_dir <- strsplit(config_char[idx], "=")[[1]][2]

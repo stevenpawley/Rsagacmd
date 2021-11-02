@@ -109,6 +109,10 @@ parameter <-
       files = NULL
     )
     
+    # strip empty values
+    for (key in names(param))
+      param[[key]] <- param[[key]][1]
+
     # generate syntactically-correct alias for identifier
     if (grepl("^[[:digit:]]", identifier))
       param$alias <- paste0("x", identifier)

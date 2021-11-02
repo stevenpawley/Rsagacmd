@@ -75,7 +75,8 @@ saga_env <-
             options <- XML::readHTMLTable(
               doc = paste(libdir, tool, sep = "/"),
               header = TRUE,
-              stringsAsFactors = FALSE
+              stringsAsFactors = FALSE,
+              trim = TRUE
             )
             
             tool_information <- options[[1]]

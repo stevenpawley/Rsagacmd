@@ -1,6 +1,3 @@
-library(sf)
-
-
 test_that("test raster formats (SAGA)", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
@@ -52,7 +49,7 @@ test_that("test vector formats (GeoPackage)", {
   
   saga <- saga_gis(vector_format = "GeoPackage")
   
-  nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+  nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
   
   # incorrect output format
   testthat::expect_error(
