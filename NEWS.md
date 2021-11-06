@@ -1,5 +1,10 @@
 # Rsagacmd 0.1.2
 
+New features:
+
+- The `search_tool` function now returns a `tibble` containing the tools that
+contain the matching term along with additional metadata.
+
 Changes:
 
 - Fix for difference in syntax/parameters between the SAGA GUI and command line
