@@ -22,7 +22,9 @@ search_tools <- function(x, pattern) {
   matches <- tibble::tibble(
     library = character(),
     tool = character(),
-    parameters = list(), 
+    author = character(),
+    parameters = list(),
+    description = character(),
     .rows = 0
   )
   
@@ -38,6 +40,7 @@ search_tools <- function(x, pattern) {
         result <- list(
           library = lib,
           tool = names(libraries[[lib]])[idx],
+          author = libraries[[lib]][[idx]]$author,
           saga_cmd = libraries[[lib]][[idx]]$tool_cmd,
           parameters = list(names(libraries[[lib]][[idx]]$params)),
           description = libraries[[lib]][[idx]]$description

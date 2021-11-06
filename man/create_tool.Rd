@@ -11,7 +11,8 @@ create_tool(tool_information, tool_options, description)
 
 \item{tool_options}{list}
 
-\item{description}{character}
+\item{character}{the description text for the tool that has been scraped from
+the help documentation}
 }
 \value{
 A `saga_tool` object containing:

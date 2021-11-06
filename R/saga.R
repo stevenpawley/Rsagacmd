@@ -72,28 +72,24 @@ saga_env <-
       for (tool in tool_files) {
         tryCatch(
           expr = {
-            options <- XML::readHTMLTable(
-              doc = paste(libdir, tool, sep = "/"),
-              header = TRUE,
-              stringsAsFactors = FALSE,
-              trim = TRUE
+            html <- rvest::read_html(paste(libdir, tool, sep = "/"))
+            options <- rvest::html_table(html, trim = TRUE)
+            
+            description_html <- rvest::html_elements(
+              html, 
+              xpath = "/html/body/text()"
             )
             
-            description_html <- 
-              rvest::read_html(paste(libdir, tool, sep = "/"))
-            
-            description_html <-
-              rvest::html_elements(description_html, xpath = "/html/body/text()")
-            
-            description <- paste(rvest::html_text2(description_html), collapse = " ")
+            description <- paste(rvest::html_text2(description_html), 
+                                 collapse = " ")
             
             tool_information <- options[[1]]
             tool_options <- options[[length(options)]]
             
-            if (!any(grepl("interactive", x = options[[1]][, 2]))) {
-              tool_config <- create_tool(tool_information, tool_options)
-              tool_config$description <- description
-              
+            if (!any(grepl("interactive", x = tool_information[[2]]))) {
+              tool_config <- create_tool(tool_information, tool_options,
+                                         description)
+
               libraries[[basename(libdir)]][[tool_config$tool_name]] <-
                 tool_config
             }

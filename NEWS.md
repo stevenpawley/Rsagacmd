@@ -3,7 +3,8 @@
 New features:
 
 - The `search_tool` function now returns a `tibble` containing the tools that
-contain the matching term along with additional metadata.
+contain the matching term along with additional metadata including the author of
+the tool, a description and the tool's parameters.
 
 Changes:
 
