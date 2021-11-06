@@ -48,10 +48,11 @@ create_tool <- function(tool_information, tool_options) {
   # apply exceptions for specific saga-gis tools
   params <- create_tool_overrides(tool_name, params)
   
-  structure(list(
-    tool_name = tool_name,
-    tool_cmd = saga_tool_cmd,
-    params = params
-  ),
+  structure(
+    list(
+      tool_name = tool_name,
+      tool_cmd = saga_tool_cmd,
+      params = params
+    ),
   class = "saga_tool")
 }

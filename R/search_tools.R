@@ -39,7 +39,8 @@ search_tools <- function(x, pattern) {
           library = lib,
           tool = names(libraries[[lib]])[idx],
           saga_cmd = libraries[[lib]][[idx]]$tool_cmd,
-          parameters = list(names(libraries[[lib]][[idx]]$params))
+          parameters = list(names(libraries[[lib]][[idx]]$params)),
+          description = libraries[[lib]][[idx]]$description
         )
         
         matches <- rbind(matches, tibble::as_tibble(result))

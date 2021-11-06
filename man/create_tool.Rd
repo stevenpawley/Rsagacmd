@@ -4,12 +4,14 @@
 \alias{create_tool}
 \title{Generates list of options for a SAGA-GIS tool}
 \usage{
-create_tool(tool_information, tool_options)
+create_tool(tool_information, tool_options, description)
 }
 \arguments{
 \item{tool_information}{list}
 
 \item{tool_options}{list}
+
+\item{description}{character}
 }
 \value{
 A `saga_tool` object containing:

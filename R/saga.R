@@ -58,7 +58,7 @@ saga_env <-
     
     if (!is.null(opt_lib))
       docs_libraries <-
-        docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
+      docs_libraries[which(basename(docs_libraries) %in% opt_lib)]
     
     libraries <- list()
     
@@ -79,11 +79,21 @@ saga_env <-
               trim = TRUE
             )
             
+            description_html <- 
+              rvest::read_html(paste(libdir, tool, sep = "/"))
+            
+            description_html <-
+              rvest::html_elements(description_html, xpath = "/html/body/text()")
+            
+            description <- paste(rvest::html_text2(description_html), collapse = " ")
+            
             tool_information <- options[[1]]
             tool_options <- options[[length(options)]]
             
             if (!any(grepl("interactive", x = options[[1]][, 2]))) {
               tool_config <- create_tool(tool_information, tool_options)
+              tool_config$description <- description
+              
               libraries[[basename(libdir)]][[tool_config$tool_name]] <-
                 tool_config
             }
