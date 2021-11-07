@@ -12,11 +12,13 @@
 \item{...}{Additional arguments to pass to print. Currently not used.}
 }
 \description{
-Generic function to display help and usage information for any SAGA-GIS tool
+Displays a tibble containing the name of the tool's parameters, the argument
+name used by Rsagacmd, the identifier used by the SAGA-GIS command line, and
+additional descriptions, default and options/constraints.
 }
 \examples{
 \dontrun{
-# Intialize a saga object
+# Initialize a saga object
 saga <- saga_gis()
 
 # Display usage information on a tool

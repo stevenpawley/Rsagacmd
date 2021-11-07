@@ -52,12 +52,12 @@ parameters <- function(tool_options) {
     identifier <- tool_identifiers[[i]]
     
     params[[alias]] <- parameter(
-      type = tool_options[tool_options$Identifier == identifier, "Type"],
-      name = tool_options[tool_options$Identifier == identifier, "Name"],
+      type = tool_options[tool_options$Identifier == identifier,][["Type"]],
+      name = tool_options[tool_options$Identifier == identifier,][["Name"]],
       alias = alias,
       identifier = identifier,
-      description = tool_options[tool_options$Identifier == identifier, "Description"],
-      constraints = tool_options[tool_options$Identifier == identifier, "Constraints"]
+      description = tool_options[tool_options$Identifier == identifier,][["Description"]],
+      constraints = tool_options[tool_options$Identifier == identifier,][["Constraints"]]
     )
   }
   
@@ -98,7 +98,7 @@ parameter <-
       name = name,
       alias = identifier,
       identifier = identifier,
-      description = description,
+      description = stringr::str_to_sentence(description),
       constraints = constraints,
       io = NA,
       feature = NA,
@@ -151,6 +151,21 @@ parameter <-
     
     param$maximum <-
       suppressWarnings(as.numeric(param$maximum))
+    
+    # convert constraints into lists
+    param$constraints <- 
+      stringr::str_split(param$constraints, "Default: ")[[1]][1]
+    
+    if (!is.na(param$constraints)) {
+      param$constraints <- 
+        stringr::str_split(param$constraints, "\\[[:digit:]\\]")[[1]]
+      param$constraints <- param$constraints[param$constraints != ""]
+      param$constraints <- stringr::str_trim(param$constraints)
+      param$constraints <- paste(
+        paste0("[", seq_along(param$constraints) - 1, "]"), 
+        param$constraints
+      )
+    }
     
     # parse type into explicit `io` attribute
     if (stringr::str_detect(param$type, "input"))

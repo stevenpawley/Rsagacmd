@@ -490,6 +490,10 @@ saga_gis <-
 
 
 #' Generic function to display help and usage information for any SAGA-GIS tool
+#' 
+#' Displays a tibble containing the name of the tool's parameters, the argument
+#' name used by Rsagacmd, the identifier used by the SAGA-GIS command line, and
+#' additional descriptions, default and options/constraints.
 #'
 #' @param x A `saga_tool` object.
 #' @param ... Additional arguments to pass to print. Currently not used.
@@ -499,7 +503,7 @@ saga_gis <-
 #' @export
 #' @examples
 #' \dontrun{
-#' # Intialize a saga object
+#' # Initialize a saga object
 #' saga <- saga_gis()
 #'
 #' # Display usage information on a tool
@@ -514,16 +518,26 @@ print.saga_tool <- function(x, ...) {
   
   # get environment of saga_gis object
   env <- environment(x)
-  params <- env$senv$libraries[[lib]][[tool]][["params"]]
+  tool_obj <- env$senv$libraries[[lib]][[tool]]
+  params <- tool_obj[["params"]]
+  author <- tool_obj[["author"]]
+  description <- tool_obj[["description"]]
   
   cat(paste0("Help for library = ", lib, "; tool = ", tool, ":", "\n"))
-  for (i in seq_along(params)) {
-    cat(paste0("Name of tool: ", params[[i]]$name), "\n")
-    cat(paste0("Argument name: ", params[[i]]$alias, "\n"))
-    cat(paste0("Identifier used by SAGA-GIS: ", params[[i]]$identifier, "\n"))
-    cat(paste0("Type: ", params[[i]]$type, "\n"))
-    cat(paste0("Description: ", params[[i]]$description, "\n"))
-    cat(paste0("Constraints: ", params[[i]]$constraints, "\n"))
-    cat("\n")
-  }
+  cat(paste0("Author: ", author), "\n")
+  cat(paste0("Description: ", description), "\n")
+  cat("\n")
+  
+  df <- tibble::tibble(
+    parameter = sapply(params, function(x) x$name),
+    type = sapply(params, function(x) x$type),
+    argument = sapply(params, function(x) x$alias),
+    identifier = sapply(params, function(x) x$identifier),
+    description = sapply(params, function(x) x$description),
+    default = sapply(params, function(x) x$default),
+    constraints = sapply(params, function(x)
+      paste(ifelse(is.na(x$constraints), "", x$constraints), collapse = "; "))
+  )
+  
+  print(df)
 }
