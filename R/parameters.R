@@ -121,19 +121,22 @@ parameter <-
     param$alias <- tolower(param$alias)
     param$alias <- make.names(param$alias, unique = TRUE)
     
+    param$description <- ifelse(
+      param$description == "",
+      NA_character_,
+      param$description
+    )
+    
     # parse constraints into default, minimum, and maximum attributes
-    if (param$constraints == "")
-      param$constraints <- NA
+    param$constraints <-
+      stringr::str_remove_all(param$constraints, "Available Choices:")
     
     param$constraints <-
-      stringr::str_replace_all(param$constraints, "Available Choices:", "")
-    
-    param$constraints <-
-      stringr::str_replace_all(param$constraints, "^\n", "")
+      stringr::str_remove_all(param$constraints, "^\n")
     
     param$constraints <-
       stringr::str_replace_all(param$constraints, "\n", ";")
-    
+
     param$default <-
       stringr::str_extract(param$constraints, "(?<=Default: \\s{0,1})[-0-9.]+")
     
@@ -155,6 +158,9 @@ parameter <-
     # convert constraints into lists
     param$constraints <- 
       stringr::str_split(param$constraints, "Default: ")[[1]][1]
+
+    if (param$constraints == "")
+      param$constraints <- NA_character_
     
     if (!is.na(param$constraints)) {
       param$constraints <- 
