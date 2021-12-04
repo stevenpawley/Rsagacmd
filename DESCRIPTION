@@ -30,8 +30,8 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     binaries. SAGA-GIS is also included in Debian/Ubuntu default software
     repositories and is available for macOS using homebrew (<https://brew.sh/>)
     from the osgeo/osgeo4mac (<https://github.com/OSGeo/homebrew-osgeo4mac>)
-    formula tap, as well as being bundled within the QGIS application bundle
-    for MacOS. Rsagacmd has currently been tested on 'SAGA-GIS' versions
+    formula tap, as well as being bundled within the 'QGIS' application bundle
+    for macOS. Rsagacmd has currently been tested on 'SAGA-GIS' versions
     from 2.3.1 to 8.0.1 on Windows, Linux and macOS.
 License: GPL-3
 Encoding: UTF-8

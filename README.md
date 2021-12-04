@@ -3,7 +3,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/Rsagacmd)](https://cran.r-project.org/package=Rsagacmd)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd)
-[![Codecov test coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
 [![R-CMD-check](https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg)](https://github.com/stevenpawley/Rsagacmd/actions)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)

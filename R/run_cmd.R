@@ -4,7 +4,7 @@
 #' @param value character, the value of the option.
 #'
 #' @return character, a joined option:value pair such as "-DEM:mygrid.tif"
-#' 
+#'
 #' @keywords internal
 parse_options <- function(key, value) {
   option <- paste0("-", key)
@@ -24,11 +24,11 @@ parse_options <- function(key, value) {
 #'   console.
 #'
 #' @return list, output from `processx::run()`
-#' 
+#'
 #' @keywords internal
 run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   cmd <- saga_cmd
-  
+
   # add flag to load projections library
   flags <- "--flags=p"
 
@@ -36,20 +36,20 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   if (!is.null(saga_config)) {
     saga_config <- paste("-C", saga_config, sep = "=")
   }
-    
+
   # create options:value character vector
   param_string <- mapply(parse_options, names(args), args, USE.NAMES = FALSE)
-  
+
   if (length(param_string) == 0)
     param_string <- NULL
-  
-  # execute command  
+
+  # execute command
   msg <- processx::run(
-    command = cmd, 
-    args = c(flags, saga_config, lib, tool_cmd, param_string), 
-    echo_cmd = verbose, 
-    echo = verbose, 
-    spinner = FALSE, 
+    command = cmd,
+    args = c(flags, saga_config, lib, tool_cmd, param_string),
+    echo_cmd = verbose,
+    echo = verbose,
+    spinner = FALSE,
     error_on_status = FALSE
   )
 

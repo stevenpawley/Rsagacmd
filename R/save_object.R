@@ -1,5 +1,5 @@
 #' Generic methods to save R in-memory objects to file to SAGA-GIS to access
-#' 
+#'
 #' Designed to be used internally by Rsagacmd for automatically pass data to
 #' SAGA-GIS for geoprocessing.
 #'
@@ -10,7 +10,7 @@
 #' @return A character that specifies the file path to where the R object was
 #'   saved.
 #' @export
-#' 
+#'
 #' @keywords internal
 save_object <- function(x, ...) {
   UseMethod("save_object", x)
@@ -36,14 +36,14 @@ save_object.character <- function(x, ...) {
 save_object.sf <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   temp <- tempfile(tmpdir = temp_path, fileext = ".shp")
   pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
   sf::st_write(obj = x, dsn = temp, quiet = TRUE)
-  
+
   temp
 }
 
@@ -53,10 +53,10 @@ save_object.sf <- function(x, ...) {
 save_object.RasterLayer <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   # pass file name to saga if RasterLayer from single band raster
   if (raster::nbands(x) == 1 &
     raster::inMemory(x) == FALSE &
@@ -67,9 +67,9 @@ save_object.RasterLayer <- function(x, ...) {
   } else if (raster::nbands(x) != 1 |
     raster::inMemory(x) == TRUE |
     tools::file_ext(raster::filename(x)) == "grd") {
-    
+
     dtype <- raster::dataType(x)
-    nodataval = switch(
+    nodataval <- switch(
       dtype,
       LOG1S = 0,
       INT1S = -127,
@@ -81,10 +81,11 @@ save_object.RasterLayer <- function(x, ...) {
       FLT4S = -99999,
       FLT8S = -99999
     )
-    
+
     temp <- tempfile(tmpdir = temp_path, fileext = ".tif")
     raster::NAvalue(x) <- nodataval
-    raster::writeRaster(x, filename = temp, datatype = dtype, NAflag = nodataval)
+    raster::writeRaster(x, filename = temp, datatype = dtype,
+                        NAflag = nodataval)
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
     x <- temp
   }
@@ -98,17 +99,17 @@ save_object.RasterLayer <- function(x, ...) {
 save_object.SpatRaster <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   # check for multiple layers
-  if (terra::nlyr(x) > 1) {
-    rlang::abort(
-      "SpatRaster object contains multiple layers. SAGA-GIS requires single-layer rasters as inputs"
-    )
-  }
-  
+  if (terra::nlyr(x) > 1)
+    rlang::abort(paste(
+      "SpatRaster object contains multiple layers.",
+      "SAGA-GIS requires single-layer rasters as inputs"
+    ))
+
   # check if layer is in-memory
   if (terra::sources(x)$source == "") {
     in_memory <- TRUE
@@ -123,11 +124,11 @@ save_object.SpatRaster <- function(x, ...) {
     n_bands <- nrow(attr(info, "df"))
     part_of_multiband <- n_bands > 1
   }
-  
+
   # single-band raster on disk -> filename -> saga
   if (!part_of_multiband & !in_memory)
     x <- terra::sources(x)$source
-  
+
   # otherwise save to temporary file
   if (part_of_multiband | in_memory) {
     temp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
@@ -135,7 +136,7 @@ save_object.SpatRaster <- function(x, ...) {
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
     x <- temp
   }
-  
+
   x
 }
 
@@ -145,16 +146,18 @@ save_object.SpatRaster <- function(x, ...) {
 save_object.RasterStack <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   if (raster::nlayers(x) == 1) {
     x <- raster::raster(x)
     x <- save_object(x)
   } else {
-    rlang::abort(
-      "Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
+    rlang::abort(paste(
+      "Raster object contains multiple layers.",
+      "SAGA-GIS requires single layer rasters as inputs"
+    ))
   }
 
   x
@@ -166,20 +169,22 @@ save_object.RasterStack <- function(x, ...) {
 save_object.RasterBrick <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   if (raster::nlayers(x) == 1) {
     x <- raster::raster(x)
     x <- save_object(x)
   } else {
-    rlang::abort(
-      "Raster object contains multiple layers. SAGA-GIS requires single layer rasters as inputs")
+    rlang::abort(paste(
+      "Raster object contains multiple layers.",
+      "SAGA-GIS requires single layer rasters as inputs"
+    ))
   }
-  
+
   x
-  
+
 }
 
 
@@ -187,20 +192,22 @@ save_object.RasterBrick <- function(x, ...) {
 #' @keywords internal
 save_object.stars <- function(x, ...) {
   args <- list(...)
-  
+
   if (length(x) > 1) {
-    rlang::abort(
-      "`stars` object contains multiple attributes. SAGA-GIS requires single layer rasters as inputs")
+    rlang::abort(paste(
+      "`stars` object contains multiple attributes.",
+      "SAGA-GIS requires single layer rasters as inputs"
+    ))
   }
-  
+
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   fp <- tempfile(tmpdir = temp_path, fileext = ".sdat")
   stars::write_stars(x, fp)
-  
+
   fp
 }
 
@@ -210,10 +217,10 @@ save_object.stars <- function(x, ...) {
 save_object.data.frame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   temp <- tempfile(tmpdir = temp_path, fileext = ".txt")
   pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
   utils::write.table(x = x, file = temp, sep = "\t")
@@ -229,7 +236,7 @@ spatial_to_saga <- function(x, temp_path) {
     layer = 1,
     driver = "ESRI Shapefile"
   )
-  
+
   temp
 }
 
@@ -239,10 +246,10 @@ spatial_to_saga <- function(x, temp_path) {
 save_object.SpatialPointsDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   spatial_to_saga(x, temp_path)
 }
 
@@ -252,10 +259,10 @@ save_object.SpatialPointsDataFrame <- function(x, ...) {
 save_object.SpatialLinesDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   spatial_to_saga(x, temp_path)
 }
 
@@ -265,10 +272,10 @@ save_object.SpatialLinesDataFrame <- function(x, ...) {
 save_object.SpatialPolygonsDataFrame <- function(x, ...) {
   args <- list(...)
   temp_path <- args$temp_path
-  
+
   if (is.null(temp_path))
     temp_path <- tempdir()
-  
+
   spatial_to_saga(x, temp_path)
 }
 

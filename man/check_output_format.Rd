@@ -5,7 +5,7 @@
 \title{Check the file extension of the output file to see if it is the same as the
 `raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
 is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
-then this might work depending on the saga version but Rsagacmd will not 
+then this might work depending on the saga version but Rsagacmd will not
 know how to read the file.}
 \usage{
 check_output_format(x, raster_format, vector_format)
@@ -21,7 +21,7 @@ check_output_format(x, raster_format, vector_format)
 Check the file extension of the output file to see if it is the same as the
 `raster_format` or `vector_format` settings. If a raster, such as a GeoTIFF
 is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
-then this might work depending on the saga version but Rsagacmd will not 
+then this might work depending on the saga version but Rsagacmd will not
 know how to read the file.
 }
 \keyword{internal}

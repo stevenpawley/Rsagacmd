@@ -8,11 +8,11 @@
 extract_tool <- function(x) {
   lib <- attr(x, "lib")
   tool <- attr(x, "tool")
-  
+
   # get environment of saga_gis object
   env <- environment(x)
   tool_obj <- env$senv$libraries[[lib]][[tool]]
-  
+
   tool_obj
 }
 
@@ -39,7 +39,7 @@ summarize_tool_params <- function(tool_obj) {
     default = sapply(params, function(x) x$default),
     available_opts = sapply(params, function(param) {
       constraints <- param$constraints[!is.na(param$constraints)]
-      
+
       ifelse(length(constraints) > 0,
              paste(constraints, collapse = "; "),
              constraints)
@@ -51,7 +51,7 @@ summarize_tool_params <- function(tool_obj) {
 
 
 #' Generic function to display help and usage information for any SAGA-GIS tool
-#' 
+#'
 #' Displays a tibble containing the name of the tool's parameters, the argument
 #' name used by Rsagacmd, the identifier used by the SAGA-GIS command line, and
 #' additional descriptions, default and options/constraints.
@@ -77,15 +77,15 @@ print.saga_tool <- function(x, ...) {
   tool_obj <- extract_tool(x)
   lib <- attr(x, "lib")
   tool <- attr(x, "tool")
-  
+
   author <- tool_obj[["author"]]
   description <- tool_obj[["description"]]
-  
+
   cat(paste0("Help for library = ", lib, "; tool = ", tool, ":", "\n"))
   cat(paste0("Author: n", author), "\n")
   cat(paste0("Description: ", description), "\n")
   cat("\n")
-  
+
   df <- summarize_tool_params(tool_obj)
   print(df)
 }
@@ -116,5 +116,5 @@ generics::tidy
 #' }
 tidy.saga_tool <- function(x, ...) {
   tool_obj <- extract_tool(x)
-  summarize_tool_params(tool_obj) 
+  summarize_tool_params(tool_obj)
 }

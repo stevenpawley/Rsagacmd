@@ -29,7 +29,9 @@ saga_remove_tmpfiles <- function(h = 0) {
         message(f)
         assoc_files <- list.files(
           path = dirname(f),
-          pattern = utils::glob2rx(paste0(tools::file_path_sans_ext(basename(f)), ".*")),
+          pattern = utils::glob2rx(
+            paste0(tools::file_path_sans_ext(basename(f)), ".*")
+          ),
           full.names = T
         )
         file.remove(assoc_files)
