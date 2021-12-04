@@ -6,6 +6,10 @@ New features:
 contain the matching term along with additional metadata including the author of
 the tool, a description and the tool's parameters.
 
+- The generic `tidy` S3 method from the `generics` package has been extended
+with a tidy.saga_tool method that summarizes a SAGA-GIS tool object's parameters
+into a tibble. This is designed for easy viewing of a tools options.
+
 Changes:
 
 - Fix for difference in syntax/parameters between the SAGA GUI and command line

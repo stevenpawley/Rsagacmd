@@ -1,3 +1,8 @@
+#' Internal function to extract information from a `saga_tool` object
+#'
+#' @param x a `saga_tool` object
+#'
+#' @return the intervals of a `saga_tool`
 #' @export
 #' @keywords internal
 extract_tool <- function(x) {
@@ -11,6 +16,13 @@ extract_tool <- function(x) {
   tool_obj
 }
 
+#' Interval function used to summarize a `saga_tool` into a tibble that
+#' describes the tools parameters and options
+#'
+#' @param tool_obj a nested list which constitutes the internals of a saga_tool
+#'   object
+#'
+#' @return a tibble
 #' @export
 #' @keywords internal
 summarize_tool_params <- function(tool_obj) {
@@ -84,11 +96,14 @@ generics::tidy
 #' Summarize the parameters that are available within a SAGA-GIS tool and
 #' return these as a tibble.
 #'
-#' @param tool a `saga_tool` object
+#' @param x a `saga_tool` object
+#' @param ... additional arguments. Currently unused.
 #'
-#' @return
-#' @export
+#' @return a tibble that describes tools, identifiers used by the saga_cmd
+#'   command line tool, the equivalent argument name used by Rsagacmd, and other
+#'   options and descriptions.
 #' @importFrom generics tidy
+#' @export
 #' @exportS3Method tidy saga_tool
 #'
 #' @examples
@@ -99,7 +114,7 @@ generics::tidy
 #' # tidy the tools parameters into a tibble
 #' tidy(saga$ta_morphometry$slope_aspect_curvature)
 #' }
-tidy.saga_tool <- function(x) {
+tidy.saga_tool <- function(x, ...) {
   tool_obj <- extract_tool(x)
   summarize_tool_params(tool_obj) 
 }

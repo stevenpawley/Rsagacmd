@@ -14,7 +14,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 
 Rsagacmd provides an R scripting interface to the open-source SAGA-GIS
 (<https://sourceforge.net/projects/saga-gis/>) software. The current
-version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 7.9.0 on Windows
+version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on Windows
 (x64), OS X and Linux.
 
 ## Contents

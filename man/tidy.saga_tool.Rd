@@ -5,13 +5,17 @@
 \title{Summarize the parameters that are available within a SAGA-GIS tool and
 return these as a tibble.}
 \usage{
-\method{tidy}{saga_tool}(x)
+\method{tidy}{saga_tool}(x, ...)
 }
 \arguments{
-\item{tool}{a `saga_tool` object}
+\item{x}{a `saga_tool` object}
+
+\item{...}{additional arguments. Currently unused.}
 }
 \value{
-
+a tibble that describes tools, identifiers used by the saga_cmd
+  command line tool, the equivalent argument name used by Rsagacmd, and other
+  options and descriptions.
 }
 \description{
 Summarize the parameters that are available within a SAGA-GIS tool and
