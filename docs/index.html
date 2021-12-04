@@ -12,13 +12,39 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Linking R with the Open-Source SAGA-GIS Software">
-<meta property="og:description" content="Provides an R scripting interface to the open-source SAGA-GIS (System for Automated Geoscientific Analyses Geographical Information System) software. Rsagacmd dynamically generates R functions for every SAGA-GIS geoprocessing tool based on the users currently installed SAGA-GIS version. These functions are contained within an S3 object and are accessed as a named list of libraries and tools. This structure facilitates an easier scripting experience by organizing the large number of SAGA-GIS geoprocessing tools (&gt;700) by their respective library. Interactive scripting can fully take advantage of code autocompletion tools (e.g. in Rstudio), allowing for each tools syntax to be quickly recognized. Furthermore, the most common types of spatial data (via the raster, terra, sp, and sf packages) along with non-spatial data are automatically passed from R to the SAGA-GIS command line tool for geoprocessing operations, and the results are loaded as the appropriate R object. Outputs from individual SAGA-GIS tools can also be chained using pipes from the magrittr and dplyr packages to combine complex geoprocessing operations together in a single statement. SAGA-GIS is available under a GPLv2 / LGPLv2 licence from &lt;https://sourceforge.net/projects/saga-gis/&gt; including Windows x86/x84 binaries. SAGA-GIS is also included in Debian/Ubuntu default software repositories and is available for macOS using homebrew (&lt;https://brew.sh/&gt;) from the osgeo/osgeo4mac (&lt;https://github.com/OSGeo/homebrew-osgeo4mac&gt;) formula tap. Rsagacmd has currently been tested on SAGA-GIS' versions from 2.3.1 to 7.9.0 on Windows, Linux and macOS.">
+<meta property="og:description" content="Provides an R scripting interface to the open-source SAGA-GIS 
+    (System for Automated Geoscientific Analyses Geographical Information
+    System) software. Rsagacmd dynamically generates R functions for every
+    SAGA-GIS geoprocessing tool based on the users currently installed
+    SAGA-GIS version. These functions are contained within an S3 object
+    and are accessed as a named list of libraries and tools. This structure
+    facilitates an easier scripting experience by organizing the large number
+    of SAGA-GIS geoprocessing tools (&gt;700) by their respective library.
+    Interactive scripting can fully take advantage of code autocompletion tools
+    (e.g. in Rstudio), allowing for each tools syntax to be quickly
+    recognized. Furthermore, the most common types of spatial data (via the
+    raster, terra, sp, and sf packages) along with non-spatial data are
+    automatically passed from R to the SAGA-GIS command line tool for
+    geoprocessing operations, and the results are loaded as the appropriate R
+    object. Outputs from individual SAGA-GIS tools can also be chained using
+    pipes from the magrittr and dplyr packages to combine complex
+    geoprocessing operations together in a single statement. SAGA-GIS is
+    available under a GPLv2 / LGPLv2 licence from
+    &lt;https://sourceforge.net/projects/saga-gis/&gt; including Windows x86/x64
+    binaries. SAGA-GIS is also included in Debian/Ubuntu default software
+    repositories and is available for macOS using homebrew (&lt;https://brew.sh/&gt;)
+    from the osgeo/osgeo4mac (&lt;https://github.com/OSGeo/homebrew-osgeo4mac&gt;)
+    formula tap, as well as being bundled within the QGIS application bundle
+    for macOS. Rsagacmd has currently been tested on SAGA-GIS' versions
+    from 2.3.1 to 8.0.1 on Windows, Linux and macOS.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +57,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -63,15 +83,15 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><a href="https://cran.r-project.org/package=Rsagacmd"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://codecov.io/gh/stevenpawley/Rsagacmd?branch=master"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://github.com/stevenpawley/Rsagacmd/actions"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></p>
+<p><a href="https://cran.r-project.org/package=Rsagacmd" class="external-link"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master" class="external-link"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://github.com/stevenpawley/Rsagacmd/actions" class="external-link"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></p>
 <!-- badges: end -->
-<div id="rsagacmd---a-package-for-linking-r-with-saga-gis" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rsagacmd---a-package-for-linking-r-with-saga-gis" class="anchor"></a>Rsagacmd - a package for linking R with SAGA-GIS</h1></div>
-<p>Rsagacmd provides an R scripting interface to the open-source SAGA-GIS (<a href="https://sourceforge.net/projects/saga-gis/" class="uri">https://sourceforge.net/projects/saga-gis/</a>) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 7.9.0 on Windows (x64), OS X and Linux.</p>
-<div id="contents" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contents" class="anchor"></a>Contents</h2>
+<div class="section level1">
+<div class="page-header"><h1 id="rsagacmd---a-package-for-linking-r-with-saga-gis">Rsagacmd - a package for linking R with SAGA-GIS<a class="anchor" aria-label="anchor" href="#rsagacmd---a-package-for-linking-r-with-saga-gis"></a>
+</h1></div>
+<p>Rsagacmd provides an R scripting interface to the open-source SAGA-GIS (<a href="https://sourceforge.net/projects/saga-gis/" class="external-link uri">https://sourceforge.net/projects/saga-gis/</a>) software. The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on Windows (x64), OS X and Linux.</p>
+<div class="section level2">
+<h2 id="contents">Contents<a class="anchor" aria-label="anchor" href="#contents"></a>
+</h2>
 <ul>
 <li><a href="#description">Description</a></li>
 <li><a href="#package-installation">Package installation</a></li>
@@ -82,25 +102,25 @@
 <li><a href="#notes">Notes</a></li>
 </ul>
 </div>
-<div id="description" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description" class="anchor"></a>Description</h2>
+<div class="section level2">
+<h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
+</h2>
 <p>Rsagacmd provides a complete interface between R and SAGA-GIS. The package allows all SAGA-GIS tools and libraries to be used from within R. Further, the most common geospatial datatypes within R (rasters, simple features, and sp objects) are seamlessly passed between R and SAGA-GIS during geoprocessing operations.</p>
-<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/package=RSAGA" class="uri">https://cran.r-project.org/package=RSAGA</a>), which provides a command line parser and a subset of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user’s installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGA’s <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
+<p>Rsagacmd is unrelated to the <code>RSAGA</code> package (<a href="https://cran.r-project.org/package=RSAGA" class="external-link uri">https://cran.r-project.org/package=RSAGA</a>), which provides a command line parser and a subset of pre-defined functions to interface with SAGA-GIS. In contrast, Rsagacmd provides links with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool that is contained in the user’s installed SAGA-GIS version. This means that every SAGA-GIS tool is available for use within R (other than the interactive tools), and Rsagacmd always remains up-to-date with new versions of SAGA-GIS. Custom tools that have been created using SAGA’s <code>toolchains</code> (<a href="https://rohanfisher.wordpress.com/saga-tool-chains/" class="external-link uri">https://rohanfisher.wordpress.com/saga-tool-chains/</a>) will also be accessible via Rsagacmd.</p>
 </div>
-<div id="package-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#package-installation" class="anchor"></a>Package installation</h2>
-<div id="cran-version" class="section level4">
-<h4 class="hasAnchor">
-<a href="#cran-version" class="anchor"></a>CRAN version</h4>
+<div class="section level2">
+<h2 id="package-installation">Package installation<a class="anchor" aria-label="anchor" href="#package-installation"></a>
+</h2>
+<div class="section level4">
+<h4 id="cran-version">CRAN version<a class="anchor" aria-label="anchor" href="#cran-version"></a>
+</h4>
 <p><code>Rsagacmd</code> is now available on CRAN. To install this version run :</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"Rsagacmd"</span>)</span></code></pre></div>
 <p>In your R session.</p>
 </div>
-<div id="development-version" class="section level4">
-<h4 class="hasAnchor">
-<a href="#development-version" class="anchor"></a>Development version</h4>
+<div class="section level4">
+<h4 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+</h4>
 <p>First install the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span></code></pre></div>
 <p>Then install Rsagacmd from github:</p>
@@ -108,9 +128,9 @@
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"stevenpawley/Rsagacmd"</span>)</span></code></pre></div>
 </div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>The primary function in Rsagacmd is the <code>saga_gis</code> function that returns an object containing all of the SAGA-GIS libraries and tools in the same structure as what is accessible within the GIS software itself. Each tool is nested within its respective library and can be accessed by:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rsagacmd)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -121,9 +141,9 @@
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>saga<span class="sc">$</span>ta_morphometry<span class="sc">$</span><span class="fu">mass_balance_index</span>()</span></code></pre></div>
 <p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function’s syntax is the same as when using the SAGA-GIS command line tool directly except that Rsagacmd always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in Rstudio, allowing for each tools’ inputs, outputs and options to be more easily recognized.</p>
 </div>
-<div id="passing-geospatial-and-tabular-data-between-r-and-saga-gis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#passing-geospatial-and-tabular-data-between-r-and-saga-gis" class="anchor"></a>Passing geospatial and tabular data between R and SAGA-GIS</h2>
+<div class="section level2">
+<h2 id="passing-geospatial-and-tabular-data-between-r-and-saga-gis">Passing geospatial and tabular data between R and SAGA-GIS<a class="anchor" aria-label="anchor" href="#passing-geospatial-and-tabular-data-between-r-and-saga-gis"></a>
+</h2>
 <p>Rsagacmd aims to facilitate a seamless interface to the open-source SAGA-GIS by providing access to all SAGA-GIS geoprocessing tools in a R-like manner. In addition to mapping R functions to execute SAGA-GIS tools, Rsagacmd automatically handles the passing of geospatial and tabular data contained from the R environment to SAGA-GIS.</p>
 <p>Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing operations. Therefore, all of the Rsagacmd tools allow paths to the input data to be used as arguments, if the data is stored in the appropriate file formats (GDAL-supported single-band rasters, OGR supported vector data, and comma- or tab-delimited text files for tabular data). In addition, Rsagacmd currently supports the following R object classes to pass data to SAGA-GIS, and to load the results back into the R environment:</p>
 <ul>
@@ -133,16 +153,16 @@
 </ul>
 <p>The results from tools that return multiple outputs are loaded into the R environment as a named list of the appropriate R object classes.</p>
 </div>
-<div id="notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis" class="anchor"></a>Notes on handing multi-band raster datasets by Rsagacmd and SAGA-GIS</h2>
+<div class="section level2">
+<h2 id="notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis">Notes on handing multi-band raster datasets by Rsagacmd and SAGA-GIS<a class="anchor" aria-label="anchor" href="#notes-on-handing-multi-band-raster-datasets-by-rsagacmd-and-saga-gis"></a>
+</h2>
 <p>SAGA-GIS does not handle multi-band rasters and native SAGA GIS Binary file format (.sgrd) supports only single band data. Therefore when passing raster data to most SAGA-GIS tools using Rsagacmd, the data should represent single raster bands, specified as either the path to the single raster band, or when using the R raster package, a RasterLayer (or less commonly a RasterStack or RasterBrick) object that contains on-the-fly a single layer. Subsetting of raster data is performed automatically by Rsagacmd in the case of when a single band from a RasterStack or RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either passing the filename of the raster to the SAGA-GIS command line, or by writing the data to a temporary file. However, a few SAGA-GIS functions will accept a list of single band rasters as an input. In this case if this data is in the form of a RasterStack or RasterLayer object, it is recommended to use the unstack function in the raster package, which will return a list of RasterLayer objects, and then Rsagacmd will handle the subsetting automatically.</p>
 </div>
-<div id="combining-saga-gis-tools-with-pipes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#combining-saga-gis-tools-with-pipes" class="anchor"></a>Combining SAGA-GIS tools with pipes</h2>
+<div class="section level2">
+<h2 id="combining-saga-gis-tools-with-pipes">Combining SAGA-GIS tools with pipes<a class="anchor" aria-label="anchor" href="#combining-saga-gis-tools-with-pipes"></a>
+</h2>
 <p>For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, and then loaded as the appropriate R object (RasterLayer, sf object, or a tibble).</p>
-<p>This means that Rsagacmd can be used with <code><a href="reference/%&gt;%.html">%&gt;%</a></code> to quickly chain together complex geoprocessing operations:</p>
+<p>This means that Rsagacmd can be used with <code>%&gt;%</code> to quickly chain together complex geoprocessing operations:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>saga <span class="ot">&lt;-</span> <span class="fu">saga_gis</span>()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random terrain and save to file</span></span>
@@ -185,35 +205,48 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=Rsagacmd">https://​cloud.r-project.org/​package=Rsagacmd</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=Rsagacmd" class="external-link">View on CRAN</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing Rsagacmd</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Steven Pawley <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Steven Pawley.</p>
+  <p></p>
+<p>Developed by Steven Pawley.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -221,6 +254,8 @@
 
   
 
+
+  
 
   </body>
 </html>

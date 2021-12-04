@@ -340,6 +340,9 @@ saga_configure <-
 #' @examples
 #' \dontrun{
 #' # Initialize a saga object
+#' library(Rsagacmd)
+#' library(raster)
+#' 
 #' saga <- saga_gis()
 #'
 #' # Alternatively initialize a saga object using file caching to handle large
@@ -359,9 +362,9 @@ saga_configure <-
 #'
 #' # Initialize a saga object but do not automatically save all results to
 #' # temporary files to load into R. Use this if you are explicitly saving each
-#' output because this will save disk space by not saving results from tools
-#' that output multiple results that you may be want to keep.
-#' saga <- saga_gis(.all_outputs = FALSE)
+#' # output because this will save disk space by not saving results from tools
+#' # that output multiple results that you may be want to keep.
+#' saga <- saga_gis(all_outputs = FALSE)
 #' }
 saga_gis <-
   function(saga_bin = NULL,
