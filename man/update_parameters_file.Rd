@@ -4,16 +4,17 @@
 \alias{update_parameters_file}
 \title{Updates a `parameters` object with file paths to the R data objects.}
 \usage{
-update_parameters_file(params, temp_path = NULL)
+update_parameters_file(params, temp_path = NULL, raster_format, vector_format)
 }
 \arguments{
 \item{temp_path}{A character specifying the tempdir to use for storage
 (optional).}
 
-\item{param}{A `parameters` object.}
+\item{raster_format}{file extension for raster formats}
 
-\item{all_outputs}{A logical indicating whether to use tempfiles for
-unspecified outputs.}
+\item{vector_format}{file extension for vector formats}
+
+\item{param}{A `parameters` object.}
 }
 \value{
 A `parameters` object with updated `file` attributes that refers to

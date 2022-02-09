@@ -3,10 +3,10 @@ testthat::test_that("Initiation of saga S3 class ", {
   testthat::skip_if(is.null(saga_search()))
 
   saga <- saga_gis()
-  
+
   # check that saga class was produced
   testthat::expect_true(!is.null(saga))
-  
+
   # check that saga contains libraries
   testthat::expect_gt(length(saga), 0)
 })
@@ -25,7 +25,7 @@ testthat::test_that("Initiation of saga S3 class using opt_lib ", {
 testthat::test_that("Test file caching ", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
-  
+
   saga_bin <- saga_search()
 
   saga_version <- Rsagacmd:::saga_version(saga_cmd = saga_bin)
@@ -36,12 +36,12 @@ testthat::test_that("Test file caching ", {
     output <- paste(
       "Cannot enable grid caching or change number cores for SAGA-GIS",
       "versions < 4.0.0. Please use a more recent version of SAGA-GIS"
-      )
-    
+    )
+
     testthat::expect_message(
-      saga_gis(grid_caching = TRUE, grid_cache_threshold = 20), 
-      output)
-    
+      saga_gis(grid_caching = TRUE, grid_cache_threshold = 20),
+      output
+    )
   } else {
 
     # check that saga S3 class can be initiated using file caching
@@ -50,15 +50,15 @@ testthat::test_that("Test file caching ", {
     cache_dir <- gsub("//", "/", cache_dir)
     cache_dir <- gsub("\\\\", "/", cache_dir)
     dir.create(cache_dir)
-    
+
     saga_fc <-
       saga_gis(
         grid_caching = TRUE,
         grid_cache_threshold = 0.001,
-        grid_cache_dir = cache_dir, 
+        grid_cache_dir = cache_dir,
         cores = 1
       )
-    
+
     testthat::expect_true(!is.null(saga_fc))
     testthat::expect_gt(length(saga_fc), 0)
 
@@ -72,9 +72,9 @@ testthat::test_that("Test file caching ", {
     config_char <- strsplit(config_char, "\n")[[1]]
     idx <- grep("GRID_CACHE_TMPDIR", config_char)
     config_cache_dir <- strsplit(config_char[idx], "=")[[1]][2]
-    
+
     testthat::expect_equal(shQuote(cache_dir), config_cache_dir)
-    
+
     # check that file caching is working by checking time for running a
     # process compared to not using file caching
     saga <- saga_gis()

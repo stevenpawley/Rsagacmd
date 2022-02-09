@@ -28,6 +28,9 @@ parse_options <- function(key, value) {
 #' @keywords internal
 run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   cmd <- saga_cmd
+  
+  # convert sdat extensions into sgrd for reading into saga
+  args <- gsub(".sdat$", ".sgrd", args)
 
   # add flag to load projections library
   flags <- "--flags=p"
@@ -40,8 +43,9 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   # create options:value character vector
   param_string <- mapply(parse_options, names(args), args, USE.NAMES = FALSE)
 
-  if (length(param_string) == 0)
+  if (length(param_string) == 0) {
     param_string <- NULL
+  }
 
   # execute command
   msg <- processx::run(

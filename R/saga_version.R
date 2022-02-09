@@ -9,7 +9,6 @@
 #'
 #' @export
 saga_version <- function(saga_cmd) {
-
   saga_vers <- system(paste(shQuote(saga_cmd), "--version"), intern = T)[1]
   saga_vers <- regmatches(
     x = saga_vers,

@@ -25,11 +25,9 @@ read_table <- function(x) {
   if (tools::file_ext(x$files) == "txt") {
     object <- utils::read.table(x$files, header = T, sep = "\t")
     object <- tibble::as_tibble(object)
-
   } else if (tools::file_ext(x$files) == "csv") {
     object <- utils::read.csv(x$files)
     object <- tibble::as_tibble(object)
-
   } else if (tools::file_ext(x$files) == "dbf") {
     object <- foreign::read.dbf(x$files)
     object <- tibble::as_tibble(object)
@@ -50,14 +48,17 @@ read_table <- function(x) {
 #'
 #' @keywords internal
 read_grid <- function(x, backend) {
-  if (backend == "raster")
+  if (backend == "raster") {
     object <- raster::raster(x$files)
+  }
 
-  if (backend == "terra")
+  if (backend == "terra") {
     object <- terra::rast(x$files)
+  }
 
-  if (backend == "stars")
+  if (backend == "stars") {
     object <- stars::read_stars(x$files)
+  }
 
   object
 }
@@ -76,20 +77,24 @@ read_grid <- function(x, backend) {
 read_grid_list <- function(x, backend) {
   x$files <- strsplit(x$files, ";")[[1]]
 
-  if (backend == "raster")
+  if (backend == "raster") {
     object <- lapply(x$files, raster::raster)
+  }
 
-  if (backend == "terra")
+  if (backend == "terra") {
     object <- lapply(x$files, terra::rast)
+  }
 
-  if (backend == "stars")
+  if (backend == "stars") {
     object <- lapply(x$files, stars::read_stars)
+  }
 
   names(object) <- paste(x$alias, seq_along(x$files), sep = "_")
 
   # unlist if grid list but just a single output
-  if (length(object) == 1)
+  if (length(object) == 1) {
     object <- object[[1]]
+  }
 
   object
 }
@@ -108,13 +113,11 @@ read_grid_list <- function(x, backend) {
 #'
 #' @keywords internal
 read_output <- function(output, backend, .intern, .all_outputs) {
-  output$files <- gsub(".sgrd", ".sdat", output$files)
-
+  output$files <- convert_sagaext_r(output$files)
+  
   if (.intern) {
     object <- tryCatch(expr = {
-
-      switch(
-        output$feature,
+      switch(output$feature,
         "Shape" = read_shapes(output),
         "Table" = read_table(output),
         "Grid" = read_grid(output, backend),
@@ -122,16 +125,17 @@ read_output <- function(output, backend, .intern, .all_outputs) {
         "Grid list" = read_grid_list(output, backend),
         "File path" = output$files
       )
-
     }, error = function(e) {
       if (.all_outputs) {
         message(
-          paste("No geoprocessing output for", output$alias,
-                ". Results may require other input parameters to be specified"))
+          paste(
+            "No geoprocessing output for", output$alias,
+            ". Results may require other input parameters to be specified"
+          )
+        )
       }
       return(NULL)
     })
-
   } else {
     object <- output$files
   }

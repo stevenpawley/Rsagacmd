@@ -84,15 +84,14 @@ search_tools <- function(x, pattern) {
 #' tiles <- tile_geoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
 #' }
 tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
-
   if (is.null(file_path)) {
     include_as_tempfiles <- TRUE
     file_path <-
       file.path(tempdir(), paste0("tiles", floor(stats::runif(1, 0, 1e6))))
 
-    if (!dir.exists(file_path))
+    if (!dir.exists(file_path)) {
       dir.create(file_path)
-
+    }
   } else {
     include_as_tempfiles <- FALSE
   }
@@ -110,19 +109,23 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
 
   tile_sdats <- list.files(file_path, pattern = "*.sdat$", full.names = TRUE)
 
-  if (include_as_tempfiles)
+  if (include_as_tempfiles) {
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, tile_sdats)
+  }
 
   senv <- environment(x[[1]][[1]])$senv
 
-  if (senv$backend == "raster")
+  if (senv$backend == "raster") {
     tiles <- sapply(tile_sdats, raster::raster)
+  }
 
-  if (senv$backend == "terra")
+  if (senv$backend == "terra") {
     tiles <- sapply(tile_sdats, terra::rast)
+  }
 
-  if (senv$backend == "stars")
+  if (senv$backend == "stars") {
     tiles <- sapply(tile_sdats, stars::read_stars)
+  }
 
   tiles
 }

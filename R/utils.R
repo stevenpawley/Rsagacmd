@@ -18,6 +18,6 @@
 #' @examples
 #' mrvbf_threshold(res = 10)
 mrvbf_threshold <- function(res) {
-  t_slope <- 116.57 * (res ** -0.62)
+  t_slope <- 116.57 * (res**-0.62)
   return(t_slope)
 }

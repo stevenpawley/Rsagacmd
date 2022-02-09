@@ -12,17 +12,13 @@
 create_tool_overrides <- function(tool_name, params) {
   if (tool_name == "export_geotiff" | tool_name == "export_raster") {
     params$file$io <- "Output"
-
   } else if (tool_name == "export_shapes" |
-             tool_name == "export_shapes_to_kml") {
+    tool_name == "export_shapes_to_kml") {
     params$file$io <- "Output"
-
   } else if (tool_name == "clip_grid_with_rectangle") {
     params$output$feature <- "Grid"
-
   } else if (tool_name == "tiling") {
     params$tiles_path$io <- "Output"
-
   } else if (tool_name == "tpi_based_landform_classification") {
     if (!"radius_a_min" %in% names(params)) {
       # rename radius_a to radius_a_min
@@ -50,7 +46,6 @@ create_tool_overrides <- function(tool_name, params) {
       params$radius_b_max$identifier <- "RADIUS_B_MAX"
       params$radius_b_max$default <- 1000
     }
-
   } else if (tool_name == "topographic_position_index_tpi") {
     if (!"radius_min" %in% names(params)) {
       # rename radius to radius min

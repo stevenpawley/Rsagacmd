@@ -9,8 +9,8 @@ save_object(x, ...)
 \arguments{
 \item{x}{An R object.}
 
-\item{...}{Other parameters such as the temporary directory to use for
-storage.}
+\item{...}{Other parameters such as the temporary directory or the
+vector/raster format used to write spatial datasets to file.}
 }
 \value{
 A character that specifies the file path to where the R object was

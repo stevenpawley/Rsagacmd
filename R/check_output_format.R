@@ -38,8 +38,6 @@ check_output_format <- function(x, raster_format, vector_format) {
 
       rlang::abort(msg)
     }
-
-
   } else if (x$feature == "Grid list") {
     files <- strsplit(x$files, ";")[[1]]
     ext <- sapply(files, function(f) get_file_ext(f))
@@ -49,13 +47,12 @@ check_output_format <- function(x, raster_format, vector_format) {
       msg <- paste(
         "`raster_format` is set to", quote_file_ext(raster_format),
         "but you specified an output with a",
-        quote_file_ext(incorrect_ext),  "file extension.",
+        quote_file_ext(incorrect_ext), "file extension.",
         "This will prevent Rsagacmd from loading the output",
-        "into your R environment")
+        "into your R environment"
+      )
       rlang::abort(msg)
     }
-
-
   } else if (x$feature == "Shape") {
     ext <- get_file_ext(x$files)
 
@@ -65,11 +62,10 @@ check_output_format <- function(x, raster_format, vector_format) {
         "but you specified an output with a", quote_file_ext(ext),
         "file extension.",
         "This will prevent Rsagacmd from loading the output",
-        "into your R environment")
+        "into your R environment"
+      )
       rlang::abort(msg)
     }
-
-
   } else if (x$feature == "Shapes list") {
     files <- strsplit(x$files, ";")[[1]]
     ext <- sapply(files, function(f) get_file_ext(f))
@@ -85,7 +81,20 @@ check_output_format <- function(x, raster_format, vector_format) {
       )
       rlang::abort(msg)
     }
-
   }
+}
 
+#' Ensure that the file extension for the SAGA raster format ends with .sdat
+#' for reading or writing SAGA grid objects in R.
+#' 
+#' This is used because the R raster/terra libraries expect to read and write
+#' SAGA grid formats using the '.sdat' file extension, not '.sgrd'.
+#'
+#' @param fp file path to raster writing
+#'
+#' @return
+#' @export
+#' @keywords internal
+convert_sagaext_r <- function(fp) {
+  return(gsub(".sgrd$", ".sdat", fp))
 }

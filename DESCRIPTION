@@ -43,7 +43,7 @@ Imports:
     generics,
     sf,
     raster,
-    terra,
+    terra (>= 1.5.12),
     stars,
     tools,
     utils,

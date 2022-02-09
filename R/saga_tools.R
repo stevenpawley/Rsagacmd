@@ -41,12 +41,13 @@ summarize_tool_params <- function(tool_obj) {
       constraints <- param$constraints[!is.na(param$constraints)]
 
       ifelse(length(constraints) > 0,
-             paste(constraints, collapse = "; "),
-             constraints)
+        paste(constraints, collapse = "; "),
+        constraints
+      )
     })
   )
 
-  df  
+  df
 }
 
 

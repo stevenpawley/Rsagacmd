@@ -5,7 +5,7 @@
 \title{Primary function to read data sets (raster, vector, tabular) that are output
 by saga_cmd}
 \usage{
-read_output(output, backend, .intern, .all_outputs)
+read_output(output, backend, raster_format, .intern, .all_outputs)
 }
 \arguments{
 \item{output}{list, a `options` object that was created by the `create_tool`

@@ -43,9 +43,9 @@ create_tool <- function(tool_information, tool_options, description) {
   # strip input, output and options lines from table
   # (rows in the table that represent headers/section breaks and have same value
   # like 'Input' filled across the row)
-  header_rows <- apply(tool_options, 1, function(row)
+  header_rows <- apply(tool_options, 1, function(row) {
     length(unique(unlist(row)))
-  )
+  })
   header_rows <- which(header_rows > 1)
   tool_options <- tool_options[header_rows, ]
 

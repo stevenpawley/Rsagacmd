@@ -13,8 +13,9 @@
 create_alias <- function(identifier) {
   alias <- identifier
 
-  if (grepl("^[[:digit:]]", identifier))
+  if (grepl("^[[:digit:]]", identifier)) {
     alias <- paste0("x", identifier)
+  }
 
   alias <- gsub(" ", "_", alias)
   alias <- tolower(alias)
@@ -56,12 +57,8 @@ parameters <- function(tool_options) {
       name = tool_options[tool_options$Identifier == identifier, ][["Name"]],
       alias = alias,
       identifier = identifier,
-      description = tool_options[
-        tool_options$Identifier == identifier, ][["Description"]
-      ],
-      constraints = tool_options[
-        tool_options$Identifier == identifier, ][["Constraints"]
-      ]
+      description = tool_options[tool_options$Identifier == identifier, ][["Description"]],
+      constraints = tool_options[tool_options$Identifier == identifier, ][["Constraints"]]
     )
   }
 
@@ -114,12 +111,14 @@ parameter <-
     )
 
     # strip empty values
-    for (key in names(param))
+    for (key in names(param)) {
       param[[key]] <- param[[key]][1]
+    }
 
     # generate syntactically-correct alias for identifier
-    if (grepl("^[[:digit:]]", identifier))
+    if (grepl("^[[:digit:]]", identifier)) {
       param$alias <- paste0("x", identifier)
+    }
 
     param$alias <- gsub(" ", "_", param$alias)
     param$alias <- tolower(param$alias)
@@ -160,11 +159,12 @@ parameter <-
       suppressWarnings(as.numeric(param$maximum))
 
     # convert constraints into lists
-    param$constraints <- 
+    param$constraints <-
       stringr::str_split(param$constraints, "Default: ")[[1]][1]
 
-    if (param$constraints == "")
+    if (param$constraints == "") {
       param$constraints <- NA_character_
+    }
 
     if (!is.na(param$constraints)) {
       param$constraints <-
@@ -178,56 +178,73 @@ parameter <-
     }
 
     # parse type into explicit `io` attribute
-    if (stringr::str_detect(param$type, "input"))
+    if (stringr::str_detect(param$type, "input")) {
       param$io <- "Input"
+    }
 
-    if (stringr::str_detect(param$type, "output"))
+    if (stringr::str_detect(param$type, "output")) {
       param$io <- "Output"
+    }
 
-    if (stringr::str_detect(param$type, "Grid"))
+    if (stringr::str_detect(param$type, "Grid")) {
       param$feature <- "Grid"
+    }
 
-    if (stringr::str_detect(param$type, "Grid list"))
+    if (stringr::str_detect(param$type, "Grid list")) {
       param$feature <- "Grid list"
+    }
 
-    if (stringr::str_detect(param$type, "Shapes"))
+    if (stringr::str_detect(param$type, "Shapes")) {
       param$feature <- "Shape"
+    }
 
-    if (stringr::str_detect(param$type, "Shapes list"))
+    if (stringr::str_detect(param$type, "Shapes list")) {
       param$feature <- "Shapes list"
+    }
 
-    if (stringr::str_detect(param$type, "Table"))
+    if (stringr::str_detect(param$type, "Table")) {
       param$feature <- "Table"
+    }
 
-    if (stringr::str_detect(param$type, "Static table"))
+    if (stringr::str_detect(param$type, "Static table")) {
       param$feature <- "Table"
+    }
 
-    if (stringr::str_detect(param$type, "Table list"))
+    if (stringr::str_detect(param$type, "Table list")) {
       param$feature <- "Table list"
+    }
 
-    if (stringr::str_detect(param$type, "File path"))
+    if (stringr::str_detect(param$type, "File path")) {
       param$feature <- "File path"
+    }
 
-    if (stringr::str_detect(param$type, "field"))
+    if (stringr::str_detect(param$type, "field")) {
       param$feature <- "Table field"
+    }
 
-    if (stringr::str_detect(param$type, "Integer"))
+    if (stringr::str_detect(param$type, "Integer")) {
       param$feature <- "Integer"
+    }
 
-    if (stringr::str_detect(param$type, "Choice"))
+    if (stringr::str_detect(param$type, "Choice")) {
       param$feature <- "Choice"
+    }
 
-    if (stringr::str_detect(param$type, "Floating point"))
+    if (stringr::str_detect(param$type, "Floating point")) {
       param$feature <- "numeric"
+    }
 
-    if (stringr::str_detect(param$type, "Boolean"))
+    if (stringr::str_detect(param$type, "Boolean")) {
       param$feature <- "logical"
+    }
 
-    if (stringr::str_detect(param$type, "Long text"))
+    if (stringr::str_detect(param$type, "Long text")) {
       param$feature <- "character"
+    }
 
-    if (stringr::str_detect(param$type, "Text"))
+    if (stringr::str_detect(param$type, "Text")) {
       param$feature <- "character"
+    }
 
     class(param) <- "parameter"
     param
@@ -238,28 +255,37 @@ parameter <-
 #' @param param A `parameter` object.
 #' @param temp_path A character specifying the tempdir to use for storage
 #'   (optional).
-#'
+#' @param raster_format name of raster format in `supported_raster_formats`
+#' @param vector_format file extension for vector formats in
+#'   `supported_vector_formats`
+#' 
 #' @return A `parameter` object with an updated `file` attribute that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
-update_parameter_file <- function(param, temp_path = NULL) {
-  if (!is.null(param$value)) {
-    # update the `files` attribute with the file path to the object
-    # in `parameter$value` attribute
-    param$files <- save_object(param$value, temp_path = temp_path)
-
-    # convert arguments that contain lists into semi-colon separated character
-    # strings for use with saga_cmd
-    param$files <- gsub(".sdat", ".sgrd", param$files)
+update_parameter_file <-
+  function(param,
+           temp_path = NULL,
+           raster_format,
+           vector_format) {
+    if (!is.null(param$value)) {
+      # update the `files` attribute with the file path to the object
+      # in `parameter$value` attribute
+      param$files <-
+        save_object(
+          param$value,
+          temp_path = temp_path,
+          raster_format = raster_format,
+          vector_format = vector_format
+        )
+    }
+    
+    # collapse lists into semi-colon separated string
+    if (length(param$files) > 1) {
+      param$files <- paste(param$files, collapse = ";")
+    }
+    
+    param
   }
-
-  # collapse lists into semi-colon separated string
-  if (length(param$files) > 1) {
-    param$files <- paste(param$files, collapse = ";")
-  }
-
-  param
-}
 
 
 #' Updates a `parameters` object with file paths to the R data objects.
@@ -267,17 +293,29 @@ update_parameter_file <- function(param, temp_path = NULL) {
 #' @param param A `parameters` object.
 #' @param temp_path A character specifying the tempdir to use for storage
 #'   (optional).
-#' @param all_outputs A logical indicating whether to use tempfiles for
-#'   unspecified outputs.
+#' @param raster_format file extension for raster formats
+#' @param vector_format file extension for vector formats
 #'
 #' @return A `parameters` object with updated `file` attributes that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
-update_parameters_file <- function(params, temp_path = NULL) {
-  # update the `file` attribute of each `parameter` object
-  params <- lapply(params, update_parameter_file, temp_path = temp_path)
-  params
-}
+update_parameters_file <-
+  function(params,
+           temp_path = NULL,
+           raster_format,
+           vector_format) {
+    # update the `file` attribute of each `parameter` object
+    params <-
+      lapply(
+        params,
+        update_parameter_file,
+        temp_path = temp_path,
+        raster_format = raster_format,
+        vector_format = vector_format
+      )
+    
+    return(params)
+  }
 
 
 #' Update a `parameters` object using temporary files for any unspecified output
@@ -297,7 +335,7 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format,
 
   parameter_outputs <-
     parameter_outputs[
-      sapply(parameter_outputs, function(param)param$io == "Output")
+      sapply(parameter_outputs, function(param) param$io == "Output")
     ]
 
   parameter_outputs <- names(parameter_outputs)
@@ -315,13 +353,11 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format,
           tmpdir = temp_path,
           fileext = raster_format
         )
-
       } else if (params[[n]]$feature %in% shape_features) {
         params[[n]]$files <- tempfile(
           tmpdir = temp_path,
           fileext = vector_format
         )
-
       } else if (params[[n]]$feature == table_features) {
         params[[n]]$files <- tempfile(tmpdir = temp_path, fileext = ".csv")
       }
