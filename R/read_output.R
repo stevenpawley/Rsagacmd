@@ -3,12 +3,25 @@
 #' @param x list, a `options` object that was created by the `create_tool`
 #'   function that contains the parameters for a particular tool and its
 #'   outputs.
+#' @param vector_backend character for vector backend to use.
 #'
 #' @return an `sf` object.
 #'
 #' @keywords internal
-read_shapes <- function(x) {
-  sf::st_read(x$files, quiet = TRUE)
+read_shapes <- function(x, vector_backend) {
+  if (vector_backend == "sf") {
+    result <- sf::st_read(x$files, quiet = TRUE)  
+  }
+  
+  if (vector_backend == "SpatVector") {
+    result <- terra::vect(x$files)
+  }
+  
+  if (vector_backend == "SpatVectorProxy") {
+    result <- terra::vect(x$files, proxy = TRUE)
+  }
+  
+  return(result)
 }
 
 
@@ -106,23 +119,26 @@ read_grid_list <- function(x, backend) {
 #' @param output list, a `options` object that was created by the `create_tool`
 #'   function that contains the parameters for a particular tool and its
 #'   outputs.
-#' @param backend character, either "raster" or "terra"
+#' @param raster_backend character, either "raster" or "terra"
+#' @param vector_backend character, either "sf", "SpatVector" or
+#'   "SpatVectorProxy"
 #' @param .intern logical, whether to load the output as an R object
 #'
 #' @return the loaded objects, or NULL is `.intern = FALSE`.
 #'
 #' @keywords internal
-read_output <- function(output, backend, .intern, .all_outputs) {
+read_output <- function(output, raster_backend, vector_backend, .intern,
+                        .all_outputs) {
   output$files <- convert_sagaext_r(output$files)
 
   if (.intern) {
     object <- tryCatch(expr = {
       switch(output$feature,
-        "Shape" = read_shapes(output),
+        "Shape" = read_shapes(output, vector_backend),
         "Table" = read_table(output),
-        "Grid" = read_grid(output, backend),
-        "Raster" = read_grid(output, backend),
-        "Grid list" = read_grid_list(output, backend),
+        "Grid" = read_grid(output, raster_backend),
+        "Raster" = read_grid(output, raster_backend),
+        "Grid list" = read_grid_list(output, raster_backend),
         "File path" = output$files
       )
     }, error = function(e) {

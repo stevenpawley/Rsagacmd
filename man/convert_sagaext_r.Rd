@@ -5,13 +5,10 @@
 \title{Ensure that the file extension for the SAGA raster format ends with .sdat
 for reading or writing SAGA grid objects in R.}
 \usage{
-convert_sagaext_r(fp, raster_format)
+convert_sagaext_r(fp)
 }
 \arguments{
 \item{fp}{file path to raster writing}
-
-\item{raster_format}{named character vector of the supported raster format,
-i.e. `raster_format = c(SAGA = ".sgrd")`}
 }
 \value{
 

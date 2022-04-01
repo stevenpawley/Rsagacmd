@@ -36,7 +36,8 @@ saga_execute <-
     saga_cmd <- senv$saga_cmd
     saga_config <- senv$saga_config
     temp_path <- senv$temp_path
-    backend <- senv$backend
+    raster_backend <- senv$raster_backend
+    vector_backend <- senv$vector_backend
     verbose <- senv$verbose
     intern <- senv$intern
     all_outputs <- senv$all_outputs
@@ -131,7 +132,8 @@ saga_execute <-
       lapply(
         tool_outputs,
         read_output,
-        backend = backend,
+        raster_backend = raster_backend,
+        vector_backend = vector_backend,
         .intern = intern,
         .all_outputs = all_outputs
       )

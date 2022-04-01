@@ -11,20 +11,28 @@
 #' @param opt_lib A character vector of a subset of SAGA-GIS tool libraries to
 #'   generate dynamic functions that map to each tool. Used to save time if you
 #'   only want to import a single library.
-#' @param backend A character vector to specify the library to use for handling
-#'   raster data. Currently, either "raster", "terra" or "stars" is supported.
-#'   The default is "raster".
+#' @param raster_backend A character vector to specify the library to use for
+#'   handling raster data. Currently, either "raster", "terra" or "stars" is
+#'   supported. The default is "raster".
+#' @param vector_backend A character to specify the library to use for handling
+#'   vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is
+#'   supported. The default is "sf".
 #'
 #' @return A saga environment S3 object containing paths, settings and a nested
 #'   list of libraries tools and options.
 saga_env <-
   function(saga_bin = NULL,
            opt_lib = NULL,
-           backend = "raster") {
-    if (!backend %in% c("raster", "terra", "stars")) {
-      rlang::abort("The `backend` must be one of 'raster', 'terra' or 'stars'")
+           raster_backend = "raster",
+           vector_backend = "sf") {
+    if (!raster_backend %in% c("raster", "terra", "stars")) {
+      rlang::abort("The `raster_backend` must be one of 'raster', 'terra' or 'stars'")
     }
-
+    
+    if (!vector_backend %in% c("sf", "SpatVector", "SpatVectorProxy")) {
+      rlang::abort("The `vector_backend` must be one of 'sf', 'SpatVector' or 'SpatVectorProxy'")
+    }
+    
     if (is.null(saga_bin)) {
       saga_bin <- saga_search()
     }
@@ -153,7 +161,8 @@ saga_env <-
       list(
         saga_cmd = saga_bin,
         saga_vers = saga_vers,
-        backend = backend,
+        raster_backend = raster_backend,
+        vector_backend = vector_backend,
         libraries = libraries
       )
     )
@@ -311,7 +320,17 @@ saga_configure <-
 #'   activated.
 #' @param backend A character vector to specify the library to use for handling
 #'   raster data. Currently, "raster", "terra" or "stars" is supported. The
-#'   default is "raster".
+#'   default is "raster". Will be deprecated in the future in favour of
+#'   `raster_backend`.
+#' @param raster_backend A character vector to specify the library to use for
+#'   handling raster data. Currently, "raster", "terra" or "stars" is supported.
+#'   The default is "raster".
+#' @param vector_backend A character to specify the library to use for handling
+#'   vector data. Currently, "sf", "SpatVector" or "SpatVectorProxy" is
+#'   supported. The default is "sf", however for large vector datasets, using
+#'   the "SpatVectorProxy" backend from the `terra` package has performance
+#'   advantages because it allows file-based which can reduce repeated
+#'   reading/writing when passing data between R and SAGA-GIS.
 #' @param raster_format A character to specify the default format used to save
 #'   raster data sets that are produced by SAGA-GIS. Available options are one
 #'   of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".
@@ -330,9 +349,9 @@ saga_configure <-
 #' @param intern A logical to indicate whether to load the SAGA-GIS
 #'   geoprocessing results as an R object, default = TRUE. For instance, if a
 #'   raster grid is output by SAGA-GIS then this will be loaded as either as
-#'   `RasterLayer` or `SpatRaster` object, depending on the `backend` setting
-#'   that is used. Vector data sets are always loaded as `sf` objects, and
-#'   tabular data sets are loaded as tibbles. The `intern` settings for the
+#'   `RasterLayer` or `SpatRaster` object, depending on the `raster_backend`
+#'   setting that is used. Vector data sets are always loaded as `sf` objects,
+#'   and tabular data sets are loaded as tibbles. The `intern` settings for the
 #'   `saga` object can be overridden for individual tools using the `.intern`
 #'   argument.
 #' @param opt_lib A character vector with the names of a subset of SAGA-GIS
@@ -387,6 +406,8 @@ saga_gis <-
            grid_cache_dir = NULL,
            cores = NULL,
            backend = "raster",
+           raster_backend = "raster",
+           vector_backend = "sf",
            raster_format = "SAGA",
            vector_format = c("ESRI Shapefile", "GeoPackage"),
            all_outputs = TRUE,
@@ -394,7 +415,12 @@ saga_gis <-
            opt_lib = NULL,
            temp_path = NULL,
            verbose = FALSE) {
-    senv <- saga_env(saga_bin, opt_lib, backend)
+    if (!missing(backend)) {
+      .Deprecated(new = "raster_backend", old = "backend")
+      raster_backend <- backend
+    }
+    
+    senv <- saga_env(saga_bin, opt_lib, raster_backend, vector_backend)
     senv$verbose <- verbose
     senv$all_outputs <- all_outputs
     senv$intern <- intern

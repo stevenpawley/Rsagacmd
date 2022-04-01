@@ -3,7 +3,7 @@ test_that("test terra backend", {
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("terra")
 
-  saga <- saga_gis(backend = "terra")
+  saga <- saga_gis(raster_backend = "terra")
 
   # test reading from file
   dem <- saga$grid_calculus$random_terrain()
@@ -31,7 +31,7 @@ test_that("test stars backend", {
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("stars")
 
-  saga <- saga_gis(backend = "stars")
+  saga <- saga_gis(raster_backend = "stars")
 
   # test reading output from stars
   dem <- saga$grid_calculus$random_terrain()
@@ -56,7 +56,7 @@ test_that("test raster backend, passing RasterLayers to saga_cmd", {
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("raster")
 
-  saga <- saga_gis(backend = "raster")
+  saga <- saga_gis(raster_backend = "raster")
 
   # test reading output from raster
   dem <- saga$grid_calculus$random_terrain()
@@ -84,7 +84,7 @@ test_that("test raster backend, passing layers from a RasterStack to saga_cmd", 
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("raster")
 
-  saga <- saga_gis(backend = "raster")
+  saga <- saga_gis(raster_backend = "raster")
 
   # create a RasterStack from on-disk files
   dem <- saga$grid_calculus$random_terrain()
@@ -125,7 +125,7 @@ test_that("test raster backend, passing layers from a RasterBrick to saga_cmd", 
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("raster")
 
-  saga <- saga_gis(backend = "raster")
+  saga <- saga_gis(raster_backend = "raster")
 
   # create a RasterBrick on-disk
   dem <- raster::raster(
@@ -167,7 +167,7 @@ test_that("test terra backend, passing layers from a SpatRaster to saga_cmd", {
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("terra")
 
-  saga <- saga_gis(backend = "terra")
+  saga <- saga_gis(raster_backend = "terra")
 
   # test selecting a single layer from a multiband SpatRaster (on disk)
   dem <- saga$grid_calculus$random_terrain()

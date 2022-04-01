@@ -48,6 +48,29 @@ save_object.sf <-
     return(temp)
   }
 
+#' @export
+#' @keywords internal
+save_object.SpatVector <-
+  function(x,
+           temp_path = tempdir(),
+           vector_format,
+           ...) {
+    temp <-
+      tempfile(tmpdir = temp_path, fileext = vector_format)
+    
+    pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
+    
+    terra::writeVector(x, filename = temp)
+    
+    return(temp)
+  }
+
+#' @export
+#' @keywords internal
+save_object.SpatVectorProxy <- function(x, ...) {
+  src <- x@ptr$v$source
+  return(src)
+}
 
 #' @export
 #' @keywords internal
@@ -94,7 +117,6 @@ save_object.RasterLayer <-
     return(x)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.SpatRaster <-
@@ -137,7 +159,6 @@ save_object.SpatRaster <-
     return(x)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.RasterStack <-
@@ -160,7 +181,6 @@ save_object.RasterStack <-
     return(x)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.RasterBrick <-
@@ -182,7 +202,6 @@ save_object.RasterBrick <-
 
     return(x)
   }
-
 
 #' @export
 #' @keywords internal
@@ -207,7 +226,6 @@ save_object.stars <-
     return(fp)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.data.frame <- function(x, temp_path = tempdir(), ...) {
@@ -217,7 +235,6 @@ save_object.data.frame <- function(x, temp_path = tempdir(), ...) {
 
   return(temp)
 }
-
 
 spatial_to_saga <-
   function(x,
@@ -230,7 +247,6 @@ spatial_to_saga <-
     return(temp)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.SpatialPointsDataFrame <-
@@ -240,7 +256,6 @@ save_object.SpatialPointsDataFrame <-
            ...) {
     spatial_to_saga(x, temp_path, vector_format = vector_format)
   }
-
 
 #' @export
 #' @keywords internal
@@ -252,7 +267,6 @@ save_object.SpatialLinesDataFrame <-
     spatial_to_saga(x, temp_path, vector_format = vector_format)
   }
 
-
 #' @export
 #' @keywords internal
 save_object.SpatialPolygonsDataFrame <-
@@ -262,7 +276,6 @@ save_object.SpatialPolygonsDataFrame <-
            ...) {
     spatial_to_saga(x, temp_path, vector_format = vector_format)
   }
-
 
 #' @export
 #' @keywords internal

@@ -4,12 +4,14 @@
 \alias{read_shapes}
 \title{Read a spatial vector data set that is output by saga_cmd}
 \usage{
-read_shapes(x)
+read_shapes(x, vector_backend)
 }
 \arguments{
 \item{x}{list, a `options` object that was created by the `create_tool`
 function that contains the parameters for a particular tool and its
 outputs.}
+
+\item{vector_backend}{character for vector backend to use.}
 }
 \value{
 an `sf` object.

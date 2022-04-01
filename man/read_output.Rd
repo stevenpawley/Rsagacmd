@@ -5,14 +5,17 @@
 \title{Primary function to read data sets (raster, vector, tabular) that are output
 by saga_cmd}
 \usage{
-read_output(output, backend, raster_format, .intern, .all_outputs)
+read_output(output, raster_backend, vector_backend, .intern, .all_outputs)
 }
 \arguments{
 \item{output}{list, a `options` object that was created by the `create_tool`
 function that contains the parameters for a particular tool and its
 outputs.}
 
-\item{backend}{character, either "raster" or "terra"}
+\item{raster_backend}{character, either "raster" or "terra"}
+
+\item{vector_backend}{character, either "sf", "SpatVector" or
+"SpatVectorProxy"}
 
 \item{.intern}{logical, whether to load the output as an R object}
 }

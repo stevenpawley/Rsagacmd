@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">update_parameters_file</span><span class="op">(</span><span class="va">params</span>, temp_path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">update_parameters_file</span><span class="op">(</span><span class="va">params</span>, temp_path <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">raster_format</span>, <span class="va">vector_format</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -55,11 +55,12 @@
     <dl><dt>temp_path</dt>
 <dd><p>A character specifying the tempdir to use for storage
 (optional).</p></dd>
+<dt>raster_format</dt>
+<dd><p>file extension for raster formats</p></dd>
+<dt>vector_format</dt>
+<dd><p>file extension for vector formats</p></dd>
 <dt>param</dt>
 <dd><p>A `parameters` object.</p></dd>
-<dt>all_outputs</dt>
-<dd><p>A logical indicating whether to use tempfiles for
-unspecified outputs.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -79,7 +80,8 @@ unspecified outputs.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer></div>
