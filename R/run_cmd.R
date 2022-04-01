@@ -28,7 +28,7 @@ parse_options <- function(key, value) {
 #' @keywords internal
 run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   cmd <- saga_cmd
-  
+
   # convert sdat extensions into sgrd for reading into saga
   args <- gsub(".sdat$", ".sgrd", args)
 

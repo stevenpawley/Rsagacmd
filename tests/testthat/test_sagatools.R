@@ -47,11 +47,11 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       formula = gsub("z", dem_mean, "ifelse(g1>z, 1, 0)"),
       result = tempfile(fileext = ".sgrd")
     )
-  
+
   vers <- saga_version(saga_search())
   fileext <- ifelse(vers < 7.0, ".shp", ".gpkg")
   tempfile <- tempfile(fileext = fileext)
-  
+
   shapes <-
     saga$shapes_grid$vectorising_grid_classes(
       grid = categories,

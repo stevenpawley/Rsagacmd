@@ -114,7 +114,7 @@ read_grid_list <- function(x, backend) {
 #' @keywords internal
 read_output <- function(output, backend, .intern, .all_outputs) {
   output$files <- convert_sagaext_r(output$files)
-  
+
   if (.intern) {
     object <- tryCatch(expr = {
       switch(output$feature,

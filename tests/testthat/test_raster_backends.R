@@ -166,9 +166,9 @@ test_that("test terra backend, passing layers from a SpatRaster to saga_cmd", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(saga_search()))
   testthat::skip_if_not_installed("terra")
-  
+
   saga <- saga_gis(backend = "terra")
-  
+
   # test selecting a single layer from a multiband SpatRaster (on disk)
   dem <- saga$grid_calculus$random_terrain()
   multilayer <- c(dem, dem)
@@ -176,13 +176,13 @@ test_that("test terra backend, passing layers from a SpatRaster to saga_cmd", {
   multilayer_file <- terra::writeRaster(multilayer, temp)
   result <- saga$ta_morphometry$terrain_ruggedness_index_tri(multilayer_file[[1]])
   testthat::expect_s4_class(result, "SpatRaster")
-  
+
   # test selected multiple layers from a multiband SpatRaster on disk (expect failure)
   testthat::expect_error(
     saga$ta_morphometry$terrain_ruggedness_index_tri(multilayer_file),
     regexp = "SpatRaster object contains multiple layers. SAGA-GIS requires single-layer rasters as inputs"
   )
-  
+
   # test selecting a single layer from singlelayer SpatRaster (in memory)
   dem <- terra::rast(
     ncol = 36, nrow = 18, xmin = -1000, xmax = 1000,
@@ -197,7 +197,7 @@ test_that("test terra backend, passing layers from a SpatRaster to saga_cmd", {
   dem_multi <- c(dem, dem)
   result <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem_multi[[1]])
   testthat::expect_s4_class(result, "SpatRaster")
-  
+
   # test selecting multiple layers from a multilayer SpatRaster in-memory (expect failure)
   testthat::expect_error(
     saga$ta_morphometry$terrain_ruggedness_index_tri(dem_multi),

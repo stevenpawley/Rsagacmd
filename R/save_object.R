@@ -40,11 +40,11 @@ save_object.sf <-
            ...) {
     temp <-
       tempfile(tmpdir = temp_path, fileext = vector_format)
-    
+
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
-    
+
     sf::st_write(obj = x, dsn = temp, quiet = TRUE)
-    
+
     return(temp)
   }
 
@@ -58,17 +58,16 @@ save_object.RasterLayer <-
            ...) {
     # pass file name to saga if RasterLayer from single band raster
     if (raster::nbands(x) == 1 &
-        raster::inMemory(x) == FALSE &
-        tools::file_ext(raster::filename(x)) != "grd") {
+      raster::inMemory(x) == FALSE &
+      tools::file_ext(raster::filename(x)) != "grd") {
       x <- raster::filename(x)
-      
+
       # else save band as a single band temporary file and pass temp file name
     } else if (raster::nbands(x) != 1 |
-               raster::inMemory(x) == TRUE |
-               tools::file_ext(raster::filename(x)) == "grd") {
+      raster::inMemory(x) == TRUE |
+      tools::file_ext(raster::filename(x)) == "grd") {
       dtype <- raster::dataType(x)
-      nodataval <- switch(
-        dtype,
+      nodataval <- switch(dtype,
         LOG1S = 0,
         INT1S = -127,
         INT1U = 0,
@@ -79,18 +78,19 @@ save_object.RasterLayer <-
         FLT4S = -99999,
         FLT8S = -99999
       )
-      
+
       temp <- tempfile(tmpdir = temp_path, fileext = raster_format)
       temp <- convert_sagaext_r(temp)
       raster::NAvalue(x) <- nodataval
       raster::writeRaster(x,
-                          filename = temp,
-                          datatype = dtype,
-                          NAflag = nodataval)
+        filename = temp,
+        datatype = dtype,
+        NAflag = nodataval
+      )
       pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
       x <- temp
     }
-    
+
     return(x)
   }
 
@@ -104,7 +104,7 @@ save_object.SpatRaster <-
            ...) {
     # get data source of SpatRaster object
     source_tbl <- terra::sources(x, nlyr = TRUE, bands = TRUE)
-    
+
     # check if the SpatRaster contains multiple layers
     if (any(source_tbl$nlyr > 1) | nrow(source_tbl) > 1) {
       rlang::abort(
@@ -114,7 +114,7 @@ save_object.SpatRaster <-
 
     # check if SpatRaster is in-memory
     in_memory <- terra::inMemory(x)
-    
+
     if (!in_memory) {
       # check if the SpatRaster represents a single layer within a multilayer file
       n_bands <- terra::nlyr(terra::rast(source_tbl$source[[1]]))
@@ -122,7 +122,7 @@ save_object.SpatRaster <-
     } else {
       part_of_multiband <- terra::nlyr(x) > 1
     }
-    
+
     # single-band raster on disk -> filename -> saga
     if (!part_of_multiband & !in_memory) {
       x <- source_tbl$source[[1]]
@@ -133,7 +133,7 @@ save_object.SpatRaster <-
       pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
       x <- temp
     }
-    
+
     return(x)
   }
 
@@ -156,7 +156,7 @@ save_object.RasterStack <-
         )
       )
     }
-    
+
     return(x)
   }
 
@@ -179,7 +179,7 @@ save_object.RasterBrick <-
         )
       )
     }
-    
+
     return(x)
   }
 
@@ -199,11 +199,11 @@ save_object.stars <-
         )
       )
     }
-    
+
     fp <- tempfile(tmpdir = temp_path, fileext = raster_format)
     fp <- convert_sagaext_r(fp)
     stars::write_stars(x, fp)
-    
+
     return(fp)
   }
 
@@ -214,7 +214,7 @@ save_object.data.frame <- function(x, temp_path = tempdir(), ...) {
   temp <- tempfile(tmpdir = temp_path, fileext = ".txt")
   pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
   utils::write.table(x = x, file = temp, sep = "\t")
-  
+
   return(temp)
 }
 
@@ -226,7 +226,7 @@ spatial_to_saga <-
     temp <- tempfile(tmpdir = temp_path, fileext = vector_format)
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
     rgdal::writeOGR(obj = x, dsn = temp, layer = 1)
-    
+
     return(temp)
   }
 

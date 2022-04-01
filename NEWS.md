@@ -1,3 +1,14 @@
+# Rsagacmd 0.2
+
+New features:
+
+- Support for SpatVector and SpatVectorProxy proxy objects for vector spatial
+datasets.
+
+Changes:
+
+ - Bug fix for using the `terra` package as a raster backend.
+
 # Rsagacmd 0.1.2
 
 New features:

@@ -258,7 +258,7 @@ parameter <-
 #' @param raster_format name of raster format in `supported_raster_formats`
 #' @param vector_format file extension for vector formats in
 #'   `supported_vector_formats`
-#' 
+#'
 #' @return A `parameter` object with an updated `file` attribute that refers to
 #'   the on-disk file for saga_cmd to access.
 #' @keywords internal
@@ -278,12 +278,12 @@ update_parameter_file <-
           vector_format = vector_format
         )
     }
-    
+
     # collapse lists into semi-colon separated string
     if (length(param$files) > 1) {
       param$files <- paste(param$files, collapse = ";")
     }
-    
+
     param
   }
 
@@ -313,7 +313,7 @@ update_parameters_file <-
         raster_format = raster_format,
         vector_format = vector_format
       )
-    
+
     return(params)
   }
 

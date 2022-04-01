@@ -1,8 +1,8 @@
 Package: Rsagacmd
 Type: Package
 Title: Linking R with the Open-Source 'SAGA-GIS' Software
-Version: 0.1.2
-Date: 2021-12-03
+Version: 0.2.0
+Date: 2022-01-04
 Authors@R: c(
     person("Steven", "Pawley",
     email = "dr.stevenpawley@gmail.com",
@@ -43,7 +43,7 @@ Imports:
     generics,
     sf,
     raster,
-    terra (>= 1.5.12),
+    terra (>= 1.5.24),
     stars,
     tools,
     utils,
