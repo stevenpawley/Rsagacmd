@@ -27,5 +27,16 @@ testthat::test_that("test grid list output when output files explicitly named", 
   
   testthat::expect_length(result, 3)
   testthat::expect_named(result, c("pca_1", "pca_2", "pca_3"))
+  
+  # test that error is caught for list-like outputs that cannot be guessed
+  # by Rsagacmd
+  testthat::expect_error(
+    saga$statistics_grid$focal_pca_on_a_grid(
+      grid = dem, 
+      components = 3,
+      .all_outputs = TRUE
+    ),
+    regexp = "Rsagacmd cannot currently guess the output types"
+  )
 })
   

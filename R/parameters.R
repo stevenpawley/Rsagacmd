@@ -340,9 +340,10 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format,
 
   parameter_outputs <- names(parameter_outputs)
 
-  grid_features <- c("Grid", "Grid list", "Raster")
-  shape_features <- c("Shape", "Shapes list")
+  grid_features <- c("Grid", "Raster")
+  shape_features <- c("Shape")
   table_features <- "Table"
+  cannot_handle_features <- c("Grid list", "Shapes list")
 
   for (n in parameter_outputs) {
     if (params[[n]]$io == "Output" & is.null(params[[n]]$files)) {
@@ -360,6 +361,13 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format,
         )
       } else if (params[[n]]$feature == table_features) {
         params[[n]]$files <- tempfile(tmpdir = temp_path, fileext = ".csv")
+      } else {
+        rlang::abort(
+          paste(
+            "Rsagacmd cannot currently guess the output types or number of outputs.",
+            "Please explicitly provide file paths or lists of file paths to the tool's output arguments"
+          )
+        )
       }
 
       params[[n]]$value <- params[[n]]$files
