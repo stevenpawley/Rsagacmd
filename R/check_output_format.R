@@ -96,5 +96,5 @@ check_output_format <- function(x, raster_format, vector_format) {
 #' @export
 #' @keywords internal
 convert_sagaext_r <- function(fp) {
-  return(gsub(".sgrd$", ".sdat", fp))
+  return(gsub(".sgrd", ".sdat", fp))
 }
