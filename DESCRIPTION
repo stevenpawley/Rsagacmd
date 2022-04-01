@@ -59,3 +59,5 @@ Suggests:
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
+URL: https://stevenpawley.github.io/Rsagacmd/
+BugReports: https://github.com/stevenpawley/Rsagacmd/issues
