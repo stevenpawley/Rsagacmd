@@ -57,7 +57,7 @@ will also be accessible via **Rsagacmd**.
 **Rsagacmd** is now available on CRAN. To install this version run:
 
 ```r
-install.packages("**Rsagacmd**")
+install.packages("Rsagacmd")
 ```
 
 In your R session.
@@ -85,7 +85,7 @@ structure as what is accessible within the GIS software itself. Each
 tool is nested within its respective library and can be accessed by:
 
 ```r
-library(**Rsagacmd**)
+library(Rsagacmd)
 
 # initiate a saga object
 saga <- saga_gis()
