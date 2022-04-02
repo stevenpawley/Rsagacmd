@@ -141,7 +141,7 @@ tidy.saga_tool <- function(x, ...) {
 #' # Initialize a saga object
 #' saga <- saga_gis()
 #'
-#' # tidy the tools parameters into a tibble
+#' # tidy the saga object's parameters into a tibble
 #' tidy(saga)
 #' }
 tidy.saga <- function(x, ...) {
@@ -151,7 +151,7 @@ tidy.saga <- function(x, ...) {
     env$senv$libraries,
     function(lib) {
       desc <- attr(lib, "description")
-      if (is.null(desc)) desc <- NA
+      if (is.null(desc)) desc <- NA_character_
       desc
     })
   
@@ -159,5 +159,48 @@ tidy.saga <- function(x, ...) {
     libraries = names(x),
     description = unlist(lib_descriptions),
     n_tools = sapply(x, length)
+  )
+}
+
+
+#' Summarize the tools that are available within a saga library and
+#' return these as a tibble.
+#'
+#' @param x a `saga_library` object
+#' @param ... additional arguments. Currently unused.
+#'
+#' @return a tibble that describes the tools and their descriptions within a
+#'   particular SAGA-GIS library.
+#' @importFrom generics tidy
+#' @export
+#' @exportS3Method tidy saga_library
+#'
+#' @examples
+#' \dontrun{
+#' # Initialize a saga object
+#' saga <- saga_gis()
+#'
+#' # tidy the library's parameters into a tibble
+#' tidy(saga$climate_tools)
+#' }
+tidy.saga_library <- function(x, ...) {
+  tool_descriptions <- sapply(x, function(tool) {
+    tool_obj <- extract_tool(tool)
+    lib <- attr(x, "lib")
+    tool <- attr(x, "tool")
+    tool_obj[["description"]]
+  })
+  
+  tool_authors <- sapply(x, function(tool) {
+    tool_obj <- extract_tool(tool)
+    lib <- attr(x, "lib")
+    tool <- attr(x, "tool")
+    tool_obj[["author"]]
+  })
+  
+  tibble::tibble(
+    tools = names(x),
+    description = tool_descriptions,
+    author = tool_authors
   )
 }

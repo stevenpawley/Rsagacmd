@@ -5,6 +5,9 @@ New features:
 - Support for SpatVector and SpatVectorProxy proxy objects for vector spatial
 datasets.
 
+- tidy methods to summarize information about the SAGA-GIS libraries and tools
+within any library and return these as a tibble.
+
 Changes:
 
  - Bug fix for using the `terra` package as a raster backend.

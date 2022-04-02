@@ -25,7 +25,7 @@ return these as a tibble.
 # Initialize a saga object
 saga <- saga_gis()
 
-# tidy the tools parameters into a tibble
+# tidy the saga object's parameters into a tibble
 tidy(saga)
 }
 }

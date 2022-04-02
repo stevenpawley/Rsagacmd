@@ -568,6 +568,7 @@ saga_gis <-
               append(tool_libraries[[lib]], func)
             toolnames <- append(toolnames, tool)
             names(tool_libraries[[lib]]) <- toolnames
+            class(tool_libraries[[lib]]) <- "saga_library"
           },
           error = function(e) {
             warning(
