@@ -2,8 +2,8 @@
 % Please edit documentation in R/file-extensions.R
 \name{convert_sagaext_r}
 \alias{convert_sagaext_r}
-\title{Ensure that the file extension for the SAGA raster format ends with .sdat
-for reading or writing SAGA grid objects in R.}
+\title{Ensure that the file extension for the SAGA raster format ends with .sdat for
+reading or writing SAGA grid objects in R.}
 \usage{
 convert_sagaext_r(fp)
 }
@@ -11,7 +11,8 @@ convert_sagaext_r(fp)
 \item{fp}{file path to raster writing}
 }
 \value{
-
+a character vector with the corrected file extensions to read SAGA
+  sgrd files back into R.
 }
 \description{
 This is used because the R raster/terra libraries expect to read and write

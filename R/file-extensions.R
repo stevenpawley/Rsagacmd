@@ -84,15 +84,16 @@ check_output_format <- function(x, raster_format, vector_format) {
   }
 }
 
-#' Ensure that the file extension for the SAGA raster format ends with .sdat
-#' for reading or writing SAGA grid objects in R.
+#' Ensure that the file extension for the SAGA raster format ends with .sdat for
+#' reading or writing SAGA grid objects in R.
 #'
 #' This is used because the R raster/terra libraries expect to read and write
 #' SAGA grid formats using the '.sdat' file extension, not '.sgrd'.
 #'
 #' @param fp file path to raster writing
 #'
-#' @return
+#' @return a character vector with the corrected file extensions to read SAGA
+#'   sgrd files back into R.
 #' @export
 #' @keywords internal
 convert_sagaext_r <- function(fp) {
