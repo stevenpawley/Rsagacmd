@@ -15,7 +15,6 @@
 #'
 #' @keywords internal
 create_tool <- function(tool_information, tool_options, description) {
-
   # get the command to execute the saga_cmd tool
   saga_tool_cmd <- tool_information[[2]][1]
   author <- tool_information[[2]][2]
