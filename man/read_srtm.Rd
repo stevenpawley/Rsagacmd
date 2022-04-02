@@ -20,5 +20,9 @@ To access the data, use the convenience function of `read_srtm()` to load
 the data as a `terra::SpatRaster` object.
 }
 \examples{
-read_srtm()
+library(Rsagacmd)
+library(terra)
+
+dem <- read_srtm()
+plot(dem)
 }

@@ -13,7 +13,11 @@
 #'
 #' @export
 #' @examples
-#' read_srtm()
+#' library(Rsagacmd)
+#' library(terra)
+#' 
+#' dem <- read_srtm()
+#' plot(dem)
 read_srtm <- function() {
   terra::rast(system.file("extdata/srtm.tif", package = "Rsagacmd"))
 }
