@@ -83,15 +83,15 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
   
   senv <- environment(x[[1]][[1]])$senv
   
-  if (senv$backend == "raster") {
+  if (senv$raster_backend == "raster") {
     tiles <- sapply(tile_sdats, raster::raster)
   }
   
-  if (senv$backend == "terra") {
+  if (senv$raster_backend == "terra") {
     tiles <- sapply(tile_sdats, terra::rast)
   }
   
-  if (senv$backend == "stars") {
+  if (senv$raster_backend == "stars") {
     tiles <- sapply(tile_sdats, stars::read_stars)
   }
   

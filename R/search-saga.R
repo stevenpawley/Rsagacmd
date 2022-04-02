@@ -10,7 +10,7 @@
 #' @return The path to installed saga_cmd binary.
 #'
 #' @export
-saga_search <- function() {
+search_saga <- function() {
   # check to see if saga_cmd is recognized (i.e. has been added to path)
   saga_cmd <- if (nchar(Sys.which(names = "saga_cmd")) > 0) "saga_cmd" else NULL
 

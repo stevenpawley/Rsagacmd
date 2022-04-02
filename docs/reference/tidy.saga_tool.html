@@ -78,13 +78,32 @@ return these as a tibble.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \dontrun{</span></span>
 <span class="r-in"><span class="co"># Initialize a saga object</span></span>
 <span class="r-in"><span class="va">saga</span> <span class="op">&lt;-</span> <span class="fu"><a href="saga_gis.html">saga_gis</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># tidy the tools parameters into a tibble</span></span>
 <span class="r-in"><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="va">slope_aspect_curvature</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    parameter        type  argument identifier description default available_opts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Elevation        Grid… elevati… ELEVATION  <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Slope            Grid… slope    SLOPE      <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Aspect           Grid… aspect   ASPECT     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> General Curvatu… Grid… c_gene   C_GENE     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Profile Curvatu… Grid… c_prof   C_PROF     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Plan Curvature   Grid… c_plan   C_PLAN     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Tangential Curv… Grid… c_tang   C_TANG     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Longitudinal Cu… Grid… c_long   C_LONG     Zevenberge…      <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Cross-Sectional… Grid… c_cros   C_CROS     Zevenberge…      <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Minimal Curvatu… Grid… c_mini   C_MINI     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Maximal Curvatu… Grid… c_maxi   C_MAXI     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Total Curvature  Grid… c_tota   C_TOTA     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> Flow Line Curva… Grid… c_roto   C_ROTO     <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> Method           Choi… method   METHOD     <span style="color: #BB0000;">NA</span>                6 [0] maximum s…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> Unit             Choi… unit_sl… UNIT_SLOPE <span style="color: #BB0000;">NA</span>                0 [0] radians; …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> Unit             Choi… unit_as… UNIT_ASPE… <span style="color: #BB0000;">NA</span>                0 [0] radians; …</span>
+<span class="r-in"><span class="co"># }</span></span>
 </code></pre></div>
     </div>
   </div>

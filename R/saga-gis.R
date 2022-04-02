@@ -34,7 +34,7 @@ saga_env <-
     }
     
     if (is.null(saga_bin)) {
-      saga_bin <- saga_search()
+      saga_bin <- search_saga()
     }
 
     if (nchar(Sys.which(names = saga_bin)) == 0) {
