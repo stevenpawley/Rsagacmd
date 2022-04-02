@@ -36,7 +36,7 @@ testthat::test_that("test grid list output when output files explicitly named", 
       components = 3,
       .all_outputs = TRUE
     ),
-    regexp = "Rsagacmd cannot currently guess the output types"
+    regexp = "Rsagacmd cannot determine the number of results for list-like outputs"
   )
 })
   
