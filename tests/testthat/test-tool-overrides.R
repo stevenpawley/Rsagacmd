@@ -1,6 +1,6 @@
 test_that("test create tool overrides export_geotiff", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis(backend = "raster")
 
@@ -18,7 +18,7 @@ test_that("test create tool overrides export_geotiff", {
 
 test_that("test create tool overrides export_shapes", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis(backend = "raster")
 
@@ -37,7 +37,7 @@ test_that("test create tool overrides export_shapes", {
 
 test_that("test create tool overrides tpi_based_landform_classification", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis(backend = "raster")
 
@@ -57,7 +57,7 @@ test_that("test create tool overrides tpi_based_landform_classification", {
 
 test_that("test create tool overrides topographic_position_index_tpi", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis(backend = "raster")
 

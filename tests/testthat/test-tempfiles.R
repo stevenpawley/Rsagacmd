@@ -1,6 +1,6 @@
 test_that("temporary file usage with all_outputs = TRUE", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   # all_outputs = TRUE
   # output should be added to saga tempfile list
@@ -19,7 +19,7 @@ test_that("temporary file usage with all_outputs = TRUE", {
 
 test_that("temporary file usage with all_outputs = FALSE", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   # outputs are not added to tempfiles
   saga <- saga_gis(all_outputs = FALSE)

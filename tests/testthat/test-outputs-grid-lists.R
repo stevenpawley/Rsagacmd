@@ -1,6 +1,6 @@
 testthat::test_that("test grid list output when output files explicitly named", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   
   saga <- saga_gis(all_outputs = FALSE)
   

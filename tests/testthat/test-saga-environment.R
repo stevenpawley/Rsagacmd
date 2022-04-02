@@ -1,6 +1,6 @@
 testthat::test_that("Initiation of saga S3 class ", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis()
 
@@ -14,7 +14,7 @@ testthat::test_that("Initiation of saga S3 class ", {
 
 testthat::test_that("Initiation of saga S3 class using opt_lib ", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga1 <- saga_gis(opt_lib = "climate_tools")
   testthat::expect_true(!is.null(saga1))
@@ -24,9 +24,9 @@ testthat::test_that("Initiation of saga S3 class using opt_lib ", {
 
 testthat::test_that("Test file caching ", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
-  saga_bin <- saga_search()
+  saga_bin <- search_saga()
 
   saga_version <- Rsagacmd:::saga_version(saga_cmd = saga_bin)
 

@@ -1,6 +1,6 @@
 test_that("test terra backend", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("terra")
 
   saga <- saga_gis(raster_backend = "terra")
@@ -28,7 +28,7 @@ test_that("test terra backend", {
 
 test_that("test stars backend", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("stars")
 
   saga <- saga_gis(raster_backend = "stars")
@@ -53,7 +53,7 @@ test_that("test stars backend", {
 
 test_that("test raster backend, passing RasterLayers to saga_cmd", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("raster")
 
   saga <- saga_gis(raster_backend = "raster")
@@ -81,7 +81,7 @@ test_that("test raster backend, passing RasterLayers to saga_cmd", {
 
 test_that("test raster backend, passing layers from a RasterStack to saga_cmd", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("raster")
 
   saga <- saga_gis(raster_backend = "raster")
@@ -122,7 +122,7 @@ test_that("test raster backend, passing layers from a RasterStack to saga_cmd", 
 
 test_that("test raster backend, passing layers from a RasterBrick to saga_cmd", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("raster")
 
   saga <- saga_gis(raster_backend = "raster")
@@ -164,7 +164,7 @@ test_that("test raster backend, passing layers from a RasterBrick to saga_cmd", 
 
 test_that("test terra backend, passing layers from a SpatRaster to saga_cmd", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("terra")
 
   saga <- saga_gis(raster_backend = "terra")

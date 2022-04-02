@@ -1,6 +1,6 @@
 test_that("test SpatVector backend", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("terra")
   
   saga <- saga_gis(vector_backend = "SpatVector")
@@ -16,7 +16,7 @@ test_that("test SpatVector backend", {
 
 test_that("test SpatVectorProxy backend", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
   testthat::skip_if_not_installed("terra")
   
   saga <- saga_gis(vector_backend = "SpatVectorProxy", )

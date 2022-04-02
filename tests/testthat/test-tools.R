@@ -1,6 +1,6 @@
 testthat::test_that("basic SAGA-GIS tool usage ", {
   testthat::skip_on_cran()
-  testthat::skip_if(is.null(saga_search()))
+  testthat::skip_if(is.null(search_saga()))
 
   saga <- saga_gis(all_outputs = FALSE)
 
@@ -48,7 +48,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       result = tempfile(fileext = ".sgrd")
     )
 
-  vers <- saga_version(saga_search())
+  vers <- saga_version(search_saga())
   fileext <- ifelse(vers < 7.0, ".shp", ".gpkg")
   tempfile <- tempfile(fileext = fileext)
 
