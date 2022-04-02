@@ -78,20 +78,38 @@ saga_env <-
 
       # get module names from file and remove from parameter list
       tool_names_file <- tool_files[which.min(nchar(tool_files))]
+      
+      # get library description
+      lib_html <- rvest::read_html(paste(libdir, tool_names_file, sep = "/"))
+      
+      lib_description_html <- rvest::html_elements(
+        lib_html,
+        xpath = "/html/body/text()"
+      )
+      lib_description <- paste(
+        rvest::html_text2(lib_description_html),
+        collapse = " "
+      )
+      lib_description <- stringr::str_to_sentence(lib_description)
+      
+      # remove library description html from the tool html files
       tool_files <- tool_files[tool_files != tool_names_file]
 
+      # create the library tools
       for (tool in tool_files) {
         tryCatch(
           expr = {
             html <- rvest::read_html(paste(libdir, tool, sep = "/"))
             options <- rvest::html_table(html, trim = TRUE)
 
-            description_html <- rvest::html_elements(
-              html,
-              xpath = "/html/body/text()"
-            )
+            description_html <-
+              rvest::html_elements(
+                html,
+                xpath = "/html/body/text()"
+              )
 
-            description <- paste(rvest::html_text2(description_html),
+            description <- paste(
+              rvest::html_text2(description_html),
               collapse = " "
             )
 
@@ -100,19 +118,27 @@ saga_env <-
 
             if (!any(grepl("interactive", x = tool_information[[2]]))) {
               tool_config <- create_tool(
-                tool_information, tool_options,
+                tool_information,
+                tool_options,
                 description
               )
 
-              libraries[[basename(libdir)]][[tool_config$tool_name]] <-
-                tool_config
+              libraries[[basename(libdir)]][[tool_config$tool_name]] <- tool_config
             }
+            
           },
           error = function(e) {
             e
           }
         )
       }
+      
+      tryCatch({
+        attr(libraries[[basename(libdir)]], "description") <- lib_description  
+      }, error = function(e) {
+        e
+      })
+      
     }
 
     # remove tools that produce no outputs
@@ -121,12 +147,10 @@ saga_env <-
 
       for (tool in tools) {
         params <- libraries[[lib]][[tool]]$params
-
         has_output <- sapply(params, function(x) if ("io" %in% names(x)) x$io)
 
         if (!"Output" %in% has_output) {
-          libraries[[lib]] <-
-            libraries[[lib]][!names(libraries[[lib]]) == tool]
+          libraries[[lib]] <- libraries[[lib]][!names(libraries[[lib]]) == tool]
         }
       }
     }
