@@ -364,8 +364,8 @@ update_parameters_tempfiles <- function(params, temp_path, raster_format,
       } else {
         rlang::abort(
           paste(
-            "Rsagacmd cannot currently guess the output types or number of outputs.",
-            "Please explicitly provide file paths or lists of file paths to the tool's output arguments"
+            "Rsagacmd cannot determine the number of results for list-like outputs.",
+            "For Grid/Shapes list outputs, please provide file path(s) to the tool's output arguments."
           )
         )
       }

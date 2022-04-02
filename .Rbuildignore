@@ -11,3 +11,4 @@
 ^\.github$
 ^\.covrignore$
 ^CRAN-SUBMISSION$
+^data-raw$
