@@ -324,7 +324,7 @@ update_parameters_file <-
 #' @param params A `parameters` object.
 #' @param temp_path A character with the tempdir.
 #' @param raster_format A character specifying the raster format.
-#' @param vector_format A character specifiying the vector format.
+#' @param vector_format A character specifying the vector format.
 #'
 #' @return A `parameters` object.
 #'

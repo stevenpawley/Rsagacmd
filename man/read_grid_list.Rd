@@ -14,7 +14,7 @@ outputs.}
 \item{backend}{character, either "raster" or "terra"}
 }
 \value{
-list, containing multile `raster` or `SpatRaster` objects.
+list, containing multiple `raster` or `SpatRaster` objects.
 }
 \description{
 Read a semi-colon separated list of grids that are output by saga_cmd

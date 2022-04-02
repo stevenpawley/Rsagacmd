@@ -118,11 +118,12 @@ saga_env <-
 
             if (!any(grepl("interactive", x = tool_information[[2]]))) {
               tool_config <- create_tool(
-                tool_information,
-                tool_options,
-                description
+                tool_information = tool_information,
+                tool_options = tool_options,
+                description = description,
+                html_file = tool
               )
-
+              
               libraries[[basename(libdir)]][[tool_config$tool_name]] <- tool_config
             }
             

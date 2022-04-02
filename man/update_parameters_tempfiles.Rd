@@ -14,7 +14,7 @@ update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
 
 \item{raster_format}{A character specifying the raster format.}
 
-\item{vector_format}{A character specifiying the vector format.}
+\item{vector_format}{A character specifying the vector format.}
 }
 \value{
 A `parameters` object.

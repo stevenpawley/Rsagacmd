@@ -4,12 +4,15 @@
 \alias{create_tool}
 \title{Generates list of options for a SAGA-GIS tool}
 \usage{
-create_tool(tool_information, tool_options, description)
+create_tool(tool_information, tool_options, description, html_file)
 }
 \arguments{
 \item{tool_information}{list}
 
 \item{tool_options}{list}
+
+\item{html_file}{the name of the html file for the tool's documentation.
+Stored to help linking with online documentation.}
 
 \item{character}{the description text for the tool that has been scraped from
 the help documentation}
@@ -17,8 +20,11 @@ the help documentation}
 \value{
 A `saga_tool` object containing:
 + `tool_name` A syntactically-correct name for the tool.
++ `description` The tool's description.
++ `author` The tool's author.
 + `tool_cmd` The command to use for saga_cmd to execute tool.
 + `parameters` A named list of the tool's parameter objects.
++ `html_file` The html document name.
 }
 \description{
 Parses the html table for a SAGA-GIS tool into a list of identifiers,

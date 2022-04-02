@@ -7,14 +7,20 @@
 #' @param tool_options list
 #' @param character the description text for the tool that has been scraped from
 #'   the help documentation
+#' @param html_file the name of the html file for the tool's documentation.
+#'   Stored to help linking with online documentation.
 #'
 #' @return A `saga_tool` object containing:
 #' + `tool_name` A syntactically-correct name for the tool.
+#' + `description` The tool's description.
+#' + `author` The tool's author.
 #' + `tool_cmd` The command to use for saga_cmd to execute tool.
 #' + `parameters` A named list of the tool's parameter objects.
+#' + `html_file` The html document name.
 #'
 #' @keywords internal
-create_tool <- function(tool_information, tool_options, description) {
+create_tool <- function(tool_information, tool_options, description,
+                        html_file) {
   # get the command to execute the saga_cmd tool
   saga_tool_cmd <- tool_information[[2]][1]
   author <- tool_information[[2]][2]
@@ -60,7 +66,8 @@ create_tool <- function(tool_information, tool_options, description) {
       description = description,
       author = author,
       tool_cmd = saga_tool_cmd,
-      params = params
+      params = params,
+      html_file = html_file
     ),
     class = "saga_tool"
   )

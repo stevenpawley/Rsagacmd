@@ -55,7 +55,7 @@ options, defaults and constraints</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">create_tool</span><span class="op">(</span><span class="va">tool_information</span>, <span class="va">tool_options</span>, <span class="va">description</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">create_tool</span><span class="op">(</span><span class="va">tool_information</span>, <span class="va">tool_options</span>, <span class="va">description</span>, <span class="va">html_file</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -64,6 +64,9 @@ options, defaults and constraints</p>
 <dd><p>list</p></dd>
 <dt>tool_options</dt>
 <dd><p>list</p></dd>
+<dt>html_file</dt>
+<dd><p>the name of the html file for the tool's documentation.
+Stored to help linking with online documentation.</p></dd>
 <dt>character</dt>
 <dd><p>the description text for the tool that has been scraped from
 the help documentation</p></dd>
@@ -72,8 +75,11 @@ the help documentation</p></dd>
     <h2>Value</h2>
     <p>A `saga_tool` object containing:
 + `tool_name` A syntactically-correct name for the tool.
++ `description` The tool's description.
++ `author` The tool's author.
 + `tool_cmd` The command to use for saga_cmd to execute tool.
-+ `parameters` A named list of the tool's parameter objects.</p>
++ `parameters` A named list of the tool's parameter objects.
++ `html_file` The html document name.</p>
     </div>
 
   </div>

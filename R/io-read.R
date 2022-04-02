@@ -84,7 +84,7 @@ read_grid <- function(x, backend) {
 #'   outputs.
 #' @param backend character, either "raster" or "terra"
 #'
-#' @return list, containing multile `raster` or `SpatRaster` objects.
+#' @return list, containing multiple `raster` or `SpatRaster` objects.
 #'
 #' @keywords internal
 read_grid_list <- function(x, backend) {
