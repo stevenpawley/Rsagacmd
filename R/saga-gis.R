@@ -176,6 +176,8 @@ saga_env <-
       "garden_webservices",
       "grid_calculus_bsl",
       "pointcloud_viewer",
+      "pointcloud_tools",
+      "io_pdal",
       "tin_viewer"
     )
 
