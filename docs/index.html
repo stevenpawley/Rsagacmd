@@ -90,13 +90,18 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><a href="https://cran.r-project.org/package=Rsagacmd" class="external-link"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a> [<img src="https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd" alt="Downloads"><a href="https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master" class="external-link"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://github.com/stevenpawley/Rsagacmd/actions" class="external-link"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></p>
-<!-- badges: end -->
 <div class="section level1">
-<div class="page-header"><h1 id="rsagacmd---a-package-for-linking-r-with-saga-gis">
+<div class="page-header"><h1 id="rsagacmd">Rsagacmd<a class="anchor" aria-label="anchor" href="#rsagacmd"></a>
+</h1></div>
+<!-- badges: start -->
+
+<!-- badges: end -->
+</div>
+<div class="section level1">
+<h1 id="rsagacmd---a-package-for-linking-r-with-saga-gis">
 <strong>Rsagacmd</strong> - a package for linking R with
 SAGA-GIS<a class="anchor" aria-label="anchor" href="#rsagacmd---a-package-for-linking-r-with-saga-gis"></a>
-</h1></div>
+</h1>
 <p><strong>Rsagacmd</strong> provides an R scripting interface to the
 open-source SAGA-GIS (<a href="https://sourceforge.net/projects/saga-gis/" class="external-link uri">https://sourceforge.net/projects/saga-gis/</a>) software.
 The current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1
@@ -159,7 +164,8 @@ version run:</p>
 <p>Then install <strong>Rsagacmd</strong> from github:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
-<span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stevenpawley/**Rsagacmd**"</span><span class="op">)</span></code></pre></div>
+
+<span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stevenpawley/Rsagacmd"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -172,12 +178,24 @@ accessible within the GIS software itself. Each tool is nested within
 its respective library and can be accessed by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stevenpawley.github.io/Rsagacmd/" class="external-link">Rsagacmd</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span>
+<span class="co">#&gt; terra 1.5.21</span>
 
 <span class="co"># initiate a saga object</span>
-<span class="va">saga</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/saga_gis.html">saga_gis</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">saga</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/saga_gis.html">saga_gis</a></span><span class="op">(</span>raster_backend <span class="op">=</span> <span class="st">"terra"</span><span class="op">)</span>
+
+<span class="co"># load the example data</span>
+<span class="va">srtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_srtm.html">read_srtm</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># access the libraries and tools</span>
-<span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">mass_balance_index</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">mass_balance_index</span><span class="op">(</span>dem <span class="op">=</span> <span class="va">srtm</span><span class="op">)</span>
+<span class="co">#&gt; class       : SpatRaster </span>
+<span class="co">#&gt; dimensions  : 400, 400, 1  (nrow, ncol, nlyr)</span>
+<span class="co">#&gt; resolution  : 100, 100  (x, y)</span>
+<span class="co">#&gt; extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)</span>
+<span class="co">#&gt; coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) </span>
+<span class="co">#&gt; source      : filedc03404aeeb1.sdat </span>
+<span class="co">#&gt; name        : filedc03404aeeb1</span></code></pre></div>
 <p>This facilitates an easier scripting experience by organizing the
 large number of SAGA-GIS tools (&gt; 700) by their respective library.
 Each function’s syntax is the same as when using the SAGA-GIS command
@@ -256,58 +274,92 @@ object, or a tibble).</p>
 <code>%&gt;%</code> to quickly chain together complex geoprocessing
 operations:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">saga</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/saga_gis.html">saga_gis</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Generate random terrain and save to file</span>
-<span class="va">dem</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">grid_calculus</span><span class="op">$</span><span class="fu">random_terrain</span><span class="op">(</span>target_out_grid <span class="op">=</span> <span class="st">"terrain.sgrd"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># Generate random terrain and save to file</span>
+<span class="va">dem</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">grid_calculus</span><span class="op">$</span><span class="fu">random_terrain</span><span class="op">(</span>
+  target_out_grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".sgrd"</span><span class="op">)</span>
+<span class="op">)</span>
 
 <span class="co"># Terrain ruggedness index and automatically save the result to a tempfile</span>
-<span class="va">tri</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">terrain_ruggedness_index_tri</span><span class="op">(</span>dem <span class="op">=</span> <span class="va">dem</span>, radius <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
+<span class="va">tri</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">terrain_ruggedness_index_tri</span><span class="op">(</span>dem <span class="op">=</span> <span class="va">dem</span>, radius <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tri</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-using-tempfiles-1.png" width="100%"></p>
 <p>This example will write the output terrain ruggedness index to a
 temporary file, and will automatically load the result into the R
 environment as a <code>RasterLayer</code> object. This was implemented
 for convenience, and so that the user can also create complex workflows
 that require very little code. It is also means that you can combine
 several processing steps with pipes:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read project area as a simple features object</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>prj_bnd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'some_shape.shp'</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dem <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="st">'some_dem.tif'</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># clip dem to shape, resample, and calculate potential incoming solar radiation</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pisr <span class="ot">&lt;-</span> dem <span class="sc">%&gt;%</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>shapes_grid<span class="sc">$</span><span class="fu">clip_grid_with_rectangle</span>(<span class="at">shapes =</span> prj_bnd)<span class="er">)</span> <span class="sc">%&gt;%</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>grid_tools<span class="sc">$</span><span class="fu">resampling</span>(<span class="at">target_user_size =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    saga<span class="sc">$</span>ta_lighting<span class="sc">$</span><span class="fu">potential_incoming_solar_radiation</span>(</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">location =</span> <span class="dv">1</span>, </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">period =</span> <span class="dv">2</span>, </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">day =</span> <span class="st">"2013-01-01"</span>, </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">day_stop =</span> <span class="st">"2014-01-01"</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">days_step =</span> <span class="dv">10</span>, </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">hour_step =</span> <span class="dv">3</span>, </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">'Hofierka and Suri'</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">grd_linke_default =</span> <span class="dv">3</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
+<span class="co">#&gt; Linking to GEOS 3.9.1, GDAL 3.2.3, PROJ 7.2.1; sf_use_s2() is TRUE</span>
+
+<span class="co"># read project area as a simple features object</span>
+<span class="va">prj_bnd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">320000</span>, <span class="fl">340000</span>, <span class="fl">5880000</span>, <span class="fl">5900000</span><span class="op">)</span>,
+  nrow <span class="op">=</span> <span class="fl">1</span>
+<span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">prj_bnd</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">320000</span>, xmax <span class="op">=</span> <span class="fl">340000</span>, ymin <span class="op">=</span> <span class="fl">5890000</span>, ymax <span class="op">=</span> <span class="fl">5910000</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fl">3402</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">prj_bnd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>area <span class="op">=</span> <span class="st">"my area"</span><span class="op">)</span>, <span class="va">prj_bnd</span><span class="op">)</span>
+
+<span class="va">dem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_srtm.html">read_srtm</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># clip dem to shape, resample, and calculate land surface parameters</span>
+<span class="va">lsps</span> <span class="op">&lt;-</span> <span class="va">dem</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="va">saga</span><span class="op">$</span><span class="va">shapes_grid</span><span class="op">$</span><span class="fu">clip_grid_with_rectangle</span><span class="op">(</span>shapes <span class="op">=</span> <span class="va">prj_bnd</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/aggregate.sf.html" class="external-link">aggregate</a></span><span class="op">(</span>fact <span class="op">=</span> <span class="fl">2</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">slope_aspect_curvature</span><span class="op">(</span><span class="op">)</span>
+
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lsps</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-using-pipes-1.png" width="100%"></p>
 <p>In the above example, three tools are joined together using pipes,
-and only the PISR grid is returned as a <code>RasterLayer</code> object.
-The intermediate processing steps are dealt with automatically by saving
-the outputs as tempfiles. When dealing with high-resolution and/or
-larger raster data, these tempfiles can start to consume a significant
-amount of disk space over a session. If required, temporary files can be
-cleaned during the session in a similar way to the
-<strong>raster</strong> package, using:</p>
+and only the land surface parameter grids are returned as
+<code>SpatRaster</code> objects. The intermediate processing steps are
+dealt with automatically by saving the outputs as tempfiles. When
+dealing with high-resolution and/or larger raster data, these tempfiles
+can start to consume a significant amount of disk space over a session.
+If required, temporary files can be cleaned during the session in a
+similar way to the <strong>raster</strong> or <strong>terra</strong>
+packages, using:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/saga_remove_tmpfiles.html">saga_remove_tmpfiles</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="reference/saga_remove_tmpfiles.html">saga_remove_tmpfiles</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+<span class="co">#&gt; Removing Rsagacmd temporary files h=0</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03404aeeb1.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03221ae135.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032714d9fe.gpkg</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0349f3c6bd.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03222665a6.sdat</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036db86ce.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03366f41e6.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03424f7ef5.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03711828d5.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036920f1f4.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0371ed0017.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc037ea1206f.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03458985c.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03547ac23e.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0347669fc6.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032283a4c9.sgrd</span>
+<span class="co">#&gt; /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0370b799d2.sgrd</span></code></pre></div>
 <p>where <code>h</code> is minimum age (in number of hours) of tempfiles
 for removal, so <code>h = 0</code> will remove all tempfiles that were
 automatically created by <strong>Rsagacmd</strong>.</p>
 <p>The behaviour of automatically outputting results to tempfiles can be
-disabled for any tool by using <code>.all_outputs = FALSE</code>. In
-this case, the output arguments need to be specified manually, e.g.:</p>
+disabled for any specific tool by using
+<code>.all_outputs = FALSE</code> or can be disabled globally when the
+link to SAGA-GIS is created using
+<code>saga_gis(all_outputs = FALSE)</code>. In this case, the output
+arguments need to be specified manually, e.g.:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tri</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">terrain_ruggedness_index_tri</span><span class="op">(</span>
     dem <span class="op">=</span> <span class="va">dem</span>, 
     radius <span class="op">=</span> <span class="fl">3</span>, 
-    tri <span class="op">=</span> <span class="st">"somefile.sgrd"</span>
+    tri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".sgrd"</span><span class="op">)</span>,
+    .all_outputs <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 </div>
 </div>
@@ -346,7 +398,15 @@ this case, the output arguments need to be specified manually, e.g.:</p>
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=Rsagacmd" class="external-link"><img src="https://www.r-pkg.org/badges/version/Rsagacmd" alt="CRAN status"></a></li>
+<li><a href="https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master" class="external-link"><img src="https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/stevenpawley/Rsagacmd/actions" class="external-link"><img src="https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
+</ul>
+</div>
 
   </div>
 </div>

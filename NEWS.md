@@ -8,6 +8,9 @@ datasets.
 - tidy methods to summarize information about the SAGA-GIS libraries and tools
 within any library and return these as a tibble.
 
+- Function 'saga_docs' to browse the online documentation for each SAGA-GIS
+tool.
+
 Changes:
 
  - Bug fix for using the `terra` package as a raster backend.

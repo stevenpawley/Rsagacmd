@@ -12,3 +12,4 @@
 ^\.covrignore$
 ^CRAN-SUBMISSION$
 ^data-raw$
+^README\.Rmd$

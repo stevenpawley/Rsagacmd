@@ -1,9 +1,13 @@
+
+# Rsagacmd
+
 <!-- badges: start -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/Rsagacmd)](https://cran.r-project.org/package=Rsagacmd)
-[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd)
-[![Codecov test coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
+\[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Rsagacmd)
+[![Codecov test
+coverage](https://codecov.io/gh/stevenpawley/Rsagacmd/branch/master/graph/badge.svg)](https://app.codecov.io/gh/stevenpawley/Rsagacmd?branch=master)
 [![R-CMD-check](https://github.com/stevenpawley/Rsagacmd/workflows/R-CMD-check/badge.svg)](https://github.com/stevenpawley/Rsagacmd/actions)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
@@ -12,10 +16,10 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 
 # **Rsagacmd** - a package for linking R with SAGA-GIS
 
-**Rsagacmd** provides an R scripting interface to the open-source SAGA-GIS
-(<https://sourceforge.net/projects/saga-gis/>) software. The current
-version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on Windows
-(x64), OS X and Linux.
+**Rsagacmd** provides an R scripting interface to the open-source
+SAGA-GIS (<https://sourceforge.net/projects/saga-gis/>) software. The
+current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on
+Windows (x64), OS X and Linux.
 
 ## Contents
 
@@ -39,14 +43,14 @@ simple features, and sp objects) are seamlessly passed between R and
 SAGA-GIS during geoprocessing operations.
 
 **Rsagacmd** is unrelated to the `RSAGA` package
-(<https://cran.r-project.org/package=RSAGA>), which
-provides a command line parser and a subset of pre-defined functions to
-interface with SAGA-GIS. In contrast, **Rsagacmd** provides links with
-SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
-that is contained in the user's installed SAGA-GIS version. This means
-that every SAGA-GIS tool is available for use within R (other than the
+(<https://cran.r-project.org/package=RSAGA>), which provides a command
+line parser and a subset of pre-defined functions to interface with
+SAGA-GIS. In contrast, **Rsagacmd** provides links with SAGA-GIS by
+dynamically generating R functions for every SAGA-GIS tool that is
+contained in the user’s installed SAGA-GIS version. This means that
+every SAGA-GIS tool is available for use within R (other than the
 interactive tools), and **Rsagacmd** always remains up-to-date with new
-versions of SAGA-GIS. Custom tools that have been created using SAGA's
+versions of SAGA-GIS. Custom tools that have been created using SAGA’s
 `toolchains` (<https://rohanfisher.wordpress.com/saga-tool-chains/>)
 will also be accessible via **Rsagacmd**.
 
@@ -56,7 +60,7 @@ will also be accessible via **Rsagacmd**.
 
 **Rsagacmd** is now available on CRAN. To install this version run:
 
-```r
+``` r
 install.packages("Rsagacmd")
 ```
 
@@ -66,42 +70,56 @@ In your R session.
 
 First install the `devtools` package:
 
-```r
+``` r
 install.packages("devtools")
 ```
 
 Then install **Rsagacmd** from github:
 
-```r
+``` r
 library(devtools)
-install_github("stevenpawley/**Rsagacmd**")
+
+install_github("stevenpawley/Rsagacmd")
 ```
 
 ## Usage
 
-The primary function in **Rsagacmd** is the `saga_gis` function that returns
-an object containing all of the SAGA-GIS libraries and tools in the same
-structure as what is accessible within the GIS software itself. Each
-tool is nested within its respective library and can be accessed by:
+The primary function in **Rsagacmd** is the `saga_gis` function that
+returns an object containing all of the SAGA-GIS libraries and tools in
+the same structure as what is accessible within the GIS software itself.
+Each tool is nested within its respective library and can be accessed
+by:
 
-```r
+``` r
 library(Rsagacmd)
+library(terra)
+#> terra 1.5.21
 
 # initiate a saga object
-saga <- saga_gis()
+saga <- saga_gis(raster_backend = "terra")
+
+# load the example data
+srtm <- read_srtm()
 
 # access the libraries and tools
-saga$ta_morphometry$mass_balance_index()
+saga$ta_morphometry$mass_balance_index(dem = srtm)
+#> class       : SpatRaster 
+#> dimensions  : 400, 400, 1  (nrow, ncol, nlyr)
+#> resolution  : 100, 100  (x, y)
+#> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
+#> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
+#> source      : filedc03404aeeb1.sdat 
+#> name        : filedc03404aeeb1
 ```
 
 This facilitates an easier scripting experience by organizing the large
 number of SAGA-GIS tools (\> 700) by their respective library. Each
-function's syntax is the same as when using the SAGA-GIS command line
+function’s syntax is the same as when using the SAGA-GIS command line
 tool directly except that **Rsagacmd** always uses lowercase arguments).
 Furthermore, because the arguments (called identifiers in SAGA-GIS) for
 many SAGA-GIS tools are not consistently named, the user can also take
 advantage of code autocompletion tools in RStudio, allowing for each
-tools' inputs, outputs and options to be more easily recognized.
+tools’ inputs, outputs and options to be more easily recognized.
 
 ## Passing geospatial and tabular data between R and SAGA-GIS
 
@@ -116,13 +134,13 @@ geoprocessing operations. Therefore, all of the **Rsagacmd** tools allow
 paths to the input data to be used as arguments, if the data is stored
 in the appropriate file formats (GDAL-supported single-band rasters, OGR
 supported vector data, and comma- or tab-delimited text files for
-tabular data). In addition, **Rsagacmd** currently supports the following R
-object classes to pass data to SAGA-GIS, and to load the results back
-into the R environment:
+tabular data). In addition, **Rsagacmd** currently supports the
+following R object classes to pass data to SAGA-GIS, and to load the
+results back into the R environment:
 
 -   Raster data handling is provided by the R **raster** package.
     Raster-based outputs from SAGA-GIS tools are loaded as `RasterLayer`
-    objects. For more details, see the 'Handling of raster data'.
+    objects. For more details, see the ‘Handling of raster data’.
 -   Vector features that result from SAGA-GIS geoprocessing operations
     are output in ESRI Shapefile format and are loaded into the R
     environment as simple features (`sf`) objects.
@@ -138,17 +156,18 @@ file format (.sgrd) supports only single band data. Therefore when
 passing raster data to most SAGA-GIS tools using **Rsagacmd**, the data
 should represent single raster bands, specified as either the path to
 the single raster band, or when using the R **raster** package, a
-`RasterLayer` (or less commonly a `RasterStack` or `RasterBrick`) object that
-contains on-the-fly a single layer. Subsetting of raster data is
-performed automatically by **Rsagacmd** in the case of when a single band
-from a `RasterStack` or `RasterBrick` object is passed to a SAGA-GIS tool.
-This occurs in by either passing the filename of the raster to the
-SAGA-GIS command line, or by writing the data to a temporary file.
-However, a few SAGA-GIS functions will accept a list of single band
-rasters as an input. In this case if this data is in the form of a
-`RasterStack` or `RasterLayer` object, it is recommended to use the unstack
-function in the **raster** package, which will return a list of RasterLayer
-objects, and then **Rsagacmd** will handle the subsetting automatically.
+`RasterLayer` (or less commonly a `RasterStack` or `RasterBrick`) object
+that contains on-the-fly a single layer. Subsetting of raster data is
+performed automatically by **Rsagacmd** in the case of when a single
+band from a `RasterStack` or `RasterBrick` object is passed to a
+SAGA-GIS tool. This occurs in by either passing the filename of the
+raster to the SAGA-GIS command line, or by writing the data to a
+temporary file. However, a few SAGA-GIS functions will accept a list of
+single band rasters as an input. In this case if this data is in the
+form of a `RasterStack` or `RasterLayer` object, it is recommended to
+use the unstack function in the **raster** package, which will return a
+list of RasterLayer objects, and then **Rsagacmd** will handle the
+subsetting automatically.
 
 ## Combining SAGA-GIS tools with pipes
 
@@ -159,15 +178,18 @@ as the appropriate R object (`RasterLayer`, `sf` object, or a tibble).
 This means that **Rsagacmd** can be used with `%>%` to quickly chain
 together complex geoprocessing operations:
 
-```r
-saga <- saga_gis()
-
+``` r
 # Generate random terrain and save to file
-dem <- saga$grid_calculus$random_terrain(target_out_grid = "terrain.sgrd")
+dem <- saga$grid_calculus$random_terrain(
+  target_out_grid = tempfile(fileext = ".sgrd")
+)
 
 # Terrain ruggedness index and automatically save the result to a tempfile
 tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, radius = 3)
+plot(tri)
 ```
+
+<img src="man/figures/README-using-tempfiles-1.png" width="100%" />
 
 This example will write the output terrain ruggedness index to a
 temporary file, and will automatically load the result into the R
@@ -176,51 +198,82 @@ convenience, and so that the user can also create complex workflows that
 require very little code. It is also means that you can combine several
 processing steps with pipes:
 
-```r
-# read project area as a simple features object
-prj_bnd <- st_read('some_shape.shp')
-dem <- raster('some_dem.tif')
+``` r
+library(sf)
+#> Linking to GEOS 3.9.1, GDAL 3.2.3, PROJ 7.2.1; sf_use_s2() is TRUE
 
-# clip dem to shape, resample, and calculate potential incoming solar radiation
-pisr <- dem %>%
-    saga$shapes_grid$clip_grid_with_rectangle(shapes = prj_bnd)) %>%
-    saga$grid_tools$resampling(target_user_size = 100) %>%
-    saga$ta_lighting$potential_incoming_solar_radiation(
-        location = 1, 
-        period = 2, 
-        day = "2013-01-01", 
-        day_stop = "2014-01-01",
-        days_step = 10, 
-        hour_step = 3, 
-        method = 'Hofierka and Suri',
-        grd_linke_default = 3
-    )
+# read project area as a simple features object
+prj_bnd <- st_polygon(list(matrix(
+  c(320000, 340000, 5880000, 5900000),
+  nrow = 1
+)))
+
+prj_bnd <- 
+  st_bbox(c(xmin = 320000, xmax = 340000, ymin = 5890000, ymax = 5910000)) %>% 
+  st_set_crs(3402) %>% 
+  st_as_sfc()
+
+prj_bnd <- st_as_sf(data.frame(area = "my area"), prj_bnd)
+
+dem <- read_srtm()
+
+# clip dem to shape, resample, and calculate land surface parameters
+lsps <- dem %>%
+  saga$shapes_grid$clip_grid_with_rectangle(shapes = prj_bnd) %>%
+  aggregate(fact = 2, fun = "mean") %>%
+  saga$ta_morphometry$slope_aspect_curvature()
+
+plot(lsps$slope)
 ```
+
+<img src="man/figures/README-using-pipes-1.png" width="100%" />
 
 In the above example, three tools are joined together using pipes, and
-only the PISR grid is returned as a `RasterLayer` object. The intermediate
-processing steps are dealt with automatically by saving the outputs as
-tempfiles. When dealing with high-resolution and/or larger raster data,
-these tempfiles can start to consume a significant amount of disk space
-over a session. If required, temporary files can be cleaned during the
-session in a similar way to the **raster** package, using:
+only the land surface parameter grids are returned as `SpatRaster`
+objects. The intermediate processing steps are dealt with automatically
+by saving the outputs as tempfiles. When dealing with high-resolution
+and/or larger raster data, these tempfiles can start to consume a
+significant amount of disk space over a session. If required, temporary
+files can be cleaned during the session in a similar way to the
+**raster** or **terra** packages, using:
 
-```r
+``` r
 saga_remove_tmpfiles(h = 0)
+#> Removing Rsagacmd temporary files h=0
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03404aeeb1.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03221ae135.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032714d9fe.gpkg
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0349f3c6bd.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03222665a6.sdat
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036db86ce.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03366f41e6.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03424f7ef5.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03711828d5.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036920f1f4.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0371ed0017.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc037ea1206f.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03458985c.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03547ac23e.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0347669fc6.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032283a4c9.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0370b799d2.sgrd
 ```
 
-where `h` is minimum age (in number of hours) of tempfiles for removal, so
-`h = 0` will remove all tempfiles that were automatically created by
+where `h` is minimum age (in number of hours) of tempfiles for removal,
+so `h = 0` will remove all tempfiles that were automatically created by
 **Rsagacmd**.
 
 The behaviour of automatically outputting results to tempfiles can be
-disabled for any tool by using `.all_outputs = FALSE`. In this case, the
-output arguments need to be specified manually, e.g.:
+disabled for any specific tool by using `.all_outputs = FALSE` or can be
+disabled globally when the link to SAGA-GIS is created using
+`saga_gis(all_outputs = FALSE)`. In this case, the output arguments need
+to be specified manually, e.g.:
 
-```r
+``` r
 tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(
     dem = dem, 
     radius = 3, 
-    tri = "somefile.sgrd"
+    tri = tempfile(fileext = ".sgrd"),
+    .all_outputs = FALSE
 )
 ```
