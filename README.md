@@ -108,8 +108,8 @@ saga$ta_morphometry$mass_balance_index(dem = srtm)
 #> resolution  : 100, 100  (x, y)
 #> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
 #> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
-#> source      : filedc03404aeeb1.sdat 
-#> name        : filedc03404aeeb1
+#> source      : filef9d93c228de4.sdat 
+#> name        : filef9d93c228de4
 ```
 
 This facilitates an easier scripting experience by organizing the large
@@ -138,13 +138,22 @@ tabular data). In addition, **Rsagacmd** currently supports the
 following R object classes to pass data to SAGA-GIS, and to load the
 results back into the R environment:
 
--   Raster data handling is provided by the R **raster** package.
-    Raster-based outputs from SAGA-GIS tools are loaded as `RasterLayer`
-    objects. For more details, see the ‘Handling of raster data’.
+-   Raster data handling is provided by the R **raster** package as the
+    default backend. Raster-based outputs from SAGA-GIS tools are loaded
+    as `RasterLayer` objects. For more details, see the ‘Handling of
+    raster data’. Other raster backends can be specified when creating
+    the link to SAGA-GIS using `saga_gis(raster_backend = "terra)` for
+    example. The supported raster backends are **raster**, **terra** and
+    **stars**.
 -   Vector features that result from SAGA-GIS geoprocessing operations
-    are output in ESRI Shapefile format and are loaded into the R
-    environment as simple features (`sf`) objects.
--   Tabular data from SAGA-GIS tools are loaded as dataframes.
+    are output the format specified by the ‘vector_format’ arguments
+    (default is ESRI Shapefile for SAGA-GIS versions \< 7.0 and
+    GeoPackage for newer versions) and are loaded into the R environment
+    as simple features (`sf`) objects. Different vector backends are
+    also supported, including ‘sf’, ‘SpatVector’, and ‘SpatVectorProxy’,
+    which can also be specified when initiating the link to SAGA-GIS
+    using `saga_gis(vector_backend = "SpatVector")`.
+-   Tabular data from SAGA-GIS tools are loaded as tibbles
 
 The results from tools that return multiple outputs are loaded into the
 R environment as a named list of the appropriate R object classes.
@@ -173,7 +182,8 @@ subsetting automatically.
 
 For convenience, non-optional outputs from SAGA-GIS are automatically
 saved to tempfiles if outputs are not explicitly stated, and then loaded
-as the appropriate R object (`RasterLayer`, `sf` object, or a tibble).
+as the appropriate R object (e.g., `RasterLayer`, `sf` object, or a
+tibble).
 
 This means that **Rsagacmd** can be used with `%>%` to quickly chain
 together complex geoprocessing operations:
@@ -240,23 +250,23 @@ files can be cleaned during the session in a similar way to the
 ``` r
 saga_remove_tmpfiles(h = 0)
 #> Removing Rsagacmd temporary files h=0
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03404aeeb1.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03221ae135.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032714d9fe.gpkg
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0349f3c6bd.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03222665a6.sdat
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036db86ce.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03366f41e6.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03424f7ef5.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03711828d5.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc036920f1f4.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0371ed0017.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc037ea1206f.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03458985c.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc03547ac23e.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0347669fc6.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc032283a4c9.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpV8nWoP/filedc0370b799d2.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d93c228de4.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d98246b7c.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9256b7752.gpkg
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d93266bbaf.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d92f5d0b0a.sdat
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d957fd5d1.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9bae8f29.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d97138d2bc.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d949936eb6.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d96e499476.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d920b2078b.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d980d4772.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d91fcd917f.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9710b3928.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d917d5ab13.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d94cd2789e.sgrd
+#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9decf479.sgrd
 ```
 
 where `h` is minimum age (in number of hours) of tempfiles for removal,
