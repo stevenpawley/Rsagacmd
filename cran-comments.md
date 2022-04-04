@@ -3,12 +3,12 @@
 ### winbuilder (devel)
 
 * using log directory 'd:/RCompile/CRANguest/R-devel/Rsagacmd.Rcheck'
-* using R Under development (unstable) (2021-12-03 r81290)
+* using R version 4.2.0 alpha (2022-04-03 r82074 ucrt)
 * using platform: x86_64-w64-mingw32 (64-bit)
-* using session charset: ISO8859-1
+* using session charset: UTF-8
 * checking for file 'Rsagacmd/DESCRIPTION' ... OK
 * checking extension type ... Package
-* this is package 'Rsagacmd' version '0.1.2'
+* this is package 'Rsagacmd' version '0.2.0'
 * package encoding: UTF-8
 * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
 Maintainer: 'Steven Pawley <dr.stevenpawley@gmail.com>'
@@ -41,7 +41,7 @@ Maintainer: 'Steven Pawley <dr.stevenpawley@gmail.com>'
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... [40s] OK
+* checking R code for possible problems ... [18s] OK
 * checking Rd files ... [1s] OK
 * checking Rd metadata ... OK
 * checking Rd line widths ... OK
@@ -51,10 +51,10 @@ Maintainer: 'Steven Pawley <dr.stevenpawley@gmail.com>'
 * checking Rd \usage sections ... OK
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... OK
-* checking examples ... [15s] OK
+* checking examples ... [8s] OK
 * checking for unstated dependencies in 'tests' ... OK
-* checking tests ... [12s] OK
-  Running 'testthat.R' [12s]
+* checking tests ... [6s] OK
+  Running 'testthat.R' [5s]
 * checking PDF version of manual ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
@@ -62,39 +62,14 @@ Status: OK
 
 ### R-hub builder
 
-── Rsagacmd 0.1.2: OK
+Rsagacmd 0.2.0: OK
+Build ID:	Rsagacmd_0.2.0.tar.gz-29391a9130b4482cb92e173fdc5c5619
+Platform:	Fedora Linux, R-devel, clang, gfortran
+Submitted:	31 minutes 2.6 seconds ago
+Build time:	31 minutes 1.2 seconds
 
-  Build ID:   Rsagacmd_0.1.2.tar.gz-dac70d9bbf8a4d53bc18d147d6f00011
-  Platform:   Ubuntu Linux 20.04.1 LTS, R-release, GCC
-  Submitted:  32m 59.4s ago
-  Build time: 25m 21.6s
-
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
-
-
-── Rsagacmd 0.1.2: OK
-
-  Build ID:   Rsagacmd_0.1.2.tar.gz-e8d2171d835049d1b37802db7aad0235
-  Platform:   Fedora Linux, R-devel, clang, gfortran
-  Submitted:  33m 24.9s ago
-  Build time: 26m 26.7s
-
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
-
-── Rsagacmd 0.1.2: OK
-
-  Build ID:   Rsagacmd_0.1.2.tar.gz-709eac69db19402b9b36de508b03d199
-  Platform:   Ubuntu Linux 20.04.1 LTS, R-release, GCC
-  Submitted:  33m 31.1s ago
-  Build time: 25m 49.5s
-
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
-
-── Rsagacmd 0.1.2: OK
-
-  Build ID:   Rsagacmd_0.1.2.tar.gz-a6d01ddbcf7148a98fb1035c75ddac20
-  Platform:   Fedora Linux, R-devel, clang, gfortran
-  Submitted:  33m 49.2s ago
-  Build time: 26m 33.3s
-
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+Rsagacmd 0.2.0: OK
+Build ID:	Rsagacmd_0.2.0.tar.gz-1a20d58721ac4badbf5d2027f91d36f2
+Platform:	Ubuntu Linux 20.04.1 LTS, R-release, GCC
+Submitted:	29 minutes 18.1 seconds ago
+Build time:	29 minutes 16.8 seconds
