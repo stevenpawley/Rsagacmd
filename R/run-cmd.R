@@ -8,7 +8,7 @@
 #' @keywords internal
 parse_options <- function(key, value) {
   option <- paste0("-", key)
-  paste(option, value, sep = ":")
+  paste(option, value, sep = "=")
 }
 
 
