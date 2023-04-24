@@ -139,11 +139,11 @@ currently supports the following R object classes to pass data to SAGA-GIS, and
 to load the results back into the R environment:
 
 -   Raster data handling is provided by the R **raster** package as the default
-backend. Raster-based outputs from SAGA-GIS tools are loaded as `RasterLayer`
+backend. Raster-based outputs from SAGA-GIS tools are loaded as `SpatRaster`
 objects. For more details, see the 'Handling of raster data'. Other raster
 backends can be specified when creating the link to SAGA-GIS using
-`saga_gis(raster_backend = "terra)` for example. The supported raster backends
-are **raster**, **terra** and **stars**.
+`saga_gis(raster_backend = "stars")` for example. The supported raster backends
+are **terra** and **stars**.
 -   Vector features that result from SAGA-GIS geoprocessing operations are
 output the format specified by the 'vector_format' arguments (default is ESRI
 Shapefile for SAGA-GIS versions < 7.0 and GeoPackage for newer versions) and are
@@ -161,24 +161,17 @@ environment as a named list of the appropriate R object classes.
 SAGA-GIS does not handle multi-band rasters and native SAGA GIS Binary file
 format (.sgrd) supports only single band data. Therefore when passing raster
 data to most SAGA-GIS tools using **Rsagacmd**, the data should represent single
-raster bands, specified as either the path to the single raster band, or when
-using the R **raster** package, a `RasterLayer` (or less commonly a
-`RasterStack` or `RasterBrick`) object that contains on-the-fly a single layer.
+raster bands, specified as either the path to the single raster band.
 Subsetting of raster data is performed automatically by **Rsagacmd** in the case
-of when a single band from a `RasterStack` or `RasterBrick` object is passed to
+of when a single band from a `SpatRaster` or `stars` object is passed to
 a SAGA-GIS tool. This occurs in by either passing the filename of the raster to
-the SAGA-GIS command line, or by writing the data to a temporary file. However,
-a few SAGA-GIS functions will accept a list of single band rasters as an input.
-In this case if this data is in the form of a `RasterStack` or `RasterLayer`
-object, it is recommended to use the unstack function in the **raster** package,
-which will return a list of RasterLayer objects, and then **Rsagacmd** will
-handle the subsetting automatically.
+the SAGA-GIS command line, or by writing the data to a temporary file.
 
 ## Combining SAGA-GIS tools with pipes
 
 For convenience, non-optional outputs from SAGA-GIS are automatically saved to
 tempfiles if outputs are not explicitly stated, and then loaded as the
-appropriate R object (e.g., `RasterLayer`, `sf` object, or a tibble).
+appropriate R object (e.g., `SpatRaster`, `sf` object, or a tibble).
 
 This means that **Rsagacmd** can be used with `%>%` to quickly chain together
 complex geoprocessing operations:
@@ -195,7 +188,7 @@ plot(tri)
 ```
 
 This example will write the output terrain ruggedness index to a temporary file,
-and will automatically load the result into the R environment as a `RasterLayer`
+and will automatically load the result into the R environment as a `SpatRaster`
 object. This was implemented for convenience, and so that the user can also
 create complex workflows that require very little code. It is also means that
 you can combine several processing steps with pipes:

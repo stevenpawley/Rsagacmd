@@ -32,13 +32,13 @@ mrvbf_threshold <- function(res) {
 #'
 #' @param x A `saga` object.
 #' @param grid A path to a GDAL-supported raster to apply tiling, or a
-#'   RasterLayer.
+#'   SpatRaster.
 #' @param nx An integer with the number of x-pixels per tile.
 #' @param ny An integer with the number of y-pixels per tile.
 #' @param overlap An integer with the number of overlapping pixels.
 #' @param file_path An optional file file path to store the raster tiles.
 #'
-#' @return A list of RasterLayer objects representing tiled data.
+#' @return A list of SpatRaster objects representing tiled data.
 #' @export
 #' @examples
 #' \dontrun{
@@ -82,10 +82,6 @@ tile_geoprocessor <- function(x, grid, nx, ny, overlap = 0, file_path = NULL) {
   }
   
   senv <- environment(x[[1]][[1]])$senv
-  
-  if (senv$raster_backend == "raster") {
-    tiles <- sapply(tile_sdats, raster::raster)
-  }
   
   if (senv$raster_backend == "terra") {
     tiles <- sapply(tile_sdats, terra::rast)

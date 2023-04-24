@@ -10,7 +10,7 @@ tile_geoprocessor(x, grid, nx, ny, overlap = 0, file_path = NULL)
 \item{x}{A `saga` object.}
 
 \item{grid}{A path to a GDAL-supported raster to apply tiling, or a
-RasterLayer.}
+SpatRaster.}
 
 \item{nx}{An integer with the number of x-pixels per tile.}
 
@@ -21,7 +21,7 @@ RasterLayer.}
 \item{file_path}{An optional file file path to store the raster tiles.}
 }
 \value{
-A list of RasterLayer objects representing tiled data.
+A list of SpatRaster objects representing tiled data.
 }
 \description{
 Split a raster grid into tiles. The tiles are saved as Rsagacmd

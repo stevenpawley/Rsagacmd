@@ -346,8 +346,8 @@ saga_configure <-
 #'   default all cores are utilized. Needs to be set to 1 if file caching is
 #'   activated.
 #' @param raster_backend A character vector to specify the library to use for
-#'   handling raster data. Currently, "raster", "terra" or "stars" is supported.
-#'   The default is "raster".
+#'   handling raster data. Supported options are "terra" or "stars".
+#'   The default is "terra".
 #' @param vector_backend A character to specify the library to use for handling
 #'   vector data. Currently, "sf", "SpatVector" or "SpatVectorProxy" is
 #'   supported. The default is "sf", however for large vector datasets, using
@@ -372,7 +372,7 @@ saga_configure <-
 #' @param intern A logical to indicate whether to load the SAGA-GIS
 #'   geoprocessing results as an R object, default = TRUE. For instance, if a
 #'   raster grid is output by SAGA-GIS then this will be loaded as either as
-#'   `RasterLayer` or `SpatRaster` object, depending on the `raster_backend`
+#'   a `SpatRaster` or `stars` object, depending on the `raster_backend`
 #'   setting that is used. Vector data sets are always loaded as `sf` objects,
 #'   and tabular data sets are loaded as tibbles. The `intern` settings for the
 #'   `saga` object can be overridden for individual tools using the `.intern`
@@ -428,7 +428,7 @@ saga_gis <-
            grid_cache_threshold = 100,
            grid_cache_dir = NULL,
            cores = NULL,
-           raster_backend = "raster",
+           raster_backend = "terra",
            vector_backend = "sf",
            raster_format = "SAGA",
            vector_format = c("ESRI Shapefile", "GeoPackage"),

@@ -23,16 +23,16 @@ Windows (x64), OS X and Linux.
 
 ## Contents
 
--   [Description](#description)
--   [Package installation](#package-installation)
--   [Usage](#usage)
--   [Passing geospatial and tabular data between R and
-    SAGA-GIS](#passing-geospatial-and-tabular-data-between-r-and-saga-gis)
--   [Notes on handing multi-band raster datasets by **Rsagacmd** and
-    SAGA-GIS](#notes-on-handing-multi-band-raster-datasets-by-**Rsagacmd**-and-saga-gis)
--   [Combining SAGA-GIS tools with
-    pipes](#combining-saga-gis-tools-with-pipes)
--   [Notes](#notes)
+- [Description](#description)
+- [Package installation](#package-installation)
+- [Usage](#usage)
+- [Passing geospatial and tabular data between R and
+  SAGA-GIS](#passing-geospatial-and-tabular-data-between-r-and-saga-gis)
+- [Notes on handing multi-band raster datasets by **Rsagacmd** and
+  SAGA-GIS](#notes-on-handing-multi-band-raster-datasets-by-**Rsagacmd**-and-saga-gis)
+- [Combining SAGA-GIS tools with
+  pipes](#combining-saga-gis-tools-with-pipes)
+- [Notes](#notes)
 
 ## Description
 
@@ -93,7 +93,7 @@ by:
 ``` r
 library(Rsagacmd)
 library(terra)
-#> terra 1.5.21
+#> terra 1.7.28
 
 # initiate a saga object
 saga <- saga_gis(raster_backend = "terra")
@@ -108,8 +108,8 @@ saga$ta_morphometry$mass_balance_index(dem = srtm)
 #> resolution  : 100, 100  (x, y)
 #> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
 #> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
-#> source      : filef9d93c228de4.sdat 
-#> name        : filef9d93c228de4
+#> source      : file390870ea106.sdat 
+#> name        : file390870ea106
 ```
 
 This facilitates an easier scripting experience by organizing the large
@@ -138,22 +138,21 @@ tabular data). In addition, **Rsagacmd** currently supports the
 following R object classes to pass data to SAGA-GIS, and to load the
 results back into the R environment:
 
--   Raster data handling is provided by the R **raster** package as the
-    default backend. Raster-based outputs from SAGA-GIS tools are loaded
-    as `RasterLayer` objects. For more details, see the ‘Handling of
-    raster data’. Other raster backends can be specified when creating
-    the link to SAGA-GIS using `saga_gis(raster_backend = "terra)` for
-    example. The supported raster backends are **raster**, **terra** and
-    **stars**.
--   Vector features that result from SAGA-GIS geoprocessing operations
-    are output the format specified by the ‘vector_format’ arguments
-    (default is ESRI Shapefile for SAGA-GIS versions \< 7.0 and
-    GeoPackage for newer versions) and are loaded into the R environment
-    as simple features (`sf`) objects. Different vector backends are
-    also supported, including ‘sf’, ‘SpatVector’, and ‘SpatVectorProxy’,
-    which can also be specified when initiating the link to SAGA-GIS
-    using `saga_gis(vector_backend = "SpatVector")`.
--   Tabular data from SAGA-GIS tools are loaded as tibbles
+- Raster data handling is provided by the R **raster** package as the
+  default backend. Raster-based outputs from SAGA-GIS tools are loaded
+  as `SpatRaster` objects. For more details, see the ‘Handling of raster
+  data’. Other raster backends can be specified when creating the link
+  to SAGA-GIS using `saga_gis(raster_backend = "stars")` for example.
+  The supported raster backends are **terra** and **stars**.
+- Vector features that result from SAGA-GIS geoprocessing operations are
+  output the format specified by the ‘vector_format’ arguments (default
+  is ESRI Shapefile for SAGA-GIS versions \< 7.0 and GeoPackage for
+  newer versions) and are loaded into the R environment as simple
+  features (`sf`) objects. Different vector backends are also supported,
+  including ‘sf’, ‘SpatVector’, and ‘SpatVectorProxy’, which can also be
+  specified when initiating the link to SAGA-GIS using
+  `saga_gis(vector_backend = "SpatVector")`.
+- Tabular data from SAGA-GIS tools are loaded as tibbles
 
 The results from tools that return multiple outputs are loaded into the
 R environment as a named list of the appropriate R object classes.
@@ -164,25 +163,17 @@ SAGA-GIS does not handle multi-band rasters and native SAGA GIS Binary
 file format (.sgrd) supports only single band data. Therefore when
 passing raster data to most SAGA-GIS tools using **Rsagacmd**, the data
 should represent single raster bands, specified as either the path to
-the single raster band, or when using the R **raster** package, a
-`RasterLayer` (or less commonly a `RasterStack` or `RasterBrick`) object
-that contains on-the-fly a single layer. Subsetting of raster data is
-performed automatically by **Rsagacmd** in the case of when a single
-band from a `RasterStack` or `RasterBrick` object is passed to a
-SAGA-GIS tool. This occurs in by either passing the filename of the
-raster to the SAGA-GIS command line, or by writing the data to a
-temporary file. However, a few SAGA-GIS functions will accept a list of
-single band rasters as an input. In this case if this data is in the
-form of a `RasterStack` or `RasterLayer` object, it is recommended to
-use the unstack function in the **raster** package, which will return a
-list of RasterLayer objects, and then **Rsagacmd** will handle the
-subsetting automatically.
+the single raster band. Subsetting of raster data is performed
+automatically by **Rsagacmd** in the case of when a single band from a
+`SpatRaster` or `stars` object is passed to a SAGA-GIS tool. This occurs
+in by either passing the filename of the raster to the SAGA-GIS command
+line, or by writing the data to a temporary file.
 
 ## Combining SAGA-GIS tools with pipes
 
 For convenience, non-optional outputs from SAGA-GIS are automatically
 saved to tempfiles if outputs are not explicitly stated, and then loaded
-as the appropriate R object (e.g., `RasterLayer`, `sf` object, or a
+as the appropriate R object (e.g., `SpatRaster`, `sf` object, or a
 tibble).
 
 This means that **Rsagacmd** can be used with `%>%` to quickly chain
@@ -203,14 +194,14 @@ plot(tri)
 
 This example will write the output terrain ruggedness index to a
 temporary file, and will automatically load the result into the R
-environment as a `RasterLayer` object. This was implemented for
+environment as a `SpatRaster` object. This was implemented for
 convenience, and so that the user can also create complex workflows that
 require very little code. It is also means that you can combine several
 processing steps with pipes:
 
 ``` r
 library(sf)
-#> Linking to GEOS 3.9.1, GDAL 3.2.3, PROJ 7.2.1; sf_use_s2() is TRUE
+#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
 
 # read project area as a simple features object
 prj_bnd <- st_polygon(list(matrix(
@@ -250,23 +241,23 @@ files can be cleaned during the session in a similar way to the
 ``` r
 saga_remove_tmpfiles(h = 0)
 #> Removing Rsagacmd temporary files h=0
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d93c228de4.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d98246b7c.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9256b7752.gpkg
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d93266bbaf.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d92f5d0b0a.sdat
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d957fd5d1.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9bae8f29.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d97138d2bc.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d949936eb6.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d96e499476.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d920b2078b.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d980d4772.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d91fcd917f.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9710b3928.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d917d5ab13.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d94cd2789e.sgrd
-#> /var/folders/5q/qrx350ks47n73k5myy4jmff00000gn/T//RtmpT4yvko/filef9d9decf479.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390870ea106.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085b1c2f0e.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085f840421.gpkg
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908542b4384.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39086cfe250a.sdat
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39082131eb6d.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390854575221.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390830d11fc9.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908717dde28.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087e844e4d.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39082030e21f.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908694d71bb.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085b65e1ff.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087dd85b39.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390874d3bbb.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085f8c75bb.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087e8578fe.sgrd
 ```
 
 where `h` is minimum age (in number of hours) of tempfiles for removal,

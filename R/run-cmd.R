@@ -32,9 +32,6 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   # convert sdat extensions into sgrd for reading into saga
   args <- gsub(".sdat$", ".sgrd", args)
 
-  # add flag to load projections library
-  flags <- "--flags=p"
-
   # add optional configuration flag
   if (!is.null(saga_config)) {
     saga_config <- paste("-C", saga_config, sep = "=")
@@ -50,7 +47,7 @@ run_cmd <- function(saga_cmd, saga_config, lib, tool_cmd, args, verbose) {
   # execute command
   msg <- processx::run(
     command = cmd,
-    args = c(flags, saga_config, lib, tool_cmd, param_string),
+    args = c(saga_config, lib, tool_cmd, param_string),
     echo_cmd = verbose,
     echo = verbose,
     spinner = FALSE,

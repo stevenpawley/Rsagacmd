@@ -61,10 +61,6 @@ read_table <- function(x) {
 #'
 #' @keywords internal
 read_grid <- function(x, backend) {
-  if (backend == "raster") {
-    object <- raster::raster(x$files)
-  }
-
   if (backend == "terra") {
     object <- terra::rast(x$files)
   }
@@ -89,10 +85,6 @@ read_grid <- function(x, backend) {
 #' @keywords internal
 read_grid_list <- function(x, backend) {
   x$files <- strsplit(x$files, ";")[[1]]
-
-  if (backend == "raster") {
-    object <- lapply(x$files, raster::raster)
-  }
 
   if (backend == "terra") {
     object <- lapply(x$files, terra::rast)
