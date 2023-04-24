@@ -345,10 +345,6 @@ saga_configure <-
 #' @param cores An integer for the maximum number of processing cores. By
 #'   default all cores are utilized. Needs to be set to 1 if file caching is
 #'   activated.
-#' @param backend A character vector to specify the library to use for handling
-#'   raster data. Currently, "raster", "terra" or "stars" is supported. The
-#'   default is "raster". Will be deprecated in the future in favour of
-#'   `raster_backend`.
 #' @param raster_backend A character vector to specify the library to use for
 #'   handling raster data. Currently, "raster", "terra" or "stars" is supported.
 #'   The default is "raster".
@@ -432,7 +428,6 @@ saga_gis <-
            grid_cache_threshold = 100,
            grid_cache_dir = NULL,
            cores = NULL,
-           backend = "raster",
            raster_backend = "raster",
            vector_backend = "sf",
            raster_format = "SAGA",
@@ -442,11 +437,7 @@ saga_gis <-
            opt_lib = NULL,
            temp_path = NULL,
            verbose = FALSE) {
-    if (!missing(backend)) {
-      .Deprecated(new = "raster_backend", old = "backend")
-      raster_backend <- backend
-    }
-    
+
     senv <- saga_env(saga_bin, opt_lib, raster_backend, vector_backend)
     senv$verbose <- verbose
     senv$all_outputs <- all_outputs

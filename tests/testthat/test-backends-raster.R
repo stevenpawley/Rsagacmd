@@ -136,7 +136,8 @@ test_that("test raster backend, passing layers from a RasterBrick to saga_cmd", 
   dem[] <- runif(raster::ncell(dem), 0, 1)
 
   temp_brick <- tempfile(fileext = ".tif")
-  raster::writeRaster(raster::stack(c(dem, dem)), temp_brick)
+  dem_two_layers <- raster::stack(c(dem, dem))
+  raster::writeRaster(dem_two_layers, temp_brick)
 
   # test writing a layer from a RasterBrick (from disk)
   brick_disk <- raster::brick(temp_brick)
