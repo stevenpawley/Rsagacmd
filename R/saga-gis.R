@@ -123,8 +123,10 @@ saga_env <-
                 description = description,
                 html_file = tool
               )
-              
-              libraries[[basename(libdir)]][[tool_config$tool_name]] <- tool_config
+              lib_name <- basename(libdir)
+              lib_name <- tolower(lib_name)
+              lib_name <- gsub(" ", "_", lib_name)
+              libraries[[lib_name]][[tool_config$tool_name]] <- tool_config
             }
             
           },
