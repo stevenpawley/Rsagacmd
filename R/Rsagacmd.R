@@ -12,15 +12,15 @@
 #' an easier scripting experience by organizing the large number of SAGA-GIS
 #' tools (>700) by their respective library. Interactive scripting can also
 #' fully take advantage of code autocompletion tools (e.g. in
-#' \href{https://www.rstudio.com}{Rstudio}), allowing for each tool's syntax to be
-#' quickly recognized. Furthermore, the most common types of spatial data
-#' (rasters using the \pkg{raster} package, and vector data using the \pkg{sp}
-#' or simple features \pkg{sf} packages) along with non-spatial data are
-#' seamlessly passed from R to the SAGA-GIS command line tool for geoprocessing
-#' operations, and the results are automatically loaded as the appropriate R
-#' object. Outputs from individual SAGA-GIS tools can also be chained using
-#' pipes from the \pkg{magrittr} and \pkg{dplyr} packages to chain complex
-#' geoprocessing operations together in a single statement.
+#' \href{https://www.rstudio.com}{Rstudio}), allowing for each tool's syntax to
+#' be quickly recognized. Furthermore, the most common types of spatial data
+#' (rasters using the \pkg{terra} and \pkg{stars} packages, and vector data
+#' using \pkg{sp}, \pkg{sf} or \pkg{terra} packages) along with non-spatial data
+#' are seamlessly passed from R to the SAGA-GIS command line tool for
+#' geoprocessing operations, and the results are automatically loaded as the
+#' appropriate R object. Outputs from individual SAGA-GIS tools can also be
+#' chained using pipes from the \pkg{magrittr} and \pkg{dplyr} packages to chain
+#' complex geoprocessing operations together in a single statement.
 #'
 #' @section Handling of geospatial and tabular data: Rsagacmd aims to facilitate
 #'   a seamless interface to the open-source SAGA-GIS by providing access to all
@@ -37,9 +37,9 @@
 #' Rsagacmd also supports the following R object classes to pass data to
 #' SAGA-GIS, and to load the results back into the R environment:
 #' \itemize{
-#' \item Raster data handling is provided by the R \pkg{raster} package
-#' Raster-based outputs from SAGA-GIS tools are loaded as RasterLayer objects.
-#' For more details, see the 'Handling of raster data'.
+#' \item Raster data handling is provided by the R \pkg{terra} and \pkg{stars}
+#' packages. Raster-based outputs from SAGA-GIS tools are loaded as SpatRaster
+#' or stars objects. For more details, see the 'Handling of raster data'.
 #' \item Vector features that result from SAGA-GIS geoprocessing operations are
 #' output in ESRI Shapefile format and are loaded into the R environment as
 #' simple features objects
@@ -48,23 +48,14 @@
 #' The results from tools that return multiple outputs are loaded into the R
 #' environment as a named list of the appropriate R object classes.
 #'
-#' @section Multi-band raster data and RasterStack/RasterBrick objects: SAGA-GIS
-#'   does not handle multi-band rasters and the native SAGA GIS Binary file
-#'   format (.sgrd) supports only single band data. Therefore when passing
-#'   raster data to most SAGA-GIS tools using Rsagacmd, the data should
-#'   represent single raster bands, specified as either the path to the single
-#'   raster band, or when using the R \pkg{raster} package, a RasterLayer (or
-#'   less commonly a RasterStack or RasterBrick) object that contains only a
-#'   single layer. Subsetting of raster data is performed automatically by
-#'   Rsagacmd in the case of when a single band from a RasterStack or
-#'   RasterBrick object is passed to a SAGA-GIS tool. This occurs in by either
-#'   passing the filename of the raster to the SAGA-GIS command line, or by
-#'   writing the data to a temporary file. A few SAGA-GIS functions will accept
-#'   a list of single band rasters as an input. In this case if this data is in
-#'   the form of a RasterStack or RasterLayer object, it is recommended to use
-#'   pass the output from the unstack function in the \pkg{raster} package,
-#'   which will return a list of RasterLayer objects, and then Rsagacmd will
-#'   handle the subsetting automatically.
+#' @section Multi-band raster data: SAGA-GIS does not handle multi-band rasters
+#'   and the native SAGA GIS Binary file format (.sgrd) supports only single
+#'   band data. Therefore when passing raster data to most SAGA-GIS tools using
+#'   Rsagacmd, the data should represent single raster bands. Subsetting of
+#'   raster data is performed automatically by Rsagacmd in the case of when a
+#'   single band from a multiband SpatRaster or stars object is passed to a
+#'   SAGA-GIS tool. This occurs in by either passing the filename of the raster
+#'   to the SAGA-GIS command line, or by writing the data to a temporary file.
 #'
 #' @section Combining SAGA-GIS tools with pipes: For convenience, outputs from
 #'   SAGA-GIS tools are automatically saved to tempfiles if outputs are not
@@ -77,8 +68,8 @@
 #'   the output to the next function in the chain. Note that when dealing with
 #'   high-resolution and/or larger raster data, these tempfiles can start to
 #'   consume a significant amount of disk space during a session. If required,
-#'   these temporary files can be cleaned during the session in a similar way to
-#'   the raster package, using the saga_remove_tmpfiles function.
+#'   these temporary files can be cleaned during the session using the
+#'   saga_remove_tmpfiles function.
 #'
 #' @examples
 #' \dontrun{

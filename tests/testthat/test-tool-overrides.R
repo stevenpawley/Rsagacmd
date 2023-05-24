@@ -48,7 +48,7 @@ test_that("test create tool overrides tpi_based_landform_classification", {
     radius_b_max = 20
   )
 
-  expect_s4_class(res, "RasterLayer")
+  expect_s4_class(res, "SpatRaster")
 })
 
 
@@ -65,5 +65,5 @@ test_that("test create tool overrides topographic_position_index_tpi", {
     radius_max = 100
   )
 
-  expect_s4_class(res, "RasterLayer")
+  expect_s4_class(res, "SpatRaster")
 })

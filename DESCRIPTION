@@ -1,8 +1,8 @@
 Package: Rsagacmd
 Type: Package
 Title: Linking R with the Open-Source 'SAGA-GIS' Software
-Version: 0.2.0
-Date: 2022-04-01
+Version: 0.3.0
+Date: 2023-04-23
 Authors@R: c(
     person("Steven", "Pawley",
     email = "dr.stevenpawley@gmail.com",
@@ -19,7 +19,7 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     Interactive scripting can fully take advantage of code autocompletion tools
     (e.g. in 'Rstudio'), allowing for each tools syntax to be quickly
     recognized. Furthermore, the most common types of spatial data (via the
-    'raster', 'terra', 'sp', and 'sf' packages) along with non-spatial data are
+    'terra', 'sp', and 'sf' packages) along with non-spatial data are
     automatically passed from R to the 'SAGA-GIS' command line tool for
     geoprocessing operations, and the results are loaded as the appropriate R
     object. Outputs from individual 'SAGA-GIS' tools can also be chained using
@@ -27,27 +27,22 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     geoprocessing operations together in a single statement. 'SAGA-GIS' is
     available under a GPLv2 / LGPLv2 licence from
     <https://sourceforge.net/projects/saga-gis/> including Windows x86/x64
-    binaries. SAGA-GIS is also included in Debian/Ubuntu default software
-    repositories and is available for macOS using homebrew (<https://brew.sh/>)
-    from the osgeo/osgeo4mac (<https://github.com/OSGeo/homebrew-osgeo4mac>)
-    formula tap, as well as being bundled within the 'QGIS' application bundle
-    for macOS. Rsagacmd has currently been tested on 'SAGA-GIS' versions
-    from 2.3.1 to 8.0.1 on Windows, Linux and macOS.
+    and MacOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software
+    repositories. Rsagacmd has currently been tested on 'SAGA-GIS' versions
+    from 2.3.1 to 9.0.1 on Windows, Linux and macOS.
 License: GPL-3
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Depends:
     R (>= 2.10)
 Imports:
     generics,
     sf,
-    raster,
     terra (>= 1.5.21),
     stars,
     tools,
     utils,
-    rgdal,
     foreign,
     stringr,
     rlang,

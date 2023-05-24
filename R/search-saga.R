@@ -1,11 +1,24 @@
 #' Automatic search for the path to a SAGA-GIS installation
 #'
-#' Returns the path to the saga_cmd executable On windows, automatic searching
-#' will occur first in 'C:/Program Files/SAGA-GIS'; 'C:/Program Files
-#' (x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
-#' OS X, saga_cmd is usually included in PATH, if not an automatic search is
-#' performed in the '/usr' folder. If multiple versions of SAGA-GIS are
-#' installed on the system, the path to the newest version is returned
+#' Returns the path to the saga_cmd executable.
+#' 
+#' @details
+#' On Microsoft Windows, automatic searching will occur first in 'C:/Program
+#' Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS';
+#' 'C:/OSGeo4W'; and 'C:/OSGeo4W64'.
+#' 
+#' On Linux, saga_cmd is usually included in PATH, if not an automatic search is
+#' performed in the '/usr/' folder.
+#' 
+#' For MacOS, since version 8.5, SAGA-GIS is available as an standalone MacOS
+#' app from \href{https://sourceforge.net/projects/saga-gis/}{SourceForge}. The
+#' 'SAGA.app' package is searched first (assuming that it is installed in the
+#' '/Applications/' folder). Other MacOS locations that are searched include
+#' '/usr/local/bin/' (for Homebrew installations) and within the QGIS application
+#' (SAGA-GIS is bundled with the QGIS application on MacOS by default).
+#' 
+#' If multiple versions of SAGA-GIS are installed on the system, the path to the
+#' newest version is returned.
 #'
 #' @return The path to installed saga_cmd binary.
 #'
@@ -19,21 +32,23 @@ search_saga <- function() {
     # define search paths
     if (Sys.info()["sysname"] == "Windows") {
       search_paths <- c(
-        "C:/Program Files/SAGA-GIS/",
-        "C:/Program Files (x86)/SAGA-GIS/",
-        "C:/SAGA-GIS/",
-        "C:/OSGeo4W/",
-        "C:/OSGeo4W64/"
+        "C:/Program Files/SAGA-GIS",
+        "C:/Program Files (x86)/SAGA-GIS",
+        "C:/SAGA-GIS",
+        "C:/OSGeo4W",
+        "C:/OSGeo4W64"
       )
       saga_executable <- "saga_cmd.exe"
+      
     } else if (Sys.info()["sysname"] == "Linux") {
-      search_paths <- c("/usr/")
+      search_paths <- c("/usr")
       saga_executable <- "saga_cmd$"
+      
     } else if (Sys.info()["sysname"] == "Darwin") {
       search_paths <- c(
-        "/usr/local/bin/",
-        "/Applications/QGIS.app/Contents/MacOS/bin/",
-        "/usr/local/opt/saga-gis/bin/"
+        "/Applications/SAGA.app/Contents/MacOS",
+        "/usr/local/bin",
+        "/Applications/QGIS.app/Contents/MacOS/bin"
       )
 
       saga_executable <- "^saga_cmd$"

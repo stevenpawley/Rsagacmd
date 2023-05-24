@@ -15,7 +15,7 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
     target_out_grid = tempfile(fileext = ".sgrd")
   )
 
-  testthat::expect_s4_class(dem, "RasterLayer")
+  testthat::expect_s4_class(dem, "SpatRaster")
 
   # table output
   orb <- saga$climate_tools$earths_orbital_parameters(
@@ -36,15 +36,13 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
       flow = tempfile(fileext = ".sgrd")
     )
 
-  testthat::expect_s4_class(flowacc, "RasterLayer")
+  testthat::expect_s4_class(flowacc, "SpatRaster")
 
   # test loading simple features object and pipes
-  dem_mean <- raster::cellStats(dem, mean)
-
   categories <-
     saga$grid_calculus$grid_calculator(
       dem,
-      formula = gsub("z", dem_mean, "ifelse(g1>z, 1, 0)"),
+      formula = "ifelse(g1>20000, 1, 0)",
       result = tempfile(fileext = ".sgrd")
     )
 

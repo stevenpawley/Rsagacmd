@@ -74,51 +74,6 @@ save_object.SpatVectorProxy <- function(x, ...) {
 
 #' @export
 #' @keywords internal
-save_object.RasterLayer <-
-  function(x,
-           temp_path = tempdir(),
-           raster_format,
-           ...) {
-    # pass file name to saga if RasterLayer from single band raster
-    if (raster::nbands(x) == 1 &
-      raster::inMemory(x) == FALSE &
-      tools::file_ext(raster::filename(x)) != "grd") {
-      x <- raster::filename(x)
-
-      # else save band as a single band temporary file and pass temp file name
-    } else if (raster::nbands(x) != 1 |
-      raster::inMemory(x) == TRUE |
-      tools::file_ext(raster::filename(x)) == "grd") {
-      dtype <- raster::dataType(x)
-      nodataval <- switch(dtype,
-        LOG1S = 0,
-        INT1S = -127,
-        INT1U = 0,
-        INT2S = -32767,
-        INT2U = 0,
-        INT4S = -99999,
-        INT4U = 0,
-        FLT4S = -99999,
-        FLT8S = -99999
-      )
-
-      temp <- tempfile(tmpdir = temp_path, fileext = raster_format)
-      temp <- convert_sagaext_r(temp)
-      raster::NAvalue(x) <- nodataval
-      raster::writeRaster(x,
-        filename = temp,
-        datatype = dtype,
-        NAflag = nodataval
-      )
-      pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
-      x <- temp
-    }
-
-    return(x)
-  }
-
-#' @export
-#' @keywords internal
 save_object.SpatRaster <-
   function(x,
            temp_path = tempdir(),
@@ -154,50 +109,6 @@ save_object.SpatRaster <-
       terra::writeRaster(x, filename = temp)
       pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
       x <- temp
-    }
-
-    return(x)
-  }
-
-#' @export
-#' @keywords internal
-save_object.RasterStack <-
-  function(x,
-           temp_path = tempdir(),
-           raster_format,
-           ...) {
-    if (raster::nlayers(x) == 1) {
-      x <- raster::raster(x)
-      x <- save_object(x, raster_format = raster_format)
-    } else {
-      rlang::abort(
-        paste(
-          "Raster object contains multiple layers.",
-          "SAGA-GIS requires single layer rasters as inputs"
-        )
-      )
-    }
-
-    return(x)
-  }
-
-#' @export
-#' @keywords internal
-save_object.RasterBrick <-
-  function(x,
-           temp_path = tempdir(),
-           raster_format,
-           ...) {
-    if (raster::nlayers(x) == 1) {
-      x <- raster::raster(x)
-      x <- save_object(x, raster_format = raster_format)
-    } else {
-      rlang::abort(
-        paste(
-          "Raster object contains multiple layers.",
-          "SAGA-GIS requires single layer rasters as inputs"
-        )
-      )
     }
 
     return(x)

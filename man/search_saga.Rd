@@ -10,10 +10,23 @@ search_saga()
 The path to installed saga_cmd binary.
 }
 \description{
-Returns the path to the saga_cmd executable On windows, automatic searching
-will occur first in 'C:/Program Files/SAGA-GIS'; 'C:/Program Files
-(x86)/SAGA-GIS'; 'C:/SAGA-GIS'; 'C:/OSGeo4W'; and 'C:/OSGeo4W64'. On linux or
-OS X, saga_cmd is usually included in PATH, if not an automatic search is
-performed in the '/usr' folder. If multiple versions of SAGA-GIS are
-installed on the system, the path to the newest version is returned
+Returns the path to the saga_cmd executable.
+}
+\details{
+On Microsoft Windows, automatic searching will occur first in 'C:/Program
+Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS';
+'C:/OSGeo4W'; and 'C:/OSGeo4W64'.
+
+On Linux, saga_cmd is usually included in PATH, if not an automatic search is
+performed in the '/usr/' folder.
+
+For MacOS, since version 8.5, SAGA-GIS is available as an standalone MacOS
+app from \href{https://sourceforge.net/projects/saga-gis/}{SourceForge}. The
+'SAGA.app' package is searched first (assuming that it is installed in the
+'/Applications/' folder). Other MacOS locations that are searched include
+'/usr/local/bin/' (for Homebrew installations) and within the QGIS application
+(SAGA-GIS is bundled with the QGIS application on MacOS by default).
+
+If multiple versions of SAGA-GIS are installed on the system, the path to the
+newest version is returned.
 }
