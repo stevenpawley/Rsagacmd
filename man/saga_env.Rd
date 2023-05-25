@@ -7,7 +7,7 @@
 saga_env(
   saga_bin = NULL,
   opt_lib = NULL,
-  raster_backend = "raster",
+  raster_backend = "terra",
   vector_backend = "sf"
 )
 }
@@ -21,8 +21,8 @@ generate dynamic functions that map to each tool. Used to save time if you
 only want to import a single library.}
 
 \item{raster_backend}{A character vector to specify the library to use for
-handling raster data. Currently, either "raster", "terra" or "stars" is
-supported. The default is "raster".}
+handling raster data. Currently, either "terra" or "stars" is
+supported. The default is "terra".}
 
 \item{vector_backend}{A character to specify the library to use for handling
 vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is

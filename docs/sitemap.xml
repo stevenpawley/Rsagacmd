@@ -4,19 +4,16 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/reference/Rsagacmd.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/check_output_format.html</loc>
@@ -46,9 +43,6 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/map_raster.html</loc>
-  </url>
-  <url>
     <loc>/reference/mrvbf_threshold.html</loc>
   </url>
   <url>
@@ -59,9 +53,6 @@
   </url>
   <url>
     <loc>/reference/parse_options.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
   </url>
   <url>
     <loc>/reference/print.saga_tool.html</loc>
@@ -88,6 +79,9 @@
     <loc>/reference/reexports.html</loc>
   </url>
   <url>
+    <loc>/reference/Rsagacmd.html</loc>
+  </url>
+  <url>
     <loc>/reference/run_cmd.html</loc>
   </url>
   <url>
@@ -107,9 +101,6 @@
   </url>
   <url>
     <loc>/reference/saga_remove_tmpfiles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/saga_search.html</loc>
   </url>
   <url>
     <loc>/reference/saga_show_tmpfiles.html</loc>
@@ -148,12 +139,12 @@
     <loc>/reference/tile_geoprocessor.html</loc>
   </url>
   <url>
-    <loc>/reference/update_parameter_file.html</loc>
-  </url>
-  <url>
     <loc>/reference/update_parameters_file.html</loc>
   </url>
   <url>
     <loc>/reference/update_parameters_tempfiles.html</loc>
+  </url>
+  <url>
+    <loc>/reference/update_parameter_file.html</loc>
   </url>
 </urlset>

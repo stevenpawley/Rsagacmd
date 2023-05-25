@@ -62,7 +62,7 @@ object object. Intended to be used internally by <code><a href="saga_gis.html">s
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">saga_env</span><span class="op">(</span></span>
 <span>  saga_bin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  opt_lib <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  raster_backend <span class="op">=</span> <span class="st">"raster"</span>,</span>
+<span>  raster_backend <span class="op">=</span> <span class="st">"terra"</span>,</span>
 <span>  vector_backend <span class="op">=</span> <span class="st">"sf"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -83,8 +83,8 @@ only want to import a single library.</p></dd>
 
 <dt>raster_backend</dt>
 <dd><p>A character vector to specify the library to use for
-handling raster data. Currently, either "raster", "terra" or "stars" is
-supported. The default is "raster".</p></dd>
+handling raster data. Currently, either "terra" or "stars" is
+supported. The default is "terra".</p></dd>
 
 
 <dt>vector_backend</dt>

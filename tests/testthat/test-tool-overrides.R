@@ -2,7 +2,7 @@ test_that("test create tool overrides export_geotiff", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
 
-  saga <- saga_gis(raster_backend = "raster")
+  saga <- saga_gis(raster_backend = "terra")
   dem <- saga$grid_calculus$random_terrain()
 
   # exporting from saga as a file return the filename
@@ -19,7 +19,7 @@ test_that("test create tool overrides export_shapes", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
 
-  saga <- saga_gis(raster_backend = "raster")
+  saga <- saga_gis(raster_backend = "terra")
   nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
 
   # exporting from saga as a file return the filename
@@ -37,7 +37,7 @@ test_that("test create tool overrides tpi_based_landform_classification", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
 
-  saga <- saga_gis(raster_backend = "raster")
+  saga <- saga_gis(raster_backend = "terra")
   dem <- saga$grid_calculus$random_terrain()
 
   res <- saga$ta_morphometry$tpi_based_landform_classification(
@@ -56,7 +56,7 @@ test_that("test create tool overrides topographic_position_index_tpi", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
 
-  saga <- saga_gis(raster_backend = "raster")
+  saga <- saga_gis(raster_backend = "terra")
   dem <- saga$grid_calculus$random_terrain()
 
   res <- saga$ta_morphometry$topographic_position_index_tpi(

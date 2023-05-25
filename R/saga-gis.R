@@ -12,8 +12,8 @@
 #'   generate dynamic functions that map to each tool. Used to save time if you
 #'   only want to import a single library.
 #' @param raster_backend A character vector to specify the library to use for
-#'   handling raster data. Currently, either "raster", "terra" or "stars" is
-#'   supported. The default is "raster".
+#'   handling raster data. Currently, either "terra" or "stars" is
+#'   supported. The default is "terra".
 #' @param vector_backend A character to specify the library to use for handling
 #'   vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is
 #'   supported. The default is "sf".
@@ -23,10 +23,10 @@
 saga_env <-
   function(saga_bin = NULL,
            opt_lib = NULL,
-           raster_backend = "raster",
+           raster_backend = "terra",
            vector_backend = "sf") {
-    if (!raster_backend %in% c("raster", "terra", "stars")) {
-      rlang::abort("The `raster_backend` must be one of 'raster', 'terra' or 'stars'")
+    if (!raster_backend %in% c("terra", "stars")) {
+      rlang::abort("The `raster_backend` must be one of 'terra' or 'stars'")
     }
     
     if (!vector_backend %in% c("sf", "SpatVector", "SpatVectorProxy")) {
@@ -394,12 +394,11 @@ saga_configure <-
 #'   libraries and tools.
 #'
 #' @export
-#' @import raster
 #' @examples
 #' \dontrun{
 #' # Initialize a saga object
 #' library(Rsagacmd)
-#' library(raster)
+#' library(terra)
 #'
 #' saga <- saga_gis()
 #'

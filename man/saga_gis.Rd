@@ -104,7 +104,7 @@ functions
 \dontrun{
 # Initialize a saga object
 library(Rsagacmd)
-library(raster)
+library(terra)
 
 saga <- saga_gis()
 
