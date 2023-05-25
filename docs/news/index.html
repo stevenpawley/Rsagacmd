@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -48,76 +48,41 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3" id="rsagacmd-03">Rsagacmd 0.3<a class="anchor" aria-label="anchor" href="#rsagacmd-03"></a></h2>
+<p>Changes:</p>
+<ul><li>Removed dependencies for raster and rgdal apackages</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2" id="rsagacmd-02">Rsagacmd 0.2<a class="anchor" aria-label="anchor" href="#rsagacmd-02"></a></h2>
 <p>New features:</p>
-<ul><li><p>Support for SpatVector and SpatVectorProxy proxy objects for
-vector spatial datasets.</p></li>
-<li><p>tidy methods to summarize information about the SAGA-GIS
-libraries and tools within any library and return these as a
-tibble.</p></li>
-<li><p>Function ‘saga_docs’ to browse the online documentation for each
-SAGA-GIS tool.</p></li>
+<ul><li><p>Support for SpatVector and SpatVectorProxy proxy objects for vector spatial datasets.</p></li>
+<li><p>tidy methods to summarize information about the SAGA-GIS libraries and tools within any library and return these as a tibble.</p></li>
+<li><p>Function ‘saga_docs’ to browse the online documentation for each SAGA-GIS tool.</p></li>
 </ul><p>Changes:</p>
-<ul><li>Bug fix for using the <code>terra</code> package as a raster
-backend.</li>
+<ul><li>Bug fix for using the <code>terra</code> package as a raster backend.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.2" id="rsagacmd-012">Rsagacmd 0.1.2<small>2021-12-04</small><a class="anchor" aria-label="anchor" href="#rsagacmd-012"></a></h2>
 <p>New features:</p>
-<ul><li><p>The <code>search_tool</code> function now returns a
-<code>tibble</code> containing the tools that contain the matching term
-along with additional metadata including the author of the tool, a
-description and the tool’s parameters.</p></li>
-<li><p>The generic <code>tidy</code> S3 method from the
-<code>generics</code> package has been extended with a tidy.saga_tool
-method that summarizes a SAGA-GIS tool object’s parameters into a
-tibble. This is designed for easy viewing of a tools options.</p></li>
+<ul><li><p>The <code>search_tool</code> function now returns a <code>tibble</code> containing the tools that contain the matching term along with additional metadata including the author of the tool, a description and the tool’s parameters.</p></li>
+<li><p>The generic <code>tidy</code> S3 method from the <code>generics</code> package has been extended with a tidy.saga_tool method that summarizes a SAGA-GIS tool object’s parameters into a tibble. This is designed for easy viewing of a tools options.</p></li>
 </ul><p>Changes:</p>
-<ul><li>Fix for difference in syntax/parameters between the SAGA GUI and
-command line affecting the TPI tool. The manual/docs list the parameters
-as specified in the GUI, but these differ from those on the command
-line.</li>
+<ul><li>Fix for difference in syntax/parameters between the SAGA GUI and command line affecting the TPI tool. The manual/docs list the parameters as specified in the GUI, but these differ from those on the command line.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.1" id="rsagacmd-011">Rsagacmd 0.1.1<small>2021-07-08</small><a class="anchor" aria-label="anchor" href="#rsagacmd-011"></a></h2>
 <p>New features:</p>
 <ul><li>Included support for the ‘stars’ raster backend.</li>
 </ul><p>Changes:</p>
-<ul><li><p>Because ‘Rsagacmd’ now supports multiple raster backends, the
-‘raster’ package is no longer automatically attached when using
-Rsagacmd. The raster/terra/stars objects resulting from geoprocessing
-operations be still be loaded, but to apply additional functions to
-these objects (e.g. plot) then the user needs to explicitly load the
-desired backend, e.g. <code><a href="https://r-spatial.github.io/stars/" class="external-link">library(stars)</a></code> in their
-script.</p></li>
-<li><p>The spinner is now turned off for geoprocessing operations
-because to avoid creating an annoying extra line in Rmarkdown notebooks,
-jupyter etc.</p></li>
-<li><p>Rsagacmd now checks the file extensions of tools to ensure that
-the correct file extension is used relative to the
-<code>raster_format</code> or <code>vector_format</code>. This ensures
-that outputs of SAGA-GIS tools will be correctly loaded by R.</p></li>
-<li><p>Rsagacmd saga_search should correctly recognize the location of
-the saga_cmd binary on MacOS that is included within the QGIS.app
-bundle, if installed from official sources.</p></li>
+<ul><li><p>Because ‘Rsagacmd’ now supports multiple raster backends, the ‘raster’ package is no longer automatically attached when using Rsagacmd. The raster/terra/stars objects resulting from geoprocessing operations be still be loaded, but to apply additional functions to these objects (e.g. plot) then the user needs to explicitly load the desired backend, e.g. <code><a href="https://r-spatial.github.io/stars/" class="external-link">library(stars)</a></code> in their script.</p></li>
+<li><p>The spinner is now turned off for geoprocessing operations because to avoid creating an annoying extra line in Rmarkdown notebooks, jupyter etc.</p></li>
+<li><p>Rsagacmd now checks the file extensions of tools to ensure that the correct file extension is used relative to the <code>raster_format</code> or <code>vector_format</code>. This ensures that outputs of SAGA-GIS tools will be correctly loaded by R.</p></li>
+<li><p>Rsagacmd saga_search should correctly recognize the location of the saga_cmd binary on MacOS that is included within the QGIS.app bundle, if installed from official sources.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="rsagacmd-010">Rsagacmd 0.1.0<small>2021-01-11</small><a class="anchor" aria-label="anchor" href="#rsagacmd-010"></a></h2>
-<p>Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize
-the the internal representation of SAGA-GIS tools and parameter settings
-using a similar approach as used by the saga_api.</p>
-<p>Most notably, this release provides support for the use of different
-raster backend, including the existing ‘raster’ package, as well as the
-newer ‘terra’ package. Configuration options to use different spatial
-formats as data is passed from R to SAGA (and back) is also provided.
-For rasters, datasets that are saved from R memory to disk for access by
-the saga command line (and vice versa) can be in ‘SAGA’ format (the
-default), ‘SAGA Compressed’, or ‘GeoTIFF’, which can potentially save
-disk space when transferring large volumes of data. Vector formats now
-include ‘ESRI Shapefile’ (the default), ‘Geopackage’ and ‘GeoJSON’. The
-use of the geopackage format eliminates problems when transferring
-spatial datasets which have attribute names that are &gt;10 characters
-in length.</p>
+<p>Rsagacmd 0.1.0 includes many behind-the-scenes changes that organize the the internal representation of SAGA-GIS tools and parameter settings using a similar approach as used by the saga_api.</p>
+<p>Most notably, this release provides support for the use of different raster backend, including the existing ‘raster’ package, as well as the newer ‘terra’ package. Configuration options to use different spatial formats as data is passed from R to SAGA (and back) is also provided. For rasters, datasets that are saved from R memory to disk for access by the saga command line (and vice versa) can be in ‘SAGA’ format (the default), ‘SAGA Compressed’, or ‘GeoTIFF’, which can potentially save disk space when transferring large volumes of data. Vector formats now include ‘ESRI Shapefile’ (the default), ‘Geopackage’ and ‘GeoJSON’. The use of the geopackage format eliminates problems when transferring spatial datasets which have attribute names that are &gt;10 characters in length.</p>
 <p>Enjoy!</p>
 </div>
   </div>
@@ -134,8 +99,7 @@ in length.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

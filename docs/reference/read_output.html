@@ -20,7 +20,7 @@ by saga_cmd"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -58,7 +58,7 @@ by saga_cmd</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_output</span><span class="op">(</span><span class="va">output</span>, <span class="va">raster_backend</span>, <span class="va">vector_backend</span>, <span class="va">.intern</span>, <span class="va">.all_outputs</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_output</span><span class="op">(</span><span class="va">output</span>, <span class="va">raster_backend</span>, <span class="va">vector_backend</span>, <span class="va">.intern</span>, <span class="va">.all_outputs</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -67,17 +67,26 @@ by saga_cmd</p>
 <dd><p>list, a `options` object that was created by the `create_tool`
 function that contains the parameters for a particular tool and its
 outputs.</p></dd>
+
+
 <dt>raster_backend</dt>
 <dd><p>character, either "raster" or "terra"</p></dd>
+
+
 <dt>vector_backend</dt>
 <dd><p>character, either "sf", "SpatVector" or
 "SpatVectorProxy"</p></dd>
+
+
 <dt>.intern</dt>
 <dd><p>logical, whether to load the output as an R object</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>the loaded objects, or NULL is `.intern = FALSE`.</p>
+    
+
+<p>the loaded objects, or NULL is `.intern = FALSE`.</p>
     </div>
 
   </div>
@@ -92,8 +101,7 @@ outputs.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

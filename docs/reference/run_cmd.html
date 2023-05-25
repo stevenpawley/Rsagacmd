@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -53,29 +53,42 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_cmd</span><span class="op">(</span><span class="va">saga_cmd</span>, <span class="va">saga_config</span>, <span class="va">lib</span>, <span class="va">tool_cmd</span>, <span class="va">args</span>, <span class="va">verbose</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_cmd</span><span class="op">(</span><span class="va">saga_cmd</span>, <span class="va">saga_config</span>, <span class="va">lib</span>, <span class="va">tool_cmd</span>, <span class="va">args</span>, <span class="va">verbose</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>saga_cmd</dt>
 <dd><p>character, name of the saga_cmd executable or alias.</p></dd>
+
+
 <dt>saga_config</dt>
 <dd><p>character, path to the saga configuration "ini" file.</p></dd>
+
+
 <dt>lib</dt>
 <dd><p>character, name of the selected library.</p></dd>
+
+
 <dt>tool_cmd</dt>
 <dd><p>character, name of the selected tool.</p></dd>
+
+
 <dt>args</dt>
 <dd><p>named list of tool options, such as list(DEM = "mygrid.tif",
 RADIUS = 3).</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical, whether to show all saga_cmd messages on the R
 console.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>list, output from `processx::run()`</p>
+    
+
+<p>list, output from `processx::run()`</p>
     </div>
 
   </div>
@@ -90,8 +103,7 @@ console.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

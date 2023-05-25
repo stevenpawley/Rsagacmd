@@ -20,7 +20,7 @@ object object. Intended to be used internally by saga_gis"><!-- mathjax --><scri
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -59,12 +59,12 @@ object object. Intended to be used internally by <code><a href="saga_gis.html">s
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">saga_env</span><span class="op">(</span>
-  saga_bin <span class="op">=</span> <span class="cn">NULL</span>,
-  opt_lib <span class="op">=</span> <span class="cn">NULL</span>,
-  raster_backend <span class="op">=</span> <span class="st">"raster"</span>,
-  vector_backend <span class="op">=</span> <span class="st">"sf"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">saga_env</span><span class="op">(</span></span>
+<span>  saga_bin <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  opt_lib <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  raster_backend <span class="op">=</span> <span class="st">"raster"</span>,</span>
+<span>  vector_backend <span class="op">=</span> <span class="st">"sf"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,22 +73,31 @@ object object. Intended to be used internally by <code><a href="saga_gis.html">s
 <dd><p>An optional character vector to specify the path to the
 saga_cmd executable. Otherwise the function will perform a search for
 saga_cmd.</p></dd>
+
+
 <dt>opt_lib</dt>
 <dd><p>A character vector of a subset of SAGA-GIS tool libraries to
 generate dynamic functions that map to each tool. Used to save time if you
 only want to import a single library.</p></dd>
+
+
 <dt>raster_backend</dt>
 <dd><p>A character vector to specify the library to use for
 handling raster data. Currently, either "raster", "terra" or "stars" is
 supported. The default is "raster".</p></dd>
+
+
 <dt>vector_backend</dt>
 <dd><p>A character to specify the library to use for handling
 vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is
 supported. The default is "sf".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A saga environment S3 object containing paths, settings and a nested
+    
+
+<p>A saga environment S3 object containing paths, settings and a nested
   list of libraries tools and options.</p>
     </div>
 
@@ -104,8 +113,7 @@ supported. The default is "sf".</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

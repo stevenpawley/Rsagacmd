@@ -1,3 +1,9 @@
+# Rsagacmd 0.3
+
+Changes:
+
+ - Removed dependencies for raster and rgdal apackages
+
 # Rsagacmd 0.2
 
 New features:

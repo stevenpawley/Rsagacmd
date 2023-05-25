@@ -18,7 +18,7 @@ options, defaults and constraints"><!-- mathjax --><script src="https://cdnjs.cl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -55,25 +55,34 @@ options, defaults and constraints</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">create_tool</span><span class="op">(</span><span class="va">tool_information</span>, <span class="va">tool_options</span>, <span class="va">description</span>, <span class="va">html_file</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_tool</span><span class="op">(</span><span class="va">tool_information</span>, <span class="va">tool_options</span>, <span class="va">description</span>, <span class="va">html_file</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>tool_information</dt>
 <dd><p>list</p></dd>
+
+
 <dt>tool_options</dt>
 <dd><p>list</p></dd>
+
+
 <dt>html_file</dt>
 <dd><p>the name of the html file for the tool's documentation.
 Stored to help linking with online documentation.</p></dd>
+
+
 <dt>character</dt>
 <dd><p>the description text for the tool that has been scraped from
 the help documentation</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A `saga_tool` object containing:
+    
+
+<p>A `saga_tool` object containing:
 + `tool_name` A syntactically-correct name for the tool.
 + `description` The tool's description.
 + `author` The tool's author.
@@ -94,8 +103,7 @@ the help documentation</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

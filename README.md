@@ -18,7 +18,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 
 **Rsagacmd** provides an R scripting interface to the open-source
 SAGA-GIS (<https://sourceforge.net/projects/saga-gis/>) software. The
-current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on
+current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 9.0.1 on
 Windows (x64), OS X and Linux.
 
 ## Contents
@@ -93,10 +93,14 @@ by:
 ``` r
 library(Rsagacmd)
 library(terra)
-#> terra 1.7.28
+#> terra 1.7.29
 
 # initiate a saga object
 saga <- saga_gis(raster_backend = "terra")
+#> Multiple installations of SAGA-GIS were found at:
+#> /Applications/SAGA.app/Contents/MacOS/saga_cmd
+#> /Applications/QGIS.app/Contents/MacOS/bin/saga_cmd
+#> Choosing newest version. Manually specify the location when calling saga_gis() to use an older version
 
 # load the example data
 srtm <- read_srtm()
@@ -108,8 +112,8 @@ saga$ta_morphometry$mass_balance_index(dem = srtm)
 #> resolution  : 100, 100  (x, y)
 #> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
 #> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
-#> source      : file390870ea106.sdat 
-#> name        : file390870ea106
+#> source      : fileeff8629d7635.sdat 
+#> name        : fileeff8629d7635
 ```
 
 This facilitates an easier scripting experience by organizing the large
@@ -138,12 +142,12 @@ tabular data). In addition, **Rsagacmd** currently supports the
 following R object classes to pass data to SAGA-GIS, and to load the
 results back into the R environment:
 
-- Raster data handling is provided by the R **raster** package as the
+- Raster data handling is provided by the R **terra** package as the
   default backend. Raster-based outputs from SAGA-GIS tools are loaded
   as `SpatRaster` objects. For more details, see the ‘Handling of raster
   data’. Other raster backends can be specified when creating the link
   to SAGA-GIS using `saga_gis(raster_backend = "stars")` for example.
-  The supported raster backends are **terra** and **stars**.
+
 - Vector features that result from SAGA-GIS geoprocessing operations are
   output the format specified by the ‘vector_format’ arguments (default
   is ESRI Shapefile for SAGA-GIS versions \< 7.0 and GeoPackage for
@@ -152,6 +156,7 @@ results back into the R environment:
   including ‘sf’, ‘SpatVector’, and ‘SpatVectorProxy’, which can also be
   specified when initiating the link to SAGA-GIS using
   `saga_gis(vector_backend = "SpatVector")`.
+
 - Tabular data from SAGA-GIS tools are loaded as tibbles
 
 The results from tools that return multiple outputs are loaded into the
@@ -235,29 +240,28 @@ objects. The intermediate processing steps are dealt with automatically
 by saving the outputs as tempfiles. When dealing with high-resolution
 and/or larger raster data, these tempfiles can start to consume a
 significant amount of disk space over a session. If required, temporary
-files can be cleaned during the session in a similar way to the
-**raster** or **terra** packages, using:
+files can be cleaned during the session using:
 
 ``` r
 saga_remove_tmpfiles(h = 0)
 #> Removing Rsagacmd temporary files h=0
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390870ea106.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085b1c2f0e.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085f840421.gpkg
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908542b4384.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39086cfe250a.sdat
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39082131eb6d.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390854575221.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390830d11fc9.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908717dde28.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087e844e4d.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39082030e21f.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file3908694d71bb.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085b65e1ff.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087dd85b39.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file390874d3bbb.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39085f8c75bb.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmpfOymJh/file39087e8578fe.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8629d7635.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff81e19cc76.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff87f0d5758.gpkg
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff844e19392.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff863c634f4.sdat
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff869beb258.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff866aee5a4.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff86466a6a6.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8f470fc9.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff825d5cf5.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff83f81da09.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff86611a571.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff81084d211.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff87ffb628f.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff85103dbed.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8545bce28.sgrd
+#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8573bcf5c.sgrd
 ```
 
 where `h` is minimum age (in number of hours) of tempfiles for removal,

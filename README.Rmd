@@ -29,7 +29,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 
 **Rsagacmd** provides an R scripting interface to the open-source SAGA-GIS
 (<https://sourceforge.net/projects/saga-gis/>) software. The current version has
-been tested using SAGA-GIS 2.3.2, 5.0.0 - 8.0.1 on Windows (x64), OS X and
+been tested using SAGA-GIS 2.3.2, 5.0.0 - 9.0.1 on Windows (x64), OS X and
 Linux.
 
 ## Contents
@@ -138,12 +138,12 @@ comma- or tab-delimited text files for tabular data). In addition, **Rsagacmd**
 currently supports the following R object classes to pass data to SAGA-GIS, and
 to load the results back into the R environment:
 
--   Raster data handling is provided by the R **raster** package as the default
+-   Raster data handling is provided by the R **terra** package as the default
 backend. Raster-based outputs from SAGA-GIS tools are loaded as `SpatRaster`
 objects. For more details, see the 'Handling of raster data'. Other raster
 backends can be specified when creating the link to SAGA-GIS using
-`saga_gis(raster_backend = "stars")` for example. The supported raster backends
-are **terra** and **stars**.
+`saga_gis(raster_backend = "stars")` for example.
+
 -   Vector features that result from SAGA-GIS geoprocessing operations are
 output the format specified by the 'vector_format' arguments (default is ESRI
 Shapefile for SAGA-GIS versions < 7.0 and GeoPackage for newer versions) and are
@@ -225,8 +225,7 @@ land surface parameter grids are returned as `SpatRaster` objects. The
 intermediate processing steps are dealt with automatically by saving the outputs
 as tempfiles. When dealing with high-resolution and/or larger raster data, these
 tempfiles can start to consume a significant amount of disk space over a
-session. If required, temporary files can be cleaned during the session in a
-similar way to the **raster** or **terra** packages, using:
+session. If required, temporary files can be cleaned during the session using:
 
 ```{r removing-tempfiles}
 saga_remove_tmpfiles(h = 0)
