@@ -20,12 +20,12 @@ Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS';
 On Linux, saga_cmd is usually included in PATH, if not an automatic search is
 performed in the '/usr/' folder.
 
-For MacOS, since version 8.5, SAGA-GIS is available as an standalone MacOS
+For macOS, since version 8.5, SAGA-GIS is available as an standalone macOS
 app from \href{https://sourceforge.net/projects/saga-gis/}{SourceForge}. The
 'SAGA.app' package is searched first (assuming that it is installed in the
-'/Applications/' folder). Other MacOS locations that are searched include
+'/Applications/' folder). Other macOS locations that are searched include
 '/usr/local/bin/' (for Homebrew installations) and within the QGIS application
-(SAGA-GIS is bundled with the QGIS application on MacOS by default).
+(SAGA-GIS is bundled with the QGIS application on macOS by default).
 
 If multiple versions of SAGA-GIS are installed on the system, the path to the
 newest version is returned.

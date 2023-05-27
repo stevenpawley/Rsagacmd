@@ -152,3 +152,26 @@ testthat::test_that("initiation of SAGA-GIS 8.0.1", {
     unlink(dirname(saga_bin), recursive = TRUE)
   }
 })
+
+testthat::test_that("initiation of SAGA-GIS 9.0.1", {
+  testthat::skip_on_cran()
+  testthat::skip_if_not(
+    Sys.info()["sysname"] == "Windows" &
+      Sys.info()["machine"] == "x86-64"
+  )
+  
+  saga_url <-
+    "https://sourceforge.net/projects/saga-gis/files/SAGA%20-%209/SAGA%20-%209.0.1/saga-9.0.1_x64.zip"
+  saga_bin <- download_saga(saga_url)
+  
+  if (!is.null(saga_bin)) {
+    saga <- saga_gis(saga_bin)
+    testthat::expect_false(is.null(saga))
+    testthat::expect_gt(length(saga), 0)
+    testthat::expect_s4_class(
+      saga$grid_calculus$random_terrain(iterations = 1, radius = 1),
+      "SpatRaster"
+    )
+    unlink(dirname(saga_bin), recursive = TRUE)
+  }
+})

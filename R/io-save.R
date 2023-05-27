@@ -153,7 +153,8 @@ spatial_to_saga <-
            vector_format) {
     temp <- tempfile(tmpdir = temp_path, fileext = vector_format)
     pkg.env$sagaTmpFiles <- append(pkg.env$sagaTmpFiles, temp)
-    rgdal::writeOGR(obj = x, dsn = temp, layer = 1)
+    x <- sf::st_as_sf(x)
+    sf::write_sf(x, dsn = temp, layer = 1, quiet = TRUE)
 
     return(temp)
   }

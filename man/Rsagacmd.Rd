@@ -17,7 +17,7 @@ S3 object as a named list of libraries and tools. This structure facilitates
 an easier scripting experience by organizing the large number of SAGA-GIS
 tools (>700) by their respective library. Interactive scripting can also
 fully take advantage of code autocompletion tools (e.g. in
-\href{https://www.rstudio.com}{Rstudio}), allowing for each tool's syntax to
+\href{https://posit.co}{Rstudio}), allowing for each tool's syntax to
 be quickly recognized. Furthermore, the most common types of spatial data
 (rasters using the \pkg{terra} and \pkg{stars} packages, and vector data
 using \pkg{sp}, \pkg{sf} or \pkg{terra} packages) along with non-spatial data
