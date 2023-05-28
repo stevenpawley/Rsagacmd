@@ -36,7 +36,7 @@ check_output_format <- function(x, raster_format, vector_format) {
         "into your R environment"
       )
 
-      rlang::abort(msg)
+      stop(msg)
     }
   } else if (x$feature == "Grid list") {
     files <- strsplit(x$files, ";")[[1]]
@@ -51,7 +51,7 @@ check_output_format <- function(x, raster_format, vector_format) {
         "This will prevent Rsagacmd from loading the output",
         "into your R environment"
       )
-      rlang::abort(msg)
+      stop(msg)
     }
   } else if (x$feature == "Shape") {
     ext <- get_file_ext(x$files)
@@ -64,7 +64,7 @@ check_output_format <- function(x, raster_format, vector_format) {
         "This will prevent Rsagacmd from loading the output",
         "into your R environment"
       )
-      rlang::abort(msg)
+      stop(msg)
     }
   } else if (x$feature == "Shapes list") {
     files <- strsplit(x$files, ";")[[1]]
@@ -79,7 +79,7 @@ check_output_format <- function(x, raster_format, vector_format) {
         "This will prevent Rsagacmd from loading the output",
         "into your R environment"
       )
-      rlang::abort(msg)
+      stop(msg)
     }
   }
 }

@@ -80,7 +80,7 @@ saga_execute <-
     params <- drop_parameters(params)
 
     if (length(params) == 0) {
-      rlang::abort("No outputs have been specified")
+      stop("No outputs have been specified")
     }
 
     # check if any outputs will be produced
@@ -107,7 +107,7 @@ saga_execute <-
         check_output_format(tool_output, raster_format, vector_format)
       }
     } else {
-      rlang::abort("No outputs have been specified")
+      stop("No outputs have been specified")
       return(NULL)
     }
 
@@ -124,7 +124,7 @@ saga_execute <-
       if (verbose) {
         message(msg$stdout)
       }
-      rlang::abort(msg$stderr)
+      stop(msg$stderr)
     }
 
     # load SAGA results as list of R objects
