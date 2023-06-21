@@ -34,7 +34,7 @@ test_that("test raster formats (SAGA)", {
 test_that("test raster formats (SAGA Compressed)", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
-  testthat::skip_if(saga_version(search_saga()) < numeric_version(5.0))
+  testthat::skip_if(saga_version(search_saga()) < numeric_version("5.0"))
 
   saga <- saga_gis(raster_format = "SAGA Compressed")
   dem <- saga$grid_calculus$random_terrain()
@@ -58,7 +58,7 @@ test_that("test raster formats (SAGA Compressed)", {
 test_that("test vector formats (GeoPackage)", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
-  testthat::skip_if(saga_version(search_saga()) < numeric_version(5.0))
+  testthat::skip_if(saga_version(search_saga()) < numeric_version("5.0"))
 
   saga <- saga_gis(vector_format = "GeoPackage")
 

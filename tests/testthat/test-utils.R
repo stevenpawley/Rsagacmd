@@ -1,7 +1,7 @@
 testthat::test_that("tile geoprocessor function", {
   testthat::skip_on_cran()
   testthat::skip_if(is.null(search_saga()))
-  testthat::skip_if(saga_version(search_saga()) < numeric_version(7.0))
+  testthat::skip_if(saga_version(search_saga()) < numeric_version("7.0"))
 
   saga <- saga_gis()
 

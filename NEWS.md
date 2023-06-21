@@ -1,4 +1,8 @@
-# Rsagacmd 0.3
+# Rsagacmd 0.41
+
+Minor fix to only pass character vectors to 'numeric_version'
+
+# Rsagacmd 0.4
 
 Changes:
 
