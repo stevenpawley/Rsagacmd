@@ -44,6 +44,13 @@ create_tool <- function(tool_information, tool_options, description,
   tool_name <- gsub("_+", "_", tool_name)
   tool_name <- gsub("^_+", "", tool_name)
   tool_name <- tolower(tool_name)
+  
+  # get the tool ID
+  tool_id <- tool_information[tool_information[[1]] == "ID",][[2]]
+  suppressWarnings(tool_id <- as.integer(tool_id))
+  if (is.na(tool_id)) {
+    tool_id = saga_tool_cmd
+  }
 
   # strip input, output and options lines from table
   # (rows in the table that represent headers/section breaks and have same value
@@ -60,15 +67,15 @@ create_tool <- function(tool_information, tool_options, description,
   # apply exceptions for specific saga-gis tools
   params <- create_tool_overrides(tool_name, params)
 
-  structure(
-    list(
-      tool_name = tool_name,
-      description = description,
-      author = author,
-      tool_cmd = saga_tool_cmd,
-      params = params,
-      html_file = html_file
-    ),
-    class = "saga_tool"
+  obj <- list(
+    tool_name = tool_name,
+    description = description,
+    author = author,
+    tool_cmd = saga_tool_cmd,
+    tool_id = tool_id,
+    params = params,
+    html_file = html_file
   )
+  
+  return(obj)
 }

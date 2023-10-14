@@ -32,7 +32,7 @@ saga_execute <-
     tools_in_library <- senv$libraries[[lib]]
     selected_tool <- tools_in_library[[tool]]
     params <- selected_tool$params
-    tool_cmd <- selected_tool$tool_cmd
+    tool_cmd <- selected_tool$tool_id
     saga_cmd <- senv$saga_cmd
     saga_config <- senv$saga_config
     temp_path <- senv$temp_path

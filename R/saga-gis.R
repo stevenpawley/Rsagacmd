@@ -128,7 +128,6 @@ saga_env <-
               lib_name <- gsub(" ", "_", lib_name)
               libraries[[lib_name]][[tool_config$tool_name]] <- tool_config
             }
-            
           },
           error = function(e) {
             e
