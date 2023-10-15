@@ -68,7 +68,7 @@ save_object.SpatVector <-
 #' @export
 #' @keywords internal
 save_object.SpatVectorProxy <- function(x, ...) {
-  src <- x@ptr$v$source
+  src <- terra::sources(x)
   return(src)
 }
 

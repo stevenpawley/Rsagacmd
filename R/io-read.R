@@ -14,11 +14,11 @@ read_shapes <- function(x, vector_backend) {
   }
   
   if (vector_backend == "SpatVector") {
-    result <- terra::vect(x$files)
+    suppressWarnings(result <- terra::vect(x$files))
   }
   
   if (vector_backend == "SpatVectorProxy") {
-    result <- terra::vect(x$files, proxy = TRUE)
+    suppressWarnings(result <- terra::vect(x$files, proxy = TRUE))
   }
   
   return(result)
