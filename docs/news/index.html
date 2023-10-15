@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.2</span>
       </span>
     </div>
 
@@ -48,7 +48,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3" id="rsagacmd-03">Rsagacmd 0.3<a class="anchor" aria-label="anchor" href="#rsagacmd-03"></a></h2>
+<h2 class="page-header" data-toc-text="0.42" id="rsagacmd-042">Rsagacmd 0.42<a class="anchor" aria-label="anchor" href="#rsagacmd-042"></a></h2>
+<p>Minor bug fixes:</p>
+<ul><li>Fixed issue with reading using the terra SpatVector backend.</li>
+<li>Change to the saga_cmd syntax by referring to a tool by its ID rather than its name, where possible. This avoids confusion with tools that have interactive versions.</li>
+<li>Added package-level documentation.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.41" id="rsagacmd-041">Rsagacmd 0.41<a class="anchor" aria-label="anchor" href="#rsagacmd-041"></a></h2>
+<p>Minor fix to only pass character vectors to ‘numeric_version’</p>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.4" id="rsagacmd-04">Rsagacmd 0.4<a class="anchor" aria-label="anchor" href="#rsagacmd-04"></a></h2>
 <p>Changes:</p>
 <ul><li>Removed dependencies for raster and rgdal apackages</li>
 </ul></div>
@@ -77,7 +88,7 @@
 <ul><li><p>Because ‘Rsagacmd’ now supports multiple raster backends, the ‘raster’ package is no longer automatically attached when using Rsagacmd. The raster/terra/stars objects resulting from geoprocessing operations be still be loaded, but to apply additional functions to these objects (e.g. plot) then the user needs to explicitly load the desired backend, e.g. <code><a href="https://r-spatial.github.io/stars/" class="external-link">library(stars)</a></code> in their script.</p></li>
 <li><p>The spinner is now turned off for geoprocessing operations because to avoid creating an annoying extra line in Rmarkdown notebooks, jupyter etc.</p></li>
 <li><p>Rsagacmd now checks the file extensions of tools to ensure that the correct file extension is used relative to the <code>raster_format</code> or <code>vector_format</code>. This ensures that outputs of SAGA-GIS tools will be correctly loaded by R.</p></li>
-<li><p>Rsagacmd saga_search should correctly recognize the location of the saga_cmd binary on MacOS that is included within the QGIS.app bundle, if installed from official sources.</p></li>
+<li><p>Rsagacmd saga_search should correctly recognize the location of the saga_cmd binary on macOS that is included within the QGIS.app bundle, if installed from official sources.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="rsagacmd-010">Rsagacmd 0.1.0<small>2021-01-11</small><a class="anchor" aria-label="anchor" href="#rsagacmd-010"></a></h2>

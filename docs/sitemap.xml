@@ -4,16 +4,25 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>/reference/Rsagacmd-package.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Rsagacmd.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Rsagacmd_usage.html</loc>
   </url>
   <url>
     <loc>/reference/check_output_format.html</loc>
@@ -79,9 +88,6 @@
     <loc>/reference/reexports.html</loc>
   </url>
   <url>
-    <loc>/reference/Rsagacmd.html</loc>
-  </url>
-  <url>
     <loc>/reference/run_cmd.html</loc>
   </url>
   <url>
@@ -139,12 +145,12 @@
     <loc>/reference/tile_geoprocessor.html</loc>
   </url>
   <url>
+    <loc>/reference/update_parameter_file.html</loc>
+  </url>
+  <url>
     <loc>/reference/update_parameters_file.html</loc>
   </url>
   <url>
     <loc>/reference/update_parameters_tempfiles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/update_parameter_file.html</loc>
   </url>
 </urlset>
