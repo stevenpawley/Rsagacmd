@@ -7,14 +7,14 @@
 update_parameters_file(params, temp_path = NULL, raster_format, vector_format)
 }
 \arguments{
+\item{params}{A `parameters` object.}
+
 \item{temp_path}{A character specifying the tempdir to use for storage
 (optional).}
 
 \item{raster_format}{file extension for raster formats}
 
 \item{vector_format}{file extension for vector formats}
-
-\item{param}{A `parameters` object.}
 }
 \value{
 A `parameters` object with updated `file` attributes that refers to

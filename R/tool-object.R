@@ -5,8 +5,8 @@
 #'
 #' @param tool_information list
 #' @param tool_options list
-#' @param character the description text for the tool that has been scraped from
-#'   the help documentation
+#' @param description the description text for the tool that has been scraped
+#'   from the help documentation
 #' @param html_file the name of the html file for the tool's documentation.
 #'   Stored to help linking with online documentation.
 #'
@@ -15,6 +15,7 @@
 #' + `description` The tool's description.
 #' + `author` The tool's author.
 #' + `tool_cmd` The command to use for saga_cmd to execute tool.
+#' + `tool_id` The tool's ID.
 #' + `parameters` A named list of the tool's parameter objects.
 #' + `html_file` The html document name.
 #'

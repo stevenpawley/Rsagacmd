@@ -290,7 +290,7 @@ update_parameter_file <-
 
 #' Updates a `parameters` object with file paths to the R data objects.
 #'
-#' @param param A `parameters` object.
+#' @param params A `parameters` object.
 #' @param temp_path A character specifying the tempdir to use for storage
 #'   (optional).
 #' @param raster_format file extension for raster formats
