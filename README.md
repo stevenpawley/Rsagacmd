@@ -18,7 +18,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 
 **Rsagacmd** provides an R scripting interface to the open-source
 SAGA-GIS (<https://sourceforge.net/projects/saga-gis/>) software. The
-current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 9.0.1 on
+current version has been tested using SAGA-GIS 2.3.2, 5.0.0 - 9.2 on
 Windows (x64), OS X and Linux.
 
 ## Contents
@@ -93,7 +93,7 @@ by:
 ``` r
 library(Rsagacmd)
 library(terra)
-#> terra 1.7.29
+#> terra 1.7.55
 
 # initiate a saga object
 saga <- saga_gis(raster_backend = "terra")
@@ -112,8 +112,8 @@ saga$ta_morphometry$mass_balance_index(dem = srtm)
 #> resolution  : 100, 100  (x, y)
 #> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
 #> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
-#> source      : fileeff8629d7635.sdat 
-#> name        : fileeff8629d7635
+#> source      : file19ef60012a7.sdat 
+#> name        : file19ef60012a7
 ```
 
 This facilitates an easier scripting experience by organizing the large
@@ -245,23 +245,23 @@ files can be cleaned during the session using:
 ``` r
 saga_remove_tmpfiles(h = 0)
 #> Removing Rsagacmd temporary files h=0
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8629d7635.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff81e19cc76.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff87f0d5758.gpkg
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff844e19392.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff863c634f4.sdat
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff869beb258.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff866aee5a4.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff86466a6a6.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8f470fc9.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff825d5cf5.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff83f81da09.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff86611a571.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff81084d211.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff87ffb628f.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff85103dbed.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8545bce28.sgrd
-#> /var/folders/yy/zwzdvy952rv3m1bpxfcsrqcm0000gn/T//RtmprptLyU/fileeff8573bcf5c.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef60012a7.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef61f3a27a.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef2ec55176.gpkg
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef1c6731f7.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef561275bc.sdat
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef55efb5c9.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef6c87cb32.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef472d7748.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef79f23c79.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe606a7b.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef5beeb89c.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef159a38eb.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef400ed761.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe5e4222.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4e47cd8c.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4c07ca7a.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef137e3695.sgrd
 ```
 
 where `h` is minimum age (in number of hours) of tempfiles for removal,

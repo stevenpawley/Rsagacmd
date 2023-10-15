@@ -2,5 +2,7 @@
 
 0 errors | 0 warnings | 0 note
 
-* Minor update to address CRAN issue related to passing a numeric instead of a
-character vector to numeric_version()
+* Minor update to address: 
+ - Issue with reading using the terra SpatVector backend.
+ - Confusion when calling the saga_cmd commandline with tools that have interactive versions.
+ - Added package-level documentation.

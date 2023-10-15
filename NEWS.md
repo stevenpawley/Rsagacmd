@@ -1,3 +1,13 @@
+# Rsagacmd 0.42
+
+Minor bug fixes:
+
+- Fixed issue with reading using the terra SpatVector backend.
+- Change to the saga_cmd syntax by referring to a tool by its ID rather than 
+its name, where possible. This avoids confusion with tools that have interactive
+versions.
+- Added package-level documentation.
+
 # Rsagacmd 0.41
 
 Minor fix to only pass character vectors to 'numeric_version'
