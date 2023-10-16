@@ -1,0 +1,1641 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `Rsagacmd'}}
+\par\bigskip{\large \today}
+\end{center}
+\inputencoding{utf8}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {Rsagacmd: Linking R with the Open-Source 'SAGA-GIS' Software}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Steven Pawley}}}{}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Linking R with the Open-Source 'SAGA-GIS' Software}
+\item[Version]\AsIs{0.4.2}
+\item[Date]\AsIs{2023-10-15}
+\item[Maintainer]\AsIs{Steven Pawley }\email{dr.stevenpawley@gmail.com}\AsIs{}
+\item[Description]\AsIs{Provides an R scripting interface to the open-source 'SAGA-GIS' 
+(System for Automated Geoscientific Analyses Geographical Information
+System) software. 'Rsagacmd' dynamically generates R functions for every
+'SAGA-GIS' geoprocessing tool based on the user's currently installed
+'SAGA-GIS' version. These functions are contained within an S3 object
+and are accessed as a named list of libraries and tools. This structure
+facilitates an easier scripting experience by organizing the large number
+of 'SAGA-GIS' geoprocessing tools (>700) by their respective library.
+Interactive scripting can fully take advantage of code autocompletion tools
+(e.g. in 'Rstudio'), allowing for each tools syntax to be quickly
+recognized. Furthermore, the most common types of spatial data (via the
+'terra', 'sp', and 'sf' packages) along with non-spatial data are
+automatically passed from R to the 'SAGA-GIS' command line tool for
+geoprocessing operations, and the results are loaded as the appropriate R
+object. Outputs from individual 'SAGA-GIS' tools can also be chained using
+pipes from the 'magrittr' and 'dplyr' packages to combine complex
+geoprocessing operations together in a single statement. 'SAGA-GIS' is
+available under a GPLv2 / LGPLv2 licence from
+<}\url{https://sourceforge.net/projects/saga-gis/}\AsIs{> including Windows x86/x64
+and macOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software
+repositories. Rsagacmd has currently been tested on 'SAGA-GIS' versions
+from 2.3.1 to 9.2 on Windows, Linux and macOS.}
+\item[License]\AsIs{GPL-3}
+\item[Encoding]\AsIs{UTF-8}
+\item[SystemRequirements]\AsIs{SAGA-GIS (>= 2.3.1)}
+\item[RoxygenNote]\AsIs{7.2.3}
+\item[Depends]\AsIs{R (>= 2.10)}
+\item[Imports]\AsIs{generics, sf, terra (>= 1.7.0), stars, tools, utils, foreign,
+stringr, rlang, tibble, processx, rvest}
+\item[Suggests]\AsIs{dplyr, testthat (>= 3.0.0), covr}
+\item[Config/testthat/edition]\AsIs{3}
+\item[URL]\AsIs{}\url{https://stevenpawley.github.io/Rsagacmd/}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/stevenpawley/Rsagacmd/issues}\AsIs{}
+\item[NeedsCompilation]\AsIs{no}
+\item[Author]\AsIs{Steven Pawley [aut, cre]}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{check\_output\_format}{Check the file extension of the output file to see if it is the same as the `raster\_format` or `vector\_format` settings. If a raster, such as a GeoTIFF is output directly from a SAGA-GIS tool but the raster format is set to SAGA, then this might work depending on the saga version but Rsagacmd will not know how to read the file.}{check.Rul.output.Rul.format}
+\keyword{internal}{check\_output\_format}
+%
+\begin{Description}
+Check the file extension of the output file to see if it is the same as the
+`raster\_format` or `vector\_format` settings. If a raster, such as a GeoTIFF
+is output directly from a SAGA-GIS tool but the raster format is set to SAGA,
+then this might work depending on the saga version but Rsagacmd will not
+know how to read the file.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+check_output_format(x, raster_format, vector_format)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a `parameter` object that is an output parameter of a tool.
+
+\item[\code{raster\_format}] the raster format.
+
+\item[\code{vector\_format}] the vector format.
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{convert\_sagaext\_r}{Ensure that the file extension for the SAGA raster format ends with .sdat for reading or writing SAGA grid objects in R.}{convert.Rul.sagaext.Rul.r}
+\keyword{internal}{convert\_sagaext\_r}
+%
+\begin{Description}
+This is used because the R raster/terra libraries expect to read and write
+SAGA grid formats using the '.sdat' file extension, not '.sgrd'.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+convert_sagaext_r(fp)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{fp}] file path to raster writing
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a character vector with the corrected file extensions to read SAGA
+sgrd files back into R.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{create\_alias}{Generates a syntactically-correct R name based on a SAGA-GIS identifier}{create.Rul.alias}
+\keyword{internal}{create\_alias}
+%
+\begin{Description}
+SAGA-GIS identifiers sometimes cannot represent syntactically-correct names
+in R because they start with numbers or have spaces. They are also all in
+uppercase which is ugly to refer to in code. This function creates an
+alternative/alias identifier.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create_alias(identifier)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{identifier}] A character with the identifier.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A character with a syntactically-correct alias.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{create\_function}{Function generate text that will be parsed into R code}{create.Rul.function}
+\keyword{internal}{create\_function}
+%
+\begin{Description}
+Internal variable `args` is derived by capturing the names and values of the
+calling function. The interval `senv` variable is the SAGA-GIS library
+settings (generated by `saga\_env`) and comes from the environment of when the
+dynamic function was generated.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create_function(lib, tool)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{lib}] A character, name of SAGA-GIS library.
+
+\item[\code{tool}] A character, name of SAGA-GIS tool.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A character, text that is to be parsed into a function definition.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{create\_tool}{Generates list of options for a SAGA-GIS tool}{create.Rul.tool}
+\keyword{internal}{create\_tool}
+%
+\begin{Description}
+Parses the html table for a SAGA-GIS tool into a list of identifiers,
+options, defaults and constraints
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create_tool(tool_information, tool_options, description, html_file)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{tool\_information}] list
+
+\item[\code{tool\_options}] list
+
+\item[\code{description}] the description text for the tool that has been scraped
+from the help documentation
+
+\item[\code{html\_file}] the name of the html file for the tool's documentation.
+Stored to help linking with online documentation.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `saga\_tool` object containing:
++ `tool\_name` A syntactically-correct name for the tool.
++ `description` The tool's description.
++ `author` The tool's author.
++ `tool\_cmd` The command to use for saga\_cmd to execute tool.
++ `tool\_id` The tool's ID.
++ `parameters` A named list of the tool's parameter objects.
++ `html\_file` The html document name.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{create\_tool\_overrides}{Apply manually-defined changes to specific tools}{create.Rul.tool.Rul.overrides}
+\keyword{internal}{create\_tool\_overrides}
+%
+\begin{Description}
+Used to manually alter or add parameters for specific tools outside of what
+has been defined based on the output of saga\_cmd --create-docs
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create_tool_overrides(tool_name, params)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{tool\_name}] character, name of the tool. This is the alias name used by
+Rsagacmd, i.e. the tool name without spaces, all lowercase etc.
+
+\item[\code{params}] the `parameters` object for the tool
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+the altered `parameters` object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{drop\_parameters}{Drops unused/empty parameters from a `parameters` object}{drop.Rul.parameters}
+\keyword{internal}{drop\_parameters}
+%
+\begin{Description}
+Drops unused/empty parameters from a `parameters` object
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+drop_parameters(params)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{params}] A `parameters` object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameters` object with empty `parameter` objects removed
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{extract\_tool}{Internal function to extract information from a `saga\_tool` object}{extract.Rul.tool}
+\keyword{internal}{extract\_tool}
+%
+\begin{Description}
+Internal function to extract information from a `saga\_tool` object
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+extract_tool(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a `saga\_tool` object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+the intervals of a `saga\_tool`
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{mrvbf\_threshold}{Calculate the t\_slope value based on DEM resolution for MRVBF}{mrvbf.Rul.threshold}
+%
+\begin{Description}
+Calculates the t\_slope value for the Multiresolution Index of Valley Bottom
+Flatness (Gallant and Dowling, 2003) based on input DEM resolution. MRVBF
+identified valley bottoms based on classifying slope angle and identifying
+low areas by ranking elevation in respect to the surrounding topography
+across a range of DEM resolutions. The MRVBF algorithm was developed using a
+25 m DEM, and so if the input DEM has a different resolution then the slope
+threshold t\_slope needs to be adjusted from its default value of 16 in order
+to maintain the relationship between slope and DEM resolution. This function
+provides a convenient way to perform that calculation.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+mrvbf_threshold(res)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{res}] numeric, DEM resolution
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+numeric, t\_slope value for MRVBF
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+mrvbf_threshold(res = 10)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{parameter}{Parameter class}{parameter}
+\keyword{internal}{parameter}
+%
+\begin{Description}
+Stores metadata associated with each SAGA-GIS tool parameter.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+parameter(type, name, alias, identifier, description, constraints)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{type}] A character to describe the data type of the parameter. One of
+"input", "output", "Grid", "Grid list", "Shapes", "Shapes list", "Table",
+"Static table", "Table list", "File path", "field", "Integer", "Choice",
+"Floating point", "Boolean", "Long text", "Text.
+
+\item[\code{name}] A character with the long name of the parameter.
+
+\item[\code{alias}] A syntactically correct alias for the identifier.
+
+\item[\code{identifier}] A character with the identifier of the parameter used by
+saga\_cmd.
+
+\item[\code{description}] A character with the description of the parameter.
+
+\item[\code{constraints}] A character describing the parameters constraints.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameter` class object.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{parameters}{Generates a list of `parameter` objects for a SAGA-GIS tool}{parameters}
+\keyword{internal}{parameters}
+%
+\begin{Description}
+Each `parameter` object contains information about the datatype, permissible
+values and input/output settings associated with each identifier for a
+SAGA-GIS tool.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+parameters(tool_options)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{tool\_options}] A data.frame containing the table that refers to the
+SAGA-GIS tool parameter options.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameters` object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{parse\_options}{Convenience function to join together the saga\_cmd option:value pairs}{parse.Rul.options}
+\keyword{internal}{parse\_options}
+%
+\begin{Description}
+Convenience function to join together the saga\_cmd option:value pairs
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+parse_options(key, value)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{key}] character, the saga\_cmd option such as "DEM".
+
+\item[\code{value}] character, the value of the option.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+character, a joined option:value pair such as "-DEM:mygrid.tif"
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{print.saga\_tool}{Generic function to display help and usage information for any SAGA-GIS tool}{print.saga.Rul.tool}
+%
+\begin{Description}
+Displays a tibble containing the name of the tool's parameters, the argument
+name used by Rsagacmd, the identifier used by the SAGA-GIS command line, and
+additional descriptions, default and options/constraints.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'saga_tool'
+print(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A `saga\_tool` object.
+
+\item[\code{...}] Additional arguments to pass to print. Currently not used.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+saga <- saga_gis()
+
+# Display usage information on a tool
+print(saga$ta_morphometry$slope_aspect_curvature)
+
+# Or simply:
+saga$ta_morphometry$slope_aspect_curvature
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{read\_grid}{Read a raster data set that is output by saga\_cmd}{read.Rul.grid}
+\keyword{internal}{read\_grid}
+%
+\begin{Description}
+Read a raster data set that is output by saga\_cmd
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_grid(x, backend)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] list, a `options` object that was created by the `create\_tool`
+function that contains the parameters for a particular tool and its
+outputs.
+
+\item[\code{backend}] character, either "raster", "terra" or "stars".
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+either a `raster` or `SpatRaster` object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{read\_grid\_list}{Read a semi-colon separated list of grids that are output by saga\_cmd}{read.Rul.grid.Rul.list}
+\keyword{internal}{read\_grid\_list}
+%
+\begin{Description}
+Read a semi-colon separated list of grids that are output by saga\_cmd
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_grid_list(x, backend)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] list, a `options` object that was created by the `create\_tool`
+function that contains the parameters for a particular tool and its
+outputs.
+
+\item[\code{backend}] character, either "raster" or "terra"
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+list, containing multiple `raster` or `SpatRaster` objects.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{read\_output}{Primary function to read data sets (raster, vector, tabular) that are output by saga\_cmd}{read.Rul.output}
+\keyword{internal}{read\_output}
+%
+\begin{Description}
+Primary function to read data sets (raster, vector, tabular) that are output
+by saga\_cmd
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_output(output, raster_backend, vector_backend, .intern, .all_outputs)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{output}] list, a `options` object that was created by the `create\_tool`
+function that contains the parameters for a particular tool and its
+outputs.
+
+\item[\code{raster\_backend}] character, either "raster" or "terra"
+
+\item[\code{vector\_backend}] character, either "sf", "SpatVector" or
+"SpatVectorProxy"
+
+\item[\code{.intern}] logical, whether to load the output as an R object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+the loaded objects, or NULL is `.intern = FALSE`.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{read\_shapes}{Read a spatial vector data set that is output by saga\_cmd}{read.Rul.shapes}
+\keyword{internal}{read\_shapes}
+%
+\begin{Description}
+Read a spatial vector data set that is output by saga\_cmd
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_shapes(x, vector_backend)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] list, a `options` object that was created by the `create\_tool`
+function that contains the parameters for a particular tool and its
+outputs.
+
+\item[\code{vector\_backend}] character for vector backend to use.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+an `sf` object.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{read\_srtm}{Get path to the example DEM data}{read.Rul.srtm}
+%
+\begin{Description}
+Rsagacmd comes bundled with a small tile of example Digital Elevation Model
+(DEM) data from the NASA Shuttle Radar Topography Mission Global 1 arc second
+V003. This data is stored in GeoTIFF format in `inst/extdata`.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_srtm()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Details}
+The dataset contains the land surface elevation of an area located near
+Jasper, Alberta, Canada, with the coordinate reference system (CRS) EPSG code
+of 3402 (NAD83(CSRS) / Alberta 10-TM (Forest)).
+
+To access the data, use the convenience function of `read\_srtm()` to load
+the data as a `terra::SpatRaster` object.
+\end{Details}
+%
+\begin{Examples}
+\begin{ExampleCode}
+library(Rsagacmd)
+library(terra)
+
+dem <- read_srtm()
+plot(dem)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{read\_table}{Read a tabular data set that is output by saga\_cmd}{read.Rul.table}
+\keyword{internal}{read\_table}
+%
+\begin{Description}
+Read a tabular data set that is output by saga\_cmd
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read_table(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] list, a `options` object that was created by the `create\_tool`
+function that contains the parameters for a particular tool and its
+outputs.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a `tibble`.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{reexports}{Objects exported from other packages}{reexports}
+\aliasA{tidy}{reexports}{tidy}
+\keyword{internal}{reexports}
+%
+\begin{Description}
+These objects are imported from other packages. Follow the links
+below to see their documentation.
+
+\begin{description}
+
+\item[generics] \code{\LinkA{tidy}{tidy}}
+
+\end{description}
+\end{Description}
+\inputencoding{utf8}
+\HeaderA{Rsagacmd}{Rsagacmd: Linking R with the open-source SAGA-GIS software.}{Rsagacmd}
+\aliasA{Rsagacmd-package}{Rsagacmd}{Rsagacmd.Rdash.package}
+\keyword{internal}{Rsagacmd}
+%
+\begin{Description}
+\pkg{Rsagacmd} provides an R scripting interface to the open-source System
+for Automated Geoscientific Analyses Geographical Information System software
+\Rhref{https://sourceforge.net/projects/saga-gis/}{SAGA-GIS}. The current
+version has been tested using SAGA-GIS versions 2.3.1 to 9.2 on Windows
+(x64), macOS and Linux. Rsagacmd provides a functional approach to scripting
+with SAGA-GIS by dynamically generating R functions for every SAGA-GIS tool
+based on the user's current SAGA-GIS installation. These functions are
+generated by the \code{\LinkA{saga\_gis}{saga.Rul.gis}} function and are included within an
+S3 object as a named list of libraries and tools. This structure facilitates
+an easier scripting experience by organizing the large number of SAGA-GIS
+tools (>700) by their respective library. Interactive scripting can also
+fully take advantage of code autocompletion tools (e.g. in
+\Rhref{https://posit.co}{Rstudio}), allowing for each tool's syntax to
+be quickly recognized. Furthermore, the most common types of spatial data
+(rasters using the \pkg{terra} and \pkg{stars} packages, and vector data
+using \pkg{sp}, \pkg{sf} or \pkg{terra} packages) along with non-spatial data
+are seamlessly passed from R to the SAGA-GIS command line tool for
+geoprocessing operations, and the results are automatically loaded as the
+appropriate R object. Outputs from individual SAGA-GIS tools can also be
+chained using pipes from the \pkg{magrittr} and \pkg{dplyr} packages to chain
+complex geoprocessing operations together in a single statement.
+\end{Description}
+%
+\begin{Section}{Handling of geospatial and tabular data}
+Rsagacmd aims to facilitate
+a seamless interface to the open-source SAGA-GIS by providing access to all
+SAGA-GIS geoprocessing tools in a 'R-like' manner. In addition to
+generating R functions that correspond to each SAGA-GIS tool, Rsagacmd
+automatically handles the passing of geospatial and tabular data contained
+from the R environment to SAGA-GIS.
+
+Rsagacmd uses the SAGA-GIS command line interface to perform geoprocessing
+operations. Therefore, spatial data can be passed to any Rsagacmd function as
+a path to the input data, assuming that the data is stored in the appropriate
+file formats (e.g. GDAL-supported single-band rasters, OGR supported vector
+data, and comma- or tab-delimited text files for tabular data). In addition,
+Rsagacmd also supports the following R object classes to pass data to
+SAGA-GIS, and to load the results back into the R environment:
+\begin{itemize}
+
+\item{} Raster data handling is provided by the R \pkg{terra} and \pkg{stars}
+packages. Raster-based outputs from SAGA-GIS tools are loaded as SpatRaster
+or stars objects. For more details, see the 'Handling of raster data'.
+\item{} Vector features that result from SAGA-GIS geoprocessing operations are
+output in ESRI Shapefile format and are loaded into the R environment as
+simple features objects
+\item{} Tabular data from SAGA-GIS tools are loaded as data frames
+
+\end{itemize}
+
+The results from tools that return multiple outputs are loaded into the R
+environment as a named list of the appropriate R object classes.
+\end{Section}
+%
+\begin{Section}{Multi-band raster data}
+SAGA-GIS does not handle multi-band rasters
+and the native SAGA GIS Binary file format (.sgrd) supports only single
+band data. Therefore when passing raster data to most SAGA-GIS tools using
+Rsagacmd, the data should represent single raster bands. Subsetting of
+raster data is performed automatically by Rsagacmd in the case of when a
+single band from a multiband SpatRaster or stars object is passed to a
+SAGA-GIS tool. This occurs in by either passing the filename of the raster
+to the SAGA-GIS command line, or by writing the data to a temporary file.
+\end{Section}
+%
+\begin{Section}{Combining SAGA-GIS tools with pipes}
+For convenience, outputs from
+SAGA-GIS tools are automatically saved to tempfiles if outputs are not
+explicitly stated as arguments when calling the function. This was
+implemented so that the user can create complex workflows based on little
+code. It is also means that several processing steps can be combined or
+chained in a convenient manner using pipes from the \pkg{magritrr} package.
+When using pipes, all of the intermediate processing steps are dealt with
+automatically by saving the outputs as tempfiles, and then in turn passing
+the output to the next function in the chain. Note that when dealing with
+high-resolution and/or larger raster data, these tempfiles can start to
+consume a significant amount of disk space during a session. If required,
+these temporary files can be cleaned during the session using the
+saga\_remove\_tmpfiles function.
+\end{Section}
+%
+\begin{Author}
+\strong{Maintainer}: Steven Pawley \email{dr.stevenpawley@gmail.com}
+
+\end{Author}
+%
+\begin{SeeAlso}
+Useful links:
+\begin{itemize}
+
+\item{} \url{https://stevenpawley.github.io/Rsagacmd/}
+\item{} Report bugs at \url{https://github.com/stevenpawley/Rsagacmd/issues}
+
+\end{itemize}
+
+
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+library(Rsagacmd)
+library(magrittr)
+
+# initialize a saga object
+saga <- saga_gis(opt_lib = c("grid_calculus", "ta_morphometry"))
+
+# example of executing a tool using a tempfile to store the tool outputs
+dem <- saga$grid_calculus$random_terrain(radius = 100, iterations = 500)
+
+# Example of chaining operations using pipes and using tempfile to
+# store tool outputs
+tri <- dem %>%
+  saga$ta_morphometry$terrain_ruggedness_index_tri()
+
+# Remove tempfiles generated by Rsagacmd during a session
+saga_remove_tmpfiles(h = 0)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{run\_cmd}{Prepares the statement and runs the external saga\_cmd executable}{run.Rul.cmd}
+\keyword{internal}{run\_cmd}
+%
+\begin{Description}
+Prepares the statement and runs the external saga\_cmd executable
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+run_cmd(saga_cmd, saga_config, lib, tool_cmd, args, verbose)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{saga\_cmd}] character, name of the saga\_cmd executable or alias.
+
+\item[\code{saga\_config}] character, path to the saga configuration "ini" file.
+
+\item[\code{lib}] character, name of the selected library.
+
+\item[\code{tool\_cmd}] character, name of the selected tool.
+
+\item[\code{args}] named list of tool options, such as list(DEM = "mygrid.tif",
+RADIUS = 3).
+
+\item[\code{verbose}] logical, whether to show all saga\_cmd messages on the R
+console.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+list, output from `processx::run()`
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{saga\_configure}{Generates a custom saga\_cmd configuration file}{saga.Rul.configure}
+%
+\begin{Description}
+Creates and edits a saga\_cmd configuration file in order to change saga\_cmd
+settings related to file caching and number of available processor cores.
+Intended to be used internally by \code{\LinkA{saga\_gis}{saga.Rul.gis}}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_configure(
+  senv,
+  grid_caching = FALSE,
+  grid_cache_threshold = 100,
+  grid_cache_dir = NULL,
+  cores = NULL,
+  saga_vers
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{senv}] A saga environment object. Contains the SAGA-GIS environment and
+settings.
+
+\item[\code{grid\_caching}] Whether to use file caching. The default is FALSE.
+
+\item[\code{grid\_cache\_threshold}] Any number to use as a threshold (in Mb) before
+file caching for loaded raster data is activated.
+
+\item[\code{grid\_cache\_dir}] Optionally specify a path to the used directory for
+temporary files. The default uses `base::tempdir`.
+
+\item[\code{cores}] An integer specifying the maximum number of processing cores.
+Needs to be set to 1 if file caching is activated because file caching in
+SAGA-GIS is not thread-safe.
+
+\item[\code{saga\_vers}] A `numeric\_version` that specifies the version of SAGA-GIS.
+The generation of a saga\_cmd configuration file is only valid for versions
+> 4.0.0.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A character that specifies the path to custom saga\_cmd initiation
+file.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{saga\_docs}{Browse the online documentation for a saga\_tool}{saga.Rul.docs}
+%
+\begin{Description}
+Browse the online documentation for a saga\_tool
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_docs(saga_tool)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{saga\_tool}] a saga\_tool object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+library(Rsagacmd)
+
+saga <- saga_gis()
+
+saga_docs(saga$ta_morphometry$slope_aspect_curvature)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{saga\_env}{Parses valid SAGA-GIS libraries and tools into a nested list of functions}{saga.Rul.env}
+%
+\begin{Description}
+Establishes the link to SAGA GIS by generating a SAGA help file and parsing
+all libraries, tools and options from the help files into a nested list of
+library, module and options, that are contained within an saga environment
+object object. Intended to be used internally by \code{\LinkA{saga\_gis}{saga.Rul.gis}}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_env(
+  saga_bin = NULL,
+  opt_lib = NULL,
+  raster_backend = "terra",
+  vector_backend = "sf"
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{saga\_bin}] An optional character vector to specify the path to the
+saga\_cmd executable. Otherwise the function will perform a search for
+saga\_cmd.
+
+\item[\code{opt\_lib}] A character vector of a subset of SAGA-GIS tool libraries to
+generate dynamic functions that map to each tool. Used to save time if you
+only want to import a single library.
+
+\item[\code{raster\_backend}] A character vector to specify the library to use for
+handling raster data. Currently, either "terra" or "stars" is
+supported. The default is "terra".
+
+\item[\code{vector\_backend}] A character to specify the library to use for handling
+vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is
+supported. The default is "sf".
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A saga environment S3 object containing paths, settings and a nested
+list of libraries tools and options.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{saga\_execute}{Function to execute SAGA-GIS commands through the command line tool}{saga.Rul.execute}
+%
+\begin{Description}
+Intended to be used internally by each function
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_execute(
+  lib,
+  tool,
+  senv,
+  .intern = NULL,
+  .all_outputs = NULL,
+  .verbose = NULL,
+  ...
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{lib}] A character specifying the name of SAGA-GIS library to execute.
+
+\item[\code{tool}] A character specifying the name of SAGA-GIS tool to execute.
+
+\item[\code{senv}] A saga environment object.
+
+\item[\code{.intern}] A logical specifying whether to load the outputs from the
+SAGA-GIS geoprocessing operation as an R object.
+
+\item[\code{.all\_outputs}] A logical to specify whether to automatically output all
+results from the selected SAGA tool and load them results as R objects
+(default = TRUE). If .all\_outputs = FALSE then the file paths to store the
+tool's results will have to be manually specified in the arguments.
+
+\item[\code{.verbose}] Option to output all message during the execution of
+saga\_cmd. Overrides the saga environment setting.
+
+\item[\code{...}] Named arguments and values for SAGA tool.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+output of SAGA-GIS tool loaded as an R object.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{saga\_gis}{Initiate a SAGA-GIS geoprocessor object}{saga.Rul.gis}
+%
+\begin{Description}
+Dynamically generates functions to all valid SAGA-GIS libraries and tools.
+These functions are stored within a saga S3 object as a named list of
+functions
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_gis(
+  saga_bin = NULL,
+  grid_caching = FALSE,
+  grid_cache_threshold = 100,
+  grid_cache_dir = NULL,
+  cores = NULL,
+  raster_backend = "terra",
+  vector_backend = "sf",
+  raster_format = "SAGA",
+  vector_format = c("ESRI Shapefile", "GeoPackage"),
+  all_outputs = TRUE,
+  intern = TRUE,
+  opt_lib = NULL,
+  temp_path = NULL,
+  verbose = FALSE
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{saga\_bin}] The path to saga\_cmd executable. If this argument
+is not supplied then an automatic search for the saga\_cmd executable will
+be performed.
+
+\item[\code{grid\_caching}] A logical whether to use file caching in saga\_cmd
+geoprocessing operations for rasters that are too large to fit into memory.
+
+\item[\code{grid\_cache\_threshold}] A number to act as a threshold (in Mb) before
+file caching is activated for loaded raster data.
+
+\item[\code{grid\_cache\_dir}] The path to directory for temporary files generated by
+file caching. If not provided then the result from `base::tempdir()` is
+used.
+
+\item[\code{cores}] An integer for the maximum number of processing cores. By
+default all cores are utilized. Needs to be set to 1 if file caching is
+activated.
+
+\item[\code{raster\_backend}] A character vector to specify the library to use for
+handling raster data. Supported options are "terra" or "stars".
+The default is "terra".
+
+\item[\code{vector\_backend}] A character to specify the library to use for handling
+vector data. Currently, "sf", "SpatVector" or "SpatVectorProxy" is
+supported. The default is "sf", however for large vector datasets, using
+the "SpatVectorProxy" backend from the `terra` package has performance
+advantages because it allows file-based which can reduce repeated
+reading/writing when passing data between R and SAGA-GIS.
+
+\item[\code{raster\_format}] A character to specify the default format used to save
+raster data sets that are produced by SAGA-GIS. Available options are one
+of "SAGA", "SAGA Compressed" or "GeoTIFF". The default is "SAGA".
+
+\item[\code{vector\_format}] A character to specify the default format used for
+vector data sets that are produced by SAGA-GIS, and also used to save
+in-memory objects to be read by SAGA-GIS. Available options are of of "ESRI
+Shapefile", "GeoPackage", or "GeoJSON". The default is "ESRI Shapefile" for
+SAGA versions < 7.0 and GeoPackage for more recent versions. Attempting to
+use anything other than "ESRI Shapefile" for SAGA-GIS versions < 7.0 will
+raise an error.
+
+\item[\code{all\_outputs}] A logical to indicate whether to automatically use
+temporary files to store all output data sets from each SAGA-GIS tool.
+Default = TRUE. This argument can be overridden by the `.all\_outputs`
+parameter on each individual SAGA-GIS tool function that is generated by
+`Rsagacmd::saga\_gis()`.
+
+\item[\code{intern}] A logical to indicate whether to load the SAGA-GIS
+geoprocessing results as an R object, default = TRUE. For instance, if a
+raster grid is output by SAGA-GIS then this will be loaded as either as
+a `SpatRaster` or `stars` object, depending on the `raster\_backend`
+setting that is used. Vector data sets are always loaded as `sf` objects,
+and tabular data sets are loaded as tibbles. The `intern` settings for the
+`saga` object can be overridden for individual tools using the `.intern`
+argument.
+
+\item[\code{opt\_lib}] A character vector with the names of a subset of SAGA-GIS
+libraries. Used to link only a subset of named SAGA-GIS tool libraries,
+rather than creating functions for all available tool libraries.
+
+\item[\code{temp\_path}] The path to use to store any temporary files that are
+generated as data is passed between R and SAGA-GIS. If not specified, then
+the system `base::tempdir()` is used.
+
+\item[\code{verbose}] Logical to indicate whether to output all messages made during
+SAGA-GIS commands to the R console. Default = FALSE. This argument can be
+overriden by using the `.verbose` argument on each individual SAGA-GIS tool
+function that is generated by `Rsagacmd::saga\_gis()`.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A S3 `saga` object containing a nested list of functions for SAGA-GIS
+libraries and tools.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+library(Rsagacmd)
+library(terra)
+
+saga <- saga_gis()
+
+# Alternatively initialize a saga object using file caching to handle large
+# raster files
+saga <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 250, cores = 1)
+
+# Example terrain analysis
+# Generate a random DEM
+dem <- saga$grid_calculus$random_terrain(radius = 100)
+
+# Use Rsagacmd to calculate the Terrain Ruggedness Index
+tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
+plot(tri)
+
+# Optionally run command and do not load result as an R object
+saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, .intern = FALSE)
+
+# Initialize a saga object but do not automatically save all results to
+# temporary files to load into R. Use this if you are explicitly saving each
+# output because this will save disk space by not saving results from tools
+# that output multiple results that you may be want to keep.
+saga <- saga_gis(all_outputs = FALSE)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{saga\_remove\_tmpfiles}{Removes temporary files created by Rsagacmd}{saga.Rul.remove.Rul.tmpfiles}
+%
+\begin{Description}
+For convenience, functions in the Rsagacmd package create temporary files if
+any outputs for a SAGA-GIS tool are not specified as arguments. Temporary
+files in R are automatically removed at the end of each session. However,
+when dealing with raster data, these temporary files potentially can consume
+large amounts of disk space. These temporary files can be observed during a
+session by using the saga\_show\_tmpfiles function, and can be removed using
+the saga\_remove\_tmpfiles function. Note that this function also removes any
+accompanying files, i.e. the '.prj' and '.shx' files that may be written as
+part of writing a ESRI Shapefile '.shp' format
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_remove_tmpfiles(h = 0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{h}] Remove temporary files that are older than h (in number of hours).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Nothing is returned.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Remove all temporary files generated by Rsagacmd
+saga_remove_tmpfiles(h = 0)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{saga\_show\_tmpfiles}{List temporary files created by Rsagacmd}{saga.Rul.show.Rul.tmpfiles}
+%
+\begin{Description}
+For convenience, functions in the Rsagacmd package create temporary files if
+any outputs for a SAGA-GIS tool are not specified as arguments. Temporary
+files in R are automatically removed at the end of each session. However,
+when dealing with raster data, these temporary files potentially can consume
+large amounts of disk space. These temporary files can be observed during a
+session by using the saga\_show\_tmpfiles function, and can be removed using
+the saga\_remove\_tmpfiles function.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_show_tmpfiles()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+returns the file names of the files in the temp directory that have
+been generated by Rsagacmd. Note this list of files only includes the
+primary file extension, i.e. '.shp' for a shapefile without the accessory
+files (e.g. .prj, .shx etc.).
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Show all temporary files generated by Rsagacmd
+saga_remove_tmpfiles(h = 0)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{saga\_version}{Return the installed version of SAGA-GIS}{saga.Rul.version}
+%
+\begin{Description}
+Intended to be used internally by \code{\LinkA{saga\_env}{saga.Rul.env}}. Uses a system call
+to saga\_cmd to output version of installed SAGA-GIS on the console
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+saga_version(saga_cmd)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{saga\_cmd}] The path of the saga\_cmd binary.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric\_version with the version of SAGA-GIS found at the cmd path.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{save\_object}{Generic methods to save R in-memory objects to file to SAGA-GIS to access}{save.Rul.object}
+\keyword{internal}{save\_object}
+%
+\begin{Description}
+Designed to be used internally by Rsagacmd for automatically pass data to
+SAGA-GIS for geoprocessing.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+save_object(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] An R object.
+
+\item[\code{...}] Other parameters such as the temporary directory or the
+vector/raster format used to write spatial datasets to file.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A character that specifies the file path to where the R object was
+saved.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{search\_saga}{Automatic search for the path to a SAGA-GIS installation}{search.Rul.saga}
+%
+\begin{Description}
+Returns the path to the saga\_cmd executable.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+search_saga()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Details}
+On Microsoft Windows, automatic searching will occur first in 'C:/Program
+Files/SAGA-GIS'; 'C:/Program Files (x86)/SAGA-GIS'; 'C:/SAGA-GIS';
+'C:/OSGeo4W'; and 'C:/OSGeo4W64'.
+
+On Linux, saga\_cmd is usually included in PATH, if not an automatic search is
+performed in the '/usr/' folder.
+
+For macOS, since version 8.5, SAGA-GIS is available as an standalone macOS
+app from \Rhref{https://sourceforge.net/projects/saga-gis/}{SourceForge}. The
+'SAGA.app' package is searched first (assuming that it is installed in the
+'/Applications/' folder). Other macOS locations that are searched include
+'/usr/local/bin/' (for Homebrew installations) and within the QGIS application
+(SAGA-GIS is bundled with the QGIS application on macOS by default).
+
+If multiple versions of SAGA-GIS are installed on the system, the path to the
+newest version is returned.
+\end{Details}
+%
+\begin{Value}
+The path to installed saga\_cmd binary.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{search\_tools}{Search for a SAGA-GIS tool}{search.Rul.tools}
+%
+\begin{Description}
+Search for a SAGA-GIS tool
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+search_tools(x, pattern)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] saga object
+
+\item[\code{pattern}] character, pattern of text to search for within the tool name
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a tibble containing the libraries, names and parameters of the tools
+that match the pattern of the search text and their host library
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# initialize Rsagacmd
+saga <- saga_gis()
+
+# search for a tool
+search_tools(x = saga, pattern = "terrain")
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{show\_raster\_formats}{List the available raster formats that can be set as defaults for a `saga` object.}{show.Rul.raster.Rul.formats}
+%
+\begin{Description}
+List the available raster formats that can be set as defaults for a `saga`
+object.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+show_raster_formats()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+tibble
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+show_raster_formats()
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{show\_vector\_formats}{List the available vector formats that can be set as defaults for a `saga` object.}{show.Rul.vector.Rul.formats}
+%
+\begin{Description}
+List the available vector formats that can be set as defaults for a `saga`
+object.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+show_vector_formats()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+tibble
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+show_vector_formats()
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{summarize\_tool\_params}{Interval function used to summarize a `saga\_tool` into a tibble that describes the tools parameters and options}{summarize.Rul.tool.Rul.params}
+\keyword{internal}{summarize\_tool\_params}
+%
+\begin{Description}
+Interval function used to summarize a `saga\_tool` into a tibble that
+describes the tools parameters and options
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+summarize_tool_params(tool_obj)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{tool\_obj}] a nested list which constitutes the internals of a saga\_tool
+object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a tibble
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{tidy.saga}{Summarize the libraries that are available within a saga object and return these as a tibble.}{tidy.saga}
+%
+\begin{Description}
+Summarize the libraries that are available within a saga object and
+return these as a tibble.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'saga'
+tidy(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a `saga` object
+
+\item[\code{...}] additional arguments. Currently unused.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a tibble that describes libraries, their descriptions and number of
+tools that are available in SAGA-GIS.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+saga <- saga_gis()
+
+# tidy the saga object's parameters into a tibble
+tidy(saga)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tidy.saga\_library}{Summarize the tools that are available within a saga library and return these as a tibble.}{tidy.saga.Rul.library}
+%
+\begin{Description}
+Summarize the tools that are available within a saga library and
+return these as a tibble.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'saga_library'
+tidy(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a `saga\_library` object
+
+\item[\code{...}] additional arguments. Currently unused.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a tibble that describes the tools and their descriptions within a
+particular SAGA-GIS library.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+saga <- saga_gis()
+
+# tidy the library's parameters into a tibble
+tidy(saga$climate_tools)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tidy.saga\_tool}{Summarize the parameters that are available within a SAGA-GIS tool and return these as a tibble.}{tidy.saga.Rul.tool}
+%
+\begin{Description}
+Summarize the parameters that are available within a SAGA-GIS tool and
+return these as a tibble.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'saga_tool'
+tidy(x, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a `saga\_tool` object
+
+\item[\code{...}] additional arguments. Currently unused.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a tibble that describes tools, identifiers used by the saga\_cmd
+command line tool, the equivalent argument name used by Rsagacmd, and other
+options and descriptions.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+saga <- saga_gis()
+
+# tidy the tools parameters into a tibble
+tidy(saga$ta_morphometry$slope_aspect_curvature)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{tile\_geoprocessor}{Split a raster grid into tiles for tile-based processing}{tile.Rul.geoprocessor}
+%
+\begin{Description}
+Split a raster grid into tiles. The tiles are saved as Rsagacmd
+temporary files, and are loaded as a list of R objects for further
+processing. This is a function to make the the SAGA-GIS
+grid\_tools / tiling tool more convenient to use.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tile_geoprocessor(x, grid, nx, ny, overlap = 0, file_path = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A `saga` object.
+
+\item[\code{grid}] A path to a GDAL-supported raster to apply tiling, or a
+SpatRaster.
+
+\item[\code{nx}] An integer with the number of x-pixels per tile.
+
+\item[\code{ny}] An integer with the number of y-pixels per tile.
+
+\item[\code{overlap}] An integer with the number of overlapping pixels.
+
+\item[\code{file\_path}] An optional file file path to store the raster tiles.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list of SpatRaster objects representing tiled data.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Initialize a saga object
+saga <- saga_gis()
+
+# Generate a random DEM
+dem <- saga$grid_calculus$random_terrain(radius = 15, iterations = 500)
+
+# Return tiled version of DEM
+tiles <- tile_geoprocessor(x = saga, grid = dem, nx = 20, ny = 20)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{update\_parameters\_file}{Updates a `parameters` object with file paths to the R data objects.}{update.Rul.parameters.Rul.file}
+\keyword{internal}{update\_parameters\_file}
+%
+\begin{Description}
+Updates a `parameters` object with file paths to the R data objects.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+update_parameters_file(params, temp_path = NULL, raster_format, vector_format)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{params}] A `parameters` object.
+
+\item[\code{temp\_path}] A character specifying the tempdir to use for storage
+(optional).
+
+\item[\code{raster\_format}] file extension for raster formats
+
+\item[\code{vector\_format}] file extension for vector formats
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameters` object with updated `file` attributes that refers to
+the on-disk file for saga\_cmd to access.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{update\_parameters\_tempfiles}{Update a `parameters` object using temporary files for any unspecified output parameters}{update.Rul.parameters.Rul.tempfiles}
+\keyword{internal}{update\_parameters\_tempfiles}
+%
+\begin{Description}
+Update a `parameters` object using temporary files for any unspecified output
+parameters
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+update_parameters_tempfiles(params, temp_path, raster_format, vector_format)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{params}] A `parameters` object.
+
+\item[\code{temp\_path}] A character with the tempdir.
+
+\item[\code{raster\_format}] A character specifying the raster format.
+
+\item[\code{vector\_format}] A character specifying the vector format.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameters` object.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{update\_parameter\_file}{Updates a `parameter` object with file paths to the R data objects.}{update.Rul.parameter.Rul.file}
+\keyword{internal}{update\_parameter\_file}
+%
+\begin{Description}
+Updates a `parameter` object with file paths to the R data objects.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+update_parameter_file(param, temp_path = NULL, raster_format, vector_format)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{param}] A `parameter` object.
+
+\item[\code{temp\_path}] A character specifying the tempdir to use for storage
+(optional).
+
+\item[\code{raster\_format}] name of raster format in `supported\_raster\_formats`
+
+\item[\code{vector\_format}] file extension for vector formats in
+`supported\_vector\_formats`
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A `parameter` object with an updated `file` attribute that refers to
+the on-disk file for saga\_cmd to access.
+\end{Value}
+\printindex{}
+\end{document}

@@ -1,0 +1,32 @@
+mrvbf_threshold         Calculate the t_slope value based on DEM
+                        resolution for MRVBF
+print.saga_tool         Generic function to display help and usage
+                        information for any SAGA-GIS tool
+read_srtm               Get path to the example DEM data
+saga_configure          Generates a custom saga_cmd configuration file
+saga_docs               Browse the online documentation for a saga_tool
+saga_env                Parses valid SAGA-GIS libraries and tools into
+                        a nested list of functions
+saga_execute            Function to execute SAGA-GIS commands through
+                        the command line tool
+saga_gis                Initiate a SAGA-GIS geoprocessor object
+saga_remove_tmpfiles    Removes temporary files created by Rsagacmd
+saga_show_tmpfiles      List temporary files created by Rsagacmd
+saga_version            Return the installed version of SAGA-GIS
+search_saga             Automatic search for the path to a SAGA-GIS
+                        installation
+search_tools            Search for a SAGA-GIS tool
+show_raster_formats     List the available raster formats that can be
+                        set as defaults for a 'saga' object.
+show_vector_formats     List the available vector formats that can be
+                        set as defaults for a 'saga' object.
+tidy.saga               Summarize the libraries that are available
+                        within a saga object and return these as a
+                        tibble.
+tidy.saga_library       Summarize the tools that are available within a
+                        saga library and return these as a tibble.
+tidy.saga_tool          Summarize the parameters that are available
+                        within a SAGA-GIS tool and return these as a
+                        tibble.
+tile_geoprocessor       Split a raster grid into tiles for tile-based
+                        processing
