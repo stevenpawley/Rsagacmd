@@ -197,7 +197,7 @@ Parameter = R6::R6Class(
     initialize = function(type, name, alias, identifier, description, 
                           constraints) {
       # assign initial values
-      self$type = type[1]
+      self$type = tolower(type[1])
       self$name = name[1]
       self$alias = alias[1]
       self$identifier = identifier[1]
@@ -252,21 +252,21 @@ Parameter = R6::R6Class(
       # parse type into explicit `io` attribute
       if (grepl("input", self$type)) self$io = "Input"
       if (grepl("output", self$type)) self$io = "Output"
-      if (grepl("Grid", self$type)) self$feature = "Grid"
-      if (grepl("Grid list", self$type)) self$feature = "Grid list"
-      if (grepl("Shapes", self$type)) self$feature = "Shape"
-      if (grepl("Shapes list", self$type)) self$feature = "Shapes list"
-      if (grepl("Table", self$type)) self$feature = "Table"
-      if (grepl("Static table", self$type)) self$feature = "Table"
-      if (grepl("Table list", self$type)) self$feature = "Table list"
-      if (grepl("File path", self$type)) self$feature = "File path"
+      if (grepl("grid", self$type)) self$feature = "Grid"
+      if (grepl("grid list", self$type)) self$feature = "Grid list"
+      if (grepl("shapes", self$type)) self$feature = "Shape"
+      if (grepl("shapes list", self$type)) self$feature = "Shapes list"
+      if (grepl("table", self$type)) self$feature = "Table"
+      if (grepl("static table", self$type)) self$feature = "Table"
+      if (grepl("table list", self$type)) self$feature = "Table list"
+      if (grepl("file path", self$type)) self$feature = "File path"
       if (grepl("field", self$type)) self$feature = "Table field"
-      if (grepl("Integer", self$type)) self$feature = "Integer"
-      if (grepl("Choice", self$type)) self$feature = "Choice"
-      if (grepl("Floating point", self$type)) self$feature = "numeric"
-      if (grepl("Boolean", self$type)) self$feature = "logical"
-      if (grepl("Long text", self$type)) self$feature = "character"
-      if (grepl("Text", self$type)) self$feature = "character"
+      if (grepl("integer", self$type)) self$feature = "Integer"
+      if (grepl("choice", self$type)) self$feature = "Choice"
+      if (grepl("floating point", self$type)) self$feature = "numeric"
+      if (grepl("boolean", self$type)) self$feature = "logical"
+      if (grepl("long text", self$type)) self$feature = "character"
+      if (grepl("text", self$type)) self$feature = "character"
     },
     
     #' @description

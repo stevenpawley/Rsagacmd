@@ -6,7 +6,7 @@
 #' options, defaults and constraints
 #'
 #' @keywords internal
-SagaTool <- R6::R6Class(
+SagaTool = R6::R6Class(
   classname = "SagaTool",
   
   public = list(
@@ -21,6 +21,10 @@ SagaTool <- R6::R6Class(
     
     #' @field tool_cmd The command to use for saga_cmd to execute tool.
     tool_cmd = NULL,
+
+    #' @field tool_id The tool's id. The integer identifier for the tool within
+    #' its module, i.e., ta_hydrology 4 refers to the Upslope Area tool.
+    tool_id = NULL,
     
     #' @field parameters A named list of the tool's `Parameter` objects.
     parameters = NULL,
@@ -39,49 +43,57 @@ SagaTool <- R6::R6Class(
     #' This is stored to help linking with online documentation.
     initialize = function(tool_information, tool_options, description, html_file) {
       # parse the command to execute the saga_cmd tool
-      saga_tool_cmd <- tool_information[[2]][1]
-      author <- tool_information[[2]][2]
+      saga_tool_cmd = tool_information[[2]][1]
+      author = tool_information[[2]][2]
     
       # create syntactically-correct name for the tool
-      tool_name <- gsub("^[0-9]+", "", saga_tool_cmd)
-      tool_name <- gsub("^[0-9]+", "", tool_name)
-      tool_name <- gsub(" ", "_", tool_name)
-      tool_name <- gsub("\\(", "", tool_name)
-      tool_name <- gsub("\\)", "", tool_name)
-      tool_name <- gsub("\\(", "", tool_name)
-      tool_name <- gsub("\\)", "", tool_name)
-      tool_name <- gsub("'", "", tool_name)
-      tool_name <- gsub(",", "_", tool_name)
-      tool_name <- gsub("/", "_", tool_name)
-      tool_name <- gsub("-", "_", tool_name)
-      tool_name <- gsub(":", "_", tool_name)
-      tool_name <- gsub("\\[", "_", tool_name)
-      tool_name <- gsub("\\]", "_", tool_name)
-      tool_name <- gsub("&", "_", tool_name)
-      tool_name <- gsub("_+", "_", tool_name)
-      tool_name <- gsub("^_+", "", tool_name)
-      tool_name <- tolower(tool_name)
+      tool_name = gsub("^[0-9]+", "", saga_tool_cmd)
+      tool_name = gsub("^[0-9]+", "", tool_name)
+      tool_name = gsub(" ", "_", tool_name)
+      tool_name = gsub("\\(", "", tool_name)
+      tool_name = gsub("\\)", "", tool_name)
+      tool_name = gsub("\\(", "", tool_name)
+      tool_name = gsub("\\)", "", tool_name)
+      tool_name = gsub("'", "", tool_name)
+      tool_name = gsub(",", "_", tool_name)
+      tool_name = gsub("/", "_", tool_name)
+      tool_name = gsub("-", "_", tool_name)
+      tool_name = gsub(":", "_", tool_name)
+      tool_name = gsub("\\[", "_", tool_name)
+      tool_name = gsub("\\]", "_", tool_name)
+      tool_name = gsub("&", "_", tool_name)
+      tool_name = gsub("_+", "_", tool_name)
+      tool_name = gsub("^_+", "", tool_name)
+      tool_name = tolower(tool_name)
+      
+      # get the tool ID
+      tool_id = tool_information[tool_information[[1]] == "ID",][[2]]
+      suppressWarnings(tool_id = as.integer(tool_id))
+      if (is.na(tool_id)) {
+        tool_id = saga_tool_cmd
+      }
     
       # strip input, output and options lines from table
       # (rows in the table that represent headers/section breaks and have same value
       # like 'Input' filled across the row)
-      header_rows <- apply(tool_options, 1, function(row) {
+      header_rows = apply(tool_options, 1, function(row) {
         length(unique(unlist(row)))
       })
-      header_rows <- which(header_rows > 1)
-      tool_options <- tool_options[header_rows, ]
+      header_rows = which(header_rows > 1)
+      tool_options = tool_options[header_rows, ]
     
       # get the parameters object
-      params <- Parameters$new(tool_options)
+      params = Parameters$new(tool_options)
     
       # apply exceptions for specific saga-gis tools
-      params <- create_tool_overrides(tool_name, params)
+      params = create_tool_overrides(tool_name, params)
   
       # update the class fields
       self$tool_name = tool_name
       self$description = description
       self$author = author
       self$tool_cmd = saga_tool_cmd
+      self$tool_id = tool_id
       self$parameters = params
       self$html_file = html_file
     }
