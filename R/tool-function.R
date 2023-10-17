@@ -32,3 +32,12 @@ create_function <- function(lib, tool) {
     sep = "\n"
   )
 }
+
+tool <- R6::R6Class(
+  classname = "tool",
+  public = list(
+    initialize = function(library_name, tool_name) {
+      
+    }
+  )
+)

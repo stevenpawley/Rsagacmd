@@ -106,18 +106,18 @@ functions
 library(Rsagacmd)
 library(terra)
 
-saga <- saga_gis()
+saga = saga_gis()
 
 # Alternatively initialize a saga object using file caching to handle large
 # raster files
-saga <- saga_gis(grid_caching = TRUE, grid_cache_threshold = 250, cores = 1)
+saga = saga_gis(grid_caching = TRUE, grid_cache_threshold = 250, cores = 1)
 
 # Example terrain analysis
 # Generate a random DEM
-dem <- saga$grid_calculus$random_terrain(radius = 100)
+dem = saga$grid_calculus$random_terrain(radius = 100)
 
 # Use Rsagacmd to calculate the Terrain Ruggedness Index
-tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
+tri = saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem)
 plot(tri)
 
 # Optionally run command and do not load result as an R object
@@ -127,6 +127,6 @@ saga$ta_morphometry$terrain_ruggedness_index_tri(dem = dem, .intern = FALSE)
 # temporary files to load into R. Use this if you are explicitly saving each
 # output because this will save disk space by not saving results from tools
 # that output multiple results that you may be want to keep.
-saga <- saga_gis(all_outputs = FALSE)
+saga = saga_gis(all_outputs = FALSE)
 }
 }

@@ -249,13 +249,11 @@ saga_gis =
     }
     
     # create the saga bindings
-    saga = SagaLib$new(saga_bin, raster_backend, vector_backend)
+    saga = SagaLib$new(saga_bin, raster_backend, vector_backend,
+                       verbose, all_outputs, intern)
     saga$create_binding(opt_lib)
-    
-    saga$verbose = verbose
-    saga$all_outputs = all_outputs
-    saga$intern = intern
-    saga$config = saga_configure(
+
+    config = saga_configure(
       senv = saga,
       grid_caching = grid_caching,
       grid_cache_threshold = grid_cache_threshold,
@@ -264,115 +262,38 @@ saga_gis =
       saga_vers = saga$saga_vers
     )
     
-    browser()
-    
     # set the raster format for inport/export to the saga command line tool
-    if (saga$saga_vers < 7.5 & !raster_format %in% c("SAGA", "SAGA Compressed")) {
-      stop(paste(
-        "SAGA versions < 7.5 only allow directly writing of",
-        "raster data via the 'SAGA' or 'SAGA Compressed' raster formats"
-      ))
-    }
-    if (saga$saga_vers < 5.0 & raster_format != "SAGA") {
-      stop("SAGA versions < 5.0 only allow the 'SAGA' raster format")
-    }
-    saga$raster_format = supported_raster_formats[raster_format]
+    # if (saga$saga_vers < 7.5 & !raster_format %in% c("SAGA", "SAGA Compressed")) {
+    #   stop(paste(
+    #     "SAGA versions < 7.5 only allow directly writing of",
+    #     "raster data via the 'SAGA' or 'SAGA Compressed' raster formats"
+    #   ))
+    # }
+    # if (saga$saga_vers < 5.0 & raster_format != "SAGA") {
+    #   stop("SAGA versions < 5.0 only allow the 'SAGA' raster format")
+    # }
+    # saga$raster_format = supported_raster_formats[raster_format]
     
     # set the vector format for inport/export to the saga command line tool
-    if (all(vector_format == c("ESRI Shapefile", "GeoPackage")) & saga$saga_vers < 7.0) {
-      vector_format = "ESRI Shapefile"
-    } else {
-      vector_format = "GeoPackage"
-    }
-    
-    if (saga$saga_vers < 7.0 & vector_format != "ESRI Shapefile") {
-      stop(paste(
-        "SAGA versions < 7.0 only allow directly writing of",
-        "vector data via the 'ESRI Shapefile' vector format"
-      ))
-    }
-    saga$vector_format = supported_vector_formats[vector_format]
+    # if (all(vector_format == c("ESRI Shapefile", "GeoPackage")) & saga$saga_vers < 7.0) {
+    #   vector_format = "ESRI Shapefile"
+    # } else {
+    #   vector_format = "GeoPackage"
+    # }
+    # 
+    # if (saga$saga_vers < 7.0 & vector_format != "ESRI Shapefile") {
+    #   stop(paste(
+    #     "SAGA versions < 7.0 only allow directly writing of",
+    #     "vector data via the 'ESRI Shapefile' vector format"
+    #   ))
+    # }
+    # saga$vector_format = supported_vector_formats[vector_format]
     
     # check path to temporary directory if assigned
-    if (!is.null(temp_path)) {
-      saga$temp_path = temp_path
-    }
-    
-    # dynamically create functions
-    tool_libraries = list()
-    
-    for (lib in names(lib$library)) {
-      toolnames = list()
-      
-      for (tool in names(lib$libraries[[lib]])) {
-        params = lib$libraries[[lib]][[tool]][["params"]]
-        
-        tryCatch(
-          expr = {
-            # create function body
-            body = create_function(lib = lib, tool = tool)
-            
-            # create list of arguments and default values
-            args = lapply(params, function(x) {
-              NULL
-            })
-            args =
-              c(
-                args,
-                list(
-                  .intern = NULL,
-                  .all_outputs = NULL,
-                  .verbose = NULL
-                )
-              )
-            
-            # coerce arguments to comma-separated character
-            args = mapply(function(k, v) {
-              paste(k, deparse(v), sep = " = ")
-            },
-            names(args),
-            args,
-            USE.NAMES = FALSE
-            )
-            args = paste(args, collapse = ", ")
-            
-            # parse function
-            func_code = paste0("function(", args, ") {", body, "}")
-            
-            tool_env = new.env()
-            tool_env$lib = lib
-            
-            func = structure(
-              eval(expr = parse(text = func_code), envir = tool_env),
-              lib = lib,
-              tool = tool,
-              class = "saga_tool"
-            )
-            
-            # append function to lists
-            tool_libraries[[lib]] =
-              append(tool_libraries[[lib]], func)
-            toolnames = append(toolnames, tool)
-            names(tool_libraries[[lib]]) = toolnames
-            class(tool_libraries[[lib]]) = "saga_library"
-          },
-          error = function(e) {
-            warning(
-              paste0(
-                "Problem parsing SAGA-GIS library = ",
-                lib,
-                "; and tool = ",
-                tool
-              ),
-              call. = FALSE
-            )
-          }
-        )
-      }
-    }
+    # if (!is.null(temp_path)) {
+    #   saga$temp_path = temp_path
+    # }
     
     #  return S3 saga object
-    structure(tool_libraries,
-              class = "saga"
-    )
+    saga
   }

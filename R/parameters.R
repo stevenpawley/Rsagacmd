@@ -40,7 +40,22 @@ Parameters = R6::R6Class(
       params = rep(list(NA), nrow(tool_options))
       params = stats::setNames(params, tool_aliases)
       
+      
+      alias <- tool_aliases[[1]]
+      identifier <- tool_identifiers[[1]]
+      
+      parameters = Parameter_class$new(
+        type = tool_options[tool_options$Identifier == identifier, ][["Type"]],
+        name = tool_options[tool_options$Identifier == identifier, ][["Name"]],
+        alias = alias,
+        identifier = identifier,
+        description = tool_options[tool_options$Identifier == identifier, ][["Description"]],
+        constraints = tool_options[tool_options$Identifier == identifier, ][["Constraints"]]
+      )
+      
       for (i in seq_len(length(tool_aliases))) {
+        browser()
+
         alias <- tool_aliases[[i]]
         identifier <- tool_identifiers[[i]]
         
@@ -118,7 +133,8 @@ Parameters = R6::R6Class(
     }
   )
 )
-    
+
+
 # Parameter R6 class ----
 
 #' Parameter class

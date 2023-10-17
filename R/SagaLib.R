@@ -11,13 +11,13 @@ SagaLib = R6::R6Class(
     saga_vers = NULL,
     raster_backend = NULL,
     vector_backend = NULL,
-    library = NULL,
     verbose = FALSE,
     all_outputs = FALSE,
     intern = TRUE,
     config = NULL,
     temp_path = tempdir(),
     saga_bin = NULL,
+    library = NULL,
     raster_format = NULL,
     vector_format = NULL,
     
@@ -36,7 +36,7 @@ SagaLib = R6::R6Class(
     #' vector data. Currently, either "sf", "SpatVector" or "SpatVectorProxy" is
     #' supported. The default is "sf".
     initialize = function(saga_bin = NULL, raster_backend = "terra", 
-                          vector_backend = "sf") {
+                          vector_backend = "sf", verbose = FALSE, all_outputs = FALSE, intern = TRUE) {
       # check valid backends
       if (!raster_backend %in% c("terra", "stars")) {
         stop("The `raster_backend` must be one of 'terra' or 'stars'")
@@ -103,7 +103,7 @@ SagaLib = R6::R6Class(
         
         # remove library description html from the tool html files
         tool_files = tool_files[tool_files != tool_names_file]
-        
+
         # create the library tools
         for (tool in tool_files) {
           tryCatch(
@@ -118,14 +118,14 @@ SagaLib = R6::R6Class(
               tool_options = options[[length(options)]]
               
               if (!any(grepl("interactive", x = tool_information[[2]]))) {
-                tool_config = SagaTool$new(
+                tool_object = SagaTool$new(
                   tool_information = tool_information,
                   tool_options = tool_options,
                   description = description,
                   html_file = tool
                 )
                 lib_name = gsub(" ", "_", tolower(basename(libdir)))
-                self$library[[lib_name]][[tool_config$tool_name]] = tool_config
+                self$library[[lib_name]][[tool_object$tool_name]] = tool_object
               }
             },
             error = function(e) {
@@ -185,5 +185,8 @@ SagaLib = R6::R6Class(
       )
       self$library = self$library[!names(self$library) %in% invalid_libs]
     }
+  ),
+  
+  private = list(
   )
 )
