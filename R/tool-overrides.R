@@ -60,6 +60,18 @@ create_tool_overrides <- function(tool_name, params) {
       params$radius_max$identifier <- "RADIUS_MAX"
       params$radius_max$default <- 100
     }
+  } else if (tool_name == "potential_incoming_solar_radiation") {
+    if (!"hour_range_min" %in% names(params)) {
+      # rename hour_range to hour_range_min
+      names(params)[names(params) == "hour_range"] <- "hour_range_min"
+      params$hour_range_min$alias <- "hour_range_min"
+      params$hour_range_min$identifier <- "HOUR_RANGE_MIN"
+      
+      # add a new hour_range_max parameter
+      params$hour_range_max <- params$hour_range_min
+      params$hour_range_max$alias <- "hour_range_max"
+      params$hour_range_max$identifier <- "HOUR_RANGE_MAX"
+    }
   }
 
   params
