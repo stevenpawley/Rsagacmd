@@ -30,7 +30,7 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     and macOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software
     repositories. Rsagacmd has currently been tested on 'SAGA-GIS' versions
     from 2.3.1 to 9.0.1 on Windows, Linux and macOS.
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
 RoxygenNote: 7.2.3
