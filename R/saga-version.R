@@ -15,6 +15,5 @@ saga_version <- function(saga_cmd) {
     m = regexpr("[[:digit:]]?[.][[:digit:]]{1,2}[.][[:digit:]]", saga_vers)
   )
   saga_vers <- trimws(saga_vers)
-
   as.numeric_version(saga_vers)
 }
