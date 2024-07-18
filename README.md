@@ -93,7 +93,10 @@ by:
 ``` r
 library(Rsagacmd)
 library(terra)
-#> terra 1.7.55
+#> terra 1.7.78
+```
+
+``` r
 
 # initiate a saga object
 saga <- saga_gis(raster_backend = "terra")
@@ -101,6 +104,9 @@ saga <- saga_gis(raster_backend = "terra")
 #> /Applications/SAGA.app/Contents/MacOS/saga_cmd
 #> /Applications/QGIS.app/Contents/MacOS/bin/saga_cmd
 #> Choosing newest version. Manually specify the location when calling saga_gis() to use an older version
+```
+
+``` r
 
 # load the example data
 srtm <- read_srtm()
@@ -112,8 +118,8 @@ saga$ta_morphometry$mass_balance_index(dem = srtm)
 #> resolution  : 100, 100  (x, y)
 #> extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)
 #> coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) 
-#> source      : file19ef60012a7.sdat 
-#> name        : file19ef60012a7
+#> source      : file4eb14c1fed6d.sdat 
+#> name        : file4eb14c1fed6d
 ```
 
 This facilitates an easier scripting experience by organizing the large
@@ -207,6 +213,9 @@ processing steps with pipes:
 ``` r
 library(sf)
 #> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+```
+
+``` r
 
 # read project area as a simple features object
 prj_bnd <- st_polygon(list(matrix(
@@ -245,23 +254,23 @@ files can be cleaned during the session using:
 ``` r
 saga_remove_tmpfiles(h = 0)
 #> Removing Rsagacmd temporary files h=0
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef60012a7.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef61f3a27a.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef2ec55176.gpkg
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef1c6731f7.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef561275bc.sdat
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef55efb5c9.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef6c87cb32.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef472d7748.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef79f23c79.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe606a7b.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef5beeb89c.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef159a38eb.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef400ed761.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe5e4222.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4e47cd8c.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4c07ca7a.sgrd
-#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef137e3695.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb14c1fed6d.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb12558974c.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb12024c75.gpkg
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb164e9965a.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1614976ca.sdat
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb134ba9aa2.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb146fe1cb9.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1550fda18.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb13b78949.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb16961987.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb16865f171.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb17cce6742.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb152dd5e11.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1434ad897.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb166d1c404.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1559c1758.sgrd
+#> /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb17ac0be50.sgrd
 ```
 
 where `h` is minimum age (in number of hours) of tempfiles for removal,
