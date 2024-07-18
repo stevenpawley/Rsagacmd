@@ -47,10 +47,10 @@ testthat::test_that("basic SAGA-GIS tool usage ", {
     )
 
   vers <- saga_version(search_saga())
-  fileext <- ifelse(vers < 7.0, ".shp", ".gpkg")
+  fileext <- ifelse(vers < "7.0", ".shp", ".gpkg")
   tempfile <- tempfile(fileext = fileext)
 
-  tool <- ifelse(vers >= 9.2, "vectorizing_grid_classes", "vectorising_grid_classes")
+  tool <- ifelse(vers >= "9.2", "vectorizing_grid_classes", "vectorising_grid_classes")
   shapes <-
     saga$shapes_grid[[tool]](
       grid = categories,
