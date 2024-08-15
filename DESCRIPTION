@@ -33,7 +33,7 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
 License: GPL-3
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Depends:
     R (>= 2.10)
 Imports:

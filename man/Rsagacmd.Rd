@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rsagacmd-package.R
 \docType{package}
 \name{Rsagacmd}
-\alias{Rsagacmd}
 \alias{Rsagacmd-package}
+\alias{Rsagacmd}
 \title{Rsagacmd: Linking R with the open-source SAGA-GIS software.}
 \description{
 \pkg{Rsagacmd} provides an R scripting interface to the open-source System
