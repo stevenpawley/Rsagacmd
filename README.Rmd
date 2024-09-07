@@ -242,9 +242,9 @@ FALSE)`. In this case, the output arguments need to be specified manually, e.g.:
 
 ```{r explicit-outputs}
 tri <- saga$ta_morphometry$terrain_ruggedness_index_tri(
-    dem = dem, 
-    radius = 3, 
-    tri = tempfile(fileext = ".sgrd"),
-    .all_outputs = FALSE
+  dem = dem, 
+  radius = 3, 
+  tri = tempfile(fileext = ".sgrd"),
+  .all_outputs = FALSE
 )
 ```

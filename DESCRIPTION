@@ -17,7 +17,7 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     facilitates an easier scripting experience by organizing the large number
     of 'SAGA-GIS' geoprocessing tools (>700) by their respective library.
     Interactive scripting can fully take advantage of code autocompletion tools
-    (e.g. in 'Rstudio'), allowing for each tools syntax to be quickly
+    (e.g. in 'RStudio'), allowing for each tools syntax to be quickly
     recognized. Furthermore, the most common types of spatial data (via the
     'terra', 'sp', and 'sf' packages) along with non-spatial data are
     automatically passed from R to the 'SAGA-GIS' command line tool for
