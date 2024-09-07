@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Linking R with the Open-Source SAGA-GIS Software">
-<meta property="og:description" content="Provides an R scripting interface to the open-source SAGA-GIS (System for Automated Geoscientific Analyses Geographical Information System) software. Rsagacmd dynamically generates R functions for every SAGA-GIS geoprocessing tool based on the users currently installed SAGA-GIS version. These functions are contained within an S3 object and are accessed as a named list of libraries and tools. This structure facilitates an easier scripting experience by organizing the large number of SAGA-GIS geoprocessing tools (&gt;700) by their respective library. Interactive scripting can fully take advantage of code autocompletion tools (e.g. in Rstudio), allowing for each tools syntax to be quickly recognized. Furthermore, the most common types of spatial data (via the terra, sp, and sf packages) along with non-spatial data are automatically passed from R to the SAGA-GIS command line tool for geoprocessing operations, and the results are loaded as the appropriate R object. Outputs from individual SAGA-GIS tools can also be chained using pipes from the magrittr and dplyr packages to combine complex geoprocessing operations together in a single statement. SAGA-GIS is available under a GPLv2 / LGPLv2 licence from &lt;https://sourceforge.net/projects/saga-gis/&gt; including Windows x86/x64 and macOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software repositories. Rsagacmd has currently been tested on SAGA-GIS' versions from 2.3.1 to 9.2 on Windows, Linux and macOS.">
+<meta property="og:description" content="Provides an R scripting interface to the open-source SAGA-GIS (System for Automated Geoscientific Analyses Geographical Information System) software. Rsagacmd dynamically generates R functions for every SAGA-GIS geoprocessing tool based on the users currently installed SAGA-GIS version. These functions are contained within an S3 object and are accessed as a named list of libraries and tools. This structure facilitates an easier scripting experience by organizing the large number of SAGA-GIS geoprocessing tools (&gt;700) by their respective library. Interactive scripting can fully take advantage of code autocompletion tools (e.g. in Rstudio), allowing for each tools syntax to be quickly recognized. Furthermore, the most common types of spatial data (via the terra, sp, and sf packages) along with non-spatial data are automatically passed from R to the SAGA-GIS command line tool for geoprocessing operations, and the results are loaded as the appropriate R object. Outputs from individual SAGA-GIS tools can also be chained using pipes from the magrittr and dplyr packages to combine complex geoprocessing operations together in a single statement. SAGA-GIS is available under a GPLv2 / LGPLv2 licence from &lt;https://sourceforge.net/projects/saga-gis/&gt; including Windows x86/x64 and macOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software repositories. Rsagacmd has currently been tested on SAGA-GIS' versions from 2.3.1 to 9.5.1 on Windows, Linux and macOS.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Rsagacmd</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.3</span>
       </span>
     </div>
 
@@ -128,15 +128,17 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stevenpawley.github.io/Rsagacmd/" class="external-link">Rsagacmd</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.7.55</span></span>
-<span></span>
+<span><span class="co">#&gt; terra 1.7.78</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># initiate a saga object</span></span>
 <span><span class="va">saga</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/saga_gis.html">saga_gis</a></span><span class="op">(</span>raster_backend <span class="op">=</span> <span class="st">"terra"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Multiple installations of SAGA-GIS were found at:</span></span>
 <span><span class="co">#&gt; /Applications/SAGA.app/Contents/MacOS/saga_cmd</span></span>
 <span><span class="co">#&gt; /Applications/QGIS.app/Contents/MacOS/bin/saga_cmd</span></span>
-<span><span class="co">#&gt; Choosing newest version. Manually specify the location when calling saga_gis() to use an older version</span></span>
-<span></span>
+<span><span class="co">#&gt; Choosing newest version. Manually specify the location when calling saga_gis() to use an older version</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># load the example data</span></span>
 <span><span class="va">srtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_srtm.html">read_srtm</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -147,8 +149,8 @@
 <span><span class="co">#&gt; resolution  : 100, 100  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 310009.9, 350009.9, 5879989, 5919989  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : NAD83(CSRS) / Alberta 10-TM (Forest) (EPSG:3402) </span></span>
-<span><span class="co">#&gt; source      : file19ef60012a7.sdat </span></span>
-<span><span class="co">#&gt; name        : file19ef60012a7</span></span></code></pre></div>
+<span><span class="co">#&gt; source      : file4eb14c1fed6d.sdat </span></span>
+<span><span class="co">#&gt; name        : file4eb14c1fed6d</span></span></code></pre></div>
 <p>This facilitates an easier scripting experience by organizing the large number of SAGA-GIS tools (&gt; 700) by their respective library. Each function’s syntax is the same as when using the SAGA-GIS command line tool directly except that <strong>Rsagacmd</strong> always uses lowercase arguments). Furthermore, because the arguments (called identifiers in SAGA-GIS) for many SAGA-GIS tools are not consistently named, the user can also take advantage of code autocompletion tools in RStudio, allowing for each tools’ inputs, outputs and options to be more easily recognized.</p>
 </div>
 <div class="section level2">
@@ -173,7 +175,7 @@
 </h2>
 <p>For convenience, non-optional outputs from SAGA-GIS are automatically saved to tempfiles if outputs are not explicitly stated, and then loaded as the appropriate R object (e.g., <code>SpatRaster</code>, <code>sf</code> object, or a tibble).</p>
 <p>This means that <strong>Rsagacmd</strong> can be used with <code>%&gt;%</code> to quickly chain together complex geoprocessing operations:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate random terrain and save to file</span></span>
 <span><span class="va">dem</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">grid_calculus</span><span class="op">$</span><span class="fu">random_terrain</span><span class="op">(</span></span>
 <span>  target_out_grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".sgrd"</span><span class="op">)</span></span>
@@ -184,10 +186,11 @@
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tri</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-using-tempfiles-1.png" width="100%"></p>
 <p>This example will write the output terrain ruggedness index to a temporary file, and will automatically load the result into the R environment as a <code>SpatRaster</code> object. This was implemented for convenience, and so that the user can also create complex workflows that require very little code. It is also means that you can combine several processing steps with pipes:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
-<span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># read project area as a simple features object</span></span>
 <span><span class="va">prj_bnd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">320000</span>, <span class="fl">340000</span>, <span class="fl">5880000</span>, <span class="fl">5900000</span><span class="op">)</span>,</span>
@@ -212,29 +215,29 @@
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lsps</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-using-pipes-1.png" width="100%"></p>
 <p>In the above example, three tools are joined together using pipes, and only the land surface parameter grids are returned as <code>SpatRaster</code> objects. The intermediate processing steps are dealt with automatically by saving the outputs as tempfiles. When dealing with high-resolution and/or larger raster data, these tempfiles can start to consume a significant amount of disk space over a session. If required, temporary files can be cleaned during the session using:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/saga_remove_tmpfiles.html">saga_remove_tmpfiles</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Removing Rsagacmd temporary files h=0</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef60012a7.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef61f3a27a.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef2ec55176.gpkg</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef1c6731f7.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef561275bc.sdat</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef55efb5c9.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef6c87cb32.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef472d7748.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef79f23c79.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe606a7b.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef5beeb89c.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef159a38eb.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef400ed761.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19efe5e4222.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4e47cd8c.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef4c07ca7a.sgrd</span></span>
-<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpJHVnhB/file19ef137e3695.sgrd</span></span></code></pre></div>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb14c1fed6d.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb12558974c.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb12024c75.gpkg</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb164e9965a.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1614976ca.sdat</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb134ba9aa2.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb146fe1cb9.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1550fda18.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb13b78949.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb16961987.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb16865f171.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb17cce6742.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb152dd5e11.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1434ad897.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb166d1c404.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb1559c1758.sgrd</span></span>
+<span><span class="co">#&gt; /var/folders/_m/kbp8r1612yj1xl6ndb2y8vpm0000gn/T//RtmpN0uS0X/file4eb17ac0be50.sgrd</span></span></code></pre></div>
 <p>where <code>h</code> is minimum age (in number of hours) of tempfiles for removal, so <code>h = 0</code> will remove all tempfiles that were automatically created by <strong>Rsagacmd</strong>.</p>
 <p>The behaviour of automatically outputting results to tempfiles can be disabled for any specific tool by using <code>.all_outputs = FALSE</code> or can be disabled globally when the link to SAGA-GIS is created using <code>saga_gis(all_outputs = FALSE)</code>. In this case, the output arguments need to be specified manually, e.g.:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tri</span> <span class="op">&lt;-</span> <span class="va">saga</span><span class="op">$</span><span class="va">ta_morphometry</span><span class="op">$</span><span class="fu">terrain_ruggedness_index_tri</span><span class="op">(</span></span>
 <span>    dem <span class="op">=</span> <span class="va">dem</span>, </span>
 <span>    radius <span class="op">=</span> <span class="fl">3</span>, </span>

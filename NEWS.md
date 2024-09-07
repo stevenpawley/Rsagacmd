@@ -1,3 +1,10 @@
+# Rsagacmd 0.43
+
+Important bug fix:
+
+- Fix issue that prevented Rsagacmd working with R 4.4.1 related to
+comparisons to numeric versions required to be made on character vectors.
+
 # Rsagacmd 0.42
 
 Minor bug fixes:

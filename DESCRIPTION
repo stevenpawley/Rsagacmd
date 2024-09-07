@@ -1,8 +1,8 @@
 Package: Rsagacmd
 Type: Package
 Title: Linking R with the Open-Source 'SAGA-GIS' Software
-Version: 0.4.2
-Date: 2023-10-15
+Version: 0.4.3
+Date: 2024-09-07
 Authors@R: c(
     person("Steven", "Pawley",
     email = "dr.stevenpawley@gmail.com",
@@ -29,7 +29,7 @@ Description: Provides an R scripting interface to the open-source 'SAGA-GIS'
     <https://sourceforge.net/projects/saga-gis/> including Windows x86/x64
     and macOS binaries. SAGA-GIS is also included in Debian/Ubuntu default software
     repositories. Rsagacmd has currently been tested on 'SAGA-GIS' versions
-    from 2.3.1 to 9.2 on Windows, Linux and macOS.
+    from 2.3.1 to 9.5.1 on Windows, Linux and macOS.
 License: GPL-3
 Encoding: UTF-8
 SystemRequirements: SAGA-GIS (>= 2.3.1)
