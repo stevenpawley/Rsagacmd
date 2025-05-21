@@ -34,6 +34,7 @@ search_saga <- function() {
       # define search paths
       if (Sys.info()["sysname"] == "Windows") {
         search_paths <- c(
+          "C:/Program Files/SAGA",
           "C:/Program Files/SAGA-GIS",
           "C:/Program Files (x86)/SAGA-GIS",
           "C:/SAGA-GIS",
